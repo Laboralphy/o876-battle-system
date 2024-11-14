@@ -1,0 +1,21 @@
+{
+  "name": "o876-battle-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@laboralphy/object-fusion": "^1.2.0",
+    "@laboralphy/store": "^1.4.1",
+    "jsonschema": "^1.4.1",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

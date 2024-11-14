@@ -1,0 +1,10 @@
+{
+  "specie": "SPECIE_HUMANOID",
+  "properties": [
+    {
+      "type": "PROPERTY_ABILITY_MODIFIER",
+      "ability": "ABILITY_DEXTERITY",
+      "amp": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo -n "building effects index and consts..."
+node ./bin/generate-indexes.js ./src/effects CONST_FILENAME EFFECT > ./src/consts/effects.js
+node ./bin/generate-indexes.js ./src/effects CONST_REQUIRE EFFECT > ./src/effects/index.js
+
+echo " done"
+

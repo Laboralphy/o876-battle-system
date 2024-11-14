@@ -1,0 +1,8 @@
+{
+  "hd": 6,
+  "proficiencies": [
+    "PROFICIENCY_WEAPON_SIMPLE",
+    "PROFICIENCY_SAVING_THROW_DEXTERITY",
+    "PROFICIENCY_SAVING_THROW_CHARISMA"
+  ]
+}

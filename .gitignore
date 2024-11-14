@@ -1,0 +1,5 @@
+node_modules
+.idea
+.env
+bin/*.csv
+bin/generated-blueprints/*

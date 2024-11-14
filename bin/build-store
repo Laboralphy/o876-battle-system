@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo -n "building store..."
+
+node ./bin/generate-indexes.js ./src/store/getters REQUIRE > ./src/store/getters/index.js
+node ./bin/generate-jsdoc-getters.js ./src/store/getters > ./src/store/getters.doc.js
+
+node ./bin/generate-indexes.js ./src/store/mutations REQUIRE > ./src/store/mutations/index.js
+node ./bin/generate-jsdoc-mutations.js ./src/store/mutations > ./src/store/mutations.doc.js
+
+echo "done"
