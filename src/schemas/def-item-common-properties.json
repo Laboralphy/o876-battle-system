@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "required": [
+    "entityType",
+    "itemType",
+    "weight",
+    "properties",
+    "equipmentSlots"
+  ],
+  "properties": {
+    "entityType": {
+      "type": "string",
+      "const": "ENTITY_TYPE_ITEM"
+    },
+    "itemType": {
+      "type": "string",
+      "pattern": "^ITEM_TYPE_"
+    },
+    "properties": {
+      "type": "array",
+      "items": {
+        "$ref": "./def-item-property"
+      }
+    },
+    "weight": {
+      "type": "number"
+    },
+    "charges": {
+      "type": "number"
+    },
+    "extends": {
+      "description": "If specified, this blueprint is an extension of another blueprint",
+      "type": "string"
+    },
+    "equipmentSlots": {
+      "description": "List of equipment slot, if item is not equipable, this list wil be empty",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^EQUIPMENT_SLOT_"
+      }
+    }
+  }
+}

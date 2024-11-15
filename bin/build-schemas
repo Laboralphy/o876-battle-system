@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo -n "building schema index..."
+node ./bin/generate-indexes.js ./src/schemas REQUIRE > ./src/schemas/index.js
+
+echo " done"
+

@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "required": [
+    "proficiencies",
+    "damages",
+    "damageTypes",
+    "attributes",
+    "size"
+  ],
+  "properties": {
+    "damages": {
+      "$ref": "./def-dice-expr"
+    },
+    "damageTypes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^DAMAGE_TYPE_"
+      }
+    },
+    "proficiencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^PROFICIENCY_"
+      }
+    },
+    "attributes": {
+      "$ref": "./def-weapon-attributes"
+    },
+    "size": {
+      "type": "string",
+      "pattern": "^WEAPON_SIZE_"
+    },
+    "ammoType": {
+      "type": "string",
+      "pattern": "^AMMO_TYPE_"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "required": [
+    "ac"
+  ],
+  "properties": {
+    "ac": {
+      "type": "number"
+    }
+  }
+}

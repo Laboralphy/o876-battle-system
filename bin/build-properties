@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo -n "building properties index and consts..."
+node ./bin/generate-indexes.js ./src/properties CONST_FILENAME PROPERTY > ./src/consts/properties.js
+node ./bin/generate-indexes.js ./src/properties CONST_REQUIRE PROPERTY > ./src/properties/index.js
+
+echo " done"
+
