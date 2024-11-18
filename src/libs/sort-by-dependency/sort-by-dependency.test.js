@@ -22,12 +22,8 @@ describe('sortByDependency', function () {
                 data: 104
             }
         ]
-        sortByDependency(a, 'id', 'extends')
-        expect(a).toEqual([
-            {
-                id: 'staff',
-                data: 103
-            },
+        const b = sortByDependency(a, 'id', 'extends')
+        expect(b).toEqual([
             {
                 id: 'weapon',
                 data: 104
@@ -41,7 +37,34 @@ describe('sortByDependency', function () {
                 id: 'dagger',
                 data: 102,
                 extends: 'weapon'
+            },
+            {
+                id: 'staff',
+                data: 103
             }
         ])
+    })
+    it('should not be able to sort when cyclic dependency', function () {
+        const a = [
+            {
+                id: 'a',
+                data: 101,
+                extends: 'b'
+            },
+            {
+                id: 'b',
+                data: 102,
+                extends: 'a'
+            }
+        ]
+        expect(() => sortByDependency(a, 'id', 'extends')).toThrow()
+    })
+    it('should be able to sort 2', function () {
+        const a = []
+        for (let i = 1; i <= 100; ++i) {
+            a.push({ id: i, parent: i + 1 })
+        }
+        a.push({ id: 101 })
+        expect(() => sortByDependency(a, 'id', 'parent')).not.toThrow()
     })
 })

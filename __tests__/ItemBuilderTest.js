@@ -65,8 +65,7 @@ describe('defineItemBlueprint', function () {
             proficiencies: [CONSTS.PROFICIENCY_ARMOR_LIGHT],
             ac: 2,
             weight: 20,
-            properties: [
-            ],
+            properties: [],
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST]
         })
     })
