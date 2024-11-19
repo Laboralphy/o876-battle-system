@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid')
 const { getUniqueId } = require('./libs/unique-id')
 const CONSTS = require('./consts')
 const EFFECTS = require('./effects')
-const Horde = require('./horde')
+const Horde = require('./Horde')
 
 /**
  * @typedef RBSEffect {object}
@@ -119,7 +119,6 @@ class EffectProcessor {
         }
         const oSource = this._horde.creatures[oEffect.source]
         this.invokeEffectMethod(oEffect, 'mutate', oTarget, oSource)
-
     }
 }
 

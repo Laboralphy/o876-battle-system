@@ -1,0 +1,26 @@
+{
+  "CONDITION_PARALYSIS": {
+    "prevents": ["CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"],
+    "savingThrow": "ABILITY_STRENGTH"
+  },
+  "CONDITION_ROOT": {
+    "prevents": ["CAPABILITY_MOVE"],
+    "savingThrow": "ABILITY_DEXTERITY"
+  },
+  "CONDITION_DISEASE": {
+    "prevents": [],
+    "savingThrow": "ABILITY_CONSTITUTION"
+  },
+  "CONDITION_CONFUSED": {
+    "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET"],
+    "savingThrow": "ABILITY_INTELLIGENCE"
+  },
+  "CONDITION_BLINDNESS": {
+    "prevents": ["CAPABILITY_CAST_TARGET", "CAPABILITY_SEE"],
+    "savingThrow": "ABILITY_WISDOM"
+  },
+  "CONDITION_CALM": {
+    "prevents": ["CAPABILITY_ACT", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"],
+    "savingThrow": "ABILITY_CHARISMA"
+  }
+}

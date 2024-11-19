@@ -67,4 +67,31 @@ describe('sortByDependency', function () {
         a.push({ id: 101 })
         expect(() => sortByDependency(a, 'id', 'parent')).not.toThrow()
     })
+    it('should be able to handle arrays', function () {
+        const a = [
+            {
+                id: 1,
+                parent: [2, 3]
+            },
+            {
+                id: 2,
+                parent: []
+            },
+            {
+                id: 3,
+                parent: 4
+            },
+            {
+                id: 4,
+                parent: null
+            }
+        ]
+        expect(sortByDependency(a, 'id', 'parent')).toEqual( [
+                { id: 2, parent: [] },
+                { id: 4, parent: null },
+                { id: 3, parent: 4 },
+                { id: 1, parent: [ 2, 3 ] }
+            ]
+        )
+    })
 })

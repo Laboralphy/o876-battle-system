@@ -1,11 +1,31 @@
 const CONSTS = require('../../consts')
 
+/**
+ * @typedef RBSStoreState {object}
+ * @property id {string}
+ * @property specie {string}
+ * @property race {string}
+ * @property gender {string}
+ * @property speed {number}
+ * @property level {number}
+ * @property naturalArmorClass {number}
+ * @property abilities {object<string, number>}
+ * @property classType {string}
+ * @property pools {object<string, number>}
+ * @property properties {RBSProperty[]}
+ * @property effects {RBSEffect[]}
+ *
+ *
+ * @returns {RBSStoreState}
+ */
 module.exports = () => ({
     id: '',
-    specie: 'SPECIE_HUMANOID',
-    race: 'RACE_UNKNOWN',
-    gender: 'GENDER_NONE',
+    specie: CONSTS.SPECIE_HUMANOID,
+    race: CONSTS.RACE_UNKNOWN,
+    gender: CONSTS.GENDER_NONE,
     naturalArmorClass: 10,
+    speed: 30,
+    level: 1,
     abilities: {
         [CONSTS.ABILITY_STRENGTH]: 10,
         [CONSTS.ABILITY_DEXTERITY]: 10,
@@ -14,7 +34,7 @@ module.exports = () => ({
         [CONSTS.ABILITY_WISDOM]: 10,
         [CONSTS.ABILITY_CHARISMA]: 10
     },
-    classType: 'CLASS_TYPE_TOURIST',
+    classType: CONSTS.CLASS_TYPE_TOURIST,
     pools: {
         hitPoints: 1
     },

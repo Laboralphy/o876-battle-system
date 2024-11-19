@@ -1,11 +1,17 @@
 /**
  * Renvoie les propriétés classée par Slot d'équipements
  * @param state {*}
- * @returns {RBSProperties[]}
+ * @returns {object<string, RBSProperty[]>}
  */
 module.exports = state => {
-    const aProperties = []
+    const oProperties = {}
     Object
         .entries(state.equipment)
-        .forEach(([sSlot, oItem]))
+        .forEach(([sSlot, oItem]) => {
+            if (!(sSlot in oProperties)) {
+                oProperties[sSlot] = []
+            }
+            oProperties[sSlot].push(...oItem.properties)
+        })
+    return oProperties
 }

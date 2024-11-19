@@ -1,3 +1,10 @@
+/**
+ * Sort an array, a parent item is placed before all its children/dependencies
+ * @param aObjects {object[]}
+ * @param sKeyId {string}
+ * @param sKeyParentId {string}
+ * @returns {object[]}
+ */
 function sortByDependency(aObjects, sKeyId, sKeyParentId) {
     const indexer = new Map()
     const result = []
@@ -8,6 +15,13 @@ function sortByDependency(aObjects, sKeyId, sKeyParentId) {
     aObjects.forEach(item => {
         indexer.set(item[sKeyId], item)
     })
+
+    function visitOne (p) {
+        const parent = indexer.get(p)
+        if (parent) {
+            visit(parent) // Visiter le parent d'abord
+        }
+    }
 
     // Fonction récursive pour visiter les dépendances
     function visit (item) {
@@ -22,9 +36,10 @@ function sortByDependency(aObjects, sKeyId, sKeyParentId) {
         inProgress.add(id)
 
         if (parentId !== undefined) {
-            const parent = indexer.get(parentId)
-            if (parent) {
-                visit(parent) // Visiter le parent d'abord
+            if (Array.isArray(parentId)) {
+                parentId.forEach(visitOne)
+            } else {
+                visitOne(parentId)
             }
         }
         inProgress.delete(id)

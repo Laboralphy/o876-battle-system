@@ -1,8 +1,14 @@
-const ItemBuilder = require('./ItemBuilder')
+const EntityBuilder = require('./EntityBuilder')
 
+/**
+ * @typedef RBSProperty
+ * @property type {string} PROPERTY_*
+ * @property amp {number|string}
+ * @property data {object}
+ */
 class Manager {
     constructor () {
-        this._itemBuilder = new ItemBuilder()
+        this._entityBuilder = new EntityBuilder()
     }
 
 

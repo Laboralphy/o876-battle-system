@@ -1,8 +1,19 @@
+const { getUniqueId } = require('./libs/unique-id')
 const { buildStore } = require('./store')
+const CONSTS = require('./consts')
 
 class Creature {
-    constructor () {
+    constructor ({ blueprint = null, id = null }) {
         this._store = buildStore()
+        this._blueprint = blueprint
+        if (blueprint) {
+            this.mutations.setBlueprint({ blueprint })
+        }
+        if (id) {
+            this.mutations.setId({ id })
+        } else {
+            this.mutations.setId({ id: getUniqueId() })
+        }
     }
 
     /**

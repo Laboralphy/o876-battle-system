@@ -4,11 +4,13 @@
   "allowAdditionalProperties": false,
   "required": [
     "ac",
+    "hd",
     "entityType",
     "classType",
     "level",
     "specie",
     "speed",
+    "properties",
     "equipment",
     "actions"
   ],
@@ -68,6 +70,10 @@
       "type": "number",
       "description": "Natural armor class"
     },
+    "hd": {
+      "description": "number of hit points each level",
+      "type": "number"
+    },
     "specie": {
       "description": "Specie of creature",
       "type": "string",
@@ -81,6 +87,12 @@
     "speed": {
       "description": "Speed of the creature",
       "type": "number"
+    },
+    "properties": {
+      "type": "array",
+      "items": {
+        "$ref": "./def-item-property"
+      }
     },
     "equipment": {
       "type": "array",

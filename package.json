@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@laboralphy/object-fusion": "^1.2.0",
+    "@laboralphy/object-fusion": "^1.3.0",
     "@laboralphy/store": "^1.4.1",
     "jsonschema": "^1.4.1",
     "uuid": "^11.0.3"

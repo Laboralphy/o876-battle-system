@@ -1,6 +1,6 @@
 /**
  *
  * @param state
- * @returns {RBSProperties[]}
+ * @returns {RBSProperty[]}
  */
 module.exports = state => state.properties
