@@ -52,6 +52,7 @@ class EntityBuilder {
      * @property [attributes] {string[]} weapon attribute list
      * @property [size] {string} weapon size
      * @property [charges] {number} maximum number of charges
+     * @property [equipmentSlots] {string[]} list of slot where item can be equipped
      *
      * @param id
      * @param blueprint
@@ -146,7 +147,14 @@ class EntityBuilder {
 
     createCreatureFromResRef (resref, id = undefined) {
         const oBlueprint = this._checkResRef(resref)
-        return new Creature({ blueprint: oBlueprint, id })
+        const oCreature = new Creature({ blueprint: oBlueprint, id })
+        Object
+            .values(oBlueprint.equipment)
+            .forEach(item => {
+                const oItem = this.createEntity(item)
+
+            })
+        return oCreature
     }
 
     createEntity (blueprint, id) {

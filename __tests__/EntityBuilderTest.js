@@ -8,7 +8,7 @@ oSchemaValidator.schemaIndex = SCHEMA
 oSchemaValidator.init()
 
 describe('defineBlueprint', function () {
-    it('define a weapon blueprint', function () {
+    it('blueprints should have shortsword property when defining a valid short sword blueprint', function () {
         const ib = new EntityBuilder()
         ib.schemaValidator = oSchemaValidator
         ib.defineBlueprint('shortsword', {
@@ -25,6 +25,42 @@ describe('defineBlueprint', function () {
         })
         expect(ib.blueprints).toHaveProperty('shortsword')
     })
+    it('should throw an error when weapon blueprint is missing "damage" property', function () {
+        const ib = new EntityBuilder()
+        ib.schemaValidator = oSchemaValidator
+        expect(() => {
+            ib.defineBlueprint('shortsword', {
+                entityType: CONSTS.ENTITY_TYPE_ITEM,
+                itemType: CONSTS.ITEM_TYPE_WEAPON,
+                proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+                damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
+                attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
+                size: CONSTS.WEAPON_SIZE_SMALL,
+                weight: 2,
+                properties: [],
+                equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+            })
+        }).toThrow()
+    })
+    it('should throw an error when weapon blueprint has typo property', function () {
+        const ib = new EntityBuilder()
+        ib.schemaValidator = oSchemaValidator
+        expect(() => {
+            ib.defineBlueprint('shortsword', {
+                entityType: CONSTS.ENTITY_TYPE_ITEM,
+                itemType: CONSTS.ITEM_TYPE_WEAPON,
+                proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+                damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
+                attributesXXXXXXXXXX: [CONSTS.WEAPON_ATTRIBUTE_FINESSE], // <-- XXXXXXX typo here
+                size: CONSTS.WEAPON_SIZE_SMALL,
+                damages: '1d6',
+                weight: 2,
+                properties: [],
+                equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+            })
+        }).toThrow()
+    })
+
     it('define a weapon blueprint with an extends', function () {
         const eb = new EntityBuilder()
         eb.schemaValidator = oSchemaValidator
@@ -239,8 +275,7 @@ describe('createCreature', function () {
             'class-type-fighter': bpFighter,
             'specie-humanoid': bpHumanoid
         }
-        console.log(eb.blueprints)
         const mynpc = eb.createEntity('the-elf', 'x1')
-        console.log(mynpc)
+        expect(mynpc.getters.getId).toBe('x1')
     })
 })

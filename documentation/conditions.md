@@ -13,12 +13,12 @@
 
 ## Table of "can do" and "cannot do"
 
-| Condition | Can't...               | Saving throw | Description                       |
-|-----------|------------------------|--------------|-----------------------------------|
-| Paralysis | act, move, fight, cast | strength     | Nothing to do, just wait.         |
-| Root      | move                   | dexterity    | Retaliate with ranged attack      |
-| Disease   |                        | constitution | Should cure asap                  |
-| Confused  | cast                   | intelligence | Cannot use proficiency            |
-| Blinded   | see, cast.target       | wisdom       | You may fight, but with penalties |
-| Calm      | act, fight, cast       | charisma     | You may flee.                     |
+| Condition | Can't...               | Saving throw | Description                                      |
+|-----------|------------------------|--------------|--------------------------------------------------|
+| Paralysis | act, move, fight, cast | strength     | Nothing to do, just wait.                        |
+| Root      | move                   | dexterity    | Retaliate with ranged attack                     |
+| Weakness  |                        | constitution | Will disadvantage attack roll and ability checks |
+| Confused  | cast                   | intelligence | Cannot use proficiency                           |
+| Blinded   | see, cast.target       | wisdom       | You may fight, but with penalties                |
+| Calm      | act, fight, cast       | charisma     | You may flee.                                    |
 

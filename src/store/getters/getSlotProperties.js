@@ -1,7 +1,7 @@
 /**
- * Renvoie les propriétés classée par Slot d'équipements
+ * Renvoie les propriétés classées par Slot d'équipements
  * @param state {*}
- * @returns {object<string, RBSProperty[]>}
+ * @returns {{[slot: string]: RBSProperty[]}}
  */
 module.exports = state => {
     const oProperties = {}

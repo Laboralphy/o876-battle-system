@@ -3,6 +3,6 @@
  * @param state {*}
  * @param id {string}
  */
-module.exports = ({ state }, { id }) => {
-    state.id = id
+module.exports = ({ state }, { value }) => {
+    state.id = value
 }

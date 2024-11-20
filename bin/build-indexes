@@ -6,4 +6,5 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 "$SCRIPT_DIR"/build-data
 "$SCRIPT_DIR"/build-store
 "$SCRIPT_DIR"/build-effects
+"$SCRIPT_DIR"/build-properties
 "$SCRIPT_DIR"/build-consts

@@ -1,6 +1,7 @@
 {
   "description": "Définition des items",
   "type": "object",
+  "allowAdditionalProperties": false,
   "allOf": [
     {
       "$ref": "./def-item-common-properties"

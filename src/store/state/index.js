@@ -14,6 +14,7 @@ const CONSTS = require('../../consts')
  * @property pools {object<string, number>}
  * @property properties {RBSProperty[]}
  * @property effects {RBSEffect[]}
+ * @property equipment {[slot: string]: RBSItem}
  *
  *
  * @returns {RBSStoreState}
