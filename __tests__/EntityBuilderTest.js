@@ -188,13 +188,17 @@ describe('createItem', function () {
 })
 
 describe('createCreature', function () {
-    it ('should create an elf fighter', function () {
+    it('should create an elf fighter', function () {
         const bpHumanoid = {
-            entityType: CONSTS.ENTITY_TYPE_ACTOR,
             specie: CONSTS.SPECIE_HUMANOID,
             ac: 10,
+            hd: 6,
+            level: 1,
+            classType: CONSTS.CLASS_TYPE_TOURIST,
             speed: 30,
-            properties: []
+            properties: [],
+            actions: [],
+            equipment: []
         }
         const bpElf = {
             extends: 'specie-humanoid',
@@ -214,7 +218,9 @@ describe('createCreature', function () {
             actions: []
         }
         const bpMyNPC = {
+            entityType: CONSTS.ENTITY_TYPE_ACTOR,
             extends: ['race-elf', 'class-type-fighter'],
+            level: 10,
             abilities: {
                 strength: 16,
                 dexterity: 14,
@@ -223,7 +229,7 @@ describe('createCreature', function () {
                 wisdom: 10,
                 charisma: 10
             },
-            equipment: {}
+            equipment: []
         }
         const eb = new EntityBuilder()
         eb.schemaValidator = oSchemaValidator

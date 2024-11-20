@@ -1,3 +1,4 @@
 {
-  "specie": "SPECIE_HUMANOID"
+  "race": "RACE_HUMAN",
+  "extends": ["specie-humanoid"]
 }

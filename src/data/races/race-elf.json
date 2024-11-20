@@ -1,10 +1,16 @@
 {
-  "specie": "SPECIE_HUMANOID",
+  "race": "RACE_ELF",
+  "extends": ["specie-humanoid"],
   "properties": [
     {
       "type": "PROPERTY_ABILITY_MODIFIER",
       "ability": "ABILITY_DEXTERITY",
       "amp": 2
+    },
+    {
+      "type": "PROPERTY_ABILITY_MODIFIER",
+      "ability": "ABILITY_CONSTITUTION",
+      "amp": -2
     }
   ]
 }

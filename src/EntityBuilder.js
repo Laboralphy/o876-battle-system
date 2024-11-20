@@ -85,6 +85,7 @@ class EntityBuilder {
             }
 
             case CONSTS.ENTITY_TYPE_ACTOR: {
+                this._schemaValidator.validate(oBuiltBlueprint, 'blueprint-actor')
                 break
             }
         }
@@ -104,6 +105,13 @@ class EntityBuilder {
     }
 
     _registerUnidentifiedBlueprint (blueprint) {
+        if (typeof blueprint === 'string') {
+            if (blueprint in this._blueprints) {
+                return this._blueprints[blueprint]
+            } else {
+                throw new ReferenceError(`This blueprint does not exist ${blueprint}`)
+            }
+        }
         const sHash = this._hashObject(blueprint)
         if (sHash in this._blueprints) {
             return this._blueprints[sHash]
