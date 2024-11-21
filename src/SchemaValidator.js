@@ -79,7 +79,7 @@ class SchemaValidator {
                 .errors
                 .map(e => e.stack)
                 .join('\n')
-            throw new Error('ERR_SCHEMA_VALIDATION: ' + sSchemaId + ' stack: ' + sErrors)
+            throw new TypeError('ERR_SCHEMA_VALIDATION:\nschema: ' + sSchemaId + '\nerror: ' + sErrors)
         }
         return true
     }

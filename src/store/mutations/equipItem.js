@@ -1,4 +1,5 @@
 const CONSTS = require('../../consts')
+const {checkConst} = require("../../libs/check-const");
 /**
  * @param state {RBSStoreState}
  * @param externals {{}}
@@ -8,6 +9,9 @@ const CONSTS = require('../../consts')
  * @returns {*}
  */
 module.exports = ({ state }, { item, slot = '', bypassCurse = false }) => {
+    if (slot) {
+        checkConst('slot', slot, 'EQUIPMENT_SLOT_')
+    }
     const aAllowedSlots = item.blueprint.equipmentSlots
     let sUseSlot = aAllowedSlots.includes(slot) ? slot : ''
     for (const s of aAllowedSlots) {
