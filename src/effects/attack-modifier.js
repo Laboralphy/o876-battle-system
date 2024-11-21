@@ -1,8 +1,8 @@
 const CONSTS = require('../consts')
+const {checkConst} = require("../libs/check-const");
 
-function init ({ effect, attackType: sAttackType = CONSTS.ATTACK_TYPE_ANY } = {}) {
-    effect.data.attackType = sAttackType
-    effect.key = sAttackType
+function init ({ effect, attackType = CONSTS.ATTACK_TYPE_ANY } = {}) {
+    effect.data.attackType = checkConst(attackType)
 }
 
 module.exports = {

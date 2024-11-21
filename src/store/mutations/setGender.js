@@ -5,6 +5,6 @@
  */
 const {checkConst} = require("../../libs/check-const");
 module.exports = ({ state }, { value }) => {
-    checkConst('gender', value, 'GENDER_')
+    checkConst(value)
     state.gender = value
 }

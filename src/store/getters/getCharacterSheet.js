@@ -5,7 +5,7 @@ module.exports = (state, getters) => {
         race: state.race,
         classType: state.classType,
         level: {
-            value:
+            value: 0
         }
     }
 }

@@ -2,20 +2,16 @@ const CONSTS = require('../../consts')
 
 /**
  * Check of const is present, or throw error
- * @param sProperty {string}
  * @param value {string}
- * @param sRequiredPrefix {string}
  */
-function checkConst (sProperty, value, sRequiredPrefix = '') {
+function checkConst (value) {
     if (typeof value !== 'string') {
-        throw new TypeError(`Parameter ${sProperty} of effect/property should be of type string`)
-    }
-    if (sRequiredPrefix && !value.startsWith(sRequiredPrefix)) {
-        throw new TypeError(`Parameter ${sProperty} of effect/property should start with ${sRequiredPrefix}`)
+        throw new TypeError(`This parameter of mutation, effect, or property should be of type string`)
     }
     if (!CONSTS[value]) {
-        throw new ReferenceError(`Parameter "${sProperty}" in invalid`)
+        throw new ReferenceError(`Parameter value "${value}" in invalid`)
     }
+    return value
 }
 
 module.exports = {

@@ -1,20 +1,20 @@
 const CONSTS = require('../consts')
+const {checkConst} = require("../libs/check-const");
 
 /**
  * Inflict damage
- * @param effect {BFEffect}
+ * @param effect {RBSEffect}
  * @param value {number}
  * @param sDamageType {string} DAMAGE_TYPE_
- * @param material {string|string[]} MATERIAL_
  * @param critical {boolean}
  */
-function init ({ effect, damageType: sDamageType, material = CONSTS.MATERIAL_UNKNOWN, critical = false }) {
+function init ({ effect, damageType: sDamageType, critical = false }) {
+    checkConst(sDamageType)
     if (effect.amp === 0 && sDamageType === CONSTS.DAMAGE_TYPE_POISON) {
         throw new Error('WTF!!! POISON 0 amp')
     }
     Object.assign(effect.data, {
         damageType: sDamageType,
-        material: Array.isArray(material) ? material : [material],
         appliedAmount: 0,
         resistedAmount: 0,
         critical
@@ -60,7 +60,7 @@ function rollDamageAmount ({ damageType, material, amp, target }) {
 
 /**
  * Apply effect modification on effect target
- * @param effect {BFEffect}
+ * @param effect {RBSEffect}
  * @param target {Creature}
  * @param source {Creature}
  */

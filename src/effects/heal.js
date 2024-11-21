@@ -2,7 +2,7 @@ const CONSTS = require('../consts')
 
 /**
  *
- * @param effect {BFEffect}
+ * @param effect {RBSEffect}
  * @param target {Creature}
  */
 function mutate ({ effect: oEffect, target, source }) {

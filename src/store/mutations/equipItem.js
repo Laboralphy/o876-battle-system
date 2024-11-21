@@ -10,7 +10,7 @@ const {checkConst} = require("../../libs/check-const");
  */
 module.exports = ({ state }, { item, slot = '', bypassCurse = false }) => {
     if (slot) {
-        checkConst('slot', slot, 'EQUIPMENT_SLOT_')
+        checkConst(slot)
     }
     const aAllowedSlots = item.blueprint.equipmentSlots
     let sUseSlot = aAllowedSlots.includes(slot) ? slot : ''

@@ -5,6 +5,6 @@
  */
 const {checkConst} = require("../../libs/check-const");
 module.exports = ({ state }, { value }) => {
-    checkConst('value', value, 'CLASS_TYPE_')
+    checkConst(value)
     state.classType = value
 }

@@ -1,6 +1,7 @@
+const {checkConst} = require("../libs/check-const");
+
 function init ({ effect, ability }) {
-    effect.data.ability = ability
-    effect.key = ability
+    effect.data.ability = checkConst(ability)
 }
 
 module.exports = {
