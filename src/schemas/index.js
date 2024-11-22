@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-11-20T15:21:53.068Z
+// Date : 2024-11-22T09:59:05.108Z
 // List of files in ./src/schemas
 
 module.exports = {

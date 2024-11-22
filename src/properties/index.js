@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-11-20T15:21:53.382Z
+// Date : 2024-11-22T09:59:05.552Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -16,6 +16,7 @@ module.exports = {
   'PROPERTY_DARKVISION': require('./darkvision.js'),
   'PROPERTY_EXTRA_HITPOINTS': require('./extra-hitpoints.js'),
   'PROPERTY_HEALING_FACTOR': require('./healing-factor.js'),
+  'PROPERTY_HEALING_MODIFIER': require('./healing-modifier.js'),
   'PROPERTY_IMMUNITY': require('./immunity.js'),
   'PROPERTY_LIGHT': require('./light.js'),
   'PROPERTY_REGENERATION': require('./regeneration.js'),

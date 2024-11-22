@@ -12,6 +12,7 @@
     "speed",
     "properties",
     "equipment",
+    "proficiencies",
     "actions"
   ],
   "properties": {
@@ -105,6 +106,13 @@
             "$ref": "/blueprint-item"
           }
         ]
+      }
+    },
+    "proficiencies": {
+      "type": "array",
+      "description": "List of proficiencies",
+      "items": {
+        "type": "string"
       }
     },
     "actions": {

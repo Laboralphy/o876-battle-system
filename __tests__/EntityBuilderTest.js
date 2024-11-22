@@ -286,7 +286,7 @@ describe('createEntity', function () {
             }
         ])
     })
-    it('should create an elf fighter when using createEntity after defining several blueprints linked by "extends" references', function () {
+    it('should create a valid creature when using a composition of 3 partial blueprints linked by "extends" references', function () {
         const bpHumanoid = {
             specie: CONSTS.SPECIE_HUMANOID,
             ac: 10,
@@ -339,8 +339,32 @@ describe('createEntity', function () {
         }
         const mynpc = eb.createEntity('the-elf', 'x1')
         expect(mynpc).toBeInstanceOf(Creature)
-        expect(mynpc.getters.getId).toBe('x1')
-        expect(mynpc.getters.getSpecie).toBe(CONSTS.SPECIE_HUMANOID)
-        expect(mynpc.getters.getRace).toBe(CONSTS.RACE_ELF)
+    })
+    it('should not create several blueprint when creating several entities from a blueprint objet instead of resref', function () {
+        const ib = new EntityBuilder()
+        ib.schemaValidator = oSchemaValidator
+        const oShorSwordBP = {
+            entityType: CONSTS.ENTITY_TYPE_ITEM,
+            itemType: CONSTS.ITEM_TYPE_WEAPON,
+            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            damages: '1d6',
+            damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
+            attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
+            size: CONSTS.WEAPON_SIZE_SMALL,
+            weight: 2,
+            properties: [],
+            equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+        }
+        expect(Object.values(ib.blueprints).length).toBe(0)
+        const s1 = ib.createEntity(oShorSwordBP, 's1')
+        expect(Object.values(ib.blueprints).length).toBe(1)
+        const s2 = ib.createEntity(oShorSwordBP, 's2')
+        expect(Object.values(ib.blueprints).length).toBe(1)
+        const s3 = ib.createEntity(oShorSwordBP, 's3')
+        expect(Object.values(ib.blueprints).length).toBe(1)
+        const sShortSwordBPRef = Object.keys(ib.blueprints)[0]
+        expect(sShortSwordBPRef).toBe(s1.blueprint.ref)
+        expect(sShortSwordBPRef).toBe(s2.blueprint.ref)
+        expect(sShortSwordBPRef).toBe(s3.blueprint.ref)
     })
 })

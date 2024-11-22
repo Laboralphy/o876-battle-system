@@ -1,11 +1,8 @@
 const CONSTS = require('../consts')
+const {checkConst} = require("../libs/check-const");
 
 function init ({ effect, immunityType }) {
-    if (!CONSTS[immunityType]) {
-        throw new Error('unknown immunity type ' + immunityType)
-    }
-    effect.data.immunityType = immunityType
-    effect.key = immunityType
+    effect.data.immunityType = checkConst(immunityType)
 }
 
 module.exports = {

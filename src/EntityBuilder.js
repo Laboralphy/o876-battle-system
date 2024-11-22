@@ -3,7 +3,7 @@ const { deepMerge, deepFreeze} = require('@laboralphy/object-fusion')
 const { getUniqueId } = require('./libs/unique-id')
 const CONSTS = require('./consts')
 const Creature = require('./Creature')
-const {sortByDependency} = require("./libs/sort-by-dependency");
+const { sortByDependency } = require("./libs/sort-by-dependency");
 
 
 /**
@@ -105,6 +105,11 @@ class EntityBuilder {
         return this._blueprints[resref]
     }
 
+    /**
+     * Register a blueprint without identifier, builds an identifier out of blueprint serialisation
+     * @param blueprint {RBSItemBlueprint}
+     * @returns {Object|*}
+     */
     _registerUnidentifiedBlueprint (blueprint) {
         if (typeof blueprint === 'string') {
             if (blueprint in this._blueprints) {
