@@ -3,8 +3,8 @@ const { deepMerge, deepFreeze} = require('@laboralphy/object-fusion')
 const { getUniqueId } = require('./libs/unique-id')
 const CONSTS = require('./consts')
 const Creature = require('./Creature')
-const { sortByDependency } = require("./libs/sort-by-dependency");
-
+const { sortByDependency } = require('./libs/sort-by-dependency')
+const PropertyBuilder = require('./PropertyBuilder')
 
 /**
  * This class takes blueprints, and create real items out of them
@@ -13,6 +13,7 @@ class EntityBuilder {
     constructor () {
         this._blueprints = {}
         this._schemaValidator = null
+        this._propertyBuilder = new PropertyBuilder()
     }
 
     get schemaValidator () {
@@ -126,6 +127,10 @@ class EntityBuilder {
         }
     }
 
+    _buildProperties (aProperties) {
+        return aProperties.map(p => this._propertyBuilder.buildProperty(p))
+    }
+
     /**
      * @typedef RBSItem {object}
      * @property id {string} item identifier
@@ -144,15 +149,16 @@ class EntityBuilder {
             id: id || getUniqueId(),
             blueprint: oBlueprint,
             remainingCharges: oBlueprint.charges || 0,
-            properties: [
-                ...oBlueprint.properties
-            ]
+            properties: this._buildProperties(oBlueprint.properties)
         }
     }
 
     createCreatureFromResRef (resref, id = undefined) {
         const oBlueprint = this._checkResRef(resref)
         const oCreature = new Creature({ blueprint: oBlueprint, id })
+        this
+            ._buildProperties(oBlueprint.properties)
+            .forEach(property => oCreature.mutations.addProperty({ property }))
         Object
             .values(oBlueprint.equipment)
             .forEach(item => {

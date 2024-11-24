@@ -17,6 +17,10 @@ class PropertyBuilder {
      */
     invokePropertyMethod (oProperty, sMethod, oItem, oCreature, oParams = {}) {
         const pe = this._propertyPrograms[oProperty.type]
+        if (!pe) {
+            console.error(oProperty)
+            throw new ReferenceError(`Property ${oProperty.type} program has not been defined`)
+        }
         if (sMethod in pe) {
             return pe[sMethod]({
                 property: oProperty,
@@ -39,13 +43,15 @@ class PropertyBuilder {
      * @param oPropertyDefinition {object}
      * @return {RBSProperty}
      */
-    buildProperty ({ type: sPropertyType, amp, ...oPropertyDefinition }) {
+    buildProperty ({ type: sPropertyType, amp = 0, ...oPropertyDefinition }) {
         const oProperty = {
-            type: oPropertyDefinition.type,
-            amp: oPropertyDefinition,
+            type: sPropertyType,
+            amp,
             data: {}
         }
         this.invokePropertyMethod(oProperty, 'init', null, null, oPropertyDefinition)
         return oProperty
     }
 }
+
+module.exports = PropertyBuilder

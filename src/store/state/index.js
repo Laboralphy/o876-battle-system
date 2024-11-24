@@ -15,6 +15,7 @@ const CONSTS = require('../../consts')
  * @property properties {RBSProperty[]}
  * @property effects {RBSEffect[]}
  * @property equipment {[slot: string]: RBSItem}
+ * @property offensiveSlot {string}
  *
  *
  * @returns {RBSStoreState}
@@ -56,5 +57,6 @@ module.exports = () => ({
         [CONSTS.EQUIPMENT_SLOT_AMMO]: null,
         [CONSTS.EQUIPMENT_SLOT_WAIST]: null,
         [CONSTS.EQUIPMENT_SLOT_FEET]: null
-    }
+    },
+    offensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
 })

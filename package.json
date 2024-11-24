@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@laboralphy/object-fusion": "^1.3.0",
-    "@laboralphy/store": "^1.4.1",
+    "@laboralphy/store": "^1.4.2",
     "jsonschema": "^1.4.1",
     "uuid": "^11.0.3"
   },

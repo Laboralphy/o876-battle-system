@@ -1,4 +1,5 @@
 const CONSTS = require('../consts')
+const {checkConst} = require("../libs/check-const");
 
 /**
  * This property will half damages received from a certain type
@@ -6,10 +7,7 @@ const CONSTS = require('../consts')
  * @param sDamageType {string} DAMAGE_TYPE_*
  */
 function init ({ property, damageType: sDamageType }) {
-    if (!CONSTS[sDamageType]) {
-        throw new ReferenceError('unknown damage type ' + sDamageType)
-    }
-    property.data.damageType = sDamageType
+    property.data.damageType = checkConst(sDamageType)
 }
 
 module.exports = {

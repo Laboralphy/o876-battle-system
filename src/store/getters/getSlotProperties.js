@@ -7,6 +7,7 @@ module.exports = state => {
     const oProperties = {}
     Object
         .entries(state.equipment)
+        .filter(([, oItem]) => !!oItem)
         .forEach(([sSlot, oItem]) => {
             if (!(sSlot in oProperties)) {
                 oProperties[sSlot] = []

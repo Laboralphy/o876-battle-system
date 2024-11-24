@@ -5,6 +5,9 @@ const CONSTS = require('../../consts')
  * @param value {string}
  */
 function checkConst (value) {
+    if (value === undefined) {
+        throw new TypeError('This parameter of mutation, effect, or property should be defined')
+    }
     if (typeof value !== 'string') {
         throw new TypeError(`This parameter of mutation, effect, or property should be of type string`)
     }

@@ -10,6 +10,8 @@
  * @param propAmpMapper {function}
  * @param propSorter {function}
  * @param propForEach {function}
+ * @param restrictSlots {string[]}
+ * @param excludeInnate {boolean}
  * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, min: number, sum: number, count: number, effects: number, ip: number }}
  */
 function aggregateModifiers (aTags, getters, {
@@ -20,7 +22,9 @@ function aggregateModifiers (aTags, getters, {
     effectSorter = null,
     propSorter = null,
     effectForEach = null,
-    propForEach = null
+    propForEach = null,
+    restrictSlots = [],
+    excludeInnate = false
 } = {}) {
     const aTypeSet = new Set(
         Array.isArray(aTags)
@@ -40,8 +44,21 @@ function aggregateModifiers (aTags, getters, {
     if (effectForEach) {
         aFilteredEffects.forEach(effectForEach)
     }
-    const aFilteredProperties = getters
-        .getProperties
+    const aStartingProperties = []
+    if (!excludeInnate) {
+        aStartingProperties.push(...getters.getInnateProperties)
+    }
+    if (Array.isArray(restrictSlots)) {
+        const oSlotProperties = getters.getSlotProperties
+        restrictSlots.forEach(s => {
+            if (oSlotProperties[s]) {
+                aStartingProperties.push(oSlotProperties[s])
+            }
+        })
+    } else {
+        aStartingProperties.push(...getters.getProperties)
+    }
+    const aFilteredProperties = aStartingProperties
         .filter(ip =>
             aTypeSet.has(ip.property) &&
             (propFilter ? propFilter(ip) : true)

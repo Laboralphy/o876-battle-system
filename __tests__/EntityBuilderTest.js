@@ -254,11 +254,11 @@ describe('createEntity', function () {
         })
         eb.defineBlueprint('cursed-weapon', {
             properties: [{
-                type: 'PROPERTY_ATTACK_MODIFIER',
+                type: CONSTS.PROPERTY_ATTACK_MODIFIER,
                 amp: -1,
                 attackType: CONSTS.ATTACK_TYPE_MELEE
             }, {
-                type: 'PROPERTY_CURSE'
+                type: CONSTS.PROPERTY_CURSED
             }]
         })
         eb.defineBlueprint('weapon-cursed-sword-of-fire', {
@@ -276,13 +276,17 @@ describe('createEntity', function () {
             {
                 type: 'PROPERTY_ATTACK_MODIFIER',
                 amp: -1,
-                attackType: 'ATTACK_TYPE_MELEE'
+                data: {
+                    attackType: 'ATTACK_TYPE_MELEE'
+                }
             },
-            { type: 'PROPERTY_CURSE' },
+            { type: CONSTS.PROPERTY_CURSED, amp: 0, data: {} },
             {
                 type: 'PROPERTY_DAMAGE_MODIFIER',
                 amp: 1,
-                damageType: 'DAMAGE_TYPE_FIRE'
+                data: {
+                    damageType: 'DAMAGE_TYPE_FIRE'
+                }
             }
         ])
     })

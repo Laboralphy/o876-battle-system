@@ -73,7 +73,7 @@ class Creature {
     }
 
     equipItem (oItem) {
-
+        return this.mutations.equipItem({ item: oItem })
     }
 }
 
