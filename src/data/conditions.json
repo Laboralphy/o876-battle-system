@@ -1,33 +1,40 @@
 {
-  "CONDITION_PARALYSIS": {
+  "CONDITION_PARALYZED": {
+    "description": "Being unable to move one's body",
     "prevents": ["CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"],
     "savingThrow": "ABILITY_STRENGTH"
   },
-  "CONDITION_INCAPACITY": {
+  "CONDITION_INCAPACITATED": {
+    "description": "Being unable to do anything",
     "prevents": ["CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"],
     "savingThrow": "ABILITY_STRENGTH"
   },
-  "CONDITION_ROOT": {
+  "CONDITION_RESTRAINED": {
+    "description": "Being unable to walk or run, but still can fight, cast...",
     "prevents": ["CAPABILITY_MOVE"],
     "savingThrow": "ABILITY_DEXTERITY"
   },
   "CONDITION_DISEASE": {
+    "description": "Being afflicted by a disease",
     "prevents": [],
     "savingThrow": "ABILITY_CONSTITUTION"
   },
   "CONDITION_CONFUSED": {
+    "description": "Being unable to do something too complex for one's mind (casting spells, using skills)",
     "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET"],
     "savingThrow": "ABILITY_INTELLIGENCE"
   },
-  "CONDITION_BLINDNESS": {
+  "CONDITION_BLINDED": {
+    "description": "Being unable to see",
     "prevents": ["CAPABILITY_CAST_TARGET", "CAPABILITY_SEE"],
     "savingThrow": "ABILITY_WISDOM"
   },
   "CONDITION_CALM": {
-    "prevents": ["CAPABILITY_ACT", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"],
+    "description": "Being unable to fight, or cast spells",
+    "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"],
     "savingThrow": "ABILITY_CHARISMA"
   },
-  "CONDITION_FEAR": {
+  "CONDITION_FRIGHTENED": {
     "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"],
     "savingThrow": "ABILITY_CHARISMA"
   }
