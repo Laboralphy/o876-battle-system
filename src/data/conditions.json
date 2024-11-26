@@ -29,13 +29,14 @@
     "prevents": ["CAPABILITY_CAST_TARGET", "CAPABILITY_SEE"],
     "savingThrow": "ABILITY_WISDOM"
   },
-  "CONDITION_CALM": {
-    "description": "Being unable to fight, or cast spells",
+  "CONDITION_FRIGHTENED": {
+    "description": "Being unable to do hostile actions",
     "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"],
     "savingThrow": "ABILITY_CHARISMA"
   },
-  "CONDITION_FRIGHTENED": {
-    "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"],
-    "savingThrow": "ABILITY_CHARISMA"
+  "CONDITION_POISONED": {
+    "description": "Damage over time with poison damage",
+    "prevents": [],
+    "savingThrow": "ABILITY_CONSTITUTION"
   }
 }

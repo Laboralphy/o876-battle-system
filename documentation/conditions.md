@@ -20,5 +20,5 @@
 | Weakness  |                        | constitution | Will disadvantage attack roll and ability checks |
 | Confused  | cast                   | intelligence | Cannot use proficiency                           |
 | Blinded   | see, cast.target       | wisdom       | You may fight, but with penalties                |
-| Calm      | act, fight, cast       | charisma     | You may flee.                                    |
+| Fear      | act, fight, cast       | charisma     | You may flee.                                    |
 

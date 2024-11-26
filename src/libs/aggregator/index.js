@@ -48,7 +48,7 @@ function aggregateModifiers (aTags, getters, {
     if (!excludeInnate) {
         aStartingProperties.push(...getters.getInnateProperties)
     }
-    if (Array.isArray(restrictSlots)) {
+    if (Array.isArray(restrictSlots) && restrictSlots.length > 0) {
         const oSlotProperties = getters.getSlotProperties
         restrictSlots.forEach(s => {
             if (oSlotProperties[s]) {
@@ -60,7 +60,7 @@ function aggregateModifiers (aTags, getters, {
     }
     const aFilteredProperties = aStartingProperties
         .filter(ip =>
-            aTypeSet.has(ip.property) &&
+            aTypeSet.has(ip.type) &&
             (propFilter ? propFilter(ip) : true)
         )
         .map(prop => ({

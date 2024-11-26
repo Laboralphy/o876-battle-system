@@ -8,24 +8,87 @@ const oSchemaValidator = new SchemaValidator()
 oSchemaValidator.schemaIndex = SCHEMA
 oSchemaValidator.init()
 
+const bpNormalActor = {
+    entityType: CONSTS.ENTITY_TYPE_ACTOR,
+    specie: CONSTS.SPECIE_HUMANOID,
+    race: CONSTS.RACE_HUMAN,
+    ac: 10,
+    hp: 6,
+    proficiencies: [],
+    speed: 30,
+    classType: CONSTS.CLASS_TYPE_TOURIST,
+    level: 1,
+    hd: 6,
+    actions: [],
+    equipment: []
+}
+
+const bpBeltOfOgreStrength = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_BELT,
+    properties: [{
+        type: CONSTS.PROPERTY_ABILITY_MODIFIER,
+        ability: CONSTS.ABILITY_STRENGTH,
+        amp: 2
+    }],
+    weight: 5,
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WAIST]
+}
+
+describe('getAbilities', function () {
+    it('should return strength:14 dex:12 con:16, int:10 wis:11 cha:9 when defining creature blueprint with strength = 14 ...', function () {
+        const eb = new EntityBuilder()
+        eb.schemaValidator = oSchemaValidator
+        const oCreature = eb.createEntity({
+            ...bpNormalActor,
+            abilities: {
+                strength: 14,
+                dexterity: 12,
+                constitution: 16,
+                intelligence: 10,
+                wisdom: 11,
+                charisma: 9
+            }
+        })
+        expect(oCreature.getters.getAbilities).toEqual({
+            [CONSTS.ABILITY_STRENGTH]: 14,
+            [CONSTS.ABILITY_DEXTERITY]: 12,
+            [CONSTS.ABILITY_CONSTITUTION]: 16,
+            [CONSTS.ABILITY_INTELLIGENCE]: 10,
+            [CONSTS.ABILITY_WISDOM]: 11,
+            [CONSTS.ABILITY_CHARISMA]: 9
+        })
+    })
+    it('should return strength 19 when having strength 17 and equipped with item +2 str', function () {
+        const eb = new EntityBuilder()
+        eb.schemaValidator = oSchemaValidator
+        const oCreature = eb.createEntity({
+            ...bpNormalActor,
+            abilities: {
+                strength: 17,
+                dexterity: 12,
+                constitution: 16,
+                intelligence: 10,
+                wisdom: 11,
+                charisma: 9
+            }
+        })
+        const oBelt = eb.createEntity(bpBeltOfOgreStrength)
+        oCreature.equipItem(oBelt)
+        expect(oCreature.getters.getAbilities[CONSTS.ABILITY_STRENGTH]).toBe(19)
+    })
+})
+
+describe('getAbilityBaseValues', function () {
+
+})
 
 describe('getSlotProperties', function () {
     it('should return empty object when no items are equipped', function () {
         const eb = new EntityBuilder()
         eb.schemaValidator = oSchemaValidator
         const oCreature = eb.createEntity({
-            entityType: CONSTS.ENTITY_TYPE_ACTOR,
-            specie: CONSTS.SPECIE_HUMANOID,
-            race: CONSTS.RACE_HUMAN,
-            ac: 10,
-            hp: 6,
-            proficiencies: [],
-            speed: 30,
-            classType: CONSTS.CLASS_TYPE_TOURIST,
-            level: 1,
-            hd: 6,
-            actions: [],
-            equipment: []
+            ...bpNormalActor
         })
         expect(oCreature.getters.getSlotProperties).toEqual({
         })
@@ -52,18 +115,7 @@ describe('getSlotProperties', function () {
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT, CONSTS.EQUIPMENT_SLOT_FINGER_LEFT]
         })
         const oCreature = eb.createEntity({
-            entityType: CONSTS.ENTITY_TYPE_ACTOR,
-            specie: CONSTS.SPECIE_HUMANOID,
-            race: CONSTS.RACE_HUMAN,
-            ac: 10,
-            hp: 6,
-            proficiencies: [],
-            speed: 30,
-            classType: CONSTS.CLASS_TYPE_TOURIST,
-            level: 1,
-            hd: 6,
-            actions: [],
-            equipment: []
+            ...bpNormalActor
         })
         oCreature.equipItem(oArmor)
         oCreature.equipItem(oOrnateRing)
@@ -95,18 +147,7 @@ describe('getSlotProperties', function () {
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST]
         })
         const oCreature = eb.createEntity({
-            entityType: CONSTS.ENTITY_TYPE_ACTOR,
-            specie: CONSTS.SPECIE_HUMANOID,
-            race: CONSTS.RACE_HUMAN,
-            ac: 10,
-            hp: 6,
-            proficiencies: [],
-            speed: 30,
-            classType: CONSTS.CLASS_TYPE_TOURIST,
-            level: 1,
-            hd: 6,
-            actions: [],
-            equipment: []
+            ...bpNormalActor
         })
         expect(oCreature.getters.getSlotProperties).toEqual({})
         oCreature.equipItem(oArmor)
@@ -196,18 +237,7 @@ describe('getSlotProperties', function () {
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT, CONSTS.EQUIPMENT_SLOT_FINGER_LEFT]
         })
         const oCreature = eb.createEntity({
-            entityType: CONSTS.ENTITY_TYPE_ACTOR,
-            specie: CONSTS.SPECIE_HUMANOID,
-            race: CONSTS.RACE_HUMAN,
-            ac: 10,
-            hp: 6,
-            proficiencies: [],
-            speed: 30,
-            classType: CONSTS.CLASS_TYPE_TOURIST,
-            level: 1,
-            hd: 6,
-            actions: [],
-            equipment: []
+            ...bpNormalActor
         })
         oCreature.equipItem(oMagicArmor)
         oCreature.equipItem(oRingOfFireProtection)
@@ -236,3 +266,4 @@ describe('getSlotProperties', function () {
         })
     })
 })
+

@@ -5,7 +5,10 @@
  * @property getAbilityModifiers {Object<string, number>}
  * @property getArmorClass undefined
  * @property getCapabilities {{act: boolean, fight: boolean, move: boolean, see: boolean, cast: { self: boolean, target: boolean } }}
+ * @property getConditionSet {Set<string>}
+ * @property getEffectSet {Set<string>}
  * @property getEffects {RBSEffect[]}
+ * @property getEncumbrance {{value: number, capacity: number}}
  * @property getEquipment {Object<string, RBSItem>}
  * @property getHitPoints {number}
  * @property getId {string}
@@ -14,6 +17,8 @@
  * @property getProperties {RBSProperty[]}
  * @property getSelectedWeapon {RBSItem|null}
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
+ * @property getSpeed {number}
+ * @property isDead {boolean}
  * @property isWieldingTwoHandedWeapon {boolean}
  */
 

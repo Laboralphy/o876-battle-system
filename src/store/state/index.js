@@ -8,6 +8,7 @@ const CONSTS = require('../../consts')
  * @property gender {string}
  * @property speed {number}
  * @property level {number}
+ * @property speed {number}
  * @property naturalArmorClass {number}
  * @property abilities {object<string, number>}
  * @property classType {string}
@@ -16,6 +17,7 @@ const CONSTS = require('../../consts')
  * @property effects {RBSEffect[]}
  * @property equipment {[slot: string]: RBSItem}
  * @property offensiveSlot {string}
+ * @property encumbrance {number}
  *
  *
  * @returns {RBSStoreState}
@@ -58,5 +60,6 @@ module.exports = () => ({
         [CONSTS.EQUIPMENT_SLOT_WAIST]: null,
         [CONSTS.EQUIPMENT_SLOT_FEET]: null
     },
-    offensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+    offensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
+    encumbrance: 0
 })

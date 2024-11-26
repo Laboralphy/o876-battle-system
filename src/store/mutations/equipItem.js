@@ -26,7 +26,7 @@ module.exports = ({ state }, { item, slot = '', bypassCurse = false }) => {
     const oPrevItem = state.equipment[sUseSlot]
     if (oPrevItem) {
         // Verifier si l'objet est maudit
-        if (!bypassCurse && !!oPrevItem.properties.find(ip => ip.property === CONSTS.PROPERTY_CURSED)) {
+        if (!bypassCurse && !!oPrevItem.properties.find(ip => ip.type === CONSTS.PROPERTY_CURSED)) {
             return {
                 previousItem: oPrevItem,
                 newItem: item,

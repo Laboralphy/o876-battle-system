@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-11-25T19:05:10.401Z
+// Date : 2024-11-26T12:20:39.702Z
 // List of files in ./src/effects
 
 module.exports = {
@@ -9,6 +9,7 @@ module.exports = {
   'EFFECT_ATTACK_MODIFIER': require('./attack-modifier.js'),
   'EFFECT_BLINDNESS': require('./blindness.js'),
   'EFFECT_CHARM': require('./charm.js'),
+  'EFFECT_CONFUSION': require('./confusion.js'),
   'EFFECT_DAMAGE_IMMUNITY': require('./damage-immunity.js'),
   'EFFECT_DAMAGE_MODIFIER': require('./damage-modifier.js'),
   'EFFECT_DAMAGE_REDUCTION': require('./damage-reduction.js'),
@@ -18,6 +19,7 @@ module.exports = {
   'EFFECT_DARKVISION': require('./darkvision.js'),
   'EFFECT_DEATH': require('./death.js'),
   'EFFECT_DISEASE': require('./disease.js'),
+  'EFFECT_FEAR': require('./fear.js'),
   'EFFECT_FLAG': require('./flag.js'),
   'EFFECT_HEAL': require('./heal.js'),
   'EFFECT_HEALING_FACTOR': require('./healing-factor.js'),
