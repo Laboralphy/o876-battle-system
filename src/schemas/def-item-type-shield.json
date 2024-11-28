@@ -1,11 +1,16 @@
 {
   "type": "object",
   "required": [
+    "proficiency",
     "ac"
   ],
   "properties": {
     "ac": {
       "type": "number"
+    },
+    "proficiency": {
+      "type": "string",
+      "pattern": "^PROFICIENCY_"
     }
   }
 }

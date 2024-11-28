@@ -15,7 +15,7 @@ describe('defineBlueprint', function () {
         ib.defineBlueprint('shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
@@ -32,7 +32,7 @@ describe('defineBlueprint', function () {
         const oOriginalBlueprint = {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
@@ -52,7 +52,7 @@ describe('defineBlueprint', function () {
             ib.defineBlueprint('shortsword', {
                 entityType: CONSTS.ENTITY_TYPE_ITEM,
                 itemType: CONSTS.ITEM_TYPE_WEAPON,
-                proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+                proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
                 damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
                 attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
                 size: CONSTS.WEAPON_SIZE_SMALL,
@@ -69,7 +69,7 @@ describe('defineBlueprint', function () {
             ib.defineBlueprint('shortsword', {
                 entityType: CONSTS.ENTITY_TYPE_ITEM,
                 itemType: CONSTS.ITEM_TYPE_WEAPON,
-                proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+                proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
                 damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
                 attributesXXXXXXXXXX: [CONSTS.WEAPON_ATTRIBUTE_FINESSE], // <-- XXXXXXX typo here
                 size: CONSTS.WEAPON_SIZE_SMALL,
@@ -101,7 +101,7 @@ describe('defineBlueprint', function () {
         eb.defineBlueprint('weapon-type-shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING, CONSTS.DAMAGE_TYPE_SLASHING],
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
@@ -117,7 +117,7 @@ describe('defineBlueprint', function () {
             ref: 'wpn-shortsword',
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING, CONSTS.DAMAGE_TYPE_SLASHING],
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
@@ -134,7 +134,7 @@ describe('defineBlueprint', function () {
             eb.defineBlueprint('light-armor', {
                 entityType: CONSTS.ENTITY_TYPE_ITEM,
                 itemType: CONSTS.ITEM_TYPE_ARMOR,
-                proficiencies: [CONSTS.PROFICIENCY_ARMOR_LIGHT],
+                proficiency: CONSTS.PROFICIENCY_ARMOR_LIGHT,
                 ac: 2,
                 weight: 20,
                 properties: [],
@@ -148,7 +148,7 @@ describe('defineBlueprint', function () {
         expect(() => ib.defineBlueprint('shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
@@ -160,7 +160,7 @@ describe('defineBlueprint', function () {
         expect(() => ib.defineBlueprint('shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_MARTIAL],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL,
             damages: '2d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
             attributes: [],
@@ -179,7 +179,7 @@ describe('createEntity', function () {
         eb.defineBlueprint('weapon-type-shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING, CONSTS.DAMAGE_TYPE_SLASHING],
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
@@ -198,7 +198,7 @@ describe('createEntity', function () {
         const bp = {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_MARTIAL],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL,
             damages: '1d8',
             damageTypes: [CONSTS.DAMAGE_TYPE_SLASHING],
             attributes: [],
@@ -216,7 +216,7 @@ describe('createEntity', function () {
         eb.defineBlueprint('weapon-type-shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING, CONSTS.DAMAGE_TYPE_SLASHING],
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
@@ -243,7 +243,7 @@ describe('createEntity', function () {
         eb.defineBlueprint('weapon-type-shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING, CONSTS.DAMAGE_TYPE_SLASHING],
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
@@ -350,7 +350,7 @@ describe('createEntity', function () {
         const oShorSwordBP = {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_SIMPLE],
+            proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
             damageTypes: [CONSTS.DAMAGE_TYPE_PIERCING],
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],

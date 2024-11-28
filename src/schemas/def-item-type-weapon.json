@@ -1,7 +1,7 @@
 {
   "type": "object",
   "required": [
-    "proficiencies",
+    "proficiency",
     "damages",
     "damageTypes",
     "attributes",
@@ -18,12 +18,9 @@
         "pattern": "^DAMAGE_TYPE_"
       }
     },
-    "proficiencies": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "pattern": "^PROFICIENCY_"
-      }
+    "proficiency": {
+      "type": "string",
+      "pattern": "^PROFICIENCY_"
     },
     "attributes": {
       "$ref": "./def-weapon-attributes"

@@ -8,5 +8,7 @@ const CONSTS = require('../../consts')
  */
 module.exports = (state, getters) => {
     const oWeapon = getters.getSelectedWeapon
-    return Boolean(oWeapon && oWeapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_TWO_HANDED))
+    return !!oWeapon
+        ? oWeapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_TWO_HANDED)
+        : false
 }
