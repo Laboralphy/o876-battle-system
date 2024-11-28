@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-11-27T10:12:50.671Z
+// Date : 2024-11-28T14:52:22.253Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
   'getAbilityBaseValues': require('./getAbilityBaseValues.js'),
   'getAbilityModifiers': require('./getAbilityModifiers.js'),
   'getArmorClass': require('./getArmorClass.js'),
-  'getCapabilities': require('./getCapabilities.js'),
+  'getCapabilitySet': require('./getCapabilitySet.js'),
   'getConditionSet': require('./getConditionSet.js'),
   'getEffectSet': require('./getEffectSet.js'),
   'getEffects': require('./getEffects.js'),
@@ -17,6 +17,7 @@ module.exports = {
   'getId': require('./getId.js'),
   'getInnateProperties': require('./getInnateProperties.js'),
   'getLevel': require('./getLevel.js'),
+  'getOffensiveSlot': require('./getOffensiveSlot.js'),
   'getProperties': require('./getProperties.js'),
   'getSelectedWeapon': require('./getSelectedWeapon.js'),
   'getSlotProperties': require('./getSlotProperties.js'),

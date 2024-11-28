@@ -2,42 +2,113 @@ const CONSTS = require('../../consts')
 const { aggregateModifiers } = require('../../libs/aggregator')
 const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/filters')
 
+/**
+ *
+ * @param state {RBSStoreState}
+ * @param getters {RBSStoreGetters}
+ * @returns {Object<string, number>}
+ */
 module.exports = (state, getters) => {
     const eq = getters.getEquipment
-    const oArmor = eq[CONSTS.EQUIPMENT_SLOT_CHEST]
+    const capa = getters.getCapabilitySet
+
+    // Defenses like shield and reflexes can only be used when creature is able to act and see
+    const bCanActAndSee = capa.has(CONSTS.CAPABILITY_ACT) && capa.has(CONSTS.CAPABILITY_SEE)
+
+    // Natural armor
+    const nACNaturalArmorClass = state.naturalArmorClass
+
+    // Dexterity
+    const nACDexBonus = bCanActAndSee ? getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY] : 0
+
+    // Shield
     const oShield = getters.isWieldingTwoHandedWeapon
         ? null
         : eq[CONSTS.EQUIPMENT_SLOT_SHIELD]
-    const naturalArmorClass = state.naturalArmorClass
-    const { sum: nACBonusMelee } = aggregateModifiers([
-        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
-        CONSTS.EFFECT_ARMOR_CLASS_MODIFIER
+    const nACShieldBaseBonus = oShield ? oShield.ac : 0
+
+    const nACShieldPropRangedBonus = aggregateModifiers([
+        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
     ], getters, {
-        effectFilter: filterMeleeAttackTypes,
-        propFilter: filterMeleeAttackTypes
+        propFilter: filterRangedAttackTypes,
+        restrictSlots: [CONSTS.EQUIPMENT_SLOT_SHIELD],
+        excludeInnate: true
     })
-    const { sum: nACBonusRanged } = aggregateModifiers([
+
+    const { sum: nACShieldPropMeleeBonus } = aggregateModifiers([
+        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
+    ], getters, {
+        propFilter: filterMeleeAttackTypes,
+        restrictSlots: [CONSTS.EQUIPMENT_SLOT_SHIELD],
+        excludeInnate: true
+    })
+
+    // Armor
+    const { sum: nACArmorPropRangedBonus } = aggregateModifiers([
+        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
+    ], getters, {
+        propFilter: filterRangedAttackTypes,
+        restrictSlots: [CONSTS.EQUIPMENT_SLOT_CHEST],
+        excludeInnate: true
+    })
+
+    const { sum: nACArmorPropMeleeBonus } = aggregateModifiers([
+        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
+    ], getters, {
+        propFilter: filterMeleeAttackTypes,
+        restrictSlots: [CONSTS.EQUIPMENT_SLOT_CHEST],
+        excludeInnate: true
+    })
+
+    const oArmor = eq[CONSTS.EQUIPMENT_SLOT_CHEST]
+    const nACArmorBaseBonus = oArmor ? oArmor.ac : 0
+
+    const { sum: nACGearRangedBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
         CONSTS.EFFECT_ARMOR_CLASS_MODIFIER
     ], getters, {
         effectFilter: filterRangedAttackTypes,
-        propFilter: filterRangedAttackTypes
+        propFilter: filterRangedAttackTypes,
+        restrictSlots: [
+            CONSTS.EQUIPMENT_SLOT_HEAD,
+            CONSTS.EQUIPMENT_SLOT_NECK,
+            CONSTS.EQUIPMENT_SLOT_BACK,
+            CONSTS.EQUIPMENT_SLOT_ARMS,
+            getters.getOffensiveSlot,
+            CONSTS.EQUIPMENT_SLOT_FINGER_LEFT,
+            CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
+            CONSTS.EQUIPMENT_SLOT_AMMO,
+            CONSTS.EQUIPMENT_SLOT_WAIST,
+            CONSTS.EQUIPMENT_SLOT_FEET
+        ]
     })
-    // If cannot act or see : no dexterity bonus and no shield bonus ; equipment armor steel count
-    const bCanActAndSee = getters.getCapabilities.act && getters.getCapabilities.see
-    const nACDexBonus = bCanActAndSee ? getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY] : 0
-    const nACArmorBonus = oArmor?.ac || 0
-    const nACShieldBonus = bCanActAndSee ? (oShield?.ac || 0) : 0
-    const nEquipmentAC = naturalArmorClass + nACDexBonus + nACArmorBonus + nACShieldBonus
+
+    const { sum: nACGearMeleeBonus } = aggregateModifiers([
+        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
+        CONSTS.EFFECT_ARMOR_CLASS_MODIFIER
+    ], getters, {
+        effectFilter: filterRangedAttackTypes,
+        propFilter: filterRangedAttackTypes,
+        restrictSlots: [
+            CONSTS.EQUIPMENT_SLOT_HEAD,
+            CONSTS.EQUIPMENT_SLOT_NECK,
+            CONSTS.EQUIPMENT_SLOT_BACK,
+            CONSTS.EQUIPMENT_SLOT_ARMS,
+            getters.getOffensiveSlot,
+            CONSTS.EQUIPMENT_SLOT_FINGER_LEFT,
+            CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
+            CONSTS.EQUIPMENT_SLOT_AMMO,
+            CONSTS.EQUIPMENT_SLOT_WAIST,
+            CONSTS.EQUIPMENT_SLOT_FEET
+        ]
+    })
+
+    const nBaseArmorClass = 10 + nACDexBonus
+    const nAccArmorClass = nACNaturalArmorClass + nACShieldBaseBonus + nACArmorBaseBonus
     return {
-        natural: naturalArmorClass,
-        equipment: nEquipmentAC,
-        melee: nEquipmentAC + nACBonusMelee,
-        ranged: nEquipmentAC + nACBonusRanged,
-        details: {
-            shield: nACShieldBonus,
-            armor: nACArmorBonus,
-            dexterity: nACDexBonus
-        }
+        [CONSTS.ATTACK_TYPE_MELEE]: nBaseArmorClass + nAccArmorClass + nACGearMeleeBonus + nACShieldPropMeleeBonus + nACArmorPropMeleeBonus,
+        [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: nBaseArmorClass + nACGearMeleeBonus,
+        [CONSTS.ATTACK_TYPE_RANGED]: nBaseArmorClass + nAccArmorClass + nACGearRangedBonus + nACShieldPropRangedBonus + nACArmorPropRangedBonus,
+        [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: nBaseArmorClass + nACGearRangedBonus,
     }
 }

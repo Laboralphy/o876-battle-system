@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-11-27T10:12:50.794Z
+// Date : 2024-11-28T14:52:22.329Z
 // List of files in ./src/store/mutations
 
 module.exports = {
@@ -14,6 +14,7 @@ module.exports = {
   'setId': require('./setId.js'),
   'setLevel': require('./setLevel.js'),
   'setNaturalArmorClass': require('./setNaturalArmorClass.js'),
+  'setOffensiveSlot': require('./setOffensiveSlot.js'),
   'setRace': require('./setRace.js'),
   'setSpecie': require('./setSpecie.js'),
   'setSpeed': require('./setSpeed.js')

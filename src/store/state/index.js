@@ -27,7 +27,7 @@ module.exports = () => ({
     specie: CONSTS.SPECIE_HUMANOID,
     race: CONSTS.RACE_UNKNOWN,
     gender: CONSTS.GENDER_NONE,
-    naturalArmorClass: 10,
+    naturalArmorClass: 0,
     speed: 30,
     level: 1,
     abilities: {

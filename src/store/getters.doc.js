@@ -4,7 +4,7 @@
  * @property getAbilityBaseValues {Object<string, number>}
  * @property getAbilityModifiers {Object<string, number>}
  * @property getArmorClass undefined
- * @property getCapabilities {{act: boolean, fight: boolean, move: boolean, see: boolean, cast: { self: boolean, target: boolean } }}
+ * @property getCapabilitySet {Set<string>}
  * @property getConditionSet {Set<string>}
  * @property getEffectSet {Set<string>}
  * @property getEffects {RBSEffect[]}
@@ -14,6 +14,7 @@
  * @property getId {string}
  * @property getInnateProperties {RBSProperty[]}
  * @property getLevel {number}
+ * @property getOffensiveSlot {string}
  * @property getProperties {RBSProperty[]}
  * @property getSelectedWeapon {RBSItem|null}
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
