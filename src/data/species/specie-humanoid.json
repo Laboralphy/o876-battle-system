@@ -1,7 +1,7 @@
 {
   "specie": "SPECIE_HUMANOID",
   "hd": 6,
-  "ac": 10,
+  "ac": 0,
   "speed": 30,
   "properties": []
 }

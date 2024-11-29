@@ -53,7 +53,7 @@ class Creature {
         m.setLevel({ value: blueprint.specie })
         m.setRace({ value: blueprint.race || CONSTS.RACE_UNKNOWN })
         m.setGender({ value: blueprint.gender || CONSTS.GENDER_NONE })
-        m.setNaturalArmorClass({ value: blueprint.ac || 10 })
+        m.setNaturalArmorClass({ value: blueprint.ac || 0 })
         m.setSpeed({ value: blueprint.speed })
         m.setClassType({ value: blueprint.classType })
         m.setLevel({ value: blueprint.level })

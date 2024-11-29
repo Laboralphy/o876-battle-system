@@ -12,7 +12,7 @@ const bpNormalActor = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
     specie: CONSTS.SPECIE_HUMANOID,
     race: CONSTS.RACE_HUMAN,
-    ac: 10,
+    ac: 0,
     hp: 6,
     proficiencies: [],
     speed: 30,
@@ -33,6 +33,16 @@ const bpBeltOfOgreStrength = {
     }],
     weight: 5,
     equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WAIST]
+}
+
+const bpStuddedLeatherArmor = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_ARMOR,
+    properties: [],
+    ac: 2,
+    weight: 5,
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST],
+    proficiency: CONSTS.PROFICIENCY_ARMOR_LIGHT
 }
 
 let eb
@@ -126,7 +136,7 @@ describe('getAbilityModifiers', function () {
 })
 
 describe('getArmorClass', function () {
-    it('should return when computing human armor class dex 10 equipping no item', function () {
+    it('should return 10 to all AC when computing human armor class dex 10 equipping no item', function () {
         const oCreature = eb.createEntity({
             ...bpNormalActor,
             abilities: {
@@ -143,6 +153,74 @@ describe('getArmorClass', function () {
             [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 10,
             [CONSTS.ATTACK_TYPE_MELEE]: 10,
             [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 10
+        })
+    })
+    it('should return 12 to all AC when computing human armor class dex 14 equipping no item', function () {
+        const oCreature = eb.createEntity({
+            ...bpNormalActor,
+            abilities: {
+                strength: 10,
+                dexterity: 14,
+                constitution: 16,
+                intelligence: 10,
+                wisdom: 10,
+                charisma: 10
+            }
+        })
+        expect(oCreature.getters.getArmorClass).toEqual({
+            [CONSTS.ATTACK_TYPE_RANGED]: 12,
+            [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 12,
+            [CONSTS.ATTACK_TYPE_MELEE]: 12,
+            [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 12
+        })
+    })
+    it('should return 14 to AC and 12 to touch AC when computing human armor class dex 14 equipping an armor', function () {
+        const oCreature = eb.createEntity({
+            ...bpNormalActor,
+            abilities: {
+                strength: 10,
+                dexterity: 14,
+                constitution: 16,
+                intelligence: 10,
+                wisdom: 10,
+                charisma: 10
+            }
+        })
+        const oArmor = eb.createEntity(bpStuddedLeatherArmor)
+        oCreature.equipItem(oArmor)
+        expect(oCreature.getters.getArmorClass).toEqual({
+            [CONSTS.ATTACK_TYPE_RANGED]: 14,
+            [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 12,
+            [CONSTS.ATTACK_TYPE_MELEE]: 14,
+            [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 12
+        })
+    })
+    it('should return 16 to AC and 12 to touch AC when computing human armor class dex 14 equipping a magic armor', function () {
+        const oCreature = eb.createEntity({
+            ...bpNormalActor,
+            abilities: {
+                strength: 10,
+                dexterity: 14,
+                constitution: 16,
+                intelligence: 10,
+                wisdom: 10,
+                charisma: 10
+            }
+        })
+        const oMagicArmor = eb.createEntity({
+            ...bpStuddedLeatherArmor,
+            properties: [{
+                type: CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
+                amp: 2
+            }]
+        })
+        oCreature.equipItem(oMagicArmor)
+        console.log(oCreature.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_CHEST].properties)
+        expect(oCreature.getters.getArmorClass).toEqual({
+            [CONSTS.ATTACK_TYPE_RANGED]: 16,
+            [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 12,
+            [CONSTS.ATTACK_TYPE_MELEE]: 16,
+            [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 12
         })
     })
 })
@@ -335,7 +413,6 @@ describe('isWieldingTwoHandedWeapon', function () {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             damages: '1d12',
-            damageTypes: [CONSTS.DAMAGE_TYPE_SLASHING],
             size: CONSTS.WEAPON_SIZE_LARGE,
             weight: 5,
             proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL,
@@ -347,7 +424,6 @@ describe('isWieldingTwoHandedWeapon', function () {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             damages: '1d8',
-            damageTypes: [CONSTS.DAMAGE_TYPE_SLASHING],
             size: CONSTS.WEAPON_SIZE_LARGE,
             proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL,
             weight: 3,

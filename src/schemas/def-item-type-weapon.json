@@ -11,13 +11,6 @@
     "damages": {
       "$ref": "./def-dice-expr"
     },
-    "damageTypes": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "pattern": "^DAMAGE_TYPE_"
-      }
-    },
     "proficiency": {
       "type": "string",
       "pattern": "^PROFICIENCY_"

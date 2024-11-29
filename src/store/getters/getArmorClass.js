@@ -25,9 +25,9 @@ module.exports = (state, getters) => {
     const oShield = getters.isWieldingTwoHandedWeapon
         ? null
         : eq[CONSTS.EQUIPMENT_SLOT_SHIELD]
-    const nACShieldBaseBonus = oShield ? oShield.ac : 0
+    const nACShieldBaseBonus = oShield ? oShield.blueprint.ac : 0
 
-    const nACShieldPropRangedBonus = aggregateModifiers([
+    const { sum: nACShieldPropRangedBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
     ], getters, {
         propFilter: filterRangedAttackTypes,
@@ -55,13 +55,17 @@ module.exports = (state, getters) => {
     const { sum: nACArmorPropMeleeBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
     ], getters, {
-        propFilter: filterMeleeAttackTypes,
+        propFilter: prop => {
+            const x = filterMeleeAttackTypes(prop)
+            console.log('checking', prop, x)
+            return prop
+        },
         restrictSlots: [CONSTS.EQUIPMENT_SLOT_CHEST],
         excludeInnate: true
     })
 
     const oArmor = eq[CONSTS.EQUIPMENT_SLOT_CHEST]
-    const nACArmorBaseBonus = oArmor ? oArmor.ac : 0
+    const nACArmorBaseBonus = oArmor ? oArmor.blueprint.ac : 0
 
     const { sum: nACGearRangedBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
@@ -112,3 +116,4 @@ module.exports = (state, getters) => {
         [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: nBaseArmorClass + nACGearRangedBonus,
     }
 }
+
