@@ -18,6 +18,7 @@ const CONSTS = require('../../consts')
  * @property equipment {[slot: string]: RBSItem}
  * @property offensiveSlot {string}
  * @property encumbrance {number}
+ * @property proficiencies {string[]}
  *
  *
  * @returns {RBSStoreState}
@@ -43,6 +44,7 @@ module.exports = () => ({
         hitPoints: 1
     },
     properties: [],
+    proficiencies: [],
     effects: {},
     equipment: {
         [CONSTS.EQUIPMENT_SLOT_INVALID]: null,

@@ -253,7 +253,7 @@ describe('createEntity', function () {
             properties: [{
                 type: 'PROPERTY_DAMAGE_MODIFIER',
                 amp: 1,
-                damageType: CONSTS.DAMAGE_TYPE_FIRE
+                damageType: CONSTS.DAMAGE_TYPE_THERMAL
             }],
             damages: '1d6-1'
         })
@@ -272,7 +272,7 @@ describe('createEntity', function () {
                 type: 'PROPERTY_DAMAGE_MODIFIER',
                 amp: 1,
                 data: {
-                    damageType: 'DAMAGE_TYPE_FIRE'
+                    damageType: 'DAMAGE_TYPE_THERMAL'
                 }
             }
         ])

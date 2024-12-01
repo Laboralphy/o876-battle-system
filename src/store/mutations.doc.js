@@ -1,6 +1,7 @@
 /**
  * @typedef RBSStoreMutations {Object}
  * @property addEffect {function({ effect: RBSEffect }): RBSEffect}
+ * @property addProficiency {function({ proficiency: string })}
  * @property addProperty {function({ property: RBSProperty })}
  * @property equipItem {function({ item: RBSItem, slot: string, bypassCurse: boolean }): *}
  * @property removeEffect {function({ effect: RBSEffect })}

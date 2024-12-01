@@ -52,7 +52,7 @@ function aggregateModifiers (aTags, getters, {
         const oSlotProperties = getters.getSlotProperties
         restrictSlots.forEach(s => {
             if (oSlotProperties[s]) {
-                aStartingProperties.push(oSlotProperties[s])
+                aStartingProperties.push(...oSlotProperties[s])
             }
         })
     } else {

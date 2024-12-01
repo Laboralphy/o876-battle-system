@@ -55,11 +55,7 @@ module.exports = (state, getters) => {
     const { sum: nACArmorPropMeleeBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
     ], getters, {
-        propFilter: prop => {
-            const x = filterMeleeAttackTypes(prop)
-            console.log('checking', prop, x)
-            return prop
-        },
+        propFilter: filterMeleeAttackTypes,
         restrictSlots: [CONSTS.EQUIPMENT_SLOT_CHEST],
         excludeInnate: true
     })
@@ -108,11 +104,14 @@ module.exports = (state, getters) => {
     })
 
     const nBaseArmorClass = 10 + nACDexBonus
-    const nAccArmorClass = nACNaturalArmorClass + nACShieldBaseBonus + nACArmorBaseBonus
+    const nACArmorMeleeBonus = nACArmorBaseBonus + nACArmorPropMeleeBonus
+    const nACArmorRangedBonus = nACArmorBaseBonus + nACArmorPropRangedBonus
+    const nACShieldMeleeBonus = nACShieldBaseBonus + nACShieldPropMeleeBonus
+    const nACShieldRangedBonus = nACShieldBaseBonus + nACShieldPropRangedBonus
     return {
-        [CONSTS.ATTACK_TYPE_MELEE]: nBaseArmorClass + nAccArmorClass + nACGearMeleeBonus + nACShieldPropMeleeBonus + nACArmorPropMeleeBonus,
+        [CONSTS.ATTACK_TYPE_MELEE]: nBaseArmorClass + nACNaturalArmorClass + nACArmorMeleeBonus + nACShieldMeleeBonus,
         [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: nBaseArmorClass + nACGearMeleeBonus,
-        [CONSTS.ATTACK_TYPE_RANGED]: nBaseArmorClass + nAccArmorClass + nACGearRangedBonus + nACShieldPropRangedBonus + nACArmorPropRangedBonus,
+        [CONSTS.ATTACK_TYPE_RANGED]: nBaseArmorClass + nACNaturalArmorClass + nACArmorRangedBonus + nACShieldRangedBonus,
         [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: nBaseArmorClass + nACGearRangedBonus,
     }
 }

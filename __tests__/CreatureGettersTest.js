@@ -215,13 +215,25 @@ describe('getArmorClass', function () {
             }]
         })
         oCreature.equipItem(oMagicArmor)
-        console.log(oCreature.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_CHEST].properties)
         expect(oCreature.getters.getArmorClass).toEqual({
             [CONSTS.ATTACK_TYPE_RANGED]: 16,
             [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 12,
             [CONSTS.ATTACK_TYPE_MELEE]: 16,
             [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 12
         })
+    })
+})
+
+describe('getCapabilitySet', function () {
+    it('should be able to do anything when creature is newly created', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        const capa = oCreature.getters.getCapabilitySet
+        expect(capa.has(CONSTS.CAPABILITY_ACT)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_SEE)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_CAST_TARGET)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_CAST_SELF)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_MOVE)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_FIGHT)).toBeTruthy()
     })
 })
 
@@ -294,8 +306,7 @@ describe('getSlotProperties', function () {
                 type: CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
                 amp: 1,
                 data: {
-                    attackType: CONSTS.ATTACK_TYPE_ANY,
-                    damageType: CONSTS.DAMAGE_TYPE_ANY
+                    attackType: CONSTS.ATTACK_TYPE_ANY
                 }
             }]
         })
@@ -306,7 +317,7 @@ describe('getSlotProperties', function () {
             proficiency: CONSTS.PROFICIENCY_ARMOR_LIGHT,
             properties: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
-                damageType: CONSTS.DAMAGE_TYPE_FIRE
+                damageType: CONSTS.DAMAGE_TYPE_THERMAL
             }],
             weight: 10,
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST]
@@ -319,7 +330,7 @@ describe('getSlotProperties', function () {
             proficiency: '',
             properties: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
-                damageType: CONSTS.DAMAGE_TYPE_FIRE
+                damageType: CONSTS.DAMAGE_TYPE_THERMAL
             }],
             weight: 0.1,
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT, CONSTS.EQUIPMENT_SLOT_FINGER_LEFT]
@@ -330,14 +341,14 @@ describe('getSlotProperties', function () {
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
                 amp: 0,
                 data: {
-                    damageType: CONSTS.DAMAGE_TYPE_FIRE
+                    damageType: CONSTS.DAMAGE_TYPE_THERMAL
                 }
             }],
             [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT]: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
                 amp: 0,
                 data: {
-                    damageType: CONSTS.DAMAGE_TYPE_FIRE
+                    damageType: CONSTS.DAMAGE_TYPE_THERMAL
                 }
             }]
         })
@@ -353,7 +364,7 @@ describe('getSlotProperties', function () {
                 amp: 1
             }, {
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
-                damageType: CONSTS.DAMAGE_TYPE_COLD
+                damageType: CONSTS.DAMAGE_TYPE_THERMAL
             }],
             weight: 10,
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST]
@@ -365,7 +376,7 @@ describe('getSlotProperties', function () {
             proficiency: '',
             properties: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
-                damageType: CONSTS.DAMAGE_TYPE_FIRE
+                damageType: CONSTS.DAMAGE_TYPE_THERMAL
             }],
             weight: 0.1,
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT, CONSTS.EQUIPMENT_SLOT_FINGER_LEFT]
@@ -380,21 +391,20 @@ describe('getSlotProperties', function () {
                 type: CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
                 amp: 1,
                 data: {
-                    damageType: CONSTS.DAMAGE_TYPE_ANY,
                     attackType: CONSTS.ATTACK_TYPE_ANY
                 }
             }, {
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
                 amp: 0,
                 data: {
-                    damageType: CONSTS.DAMAGE_TYPE_COLD
+                    damageType: CONSTS.DAMAGE_TYPE_THERMAL
                 }
             }],
             [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT]: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
                 amp: 0,
                 data: {
-                    damageType: CONSTS.DAMAGE_TYPE_FIRE
+                    damageType: CONSTS.DAMAGE_TYPE_THERMAL
                 }
             }]
         })

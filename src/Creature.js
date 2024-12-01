@@ -57,6 +57,7 @@ class Creature {
         m.setSpeed({ value: blueprint.speed })
         m.setClassType({ value: blueprint.classType })
         m.setLevel({ value: blueprint.level })
+        blueprint.proficiencies.forEach(value => m.addProficiency({ value }))
         if ('abilities' in blueprint) {
             m.setAbilityValue({ ability: CONSTS.ABILITY_STRENGTH, value: blueprint.abilities.strength })
             m.setAbilityValue({ ability: CONSTS.ABILITY_DEXTERITY, value: blueprint.abilities.dexterity })

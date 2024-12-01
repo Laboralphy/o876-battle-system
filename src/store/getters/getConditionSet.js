@@ -8,14 +8,15 @@ const CONSTS = require('../../consts')
 module.exports = (state, getters) => {
     const aEffectSet = getters.getEffectSet
     const aConditions = {
-        CONDITION_PARALYZED: aEffectSet.has(CONSTS.EFFECT_PARALYSIS),
-        CONDITION_BLINDED: aEffectSet.has(CONSTS.EFFECT_BLINDNESS),
-        CONDITION_FRIGHTENED: aEffectSet.has(CONSTS.EFFECT_FEAR),
-        CONDITION_CONFUSED: aEffectSet.has(CONSTS.EFFECT_CONFUSION),
-        CONDITION_DISEASE: aEffectSet.has(CONSTS.EFFECT_DISEASE),
-        CONDITION_RESTRAINED: getters.getSpeed === 0,
-        CONDITION_INCAPACITATED: getters.isDead,
-        CONDITION_POISONED: aEffectSet.has(CONSTS.EFFECT_DAMAGE) &&
+        [CONSTS.CONDITION_BLINDED]: aEffectSet.has(CONSTS.EFFECT_BLINDNESS),
+        [CONSTS.CONDITION_FRIGHTENED]: aEffectSet.has(CONSTS.EFFECT_FEAR),
+        [CONSTS.CONDITION_CONFUSED]: aEffectSet.has(CONSTS.EFFECT_CONFUSION),
+        [CONSTS.CONDITION_DISEASE]: aEffectSet.has(CONSTS.EFFECT_DISEASE),
+        [CONSTS.CONDITION_PARALYZED]: aEffectSet.has(CONSTS.EFFECT_PARALYSIS),
+        [CONSTS.CONDITION_STUNNED]: aEffectSet.has(CONSTS.EFFECT_STUN),
+        [CONSTS.CONDITION_RESTRAINED]: getters.getSpeed === 0,
+        [CONSTS.CONDITION_INCAPACITATED]: getters.isDead,
+        [CONSTS.CONDITION_POISONED]: aEffectSet.has(CONSTS.EFFECT_DAMAGE) &&
             getters.getEffects.some(eff => eff.type === CONSTS.EFFECT_DAMAGE && eff.damageType === CONSTS.DAMAGE_TYPE_POISON)
     }
     return Object

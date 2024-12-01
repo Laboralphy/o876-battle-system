@@ -3,7 +3,6 @@
   "required": [
     "proficiency",
     "damages",
-    "damageTypes",
     "attributes",
     "size"
   ],
