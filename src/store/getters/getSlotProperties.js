@@ -1,18 +1,25 @@
 /**
  * Renvoie les propriétés classées par Slot d'équipements
- * @param state {*}
+ * @param state {RBSStoreState}
+ * @param getters {RBSStoreGetters}
  * @returns {{[slot: string]: RBSProperty[]}}
  */
-module.exports = state => {
+module.exports = (state, getters) => {
+    const aSlots = [
+        ...getters.getDefensiveSlots,
+        ...getters.getOffensiveSlots
+    ]
     const oProperties = {}
-    Object
-        .entries(state.equipment)
-        .filter(([, oItem]) => !!oItem && oItem.properties.length > 0)
-        .forEach(([sSlot, oItem]) => {
-            if (!(sSlot in oProperties)) {
-                oProperties[sSlot] = []
+    const eq = state.equipment
+    aSlots
+        .forEach(slot => {
+            const oItem = eq[slot]
+            if (!!oItem && oItem.properties.length > 0) {
+                if (!(slot in oProperties)) {
+                    oProperties[slot] = []
+                }
+                oProperties[slot].push(...oItem.properties)
             }
-            oProperties[sSlot].push(...oItem.properties)
         })
     return oProperties
 }

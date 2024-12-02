@@ -1,5 +1,4 @@
 const CONSTS = require('../../consts')
-
 /**
  *
  * @param state {RBSStoreState}
@@ -7,8 +6,14 @@ const CONSTS = require('../../consts')
  * @returns {boolean}
  */
 module.exports = (state, getters) => {
+    const aProficiencies = getters.getProficiencySet
     const oWeapon = getters.getSelectedWeapon
-    return !!oWeapon
-        ? oWeapon.blueprint.proficiency.includes(CONSTS.WEAPON_ATTRIBUTE_TWO_HANDED)
-        : false
+    if (oWeapon) {
+        // We have a weapon
+        const sWeaponProficiency = oWeapon.blueprint.proficiency || ''
+        // if weapon has no proficiency, we are proficient
+        return sWeaponProficiency !== '' ? aProficiencies.has(sWeaponProficiency) : true
+    }
+    // we have no weapon
+    return aProficiencies.has(CONSTS.PROFICIENCY_WEAPON_NATURAL)
 }

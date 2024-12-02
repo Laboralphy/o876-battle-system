@@ -1,6 +1,6 @@
 const CONSTS = require('../../consts')
 const { aggregateModifiers } = require('../../libs/aggregator')
-const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/filters')
+const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/props-effects-filters')
 
 /**
  *
@@ -74,7 +74,7 @@ module.exports = (state, getters) => {
             CONSTS.EQUIPMENT_SLOT_NECK,
             CONSTS.EQUIPMENT_SLOT_BACK,
             CONSTS.EQUIPMENT_SLOT_ARMS,
-            getters.getOffensiveSlot,
+            getters.getSelectedOffensiveSlot,
             CONSTS.EQUIPMENT_SLOT_FINGER_LEFT,
             CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
             CONSTS.EQUIPMENT_SLOT_AMMO,
@@ -94,7 +94,7 @@ module.exports = (state, getters) => {
             CONSTS.EQUIPMENT_SLOT_NECK,
             CONSTS.EQUIPMENT_SLOT_BACK,
             CONSTS.EQUIPMENT_SLOT_ARMS,
-            getters.getOffensiveSlot,
+            getters.getSelectedOffensiveSlot,
             CONSTS.EQUIPMENT_SLOT_FINGER_LEFT,
             CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
             CONSTS.EQUIPMENT_SLOT_AMMO,

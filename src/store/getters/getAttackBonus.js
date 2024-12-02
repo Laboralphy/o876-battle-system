@@ -1,0 +1,88 @@
+const { aggregateModifiers } = require('../../libs/aggregator');
+const CONSTS = require('../../consts');
+const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/props-effects-filters')
+
+
+
+function getRangedAttackModifiers (getters) {
+    const { sum: nAttackModifierRanged } = aggregateModifiers([
+        CONSTS.PROPERTY_ATTACK_MODIFIER,
+        CONSTS.EFFECT_ATTACK_MODIFIER
+    ], getters, {
+        effectFilter: filterRangedAttackTypes,
+        propFilter: filterRangedAttackTypes
+    })
+    return nAttackModifierRanged
+}
+
+function getMeleeAttackModifiers (getters) {
+    const { sum: nAttackModifierMelee } = aggregateModifiers([
+        CONSTS.PROPERTY_ATTACK_MODIFIER,
+        CONSTS.EFFECT_ATTACK_MODIFIER
+    ], getters, {
+        effectFilter: filterMeleeAttackTypes,
+        propFilter: filterMeleeAttackTypes
+    })
+    return nAttackModifierMelee
+}
+
+function getSelectedWeaponAttackBonus (state, getters) {
+    const weapon = getters.getSelectedWeapon
+    const ranged = weapon && weapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
+    const finesse = weapon && weapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_FINESSE)
+    const strength = getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH]
+    const dexterity = getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]
+    return ranged
+        ? (getRangedAttackModifiers(getters) + dexterity)
+        : finesse
+            ? (getMeleeAttackModifiers(getters) + Math.max(dexterity, strength))
+            : (getMeleeAttackModifiers(getters) + strength)
+}
+
+/**
+ * Returns the attack bonus of the selected action
+ * @param state {RBSStoreState}
+ * @param getters {RBSStoreGetters}
+ * @returns {number}
+ */
+module.exports = (state, getters) => {
+    // Monster attack bonus adjustment as defined in monster data table
+    // Attack bonus gained with level
+    const nLevelAttackBonus = getters.getClassTypeData.attackBonus
+    const weapon = getters.getSelectedWeapon
+    if (weapon) {
+        return nLevelAttackBonus + getSelectedWeaponAttackBonus(state, getters)
+    }
+    const action = getters.getSelectedAction
+    if (action) {
+        switch (action.attackType) {
+            case CONSTS.ATTACK_TYPE_RANGED:
+            case CONSTS.ATTACK_TYPE_RANGED_TOUCH: {
+                return nLevelAttackBonus +
+                    getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY] +
+                    getRangedAttackModifiers(getters)
+            }
+
+            case CONSTS.ATTACK_TYPE_MELEE_TOUCH: {
+                return nLevelAttackBonus +
+                    getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY] +
+                    getMeleeAttackModifiers(getters)
+            }
+
+            case CONSTS.ATTACK_TYPE_MELEE:
+            case CONSTS.ATTACK_TYPE_MULTI_MELEE: {
+                return nLevelAttackBonus +
+                    getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH] +
+                    getMeleeAttackModifiers(getters)
+            }
+
+            default: {
+                return nLevelAttackBonus
+            }
+        }
+    } else {
+        return nLevelAttackBonus +
+            getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH] +
+            getMeleeAttackModifiers(getters)
+    }
+}

@@ -4,8 +4,10 @@
  * @property getAbilityBaseValues {Object<string, number>}
  * @property getAbilityModifiers {Object<string, number>}
  * @property getArmorClass {Object<string, number>}
+ * @property getAttackBonus {number}
  * @property getCapabilitySet {Set<string>}
  * @property getConditionSet {Set<string>}
+ * @property getDefensiveSlots {string[]}
  * @property getEffectSet {Set<string>}
  * @property getEffects {RBSEffect[]}
  * @property getEncumbrance {{value: number, capacity: number}}
@@ -14,13 +16,16 @@
  * @property getId {string}
  * @property getInnateProperties {RBSProperty[]}
  * @property getLevel {number}
- * @property getOffensiveSlot {string}
- * @property getProficiencySet {Set<any>}
+ * @property getOffensiveSlots {string[]}
+ * @property getProficiencyBonus {number}
+ * @property getProficiencySet {Set<string>}
  * @property getProperties {RBSProperty[]}
+ * @property getSelectedOffensiveSlot {string}
  * @property getSelectedWeapon {RBSItem|null}
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
  * @property getSpeed {number}
  * @property isDead {boolean}
+ * @property isRangedWeaponLoaded {boolean}
  * @property isWeildingProficientWeapon {boolean}
  * @property isWieldingTwoHandedWeapon {boolean}
  */

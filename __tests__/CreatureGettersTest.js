@@ -45,6 +45,30 @@ const bpStuddedLeatherArmor = {
     proficiency: CONSTS.PROFICIENCY_ARMOR_LIGHT
 }
 
+const bpDagger = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    damages: '1d4',
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    weight: 1,
+    proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
+    properties: [],
+    attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+}
+
+const bpLongSword = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    damages: '1d8',
+    size: CONSTS.WEAPON_SIZE_MEDIUM,
+    weight: 3,
+    proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL,
+    properties: [],
+    attributes: [],
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+}
+
 let eb
 
 beforeEach(function () {
@@ -235,6 +259,60 @@ describe('getCapabilitySet', function () {
         expect(capa.has(CONSTS.CAPABILITY_MOVE)).toBeTruthy()
         expect(capa.has(CONSTS.CAPABILITY_FIGHT)).toBeTruthy()
     })
+    it('should not return CAPABILITY_SEE and CAPABILITY_CAST_TARGET when having effect blindness', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.addEffect({
+            effect: {
+                type: CONSTS.EFFECT_BLINDNESS,
+                amp: 0,
+                duration: 10,
+                data: {}
+            }
+        })
+        const capa = oCreature.getters.getCapabilitySet
+        expect(capa.has(CONSTS.CAPABILITY_ACT)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_SEE)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_CAST_TARGET)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_CAST_SELF)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_MOVE)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_FIGHT)).toBeTruthy()
+    })
+    it('should return only CAPABILITY_SEE when having effect paralysis', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.addEffect({
+            effect: {
+                type: CONSTS.EFFECT_PARALYSIS,
+                amp: 0,
+                duration: 10,
+                data: {}
+            }
+        })
+        const capa = oCreature.getters.getCapabilitySet
+        expect(capa.has(CONSTS.CAPABILITY_ACT)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_SEE)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_CAST_TARGET)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_CAST_SELF)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_MOVE)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_FIGHT)).toBeFalsy()
+    })
+    it('should return only CAPABILITY_SEE when having effect stun', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.addEffect({
+            effect: {
+                type: CONSTS.EFFECT_STUN,
+                amp: 0,
+                duration: 10,
+                data: {}
+            }
+        })
+        const capa = oCreature.getters.getCapabilitySet
+        expect(capa.has(CONSTS.CAPABILITY_ACT)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_SEE)).toBeTruthy()
+        expect(capa.has(CONSTS.CAPABILITY_CAST_TARGET)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_CAST_SELF)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_MOVE)).toBeFalsy()
+        expect(capa.has(CONSTS.CAPABILITY_FIGHT)).toBeFalsy()
+    })
 })
 
 describe('getSlotProperties', function () {
@@ -408,6 +486,31 @@ describe('getSlotProperties', function () {
                 }
             }]
         })
+    })
+})
+
+describe('isWieldingProficientWeapon', function () {
+    it('should return false when not having weapon and having no proficiency_weapon_natural', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        expect(oCreature.getters.isWeildingProficientWeapon).toBeFalsy()
+    })
+    it('should return true when not having weapon and having proficiency_weapon_natural', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_NATURAL })
+        expect(oCreature.getters.isWeildingProficientWeapon).toBeTruthy()
+    })
+    it('should return false when having dagger but no weapon simple proficiency', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        const oDagger = eb.createEntity(bpDagger)
+        oCreature.equipItem(oDagger)
+        expect(oCreature.getters.isWeildingProficientWeapon).toBeFalsy()
+    })
+    it('should return true when having dagger and weapon simple proficiency', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        const oDagger = eb.createEntity(bpDagger)
+        oCreature.equipItem(oDagger)
+        oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+        expect(oCreature.getters.isWeildingProficientWeapon).toBeTruthy()
     })
 })
 

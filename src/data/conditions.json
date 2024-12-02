@@ -1,4 +1,20 @@
 {
+  "CONDITION_BLINDED": {
+    "description": "Caused by spells, spits, Prevent from seeing and casting spell on target",
+    "prevents": ["CAPABILITY_CAST_TARGET", "CAPABILITY_SEE"]
+  },
+  "CONDITION_CONFUSED": {
+    "description": "Cause by spells, gases, charms. Prevent from doing hostile actions and fleeing",
+    "prevents": ["CAPABILITY_ACT", "CAPABILITY_FIGHT", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET"]
+  },
+  "CONDITION_DISEASE": {
+    "description": "Being afflicted by a disease",
+    "prevents": []
+  },
+  "CONDITION_FRIGHTENED": {
+    "description": "Caused by spells, auras. Prevent from doing hostile actions",
+    "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
+  },
   "CONDITION_INCAPACITATED": {
     "description": "The result of having 0 HP. Being unable to do anything",
     "prevents": ["CAPABILITY_SEE", "CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
@@ -7,32 +23,16 @@
     "description": "Cause by spells or grasp. Prevent from doing anything, except seeing. This is a body affliction.",
     "prevents": ["CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
   },
-  "CONDITION_STUNNED": {
-    "description": "Caused by spells, psionic, shock, explosion. Prevent from doing anything, except seeing. This is a mind affliction.",
-    "prevents": ["CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
+  "CONDITION_POISONED": {
+    "description": "Damage over time with poison damage, will give disadvantages",
+    "prevents": []
   },
   "CONDITION_RESTRAINED": {
     "description": "Caused by entanglement. Prevent from fleeing or approaching",
     "prevents": ["CAPABILITY_MOVE"]
   },
-  "CONDITION_CONFUSED": {
-    "description": "Cause by spells, gases, charms. Prevent from doing hostile actions and fleeing",
-    "prevents": ["CAPABILITY_ACT", "CAPABILITY_FIGHT", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET"]
-  },
-  "CONDITION_FRIGHTENED": {
-    "description": "Caused by spells, auras. Prevent from doing hostile actions",
-    "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
-  },
-  "CONDITION_BLINDED": {
-    "description": "Caused by spells, spits, Prevent from seeing and casting spell on target",
-    "prevents": ["CAPABILITY_CAST_TARGET", "CAPABILITY_SEE"]
-  },
-  "CONDITION_POISONED": {
-    "description": "Damage over time with poison damage, will give disadvantages",
-    "prevents": []
-  },
-  "CONDITION_DISEASE": {
-    "description": "Being afflicted by a disease",
-    "prevents": []
+  "CONDITION_STUNNED": {
+    "description": "Caused by spells, psionic, shock, explosion. Prevent from doing anything, except seeing. This is a mind affliction.",
+    "prevents": ["CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
   }
 }
