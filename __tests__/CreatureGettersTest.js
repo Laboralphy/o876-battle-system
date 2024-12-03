@@ -248,6 +248,19 @@ describe('getArmorClass', function () {
     })
 })
 
+describe('getRangedAttackBonus', function () {
+    it('should returns 0 when creature is level 5 and having no ranged weapon', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.setLevel({ value: 5 })
+        expect(oCreature.getters.getRangedAttackBonus).toBe(0)
+    })
+    it('should returns 2 when creature is level 5 and having a bow with arrow and not being proficient with bows', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.setLevel({ value: 5 })
+        expect(oCreature.getters.getRangedAttackBonus).toBe(0)
+    })
+})
+
 describe('getCapabilitySet', function () {
     it('should be able to do anything when creature is newly created', function () {
         const oCreature = eb.createEntity(bpNormalActor)

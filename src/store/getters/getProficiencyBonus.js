@@ -1,7 +1,7 @@
 const { clamp } = require('../../libs/clamp')
 
 /**
- * Return the proficiency bonus
+ * Return the proficiency bonus according to creature level
  *
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
