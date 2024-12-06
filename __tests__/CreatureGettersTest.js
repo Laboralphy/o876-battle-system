@@ -57,6 +57,39 @@ const bpDagger = {
     equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
 }
 
+const bpShortbow = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    damages: '1d6',
+    size: CONSTS.WEAPON_SIZE_MEDIUM,
+    weight: 3,
+    proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
+    properties: [],
+    ammoType: 'AMMO_TYPE_ARROW',
+    attributes: [CONSTS.WEAPON_ATTRIBUTE_RANGED, CONSTS.WEAPON_ATTRIBUTE_AMMUNITION],
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]
+}
+
+const bpArrow = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_AMMO,
+    weight: 0.1,
+    properties: [],
+    ammoType: 'AMMO_TYPE_ARROW',
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_AMMO]
+}
+
+const bpShortSword = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    damages: '1d6',
+    size: CONSTS.WEAPON_SIZE_MEDIUM,
+    weight: 1,
+    proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
+    properties: [],
+    attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+}
 const bpLongSword = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
     itemType: CONSTS.ITEM_TYPE_WEAPON,
@@ -249,17 +282,192 @@ describe('getArmorClass', function () {
 })
 
 describe('getRangedAttackBonus', function () {
-    it('should returns 0 when creature is level 5 and having no ranged weapon', function () {
-        const oCreature = eb.createEntity(bpNormalActor)
-        oCreature.mutations.setLevel({ value: 5 })
-        expect(oCreature.getters.getRangedAttackBonus).toBe(0)
+    describe('when creature is level 5 and dexterity 10', function () {
+        describe('when non proficient', function () {
+            it('should returns 0 when creature having no ranged weapon', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.setLevel({ value: 5 })
+                expect(oCreature.getters.getRangedAttackBonus).toBe(0)
+            })
+            it('should returns 0 when having bow + arrow', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.setLevel({ value: 5 })
+                const oBow = eb.createEntity(bpShortbow)
+                const oArrow = eb.createEntity(bpArrow)
+                oCreature.equipItem(oBow)
+                oCreature.equipItem(oArrow)
+                expect(oCreature.getters.getRangedAttackBonus).toBe(0)
+            })
+        })
+        describe('when proficient', function () {
+            it('should returns 0 when creature having no ranged weapon', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+                oCreature.mutations.setLevel({ value: 5 })
+                expect(oCreature.getters.getRangedAttackBonus).toBe(0)
+            })
+            it('should returns 3 when having bow + arrow', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+                oCreature.mutations.setLevel({ value: 5 })
+                const oBow = eb.createEntity(bpShortbow)
+                const oArrow = eb.createEntity(bpArrow)
+                oCreature.equipItem(oBow)
+                oCreature.equipItem(oArrow)
+                expect(oCreature.getters.isRangedWeaponLoaded).toBeTruthy()
+                expect(oCreature.getters.getRangedAttackBonus).toBe(3)
+            })
+            it('should returns 3 when having bow but no arrow', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+                oCreature.mutations.setLevel({ value: 5 })
+                const oBow = eb.createEntity(bpShortbow)
+                oCreature.equipItem(oBow)
+                expect(oCreature.getters.isRangedWeaponLoaded).toBeFalsy()
+                expect(oCreature.getters.getRangedAttackBonus).toBe(3)
+            })
+        })
     })
-    it('should returns 2 when creature is level 5 and having a bow with arrow and not being proficient with bows', function () {
-        const oCreature = eb.createEntity(bpNormalActor)
-        oCreature.mutations.setLevel({ value: 5 })
-        expect(oCreature.getters.getRangedAttackBonus).toBe(0)
+    describe('when creature is level 5 and dexterity is 14', function () {
+        describe('when non proficient', function () {
+            it('should returns 2 when creature having no ranged weapon', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_DEXTERITY, value: 14 })
+                oCreature.mutations.setLevel({ value: 5 })
+                expect(oCreature.getters.getRangedAttackBonus).toBe(2)
+            })
+            it('should returns 2 when having bow + arrow', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_DEXTERITY, value: 14 })
+                oCreature.mutations.setLevel({ value: 5 })
+                const oBow = eb.createEntity(bpShortbow)
+                const oArrow = eb.createEntity(bpArrow)
+                oCreature.equipItem(oBow)
+                oCreature.equipItem(oArrow)
+                expect(oCreature.getters.getRangedAttackBonus).toBe(2)
+            })
+        })
+        describe('when proficient', function () {
+            it('should returns 2 when creature having no ranged weapon', function () {
+                // Only dexterity counts
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_DEXTERITY, value: 14 })
+                oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+                oCreature.mutations.setLevel({ value: 5 })
+                expect(oCreature.getters.getRangedAttackBonus).toBe(2)
+            })
+            it('should returns 5 when having bow + arrow', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_DEXTERITY, value: 14 })
+                oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+                oCreature.mutations.setLevel({ value: 5 })
+                const oBow = eb.createEntity(bpShortbow)
+                const oArrow = eb.createEntity(bpArrow)
+                oCreature.equipItem(oBow)
+                oCreature.equipItem(oArrow)
+                expect(oCreature.getters.isRangedWeaponLoaded).toBeTruthy()
+                expect(oCreature.getters.getRangedAttackBonus).toBe(5)
+            })
+            it('should returns 5 when having bow but no arrow', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_DEXTERITY, value: 14 })
+                oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+                oCreature.mutations.setLevel({ value: 5 })
+                const oBow = eb.createEntity(bpShortbow)
+                oCreature.equipItem(oBow)
+                expect(oCreature.getters.isRangedWeaponLoaded).toBeFalsy()
+                expect(oCreature.getters.getRangedAttackBonus).toBe(5)
+            })
+        })
+    })
+    describe('when creature is level 5 and having magic dagger', function () {
+        const bpMagicDagger = {
+            ...bpDagger,
+            properties: [
+                {
+                    type: CONSTS.PROPERTY_ATTACK_MODIFIER,
+                    amp: 1
+                }
+            ]
+        }
+        describe('when proficient', function () {
+            it('should returns 0 when creature having no ranged weapon', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+                oCreature.mutations.setLevel({ value: 5 })
+                oCreature.equipItem(eb.createEntity(bpMagicDagger))
+                expect(oCreature.getters.getRangedAttackBonus).toBe(0)
+            })
+            it('should returns 3 when having bow + arrow', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+                oCreature.mutations.setLevel({ value: 5 })
+                const oBow = eb.createEntity(bpShortbow)
+                const oArrow = eb.createEntity(bpArrow)
+                oCreature.equipItem(oBow)
+                oCreature.equipItem(oArrow)
+                oCreature.equipItem(eb.createEntity(bpMagicDagger))
+                expect(oCreature.getters.isRangedWeaponLoaded).toBeTruthy()
+                expect(oCreature.getters.getRangedAttackBonus).toBe(3)
+            })
+            it('should returns 3 when having bow but no arrow', function () {
+                const oCreature = eb.createEntity(bpNormalActor)
+                oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+                oCreature.mutations.setLevel({ value: 5 })
+                const oBow = eb.createEntity(bpShortbow)
+                oCreature.equipItem(oBow)
+                oCreature.equipItem(eb.createEntity(bpMagicDagger))
+                expect(oCreature.getters.isRangedWeaponLoaded).toBeFalsy()
+                expect(oCreature.getters.getRangedAttackBonus).toBe(3)
+            })
+        })
     })
 })
+
+describe('getMeleeAttackBonus', function () {
+    describe('when not proficient with simple melee weapon', function () {
+        it('should return 0 with no weapon and strength 10', function () {
+            const oCreature = eb.createEntity(bpNormalActor)
+            oCreature.mutations.setLevel({ value: 5 })
+            expect(oCreature.getters.getMeleeAttackBonus).toBe(0)
+        })
+        it('should return 4 with no weapon and strength 18 and dex 10', function () {
+            // testing if bare hand weapon work with high strength
+            const oCreature = eb.createEntity(bpNormalActor)
+            oCreature.mutations.setLevel({ value: 5 })
+            oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_STRENGTH, value: 18 })
+            expect(oCreature.getters.getMeleeAttackBonus).toBe(4)
+        })
+        it('should return 2 with no weapon and strength 12 and dexterity 14', function () {
+            // testing if bare hand is really a finesse weapon
+            const oCreature = eb.createEntity(bpNormalActor)
+            oCreature.mutations.setLevel({ value: 5 })
+            oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_STRENGTH, value: 12 })
+            oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_STRENGTH, value: 14 })
+            expect(oCreature.getters.getMeleeAttackBonus).toBe(2)
+        })
+    })
+    describe('when proficient with simple melee weapons', function () {
+        it('should return 5 with short sword (finesse) weapon and strength 14 and dex 10', function () {
+            const oCreature = eb.createEntity(bpNormalActor)
+            oCreature.mutations.setLevel({ value: 5 })
+            oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_STRENGTH, value: 14 })
+            oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+            oCreature.equipItem(eb.createEntity(bpShortSword))
+            expect(oCreature.getters.getMeleeAttackBonus).toBe(5)
+        })
+        it('should return 7 with short sword (finesse) weapon and strength 14 and dex 18', function () {
+            const oCreature = eb.createEntity(bpNormalActor)
+            oCreature.mutations.setLevel({ value: 5 })
+            oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_STRENGTH, value: 14 })
+            oCreature.mutations.setAbilityValue({ ability: CONSTS.ABILITY_STRENGTH, value: 18 })
+            oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
+            oCreature.equipItem(eb.createEntity(bpShortSword))
+            expect(oCreature.getters.getMeleeAttackBonus).toBe(7)
+        })
+    })
+})
+
 
 describe('getCapabilitySet', function () {
     it('should be able to do anything when creature is newly created', function () {

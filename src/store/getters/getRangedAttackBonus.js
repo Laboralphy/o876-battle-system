@@ -8,7 +8,7 @@ const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/
  * @param getters {RBSStoreGetters}
  * @return {boolean}
  */
-function isCorrectAmmoTypeEquipped (getters) {
+function shouldAmmoBeConsidered (getters) {
     const eq = getters.getEquipment
     // get the corresponding weapon
     const oWeapon = eq[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]
@@ -22,7 +22,7 @@ function isCorrectAmmoTypeEquipped (getters) {
         return false
     }
     const oAmmo = eq[CONSTS.EQUIPMENT_SLOT_AMMO]
-    return oWeapon.blueprint.ammoType === oAmmo.blueprint.ammoType
+    return oWeapon.blueprint.ammoType === oAmmo?.blueprint.ammoType
 }
 
 /**
@@ -45,7 +45,7 @@ module.exports = (state, getters) => {
         ...getters.getDefensiveSlots,
         SLOT_RANGED
     ]
-    if (isCorrectAmmoTypeEquipped(getters)) {
+    if (shouldAmmoBeConsidered(getters)) {
         aSlots.push(CONSTS.EQUIPMENT_SLOT_AMMO)
     }
     const nWeaponAttackBonus = aggregateModifiers([

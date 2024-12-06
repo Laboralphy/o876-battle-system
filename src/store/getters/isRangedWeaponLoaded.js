@@ -12,7 +12,7 @@ module.exports = (state) => {
     if (!weapon) {
         return false
     }
-    if (weapon.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_AMMUNITION)) {
+    if (weapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_AMMUNITION)) {
         const sAmmoType = weapon.ammoType
         const oAmmo = state.equipment[CONSTS.EQUIPMENT_SLOT_AMMO]
         return !!oAmmo && (oAmmo.ammoType === sAmmoType)
