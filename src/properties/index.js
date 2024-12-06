@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-03T14:54:59.252Z
+// Date : 2024-12-06T14:08:45.212Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -19,6 +19,7 @@ module.exports = {
   'PROPERTY_HEALING_MODIFIER': require('./healing-modifier.js'),
   'PROPERTY_IMMUNITY': require('./immunity.js'),
   'PROPERTY_LIGHT': require('./light.js'),
+  'PROPERTY_ON_WEAPON_HIT': require('./on-weapon-hit.js'),
   'PROPERTY_REGENERATION': require('./regeneration.js'),
   'PROPERTY_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
   'PROPERTY_SPEED_FACTOR': require('./speed-factor.js'),

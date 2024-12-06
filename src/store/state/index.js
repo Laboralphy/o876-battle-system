@@ -19,6 +19,7 @@ const CONSTS = require('../../consts')
  * @property offensiveSlot {string}
  * @property encumbrance {number}
  * @property proficiencies {string[]}
+ * @property environment {{ [env: string]: boolean }}
  *
  *
  * @returns {RBSStoreState}
@@ -63,5 +64,11 @@ module.exports = () => ({
         [CONSTS.EQUIPMENT_SLOT_FEET]: null
     },
     offensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
-    encumbrance: 0
+    encumbrance: 0,
+    environment: {
+        [CONSTS.ENVIRONMENT_DARKNESS]: false,
+        [CONSTS.ENVIRONMENT_WINDY]: false,
+        [CONSTS.ENVIRONMENT_DIFFICULT_TERRAIN]: false,
+        [CONSTS.ENVIRONMENT_UNDERWATER]: false
+    }
 })

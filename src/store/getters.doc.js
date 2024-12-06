@@ -6,12 +6,12 @@
  * @property getArmorClass {Object<string, number>}
  * @property getAttackBonus {number}
  * @property getCapabilitySet {Set<string>}
- * @property getChallengeRating {number}
  * @property getConditionSet {Set<string>}
  * @property getDefensiveSlots {string[]}
  * @property getEffectSet {Set<string>}
  * @property getEffects {RBSEffect[]}
  * @property getEncumbrance {{value: number, capacity: number}}
+ * @property getEnvironment {{ darkness: boolean, windy: boolean, difficultTerrain: boolean, underwater: boolean }}
  * @property getEquipment {Object<string, RBSItem>}
  * @property getHitPoints {number}
  * @property getId {string}
@@ -22,6 +22,7 @@
  * @property getProficiencyBonus {number}
  * @property getProficiencySet {Set<string>}
  * @property getProperties {RBSProperty[]}
+ * @property getPropertySet {Set<string>}
  * @property getRangedAttackBonus {number}
  * @property getSelectedOffensiveSlot {string}
  * @property getSelectedWeapon {RBSItem|null}

@@ -8,6 +8,7 @@
  * @property setAbilityValue {function({ ability: string, value: number })}
  * @property setClassType {function({ value: string CLASS_TYPE_* })}
  * @property setEffectDuration {function({ effect: RBSEffect, duration: number })}
+ * @property setEnvironment {function({ environment, value })}
  * @property setGender {function({ value: string GENDER_* })}
  * @property setId {function({ id: string })}
  * @property setLevel {function({ value: number })}

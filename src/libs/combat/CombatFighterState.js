@@ -56,41 +56,37 @@ class CombatFighterState {
         return this._plan[tick % this._plan.length]
     }
 
-    computeMeleePlan () {
-        const nExtraAttacks = aggregateModifiers([
+
+    getMeleeExtraAttackCount () {
+        return aggregateModifiers([
                 CONSTS.PROPERTY_ATTACK_COUNT_MODIFIER,
                 CONSTS.EFFECT_ATTACK_COUNT_MODIFIER
             ], this._creature.getters,
             {
                 propFilter: filterMeleeAttackTypes,
                 effectFilter: filterMeleeAttackTypes
-            }).sum
+            }).sum + 1
     }
 
-    computeRangedPlan () {
-        const nExtraAttacks = aggregateModifiers([
+    getRangedExtraAttackCount () {
+        return aggregateModifiers([
                 CONSTS.PROPERTY_ATTACK_COUNT_MODIFIER,
                 CONSTS.EFFECT_ATTACK_COUNT_MODIFIER
             ], this._creature.getters,
             {
                 propFilter: filterRangedAttackTypes,
                 effectFilter: filterRangedAttackTypes
-            }).sum
-    }
-
-    static computePlanning (nAttackPerTurn, nTurnTickCount, reverseOrder = false) {
+            }).sum + 1
     }
 
     computePlan (nTurnTickCount, reverseOrder = false) {
         const oWeapon = this._creature.getters.getSelectedWeapon
-        let nAttackPerTurn = 1
-        if (oWeapon) {
-            if (oWeapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)) {
-
-            }
-        } else {
-            // pas d'arme
-        }
+        const bRanged = oWeapon
+            ? oWeapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
+            : false
+        const nAttackPerTurn = bRanged
+            ? this.getRangedExtraAttackCount()
+            : this.getMeleeExtraAttackCount()
         const aPlan = new Array(nTurnTickCount)
         aPlan.fill(0)
         for (let i = 0; i < nAttackPerTurn; ++i) {

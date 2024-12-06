@@ -1,10 +1,10 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-03T14:54:59.288Z
+// Date : 2024-12-06T14:08:45.248Z
 // List of files in ./src/consts
 
 module.exports = {
   ...require('./abilities.json'),
-  ...require('./attack-failure.json'),
+  ...require('./attack-failures.json'),
   ...require('./attack-types.json'),
   ...require('./capabilities.json'),
   ...require('./class-type.json'),
@@ -18,6 +18,7 @@ module.exports = {
   ...require('./genders.json'),
   ...require('./immunities.json'),
   ...require('./item-types.json'),
+  ...require('./on-weapon-hit.json'),
   ...require('./proficiencies.json'),
   ...require('./properties.js'),
   ...require('./races.json'),
