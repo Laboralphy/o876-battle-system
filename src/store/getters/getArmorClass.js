@@ -74,7 +74,6 @@ module.exports = (state, getters) => {
             CONSTS.EQUIPMENT_SLOT_NECK,
             CONSTS.EQUIPMENT_SLOT_BACK,
             CONSTS.EQUIPMENT_SLOT_ARMS,
-            getters.getSelectedOffensiveSlot,
             CONSTS.EQUIPMENT_SLOT_FINGER_LEFT,
             CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
             CONSTS.EQUIPMENT_SLOT_AMMO,
@@ -94,7 +93,6 @@ module.exports = (state, getters) => {
             CONSTS.EQUIPMENT_SLOT_NECK,
             CONSTS.EQUIPMENT_SLOT_BACK,
             CONSTS.EQUIPMENT_SLOT_ARMS,
-            getters.getSelectedOffensiveSlot,
             CONSTS.EQUIPMENT_SLOT_FINGER_LEFT,
             CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
             CONSTS.EQUIPMENT_SLOT_AMMO,
@@ -102,6 +100,30 @@ module.exports = (state, getters) => {
             CONSTS.EQUIPMENT_SLOT_FEET
         ]
     })
+
+    const { sum: nMeleeWeaponBonus } = aggregateModifiers([
+        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
+        CONSTS.EFFECT_ARMOR_CLASS_MODIFIER
+    ], getters, {
+        effectFilter: filterRangedAttackTypes,
+        propFilter: filterRangedAttackTypes,
+        restrictSlots: [
+            CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+        ]
+    })
+
+    const { sum: nRangedWeaponBonus } = aggregateModifiers([
+        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
+        CONSTS.EFFECT_ARMOR_CLASS_MODIFIER
+    ], getters, {
+        effectFilter: filterMeleeAttackTypes,
+        propFilter: filterMeleeAttackTypes,
+        restrictSlots: [
+            CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+        ]
+    })
+
+
 
     const nBaseArmorClass = 10 + nACDexBonus
     const nACArmorMeleeBonus = nACArmorBaseBonus + nACArmorPropMeleeBonus

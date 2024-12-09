@@ -1,16 +1,16 @@
-const CONSTS = require('./consts')
+const CONSTS = require('../../consts')
 
 /**
  * This class is used to store all parameters needed to properly conduct a combat action
  */
-class Action {
+class CombatAction {
     /**
      *
      * @param id {string} action id
      * @param attackType {string} attack type (melee, ranged, melee touch ...)
      * @param damages {string|number} damages (dice expression)
      * @param damageType {string} damage type
-     * @param onHit {[]} what happen when attack hits
+     * @param onHit {[]} script launched when action is done
      */
     constructor ({
         id = '',
@@ -27,4 +27,4 @@ class Action {
     }
 }
 
-module.exports = Action
+module.exports = CombatAction

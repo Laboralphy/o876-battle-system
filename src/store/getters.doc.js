@@ -24,14 +24,11 @@
  * @property getProperties {RBSProperty[]}
  * @property getPropertySet {Set<string>}
  * @property getRangedAttackBonus {number}
- * @property getSelectedOffensiveSlot {string}
- * @property getSelectedWeapon {RBSItem|null}
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
  * @property getSpeed {number}
  * @property isDead {boolean}
  * @property isEquipmentProficient {{[p: string]: boolean}}
  * @property isRangedWeaponLoaded {boolean}
- * @property isWeildingProficientWeapon {boolean}
  * @property isWieldingTwoHandedWeapon {boolean}
  */
 

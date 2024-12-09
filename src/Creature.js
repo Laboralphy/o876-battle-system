@@ -14,6 +14,7 @@ class Creature {
         } else {
             this.mutations.setId({ value: getUniqueId() })
         }
+        this._actions = {}
     }
 
     /**
@@ -116,6 +117,15 @@ class Creature {
                 : CONSTS.CREATURE_VISIBILITY_DARKNESS
         }
         return CONSTS.CREATURE_VISIBILITY_VISIBLE
+    }
+
+    /**
+     * Attack target with equipped weapon
+     * @param oTarget {Creature}
+     * @param oAttackOutcome
+     */
+    attack (oTarget, oAttackOutcome) {
+        oAttackOutcome.target = oTarget
     }
 }
 

@@ -1,0 +1,11 @@
+{
+  "WEAPON_RANGE_MELEE": {
+    "range": 5
+  },
+  "WEAPON_RANGE_REACH": {
+    "range": 10
+  },
+  "WEAPON_RANGE_RANGED": {
+    "range": 100
+  }
+}

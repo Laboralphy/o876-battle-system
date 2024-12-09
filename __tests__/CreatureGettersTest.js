@@ -713,25 +713,25 @@ describe('getSlotProperties', function () {
 describe('isWieldingProficientWeapon', function () {
     it('should return false when not having weapon and having no proficiency_weapon_natural', function () {
         const oCreature = eb.createEntity(bpNormalActor)
-        expect(oCreature.getters.isWeildingProficientWeapon).toBeFalsy()
+        expect(oCreature.getters.isEquipmentProficient[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toBeFalsy()
     })
     it('should return true when not having weapon and having proficiency_weapon_natural', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_NATURAL })
-        expect(oCreature.getters.isWeildingProficientWeapon).toBeTruthy()
+        expect(oCreature.getters.isEquipmentProficient[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toBeTruthy()
     })
     it('should return false when having dagger but no weapon simple proficiency', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         const oDagger = eb.createEntity(bpDagger)
         oCreature.equipItem(oDagger)
-        expect(oCreature.getters.isWeildingProficientWeapon).toBeFalsy()
+        expect(oCreature.getters.isEquipmentProficient[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toBeFalsy()
     })
     it('should return true when having dagger and weapon simple proficiency', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         const oDagger = eb.createEntity(bpDagger)
         oCreature.equipItem(oDagger)
         oCreature.mutations.addProficiency({ value: CONSTS.PROFICIENCY_WEAPON_SIMPLE })
-        expect(oCreature.getters.isWeildingProficientWeapon).toBeTruthy()
+        expect(oCreature.getters.isEquipmentProficient[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]).toBeTruthy()
     })
 })
 

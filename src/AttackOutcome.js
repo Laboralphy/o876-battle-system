@@ -1,4 +1,5 @@
 const CONSTS = require('./consts')
+const DATA = require('./data')
 
 /**
  * @class
@@ -98,6 +99,68 @@ class AttackOutcome {
         this.damages = {
             amount: 0, // amount of damage if attack hit
             types: {} // amount of damage taken and resisted by type
+        }
+    }
+
+    _configWeaponAttack (sAttackType) {
+        const atk = this.attacker
+        const def = this.target
+        const ga = atk.getters
+        const ma = atk.mutations
+        const gt = def.getters
+        const mt = def.mutations
+        this.ac = gt.getArmorClass[sAttackType]
+        switch (sAttackType) {
+            case CONSTS.ATTACK_TYPE_MELEE: {
+                ma.setOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+                break
+            }
+
+            case CONSTS.ATTACK_TYPE_RANGED: {
+                ma.setOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
+                break
+            }
+        }
+        this.weapon = ga.getSelectedWeapon
+        this.bonus = ga.getAttackBonus
+    }
+
+    /**
+     * Configure attack to use creature's melee weapon
+     */
+    configMeleeWeaponAttack () {
+        this._configWeaponAttack(CONSTS.ATTACK_TYPE_MELEE)
+    }
+
+
+    /**
+     * Configure attack to use creature's melee weapon
+     */
+    configRangedWeaponAttack () {
+        this._configWeaponAttack(CONSTS.ATTACK_TYPE_RANGED)
+    }
+
+    getSelectedWeaponRange () {
+        const weapon = this.attacker.getters.getSelectedWeapon
+        if (!weapon) {
+            return DATA['WEAPON_RANGES']['WEAPON_RANGE_MELEE'].range
+        }
+        if (weapon.attributes.includes[CONSTS.WEAPON_ATTRIBUTE_REACH]) {
+            return DATA['WEAPON_RANGES']['WEAPON_RANGE_REACH'].range
+        } else if (weapon.attributes.includes[CONSTS.WEAPON_ATTRIBUTE_RANGED]) {
+            return DATA['WEAPON_RANGES']['WEAPON_RANGE_RANGED'].range
+        } else {
+            return DATA['WEAPON_RANGES']['WEAPON_RANGE_MELEE'].range
+        }
+    }
+
+    selectMostUseeFullWeapon () {
+        const nWeaponRange = this.getSelectedWeaponRange()
+        const nDistance = this.distance
+        if (nDistance <= nWeaponRange) {
+            // current weapon is ok to attack
+        } else {
+            // distance is too far for
         }
     }
 }

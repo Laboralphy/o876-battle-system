@@ -13,7 +13,6 @@
  * @property setId {function({ id: string })}
  * @property setLevel {function({ value: number })}
  * @property setNaturalArmorClass {function({ value: number })}
- * @property setOffensiveSlot {function({ slot: string })}
  * @property setRace {function({ value: string RACE_* })}
  * @property setSpecie {function({ value: string SPECIE_* })}
  * @property setSpeed {function({ value: number })}

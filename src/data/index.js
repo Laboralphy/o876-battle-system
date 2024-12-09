@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-06T14:08:44.900Z
+// Date : 2024-12-08T18:27:35.514Z
 // List of files in ./src/data
 
 module.exports = {
@@ -10,5 +10,6 @@ module.exports = {
   'PROFICIENCY_BONUS': require('./proficiency-bonus.json'),
   'RACE_ELF': require('./races/race-elf.json'),
   'RACE_HUMAN': require('./races/race-human.json'),
-  'SPECIE_HUMANOID': require('./species/specie-humanoid.json')
+  'SPECIE_HUMANOID': require('./species/specie-humanoid.json'),
+  'WEAPON_RANGES': require('./weapon-ranges.json')
 }

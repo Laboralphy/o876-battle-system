@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-06T14:08:44.959Z
+// Date : 2024-12-08T18:27:35.591Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -27,13 +27,10 @@ module.exports = {
   'getProperties': require('./getProperties.js'),
   'getPropertySet': require('./getPropertySet.js'),
   'getRangedAttackBonus': require('./getRangedAttackBonus.js'),
-  'getSelectedOffensiveSlot': require('./getSelectedOffensiveSlot.js'),
-  'getSelectedWeapon': require('./getSelectedWeapon.js'),
   'getSlotProperties': require('./getSlotProperties.js'),
   'getSpeed': require('./getSpeed.js'),
   'isDead': require('./isDead.js'),
   'isEquipmentProficient': require('./isEquipmentProficient.js'),
   'isRangedWeaponLoaded': require('./isRangedWeaponLoaded.js'),
-  'isWeildingProficientWeapon': require('./isWeildingProficientWeapon.js'),
   'isWieldingTwoHandedWeapon': require('./isWieldingTwoHandedWeapon.js')
 }
