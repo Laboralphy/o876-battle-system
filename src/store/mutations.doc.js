@@ -5,6 +5,7 @@
  * @property addProperty {function({ property: RBSProperty })}
  * @property equipItem {function({ item: RBSItem, slot: string, bypassCurse: boolean }): *}
  * @property removeEffect {function({ effect: RBSEffect })}
+ * @property selectOffensiveSlot {function({ value: string })}
  * @property setAbilityValue {function({ ability: string, value: number })}
  * @property setClassType {function({ value: string CLASS_TYPE_* })}
  * @property setEffectDuration {function({ effect: RBSEffect, duration: number })}

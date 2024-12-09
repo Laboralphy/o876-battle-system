@@ -62,7 +62,7 @@ class Dice {
    * @param nModifier {number} modifier added to result
    * @returns {number} final result
    */
-  roll (nSides, nCount = 1, nModifier = 0) {
+  _roll (nSides, nCount = 1, nModifier = 0) {
     if (nSides === 0 || nCount === 0) {
       return nModifier
     }
@@ -71,7 +71,7 @@ class Dice {
       return nModifier
     }
     if (nCount < 0) {
-      return -this.roll(nSides, -nCount, nModifier)
+      return -this._roll(nSides, -nCount, nModifier)
     }
     if (this._FORCE_AVG) {
       nAcc = nCount * (nSides + 1) / 2
@@ -169,15 +169,13 @@ class Dice {
    * @param value {number|string|object}
    * @return {number}
    */
-  evaluate (value) {
+  roll (value) {
     const t = typeof value
     if (t === 'number') {
       return value
-    } else if (t === 'object') {
-      const { sides, count, modifier } = value
-      return this.roll(sides, count, modifier)
     } else {
-      return this.evaluate(this.xdy(value))
+      const { sides, count, modifier } = t === 'object' ? value : this.xdy(value)
+      return this._roll(sides, count, modifier)
     }
   }
 }

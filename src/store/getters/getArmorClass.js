@@ -63,23 +63,25 @@ module.exports = (state, getters) => {
     const oArmor = eq[CONSTS.EQUIPMENT_SLOT_CHEST]
     const nACArmorBaseBonus = oArmor ? oArmor.blueprint.ac : 0
 
+    const restrictSlots = [
+        CONSTS.EQUIPMENT_SLOT_HEAD,
+        CONSTS.EQUIPMENT_SLOT_NECK,
+        CONSTS.EQUIPMENT_SLOT_BACK,
+        CONSTS.EQUIPMENT_SLOT_ARMS,
+        CONSTS.EQUIPMENT_SLOT_FINGER_LEFT,
+        CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
+        CONSTS.EQUIPMENT_SLOT_WAIST,
+        CONSTS.EQUIPMENT_SLOT_FEET,
+        ...getters.getOffensiveSlots
+    ]
+
     const { sum: nACGearRangedBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
         CONSTS.EFFECT_ARMOR_CLASS_MODIFIER
     ], getters, {
         effectFilter: filterRangedAttackTypes,
         propFilter: filterRangedAttackTypes,
-        restrictSlots: [
-            CONSTS.EQUIPMENT_SLOT_HEAD,
-            CONSTS.EQUIPMENT_SLOT_NECK,
-            CONSTS.EQUIPMENT_SLOT_BACK,
-            CONSTS.EQUIPMENT_SLOT_ARMS,
-            CONSTS.EQUIPMENT_SLOT_FINGER_LEFT,
-            CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
-            CONSTS.EQUIPMENT_SLOT_AMMO,
-            CONSTS.EQUIPMENT_SLOT_WAIST,
-            CONSTS.EQUIPMENT_SLOT_FEET
-        ]
+        restrictSlots
     })
 
     const { sum: nACGearMeleeBonus } = aggregateModifiers([
@@ -88,42 +90,8 @@ module.exports = (state, getters) => {
     ], getters, {
         effectFilter: filterRangedAttackTypes,
         propFilter: filterRangedAttackTypes,
-        restrictSlots: [
-            CONSTS.EQUIPMENT_SLOT_HEAD,
-            CONSTS.EQUIPMENT_SLOT_NECK,
-            CONSTS.EQUIPMENT_SLOT_BACK,
-            CONSTS.EQUIPMENT_SLOT_ARMS,
-            CONSTS.EQUIPMENT_SLOT_FINGER_LEFT,
-            CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
-            CONSTS.EQUIPMENT_SLOT_AMMO,
-            CONSTS.EQUIPMENT_SLOT_WAIST,
-            CONSTS.EQUIPMENT_SLOT_FEET
-        ]
+        restrictSlots
     })
-
-    const { sum: nMeleeWeaponBonus } = aggregateModifiers([
-        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
-        CONSTS.EFFECT_ARMOR_CLASS_MODIFIER
-    ], getters, {
-        effectFilter: filterRangedAttackTypes,
-        propFilter: filterRangedAttackTypes,
-        restrictSlots: [
-            CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
-        ]
-    })
-
-    const { sum: nRangedWeaponBonus } = aggregateModifiers([
-        CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
-        CONSTS.EFFECT_ARMOR_CLASS_MODIFIER
-    ], getters, {
-        effectFilter: filterMeleeAttackTypes,
-        propFilter: filterMeleeAttackTypes,
-        restrictSlots: [
-            CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
-        ]
-    })
-
-
 
     const nBaseArmorClass = 10 + nACDexBonus
     const nACArmorMeleeBonus = nACArmorBaseBonus + nACArmorPropMeleeBonus

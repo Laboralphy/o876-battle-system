@@ -39,7 +39,7 @@ function rollDamageAmount ({ damageType, material, amp, target }) {
     }
     amp = typeof amp === 'number'
         ? amp
-        : target.dice.evaluate(amp)
+        : target.dice.roll(amp)
     if (sType in oMitigation) {
         const { factor, reduction } = oMitigation[sType]
         const nFinalFactor = bMaterialVulnerable ? Math.max(1, 2 * factor) : factor

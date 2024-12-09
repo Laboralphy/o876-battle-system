@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-08T18:27:35.729Z
+// Date : 2024-12-09T16:40:54.271Z
 // List of files in ./src/store/mutations
 
 module.exports = {
@@ -8,6 +8,7 @@ module.exports = {
   'addProperty': require('./addProperty.js'),
   'equipItem': require('./equipItem.js'),
   'removeEffect': require('./removeEffect.js'),
+  'selectOffensiveSlot': require('./selectOffensiveSlot.js'),
   'setAbilityValue': require('./setAbilityValue.js'),
   'setClassType': require('./setClassType.js'),
   'setEffectDuration': require('./setEffectDuration.js'),

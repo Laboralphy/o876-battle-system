@@ -19,6 +19,7 @@ const CONSTS = require('../../consts')
  * @property encumbrance {number}
  * @property proficiencies {string[]}
  * @property environment {{ [env: string]: boolean }}
+ * @property selectedOffensiveSlot {string}
  *
  *
  * @returns {RBSStoreState}
@@ -68,5 +69,6 @@ module.exports = () => ({
         [CONSTS.ENVIRONMENT_WINDY]: false,
         [CONSTS.ENVIRONMENT_DIFFICULT_TERRAIN]: false,
         [CONSTS.ENVIRONMENT_UNDERWATER]: false
-    }
+    },
+    selectedOffensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
 })

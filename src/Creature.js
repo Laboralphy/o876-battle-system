@@ -1,6 +1,8 @@
 const { getUniqueId } = require('./libs/unique-id')
 const { buildStore } = require('./store')
 const CONSTS = require('./consts')
+const Events = require('events')
+const Dice = require('./libs/dice')
 
 class Creature {
     constructor ({ blueprint = null, id = null }) {
@@ -15,6 +17,16 @@ class Creature {
             this.mutations.setId({ value: getUniqueId() })
         }
         this._actions = {}
+        this._events = new Events
+        this._dice = new Dice()
+    }
+
+    get dice () {
+        return this._dice
+    }
+
+    get events () {
+        return this._events
     }
 
     /**
@@ -78,6 +90,21 @@ class Creature {
         return this.mutations.equipItem({ item: oItem })
     }
 
+    /**
+     * select an offensive slot
+     * @param sSlot {string}
+     */
+    selectOffensiveSlot (sSlot) {
+        const sPrevSlot = this.getters.getSelectedOffensiveSlot
+        if (sSlot !== sPrevSlot) {
+            this.mutations.selectOffensiveSlot({ value: sSlot })
+            this._events.emit(CONSTS.EVENT_CREATURE_SELECT_WEAPON, {
+                slot: sSlot,
+                previousSlot: sPrevSlot
+            })
+        }
+    }
+
 
     /**
      * Returns true if this creature can detect its target
@@ -126,6 +153,37 @@ class Creature {
      */
     attack (oTarget, oAttackOutcome) {
         oAttackOutcome.target = oTarget
+    }
+
+
+    /**
+     * Revive a dead creature
+     */
+    revive () {
+        if (this.getters.isDead) {
+            this.mutations.setHitPoints({ value: 1 })
+            this.events.emit('revive', {
+                creature: this
+            })
+        }
+    }
+
+    modifyHitPoints (n) {
+        this.setHitPoints(this.getters.getHitPoints + n)
+    }
+
+    setHitPoints (hp) {
+        const nCurrHP = this.getters.getHitPoints
+        if (this.getters.isDead) {
+            // Cannot heal dead creature. Must call revive prior
+            return
+        }
+        const nMaxHP = this.getters.getMaxHitPoints
+        hp = Math.max(0, Math.min(hp, nMaxHP))
+        if (hp === nCurrHP) {
+            return
+        }
+        this.mutations.setHitPoints({ value: hp })
     }
 }
 

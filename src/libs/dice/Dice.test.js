@@ -3,8 +3,8 @@ const Dice = require('./index')
 describe('evaluate', function () {
     it('should return 0 when evaluating "0"', function () {
         const d = new Dice()
-        expect(d.evaluate(0)).toBe(0)
-        expect(d.evaluate('0')).toBe(0)
+        expect(d.roll(0)).toBe(0)
+        expect(d.roll('0')).toBe(0)
     })
 })
 

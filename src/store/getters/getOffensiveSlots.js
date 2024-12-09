@@ -1,12 +1,12 @@
 const CONSTS = require('../../consts')
 /**
- * Renvoie les propriétés classées par Slot d'équipements, uniquement les propriété des objet servant à l'offensive
+ * Renvoie la liste des slots offensifs pouvant servir à une attaque
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
  * @returns {string[]}
  */
 module.exports = (state, getters) => {
-    const sOffensiveSlot = state.offensiveSlot
+    const sOffensiveSlot = state.selectedOffensiveSlot
     const aSlots = [sOffensiveSlot]
     if (sOffensiveSlot === CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED && getters.isRangedWeaponLoaded) {
         aSlots.push(CONSTS.EQUIPMENT_SLOT_AMMO)

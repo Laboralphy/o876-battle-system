@@ -7,6 +7,7 @@
  * @property getAttackBonus {number}
  * @property getCapabilitySet {Set<string>}
  * @property getConditionSet {Set<string>}
+ * @property getDamageMitigation {Object<string, BFOneDamageMitigation>}}
  * @property getDefensiveSlots {string[]}
  * @property getEffectSet {Set<string>}
  * @property getEffects {RBSEffect[]}
@@ -24,6 +25,9 @@
  * @property getProperties {RBSProperty[]}
  * @property getPropertySet {Set<string>}
  * @property getRangedAttackBonus {number}
+ * @property getSelectedOffensiveSlot {string} EQUIPMENT_SLOT_WEAPON_MELEE or RANGED
+ * @property getSelectedWeapon {RBSItem|null}
+ * @property getSelectedWeaponAttributeSet {Set<string>}
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
  * @property getSpeed {number}
  * @property isDead {boolean}
