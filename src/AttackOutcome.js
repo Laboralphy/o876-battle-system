@@ -1,15 +1,20 @@
 const CONSTS = require('./consts')
 const DATA = require('./data')
 const Events = require('events')
-const {aggregateModifiers} = require("./libs/aggregator")
-const {filterRangedAttackTypes, filterMeleeAttackTypes} = require("./libs/props-effects-filters")
+const { aggregateModifiers } = require('./libs/aggregator')
+const { filterRangedAttackTypes, filterMeleeAttackTypes } = require('./libs/props-effects-filters')
 
 /**
  * @class
  */
 class AttackOutcome {
-    constructor () {
+    /**
+     *
+     * @param effectProcessor {EffectProcessor}
+     */
+    constructor ({ effectProcessor = null } = {}) {
         this._events = new Events()
+        this._effectProcessor = effectProcessor
 
         /// ATTACK PRESETS /// /// ATTACK PRESETS /// /// ATTACK PRESETS /// /// ATTACK PRESETS ///
         /// ATTACK PRESETS /// /// ATTACK PRESETS /// /// ATTACK PRESETS /// /// ATTACK PRESETS ///
@@ -67,7 +72,7 @@ class AttackOutcome {
          * This attack is made from behind, a rogue may have damage bonus
          * @type {boolean}
          */
-        this._sneakable = false
+        this._sneak = false
 
         /**
          * this was an attack of opportunity
@@ -134,11 +139,12 @@ class AttackOutcome {
         this._failure = CONSTS.ATTACK_FAILURE_NO_ACTION
         /**
          * Damage dealt during the attack
-         * @type {{amount: number, types: {[damageType: string]: { amount: number, resisted: number }}}}
+         * @type {{amount: number, types: {[damageType: string]: { amount: number, resisted: number }}, effects: RBSEffect[]}}
          */
         this._damages = {
             amount: 0, // amount of damage if attack hit
-            types: {} // amount of damage taken and resisted by type
+            types: {}, // amount of damage taken and resisted by type
+            effects: []
         }
 
     }
@@ -227,8 +233,8 @@ class AttackOutcome {
         return this._failure
     }
 
-    get sneakable() {
-        return this._sneakable
+    get sneak() {
+        return this._sneak
     }
 
     get visibility() {
@@ -396,9 +402,12 @@ class AttackOutcome {
             this.fail(CONSTS.ATTACK_FAILURE_TARGET_UNREACHABLE)
             return false
         }
-        // rolling attack
+
         const oAttacker = this._attacker
         const oTarget = this._target
+
+
+        // rolling attack
         const nRoll = oAttacker.dice.roll('1d20')
         const bCritical = nRoll === 20
         const bHit = bCritical || (nRoll + this._attackBonus) >= this._ac
@@ -408,11 +417,20 @@ class AttackOutcome {
         this._hit = bHit
 
         // Resolve damages
-        if (this._weapon) {
+        if (bHit && this._weapon) {
             this.rollDamages(this._weapon.blueprint.damages, CONSTS.DAMAGE_TYPE_PHYSICAL)
         }
-        if (this._ammo) {
+        if (bHit && this._ammo) {
             this.rollDamages(this._ammo.blueprint.damages, CONSTS.DAMAGE_TYPE_PHYSICAL)
+        }
+        if (bHit && this.sneak) {
+            const nSneakAttackRank = this.sneak
+                ? aggregateModifiers([
+                    CONSTS.PROPERTY_SNEAK_ATTACK
+                ], oAttacker.getters).sum
+                : 0
+            const sSneakDice = nSneakAttackRank.toString() + 'd6'
+            this.rollDamages(sSneakDice, CONSTS.DAMAGE_TYPE_PHYSICAL)
         }
 
         let pFilter = null
@@ -448,7 +466,20 @@ class AttackOutcome {
                 this.rollDamages(effect.amp, effect.data.damageType)
             }
         })
+    }
 
+    createDamageEffects () {
+        return this._damages.effects = Object
+            .entries(this._damages.types)
+            .map(([sType, oDmg]) => {
+                const eDmg = this._effectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, oDmg.amount, { damageType: sType })
+                eDmg.subtype = CONSTS.EFFECT_SUBTYPE_WEAPON
+                return eDmg
+            })
+    }
+
+    applyDamages () {
+        this._effectProcessor.applyEffectGroup(this._damages.effects, [], this._target, 0, this._attacker)
     }
 }
 

@@ -9,6 +9,7 @@ const Horde = require('./Horde')
  * @typedef RBSEffect {object}
  * @property id {string}
  * @property type {string} EFFECT_*
+ * @property subtype {string} EFFECT_SUBTYPE_*
  * @property amp {number|string}
  * @property duration {number}
  * @property target {string}
@@ -33,7 +34,7 @@ class EffectProcessor {
     }
 
     get effectPrograms () {
-        return this.effectPrograms
+        return this._effectPrograms
     }
 
     set effectPrograms (value) {
@@ -77,6 +78,7 @@ class EffectProcessor {
         const oEffect = {
             id: getUniqueId(),
             type: sEffect,
+            subtype: CONSTS.EFFECT_SUBTYPE_MAGICAL,
             amp,
             data: {},
             duration: 0,
@@ -96,7 +98,7 @@ class EffectProcessor {
      * @param source {Creature}
      * @param duration
      */
-    applyEffect (oEffect, target, source = null, duration = 0) {
+    applyEffect (oEffect, target, duration = 0, source = null) {
         if (!source) {
             source = target
         }
@@ -109,6 +111,103 @@ class EffectProcessor {
             target,
             source
         })
+    }
+
+    /**
+     * Groups all specified effect. i.e : All effects will get a list of all siblings
+     * @param aEffects {RBSEffect[]}
+     * @param tags {string[]}
+     * @private
+     */
+    _groupEffects (aEffects, tags = []) {
+        const aSiblings = aEffects.map(({ id }) => id)
+        aEffects.forEach(effect => {
+            effect.siblings = aSiblings
+            effect.tags.push(...tags)
+        })
+    }
+
+    /**
+     * Parameter will be output in an array, expect if parameter is already array
+     * @param x {*}
+     * @returns {[]}
+     * @private
+     */
+    _forceArray (x) {
+        return Array.isArray(x) ? x : [x]
+    }
+
+    /**
+     * Will apply all specified effects as a group
+     * @param aEffects {RBSEffect[]}
+     * @param tags {string | string[]}
+     * @param target {Creature}
+     * @param duration {number}
+     * @param source {Creature|null}
+     */
+    applyEffectGroup (aEffects, tags, target, duration = 0, source = null) {
+        this._groupEffects(aEffects, this._forceArray(tags))
+        aEffects.forEach(effect => {
+            this.applyEffect(effect, target, duration, source)
+        })
+    }
+
+    /**
+     * get source and target of an effect
+     * @param oEffect {RBSEffect}
+     * @returns {{ source: Creature, target: Creature }}
+     */
+    getEffectTargetSource (oEffect) {
+        const idTarget = oEffect.target
+        const idSource = oEffect.source
+        const target = this._horde.creatures[idTarget]
+        const source = this._horde.creatures[idSource]
+        return {
+            target,
+            source
+        }
+    }
+
+    /**
+     * change an effect duration
+     * @param oEffect {RBSEffect}
+     * @param nDuration {number} new duration
+     */
+    setEffectDuration (oEffect, nDuration) {
+        const { target, source } = this.getEffectTargetSource(oEffect)
+        target.mutations.setEffectDuration({ effect: oEffect, duration: Math.max(0, nDuration) })
+        if (nDuration <= 0) {
+            this.invokeEffectMethod(oEffect, 'dispose', target, source)
+            this._events.emit('effect-disposed', {
+                effect: oEffect,
+                target,
+                source
+            })
+        }
+    }
+
+
+    /**
+     * Removes an effect from its target
+     * @param oEffect
+     */
+    removeEffect (oEffect) {
+        const { target, source } = this.getEffectTargetSource(oEffect)
+        if (oEffect.siblings.length > 0) {
+            const oEffectRegistry = target.getters.getEffectRegistry
+            oEffect
+                .siblings
+                .map(effId => effId in oEffectRegistry
+                    ? oEffectRegistry[effId]
+                    : null
+                )
+                .filter(eff => eff !== null)
+                .forEach(eff => {
+                    this.setEffectDuration(eff, 0)
+                })
+        } else {
+            this.setEffectDuration(oEffect, 0)
+        }
     }
 
     processEffect (oEffect) {

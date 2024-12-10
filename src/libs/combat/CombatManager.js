@@ -8,7 +8,6 @@ class CombatManager {
         this._events = new Events()
         this._defaultDistance = 0
         this._defaultTickCount = 6
-        this._rm = null
     }
 
     get events () {
@@ -171,7 +170,7 @@ class CombatManager {
             if (bBothSides && this.isCreatureFighting(oDefender, oCreature)) {
                 this.endCombat(oDefender)
             }
-            oCombat.events.removeAllListeners()
+            oCombat._events.removeAllListeners()
         }
     }
 

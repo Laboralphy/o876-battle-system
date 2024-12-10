@@ -11,6 +11,8 @@
  * @property setEffectDuration {function({ effect: RBSEffect, duration: number })}
  * @property setEnvironment {function({ environment, value })}
  * @property setGender {function({ value: string GENDER_* })}
+ * @property setHitDie {function({ value: number })}
+ * @property setHitPoints {function({ value: number })}
  * @property setId {function({ id: string })}
  * @property setLevel {function({ value: number })}
  * @property setNaturalArmorClass {function({ value: number })}

@@ -19,7 +19,7 @@ function mutate ({ effect: oEffect, target, source }) {
     // If one single effect applies -100% this is a healing nullifier
     const nHealAmount = oEffect.amp
     const nHealAmountAmplified = Math.floor(nHealAmount * nFactor)
-    target.modifyHitPoints(nHealAmountAmplified)
+    target.hitPoints += nHealAmountAmplified
     target.events.emit('heal', {
         healer: source,
         amount: nHealAmountAmplified,

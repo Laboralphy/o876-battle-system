@@ -9,6 +9,7 @@ const CONSTS = require('../../consts')
  * @property speed {number}
  * @property level {number}
  * @property speed {number}
+ * @property hitDie {number}
  * @property naturalArmorClass {number}
  * @property abilities {object<string, number>}
  * @property classType {string}
@@ -31,6 +32,7 @@ module.exports = () => ({
     gender: CONSTS.GENDER_NONE,
     naturalArmorClass: 0,
     speed: 30,
+    hitDie: 6,
     level: 1,
     abilities: {
         [CONSTS.ABILITY_STRENGTH]: 10,

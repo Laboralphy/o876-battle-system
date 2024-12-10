@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-09T16:40:54.482Z
+// Date : 2024-12-10T15:38:53.048Z
 // List of files in ./src/consts
 
 module.exports = {
@@ -11,6 +11,7 @@ module.exports = {
   ...require('./conditions.json'),
   ...require('./creature-visibility.json'),
   ...require('./damage-types.json'),
+  ...require('./effect-subtypes.json'),
   ...require('./effects.js'),
   ...require('./entity-types.json'),
   ...require('./environments.json'),

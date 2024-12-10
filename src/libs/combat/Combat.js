@@ -80,9 +80,6 @@ class Combat {
         this._tickCount = Math.max(1, value)
     }
 
-    /**
-     * @returns {Events}
-     */
     get events () {
         return this._events
     }
@@ -100,7 +97,7 @@ class Combat {
      * @return {Creature}
      */
     get attacker () {
-        return this._attackerState?.creature
+        return this._attackerState.creature
     }
 
     /**
@@ -182,15 +179,11 @@ class Combat {
         const attackerState = this._attackerState
         const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
         if (nAttackCount > 0) {
-            const action = attackerState.nextAction
-            if (action && attackerState.checkActionCooldown(action, this._turn)) {
-                this._events.emit('combat.action', {
-                    ...this.eventDefaultPayload,
-                    action,
-                    count: nAttackCount,
-                    opportunity: bPartingShot // if true, then no retaliation (start combat back)
-                })
-            }
+            this._events.emit('combat.action', {
+                ...this.eventDefaultPayload,
+                count: nAttackCount,
+                opportunity: bPartingShot // if true, then no retaliation (start combat back)
+            })
         }
     }
 }

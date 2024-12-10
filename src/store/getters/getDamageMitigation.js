@@ -39,7 +39,7 @@ module.exports = (state, getters, externals) => {
         DAMAGE_FACTOR_IMMUNITY,
         DAMAGE_FACTOR_RESISTANCE,
         DAMAGE_FACTOR_VULNERABILITY
-    } = externals['damage-factors']
+    } = externals['DAMAGE_FACTORS']
     const fDamageEffectSorter = eff => {
         return eff.data.damageType
     }

@@ -7,8 +7,9 @@
  * @property getAttackBonus {number}
  * @property getCapabilitySet {Set<string>}
  * @property getConditionSet {Set<string>}
- * @property getDamageMitigation {Object<string, BFOneDamageMitigation>}}
+ * @property getDamageMitigation {Object<string, RBSOneDamageMitigation>}}
  * @property getDefensiveSlots {string[]}
+ * @property getEffectRegistry {Object<string, RBSEffect>}
  * @property getEffectSet {Set<string>}
  * @property getEffects {RBSEffect[]}
  * @property getEncumbrance {{value: number, capacity: number}}
@@ -18,6 +19,7 @@
  * @property getId {string}
  * @property getInnateProperties {RBSProperty[]}
  * @property getLevel {number}
+ * @property getMaxHitPoints {number}
  * @property getMeleeAttackBonus {number}
  * @property getOffensiveSlots {string[]}
  * @property getProficiencyBonus {number}

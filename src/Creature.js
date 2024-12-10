@@ -69,6 +69,7 @@ class Creature {
         m.setNaturalArmorClass({ value: blueprint.ac || 0 })
         m.setSpeed({ value: blueprint.speed })
         m.setClassType({ value: blueprint.classType })
+
         m.setLevel({ value: blueprint.level })
         blueprint.proficiencies.forEach(value => m.addProficiency({ value }))
         if ('abilities' in blueprint) {
@@ -161,21 +162,18 @@ class Creature {
      */
     revive () {
         if (this.getters.isDead) {
+            this._events.emit('revive')
             this.mutations.setHitPoints({ value: 1 })
-            this.events.emit('revive', {
-                creature: this
-            })
         }
     }
 
-    modifyHitPoints (n) {
-        this.setHitPoints(this.getters.getHitPoints + n)
+    get hitPoints () {
+        return this.getters.getHitPoints
     }
 
-    setHitPoints (hp) {
+    set hitPoints (hp) {
         const nCurrHP = this.getters.getHitPoints
         if (this.getters.isDead) {
-            // Cannot heal dead creature. Must call revive prior
             return
         }
         const nMaxHP = this.getters.getMaxHitPoints

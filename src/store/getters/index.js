@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-09T16:40:54.202Z
+// Date : 2024-12-10T15:38:52.744Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -12,6 +12,7 @@ module.exports = {
   'getConditionSet': require('./getConditionSet.js'),
   'getDamageMitigation': require('./getDamageMitigation.js'),
   'getDefensiveSlots': require('./getDefensiveSlots.js'),
+  'getEffectRegistry': require('./getEffectRegistry.js'),
   'getEffectSet': require('./getEffectSet.js'),
   'getEffects': require('./getEffects.js'),
   'getEncumbrance': require('./getEncumbrance.js'),
@@ -21,6 +22,7 @@ module.exports = {
   'getId': require('./getId.js'),
   'getInnateProperties': require('./getInnateProperties.js'),
   'getLevel': require('./getLevel.js'),
+  'getMaxHitPoints': require('./getMaxHitPoints.js'),
   'getMeleeAttackBonus': require('./getMeleeAttackBonus.js'),
   'getOffensiveSlots': require('./getOffensiveSlots.js'),
   'getProficiencyBonus': require('./getProficiencyBonus.js'),

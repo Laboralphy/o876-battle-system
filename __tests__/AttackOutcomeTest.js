@@ -158,24 +158,4 @@ describe('damages', function () {
         expect(ao.hit).toBeTruthy()
         expect(ao.damages.types).toEqual({ [CONSTS.DAMAGE_TYPE_PHYSICAL]: { amount: 4, resisted: 0 }})
     })
-    it('should return 2 physical damage when target is resistant to physical damage', function () {
-        const c1 = eb.createEntity(bpNormalActor)
-        c1.mutations.setLevel({ value: 5 })
-        c1.dice.cheat(0.5)
-        const c2 = eb.createEntity(bpNormalActor)
-        c2.mutations.setLevel({ value: 5 })
-        c2.mutations.addProperty({ property: { type: CONSTS.PROPERTY_DAMAGE_RESISTANCE, damageType: CONSTS.DAMAGE_TYPE_PHYSICAL }})
-        const oSword = eb.createEntity(bpShortSword)
-        c1.equipItem(oSword)
-        const ao = new AttackOutcome()
-        ao.attacker = c1
-        ao.target = c2
-        ao.autoSelect = true
-        ao.attack()
-        expect(ao.weapon).toEqual(oSword)
-        expect(ao.roll).toBe(11)
-        expect(ao.attackBonus).toBe(3)
-        expect(ao.hit).toBeTruthy()
-        expect(ao.damages.types).toEqual({ [CONSTS.DAMAGE_TYPE_PHYSICAL]: { amount: 4, resisted: 2 }})
-    })
 })

@@ -74,7 +74,7 @@ function mutate ({ effect, target, source }) {
     })
     ed.appliedAmount = oRecentDamage.amount
     ed.resistedAmount = oRecentDamage.resisted
-    target.modifyHitPoints(-oRecentDamage.amount)
+    target.hitPoints -= oRecentDamage.amount
     target.events.emit('damaged', {
         ...oRecentDamage,
         damageType: ed.damageType,
