@@ -1,5 +1,4 @@
 const Events = require('node:events')
-const { v4: uuidv4 } = require('uuid')
 const { getUniqueId } = require('./libs/unique-id')
 const CONSTS = require('./consts')
 const EFFECTS = require('./effects')

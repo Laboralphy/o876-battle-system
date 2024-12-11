@@ -45,15 +45,47 @@ describe('isCreatureFighting', function () {
 })
 
 describe('getCombat', function () {
-    it('should the same combat instance', function () {
+    it('should create 2 combat when starting one combat', function () {
         const cm = new CombatManager()
         const c1 = new Creature({ blueprint: bpNormalActor })
         const c2 = new Creature({ blueprint: bpNormalActor })
         const combat = cm.startCombat(c1, c2)
-        expect(cm.getCombat(c1)).toBe(combat)
+        expect(cm.combats).toBe(0)
+        expect(cm.getCombat(c1) === combat).toBeTruthy()
         const combat2 = cm.getCombat(c2)
-        expect(cm.getCombat(c2)).toBe(combat2)
+        expect(cm.getCombat(c2) === combat2).toBeTruthy()
+        expect(cm.combats).toBe(2)
     })
 })
 
-describe
+describe('endCombat', function () {
+    it('should destroy a combat when fighter is leaving', function () {
+        const cm = new CombatManager()
+        const c1 = new Creature({ blueprint: bpNormalActor })
+        const c2 = new Creature({ blueprint: bpNormalActor })
+        const combat = cm.startCombat(c1, c2)
+        expect(cm.combats).toBe(2)
+        cm.endCombat(c1, true)
+        expect(cm.combats).toBe(0)
+    })
+})
+
+describe('fleeCombat', function () {
+    it('should do a parting strike before fleeing combat', function () {
+        const cm = new CombatManager()
+        const c1 = new Creature({ blueprint: bpNormalActor })
+        const c2 = new Creature({ blueprint: bpNormalActor })
+        const combat = cm.startCombat(c1, c2)
+        const logs = []
+        cm.events.on('combat.action', evt => {
+            logs.push(evt)
+        })
+        cm.fleeCombat(c2)
+        expect(logs.length).toBe(1)
+        expect(logs[0].combat === combat).toBeTruthy()
+        expect(logs[0].attacker).toBe(c1)
+        expect(logs[0].target).toBe(c2)
+        expect(logs[0].count).toBe(1)
+        expect(logs[0].opportunity).toBeTruthy()
+    })
+})

@@ -1,8 +1,10 @@
 const Events = require('events')
+const { getUniqueId } = require('../unique-id')
 const CombatFighterState = require('./CombatFighterState')
 
 class Combat {
     constructor () {
+        this._id = getUniqueId()
         /**
          * The state of attacking creature
          * @type {CombatFighterState}
@@ -30,6 +32,10 @@ class Combat {
         this._tickCount = 6
         this._events = new Events()
         this._distance = 0
+    }
+
+    get id () {
+        return this._id
     }
 
     /**
@@ -186,6 +192,61 @@ class Combat {
             })
         }
     }
+
+    advance () {
+        if (this._tick === 0) {
+            const atkr = this.attacker
+            this.selectMostSuitableAction()
+            // Start of turn
+            // attack-types planning
+            this._events.emit('combat.turn', {
+                ...this.eventDefaultPayload,
+                action: action => {
+                    let oDecidedAction = null
+                    if (typeof action === 'string') {
+                        const oCreatureActions = this.attackerActions
+                        if (action in oCreatureActions) {
+                            oDecidedAction = oCreatureActions[action]
+                        } else {
+                            throw new Error('unknown action : ' + action)
+                        }
+                    } else {
+                        oDecidedAction = action
+                        // this._attacker.nextAction = action
+                    }
+                    if (atkr.isActionCoolingDown(atkr.nextAction, this._turn)) {
+                        // nope : selected action is cooling down
+                        return
+                    }
+                    atkr.nextAction = oDecidedAction
+                }
+            })
+            if (atkr.nextAction) {
+                const nAttackCount = aggregateModifiers([
+                    CONSTS.EFFECT_ATTACK_COUNT_MODIFIER,
+                    CONSTS.ITEM_PROPERTY_ATTACK_COUNT_MODIFIER
+                ], this._attacker.creature.getters).sum + atkr.nextAction.count
+                if (nAttackCount > 0) {
+                    atkr.plan = Combat.computePlanning(nAttackCount, this._tickCount, true)
+                } else {
+                    const nRound = 1 - nAttackCount
+                    if (this._turn % nRound === 0) {
+                        atkr.plan = Combat.computePlanning(1, this._tickCount, true)
+                    } else {
+                        atkr.plan = Combat.computePlanning(0, this._tickCount, true)
+                    }
+                }
+            } else {
+                this.approachTarget()
+            }
+        }
+        this.playFighterAction()
+        this._events.emit('combat.tick.end', {
+            ...this.defaultPayload
+        })
+        this.nextTick()
+    }
+
 }
 
 module.exports = Combat
