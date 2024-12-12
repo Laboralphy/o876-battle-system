@@ -776,3 +776,33 @@ describe('isWieldingTwoHandedWeapon', function () {
         expect(oCreature.getters.isWieldingTwoHandedWeapon).toBeFalsy()
     })
 })
+
+describe('getWeaponRanges', function () {
+    it('should return melee: 5, ranged: 0 when equipping NO weapon', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        expect(oCreature.getters.getWeaponRanges).toEqual({
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: 5,
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: 0
+        })
+    })
+    it('should return melee 5, ranged 0 when equipping ranged weapon without ammo', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        const oBow = eb.createEntity(bpShortbow)
+        oCreature.equipItem(oBow)
+        expect(oCreature.getters.getWeaponRanges).toEqual({
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: 5,
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: 0
+        })
+    })
+    it('should return melee 5, ranged 100 when equipping ranged weapon with ammo', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        const oBow = eb.createEntity(bpShortbow)
+        const oArrow = eb.createEntity(bpArrow)
+        oCreature.equipItem(oBow)
+        oCreature.equipItem(oArrow)
+        expect(oCreature.getters.getWeaponRanges).toEqual({
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: 5,
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: 100
+        })
+    })
+})

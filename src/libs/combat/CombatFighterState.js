@@ -98,6 +98,7 @@ class CombatFighterState {
         }
         return this.plan = aPlan
     }
+
 }
 
 module.exports = CombatFighterState

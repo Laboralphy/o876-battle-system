@@ -49,12 +49,12 @@ describe('getCombat', function () {
         const cm = new CombatManager()
         const c1 = new Creature({ blueprint: bpNormalActor })
         const c2 = new Creature({ blueprint: bpNormalActor })
+        expect(cm.combats).toHaveLength(0)
         const combat = cm.startCombat(c1, c2)
-        expect(cm.combats).toBe(0)
         expect(cm.getCombat(c1) === combat).toBeTruthy()
         const combat2 = cm.getCombat(c2)
         expect(cm.getCombat(c2) === combat2).toBeTruthy()
-        expect(cm.combats).toBe(2)
+        expect(cm.combats).toHaveLength(2)
     })
 })
 
@@ -64,9 +64,9 @@ describe('endCombat', function () {
         const c1 = new Creature({ blueprint: bpNormalActor })
         const c2 = new Creature({ blueprint: bpNormalActor })
         const combat = cm.startCombat(c1, c2)
-        expect(cm.combats).toBe(2)
+        expect(cm.combats).toHaveLength(2)
         cm.endCombat(c1, true)
-        expect(cm.combats).toBe(0)
+        expect(cm.combats).toHaveLength(0)
     })
 })
 
@@ -88,4 +88,8 @@ describe('fleeCombat', function () {
         expect(logs[0].count).toBe(1)
         expect(logs[0].opportunity).toBeTruthy()
     })
+})
+
+describe('advancing combat', function () {
+
 })

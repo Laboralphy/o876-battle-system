@@ -32,6 +32,7 @@
  * @property getSelectedWeaponAttributeSet {Set<string>}
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
  * @property getSpeed {number}
+ * @property getWeaponRanges {number}
  * @property isDead {boolean}
  * @property isEquipmentProficient {{[p: string]: boolean}}
  * @property isRangedWeaponLoaded {boolean}

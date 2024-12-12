@@ -1,6 +1,7 @@
 const Events = require('events')
 const { getUniqueId } = require('../unique-id')
 const CombatFighterState = require('./CombatFighterState')
+const CONSTS = require("../../consts");
 
 class Combat {
     constructor () {
@@ -196,57 +197,60 @@ class Combat {
     advance () {
         if (this._tick === 0) {
             const atkr = this.attacker
-            this.selectMostSuitableAction()
+            this.selectMostSuitableAction() // this will select current action for this turn
+            // can be attack with weapon, or casting spell, or using spell like ability
             // Start of turn
             // attack-types planning
             this._events.emit('combat.turn', {
                 ...this.eventDefaultPayload,
                 action: action => {
                     let oDecidedAction = null
-                    if (typeof action === 'string') {
-                        const oCreatureActions = this.attackerActions
-                        if (action in oCreatureActions) {
-                            oDecidedAction = oCreatureActions[action]
-                        } else {
-                            throw new Error('unknown action : ' + action)
-                        }
-                    } else {
-                        oDecidedAction = action
-                        // this._attacker.nextAction = action
-                    }
-                    if (atkr.isActionCoolingDown(atkr.nextAction, this._turn)) {
-                        // nope : selected action is cooling down
-                        return
-                    }
-                    atkr.nextAction = oDecidedAction
+                    // Change action
                 }
             })
-            if (atkr.nextAction) {
-                const nAttackCount = aggregateModifiers([
-                    CONSTS.EFFECT_ATTACK_COUNT_MODIFIER,
-                    CONSTS.ITEM_PROPERTY_ATTACK_COUNT_MODIFIER
-                ], this._attacker.creature.getters).sum + atkr.nextAction.count
-                if (nAttackCount > 0) {
-                    atkr.plan = Combat.computePlanning(nAttackCount, this._tickCount, true)
-                } else {
-                    const nRound = 1 - nAttackCount
-                    if (this._turn % nRound === 0) {
-                        atkr.plan = Combat.computePlanning(1, this._tickCount, true)
-                    } else {
-                        atkr.plan = Combat.computePlanning(0, this._tickCount, true)
-                    }
-                }
-            } else {
-                this.approachTarget()
-            }
+            // if target is in weapon range
+            // then compute plannig
+            // else approach
         }
         this.playFighterAction()
         this._events.emit('combat.tick.end', {
-            ...this.defaultPayload
+            ...this.eventDefaultPayload
         })
         this.nextTick()
     }
 
+
+    /**
+     * Returns true if target is in melee range
+     * @returns {boolean}
+     */
+    isTargetInMeleeRange () {
+        const g = this.attacker.getters
+        const m = CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+        return this._distance <= g.getWeaponRanges[m]
+    }
+
+    /**
+     * Return the most suitable offensive equipment slot according to distance, ammo ...
+     * @return {string}
+     */
+    getMostSuitableSlot () {
+        if (this.isTargetInMeleeRange()) {
+            return CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+        }
+        if (this.attacker.getters.isRangedWeaponLoaded) {
+            return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+        }
+        return CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+    }
+
+    selectMostSuitableWeapon () {
+        this.attacker.selectOffensiveSlot(this.getMostSuitableSlot())
+    }
+
+    selectMostSuitableAction () {
+        this.selectMostSuitableWeapon()
+    }
 }
 
 module.exports = Combat

@@ -150,7 +150,6 @@ describe('damages', function () {
         const ao = new AttackOutcome()
         ao.attacker = c1
         ao.target = c2
-        ao.autoSelect = true
         ao.attack()
         expect(ao.weapon).toEqual(oSword)
         expect(ao.roll).toBe(11)

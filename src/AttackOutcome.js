@@ -80,13 +80,6 @@ class AttackOutcome {
          */
         this._opportunity = false
 
-        /**
-         * Specifies that we want to auto select weapon before attacking
-         * @type {boolean}
-         * @private
-         */
-        this._autoSelect = false
-
 
         /// NON BOOLEANS INDICATORS ///
 
@@ -163,10 +156,6 @@ class AttackOutcome {
 
     set opportunity(value) {
         this._opportunity = value
-    }
-
-    set autoSelect(value) {
-        this._autoSelect = value
     }
 
     get events () {
@@ -249,43 +238,14 @@ class AttackOutcome {
         return this._damages
     }
 
-    get autoSelect () {
-        return this._autoSelect
-    }
-
-    /**
-     * Returns the specified weapon range
-     * @param weapon {RBSItem}
-     * @returns {number}
-     */
-    getWeaponRange (weapon) {
-        if (!weapon) {
-            return DATA['WEAPON_RANGES']['WEAPON_RANGE_MELEE'].range
-        }
-        if (weapon.blueprint.attributes.includes[CONSTS.WEAPON_ATTRIBUTE_REACH]) {
-            return DATA['WEAPON_RANGES']['WEAPON_RANGE_REACH'].range
-        } else if (weapon.blueprint.attributes.includes[CONSTS.WEAPON_ATTRIBUTE_RANGED]) {
-            return DATA['WEAPON_RANGES']['WEAPON_RANGE_RANGED'].range
-        } else {
-            return DATA['WEAPON_RANGES']['WEAPON_RANGE_MELEE'].range
-        }
-    }
-
-    /**
-     * Returns true if target is in melee range
-     * @returns {boolean}
-     */
-    isTargetInMeleeRange () {
-        const oMeleeWeapon = this._attacker.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
-        return this._distance <= this.getWeaponRange(oMeleeWeapon)
-    }
-
     /**
      * Returns true if target is in selected weapon range
      * @returns {boolean}
      */
     isTargetInSelectedWeaponRange () {
-        return this._distance <= this.getWeaponRange(this._attacker.getters.getSelectedWeapon)
+        const g = this._attacker.getters
+        const slot = g.getSelectedOffensiveSlot
+        return this._distance <= g.getWeaponRanges[slot]
     }
 
     getAttackType () {
@@ -334,7 +294,7 @@ class AttackOutcome {
                 throw new Error('failed to select attack type')
             }
         }
-        this._range = this.getWeaponRange(w)
+        this._range = this.attacker.getters.getWeaponRanges[this.attacker.getters.getSelectedOffensiveSlot]
         this._attackBonus = ag.getAttackBonus
     }
 
@@ -390,9 +350,6 @@ class AttackOutcome {
             // Cannot see target
             this.fail(CONSTS.ATTACK_FAILURE_VISIBILITY)
             return false
-        }
-        if (this._autoSelect) {
-            this.selectMostSuitableWeapon()
         }
         // compute target defense
         this.computeAttackParameters()
