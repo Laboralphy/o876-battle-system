@@ -6,5 +6,5 @@
  */
 module.exports = (state, getters) => [
     ...getters.getInnateProperties,
-    ...Object.values(getters.getSlotProperties).flat()
+    ...getters.getEquipmentProperties
 ]

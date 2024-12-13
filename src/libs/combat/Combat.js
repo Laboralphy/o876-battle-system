@@ -4,7 +4,7 @@ const CombatFighterState = require('./CombatFighterState')
 const CONSTS = require("../../consts");
 
 class Combat {
-    constructor () {
+    constructor ({ distance = 0, tickCount }) {
         this._id = getUniqueId()
         /**
          * The state of attacking creature
@@ -30,9 +30,11 @@ class Combat {
          * @private
          */
         this._tick = 0
-        this._tickCount = 6
+        this._tickCount = tickCount
         this._events = new Events()
-        this._distance = 0
+        this._distance = distance
+        this._nextAction = null
+        this._currentAction = null
     }
 
     get id () {
@@ -145,6 +147,10 @@ class Combat {
         }
     }
 
+    notifyTargetApproach (distance) {
+        this._distance = distance
+    }
+
     /**
      * returns distance between attacker and defender
      * @returns {number}
@@ -184,33 +190,36 @@ class Combat {
      */
     playFighterAction (bPartingShot = false) {
         const attackerState = this._attackerState
-        const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
-        if (nAttackCount > 0) {
+        // If no current action then we are attacking during this turn
+        const bAttackTurn = this._currentAction === null
+        if (!bAttackTurn && this._tick === 0) {
             this._events.emit('combat.action', {
                 ...this.eventDefaultPayload,
-                count: nAttackCount,
-                opportunity: bPartingShot // if true, then no retaliation (start combat back)
+                action: this._currentAction
             })
+        } else {
+            const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
+            if (bPartingShot || nAttackCount > 0) {
+                this._events.emit('combat.attack', {
+                    ...this.eventDefaultPayload,
+                    count: nAttackCount,
+                    opportunity: bPartingShot // if true, then no retaliation (start combat back)
+                })
+            }
         }
     }
 
     advance () {
         if (this._tick === 0) {
-            const atkr = this.attacker
             this.selectMostSuitableAction() // this will select current action for this turn
             // can be attack with weapon, or casting spell, or using spell like ability
             // Start of turn
             // attack-types planning
-            this._events.emit('combat.turn', {
-                ...this.eventDefaultPayload,
-                action: action => {
-                    let oDecidedAction = null
-                    // Change action
-                }
-            })
+            this._attackerState.computePlan(this._tickCount, true)
             // if target is in weapon range
-            // then compute plannig
-            // else approach
+            if (!this.isTargetInRange()) {
+                this.approachTarget()
+            }
         }
         this.playFighterAction()
         this._events.emit('combat.tick.end', {
@@ -219,15 +228,43 @@ class Combat {
         this.nextTick()
     }
 
-
     /**
-     * Returns true if target is in melee range
+     * Returns true if target is in melee weapon range
      * @returns {boolean}
      */
-    isTargetInMeleeRange () {
+    isTargetInMeleeWeaponRange () {
         const g = this.attacker.getters
-        const m = CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
-        return this._distance <= g.getWeaponRanges[m]
+        return this._distance <= g.getWeaponRanges[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+    }
+
+    /**
+     * Return the selected weapon range
+     * @returns {number}
+     */
+    getSelectedWeaponRange () {
+        const g = this.attacker.getters
+        const m = g.getSelectedOffensiveSlot
+        return g.getWeaponRanges[m]
+    }
+
+    /**
+     * Return true if target is within selected weapon range
+     * @returns {boolean}
+     */
+    isTargetInSelectedWeaponRange () {
+        return this._distance <= this.getSelectedWeaponRange()
+    }
+
+    /**
+     * Return true if target is within action range
+     * @returns {boolean}
+     */
+    isTargetInRange () {
+        if (this._currentAction) {
+            return this._distance <= this._currentAction.range
+        } else {
+            return this.isTargetInSelectedWeaponRange()
+        }
     }
 
     /**
@@ -235,7 +272,7 @@ class Combat {
      * @return {string}
      */
     getMostSuitableSlot () {
-        if (this.isTargetInMeleeRange()) {
+        if (this.isTargetInMeleeWeaponRange()) {
             return CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
         }
         if (this.attacker.getters.isRangedWeaponLoaded) {
@@ -249,7 +286,43 @@ class Combat {
     }
 
     selectMostSuitableAction () {
-        this.selectMostSuitableWeapon()
+        this._currentAction = this._attackerState.actions[this._nextAction] || null
+        this._events.emit('combat.turn', {
+            ...this.eventDefaultPayload,
+            action: action => {
+                this._currentAction = this._attackerState.actions[action]
+            }
+        })
+        this._nextAction = null
+        if (this._currentAction === null) {
+            this.selectMostSuitableWeapon()
+        }
+    }
+
+    /**
+     * This action is used when a creature has no ranged capabilities and is trying to move toward its target
+     */
+    approachTarget () {
+        const nRunSpeed = this.attacker.getters.getSpeed
+        const previousDistance = this.distance
+        let nNewDistance = Math.max(this.getSelectedWeaponRange(), this.distance - nRunSpeed)
+        this._events.emit('combat.move', {
+            ...this.eventDefaultPayload,
+            speed: nRunSpeed,
+            previousDistance,
+            distance: d => {
+                nNewDistance = parseFloat(d) || 0
+            }
+        })
+        this.distance = nNewDistance
+    }
+
+    set nextAction (value) {
+        this._nextAction = value
+    }
+
+    get nextAction () {
+        return this._nextAction
     }
 }
 

@@ -22,6 +22,10 @@ class CombatManager {
         return this._defaultDistance
     }
 
+    set defaultDistance (value) {
+        this._defaultDistance = value
+    }
+
     /**
      * Returns a list of combats
      * @returns {Combat[]}
@@ -59,6 +63,18 @@ class CombatManager {
     }
 
     /**
+     * Sends a combat attack event.
+     * @param ev
+     * @private
+     */
+    _sendCombatAttackEvent (ev) {
+        this._events.emit('combat.attack', this._addManagerToObject(ev))
+        if (!ev.opportunity && !this.isCreatureFighting(ev.target)) {
+            this.startCombat(ev.target, ev.attacker, ev.combat.distance)
+        }
+    }
+
+    /**
      * Creates a new combat and plugs events
      * @param oCreature {Creature}
      * @param oTarget {Creature}
@@ -67,11 +83,14 @@ class CombatManager {
      * @private
      */
     _createCombat (oCreature, oTarget, nStartingDistance = null) {
-        const combat = new Combat()
-        combat.tickCount = this._defaultTickCount
+        const combat = new Combat({
+            distance: this._defaultDistance,
+            tickCount: this._defaultTickCount
+        })
         combat.events.on('combat.turn', ev => this._events.emit('combat.turn', this._addManagerToObject(ev)))
         combat.events.on('combat.tick.end', ev => this._events.emit('combat.tick.end', this._addManagerToObject(ev)))
         combat.events.on('combat.action', ev => this._sendCombatActionEvent(ev))
+        combat.events.on('combat.attack', ev => this._sendCombatAttackEvent(ev))
         combat.events.on('combat.script', ev => this._events.emit('combat.script', this._addManagerToObject(ev)))
         combat.events.on('combat.offensive-slot', ev => this._events.emit('combat.offensive-slot', this._addManagerToObject(ev)))
         combat.events.on('combat.distance', ev => {
@@ -81,7 +100,7 @@ class CombatManager {
                 // also change target distance with attacker if different
                 const oTargetCombat = this.getCombat(oTarget)
                 if (oTargetCombat && oTargetCombat.distance !== distance) {
-                    oTargetCombat.distance = distance
+                    oTargetCombat.notifyTargetApproach(distance)
                 }
             }
         })

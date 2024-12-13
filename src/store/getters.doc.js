@@ -15,6 +15,7 @@
  * @property getEncumbrance {{value: number, capacity: number}}
  * @property getEnvironment {{ darkness: boolean, windy: boolean, difficultTerrain: boolean, underwater: boolean }}
  * @property getEquipment {Object<string, RBSItem>}
+ * @property getEquipmentProperties {RBSProperty[]}
  * @property getHitPoints {number}
  * @property getId {string}
  * @property getInnateProperties {RBSProperty[]}

@@ -45,10 +45,10 @@ function aggregateModifiers (aTags, getters, {
         aFilteredEffects.forEach(effectForEach)
     }
     const aStartingProperties = []
-    if (!excludeInnate) {
-        aStartingProperties.push(...getters.getInnateProperties)
-    }
     if (Array.isArray(restrictSlots) && restrictSlots.length > 0) {
+        if (!excludeInnate) {
+            aStartingProperties.push(...getters.getInnateProperties)
+        }
         const oSlotProperties = getters.getSlotProperties
         restrictSlots.forEach(s => {
             if (oSlotProperties[s]) {
@@ -56,7 +56,10 @@ function aggregateModifiers (aTags, getters, {
             }
         })
     } else {
-        aStartingProperties.push(...getters.getProperties)
+        if (!excludeInnate) {
+            aStartingProperties.push(...getters.getInnateProperties)
+        }
+        aStartingProperties.push(...getters.getEquipmentProperties)
     }
     const aFilteredProperties = aStartingProperties
         .filter(ip =>

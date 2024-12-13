@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-12T14:16:51.279Z
+// Date : 2024-12-13T13:41:37.963Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -18,6 +18,7 @@ module.exports = {
   'getEncumbrance': require('./getEncumbrance.js'),
   'getEnvironment': require('./getEnvironment.js'),
   'getEquipment': require('./getEquipment.js'),
+  'getEquipmentProperties': require('./getEquipmentProperties.js'),
   'getHitPoints': require('./getHitPoints.js'),
   'getId': require('./getId.js'),
   'getInnateProperties': require('./getInnateProperties.js'),

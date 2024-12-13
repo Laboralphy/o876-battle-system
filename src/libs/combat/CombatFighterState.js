@@ -1,6 +1,7 @@
 const {aggregateModifiers} = require('../aggregator')
 const CONSTS = require('../../consts')
 const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../props-effects-filters')
+const CombatAction = require('./CombatAction')
 
 /**
  * @class
@@ -18,6 +19,28 @@ class CombatFighterState {
          * @private
          */
         this._creature = null
+        this._lastAttackCount = 0
+        this._actions = {}
+        this._attackCount = 0
+    }
+
+    addAction ({
+        id,
+        actionType = CONSTS.COMBAT_ACTION_TYPE_ATTACK,
+        onHit = '',
+        cooldown = 0,
+        charges = 0
+    }) {
+        if (!id) {
+            throw new Error(`id parameter is mandatory when defining action`)
+        }
+        this._actions[id] = new CombatAction({
+            id, actionType, onHit, cooldown, charges
+        })
+    }
+
+    get actions () {
+        return this._actions
     }
 
     /**
@@ -32,6 +55,10 @@ class CombatFighterState {
      */
     get creature () {
         return this._creature
+    }
+
+    get attackCount () {
+        return this._attackCount
     }
 
     /**
@@ -65,7 +92,7 @@ class CombatFighterState {
             {
                 propFilter: filterMeleeAttackTypes,
                 effectFilter: filterMeleeAttackTypes
-            }).sum + 1
+            }).sum
     }
 
     getRangedExtraAttackCount () {
@@ -76,7 +103,7 @@ class CombatFighterState {
             {
                 propFilter: filterRangedAttackTypes,
                 effectFilter: filterRangedAttackTypes
-            }).sum + 1
+            }).sum
     }
 
     computePlan (nTurnTickCount, reverseOrder = false) {
@@ -84,9 +111,15 @@ class CombatFighterState {
         const bRanged = oWeapon
             ? oWeapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
             : false
-        const nAttackPerTurn = bRanged
+        const nExtraAttackPerTurn = bRanged
             ? this.getRangedExtraAttackCount()
             : this.getMeleeExtraAttackCount()
+        const nAttackPerTurn = 1 + nExtraAttackPerTurn
+        this._attackCount = nAttackPerTurn
+        if (nAttackPerTurn === this._lastAttackCount) {
+            return this.plan
+        }
+        this._lastAttackCount = nAttackPerTurn
         const aPlan = new Array(nTurnTickCount)
         aPlan.fill(0)
         for (let i = 0; i < nAttackPerTurn; ++i) {
