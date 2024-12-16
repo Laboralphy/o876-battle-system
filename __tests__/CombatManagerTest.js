@@ -1,4 +1,5 @@
 const CombatManager = require('../src/libs/combat/CombatManager')
+const CombatAction = require('../src/libs/combat/CombatAction')
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
 const PropertyBuilder = require('../src/PropertyBuilder')
@@ -319,5 +320,159 @@ describe('advancing combat', function () {
                 type: "combat.attack"
             }
         ])
+    })
+    it('should not cast an action when not calling nextAction', function () {
+        const cm = new CombatManager()
+        cm.defaultDistance = 50
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
+        cm.startCombat(c1, c2)
+        const logs = []
+        cm.events.on('combat.action', evt => {
+            logs.push({
+                type: 'combat.attack',
+                attacker: evt.combat.attacker.id,
+                target: evt.combat.defender.id,
+                turn: evt.turn,
+                tick: evt.tick
+            })
+        })
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        expect(logs).toHaveLength(0)
+    })
+    it('should cast an action when calling next action', function () {
+        const cm = new CombatManager()
+        cm.defaultDistance = 50
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
+        const combat = cm.startCombat(c1, c2)
+        combat.attackerState.addAction({
+            id: 'a1',
+            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+            onHit: 'script1'
+        })
+        const logs = []
+        cm.events.on('combat.action', evt => {
+            logs.push({
+                type: 'combat.attack',
+                attacker: evt.combat.attacker.id,
+                target: evt.combat.defender.id,
+                turn: evt.turn,
+                tick: evt.tick,
+                action: evt.action
+            })
+        })
+        expect(combat.distance).toBe(50)
+
+        cm.processCombats() // turn 0 : tick 0->1
+        expect(combat.distance).toBe(5)
+        expect(combat.tick).toBe(1)
+        expect(logs).toHaveLength(0)
+
+        cm.processCombats() // turn 0 : tick 1->2
+
+        cm.processCombats() // turn 0 : tick 2->3
+        combat.nextAction = 'a1'
+        expect(logs).toHaveLength(0)
+        expect(combat.tick).toBe(3)
+
+        cm.processCombats() // turn 0 : tick 3->4
+        expect(logs).toHaveLength(0)
+
+        cm.processCombats() // turn 0 : tick 4->5
+        expect(logs).toHaveLength(0)
+        expect(combat.nextAction).toBe('a1')
+        expect(combat.distance).toBe(5)
+        expect(combat.getSelectedWeaponRange()).toBe(5)
+        expect(combat.isTargetInRange()).toBeTruthy()
+
+        cm.processCombats() // turn 0->1 : tick 5->0 !! new turn
+
+        cm.processCombats() // // turn 1 : tick 0->1 !! beginning of tick 0 : takin action
+        expect(combat.nextAction).toBe('')
+        expect(combat.currentAction).not.toBeNull()
+        expect(combat.currentAction).toBeInstanceOf(CombatAction)
+        expect(combat.currentAction.range).toBe(Infinity)
+        expect(logs).toHaveLength(1)
+        const l0 = logs[0].action
+        expect(l0.id).toBe('a1')
+    })
+    it('should not use action when target is too far for action range', function () {
+        const cm = new CombatManager()
+        cm.defaultDistance = 1000
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
+        const combat = cm.startCombat(c1, c2)
+        combat.attackerState.addAction({
+            id: 'a1',
+            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+            onHit: 'script1',
+            range: 5
+        })
+        const logs = []
+        cm.events.on('combat.action', ev => logs.push({
+            type: 'action',
+            action: ev.action.id
+        }))
+        expect(combat.distance).toBe(1000)
+
+        cm.processCombats() // turn 0 : tick 0->1
+        expect(combat.distance).toBe(940)
+
+        cm.processCombats() // turn 0 : tick 1->2
+        cm.processCombats() // turn 0 : tick 2->3
+        cm.processCombats() // turn 0 : tick 3->4
+        cm.processCombats() // turn 0 : tick 4->5
+        combat.nextAction = 'a1'
+        cm.processCombats() // turn 0->1 : tick 5->0
+        expect(combat.currentAction).not.toBeNull()
+        expect(combat.currentAction.id).toBe('a1')
+
+        expect(logs).toHaveLength(0)
+        cm.processCombats() // turn 1 : tick 0->1
+        expect(combat.distance).toBe(880)
+        expect(combat.currentAction.range).toBe(5)
+        expect(logs).toHaveLength(0)
+        cm.processCombats() // turn 1 : tick 1->2
+        cm.processCombats() // turn 1 : tick 2->3
+        cm.processCombats() // turn 1 : tick 3->4
+        cm.processCombats() // turn 1 : tick 4->5
+        expect(combat.currentAction.id).toBe('a1')
+        cm.processCombats() // turn 1->2 : tick 5->0
+        expect(combat.currentAction.id).toBe('a1')
+        cm.processCombats() // turn 2 : tick 0->1
+        expect(combat.currentAction.id).toBe('a1')
+        expect(combat.distance).toBe(820)
     })
 })

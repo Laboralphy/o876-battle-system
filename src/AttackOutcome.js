@@ -303,24 +303,6 @@ class AttackOutcome {
         this._ac = oTarget.getters.getArmorClass[this.getAttackType()]
     }
 
-    /**
-     * Return the most suitable offensive equipment slot according to distance, ammo ...
-     * @return {string}
-     */
-    getMostSuitableSlot () {
-        if (this.isTargetInMeleeRange()) {
-            return CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
-        }
-        if (this._attacker.getters.isRangedWeaponLoaded) {
-            return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
-        }
-        return CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
-    }
-
-    selectMostSuitableWeapon () {
-        this._attacker.selectOffensiveSlot(this.getMostSuitableSlot())
-    }
-
     fail (sReason) {
         this._failed = true
         this._failure = sReason

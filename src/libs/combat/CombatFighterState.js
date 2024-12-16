@@ -29,13 +29,19 @@ class CombatFighterState {
         actionType = CONSTS.COMBAT_ACTION_TYPE_ATTACK,
         onHit = '',
         cooldown = 0,
-        charges = 0
+        charges = 0,
+        range = Infinity
     }) {
         if (!id) {
             throw new Error(`id parameter is mandatory when defining action`)
         }
         this._actions[id] = new CombatAction({
-            id, actionType, onHit, cooldown, charges
+            id,
+            actionType,
+            onHit,
+            cooldown,
+            charges,
+            range
         })
     }
 

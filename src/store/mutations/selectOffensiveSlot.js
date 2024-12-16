@@ -6,7 +6,7 @@ const CONSTS = require('../../consts')
  * @param value {string}
  */
 module.exports = ({ state }, { value }) => {
-    if (value === CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED || value === CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED) {
+    if (value === CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED || value === CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE) {
         if (state.selectedOffensiveSlot !== value) {
             state.selectedOffensiveSlot = value
         }

@@ -31,6 +31,10 @@ class CombatAction {
         this._range = range
     }
 
+    get range () {
+        return this._range
+    }
+
     get isLimitedInCharges () {
         return this._dailyCharges > 0
     }

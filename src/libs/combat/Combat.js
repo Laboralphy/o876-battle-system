@@ -33,8 +33,12 @@ class Combat {
         this._tickCount = tickCount
         this._events = new Events()
         this._distance = distance
-        this._nextAction = null
-        this._currentAction = null
+        /**
+         * @type {string}
+         * @private
+         */
+        this._nextAction = ''
+        this._currentAction = ''
     }
 
     get id () {
@@ -147,6 +151,13 @@ class Combat {
         }
     }
 
+    /**
+     * @returns {CombatAction}
+     */
+    get currentAction () {
+        return this._attackerState.actions[this._currentAction]
+    }
+
     notifyTargetApproach (distance) {
         this._distance = distance
     }
@@ -191,25 +202,31 @@ class Combat {
     playFighterAction (bPartingShot = false) {
         const attackerState = this._attackerState
         // If no current action then we are attacking during this turn
-        const bAttackTurn = this._currentAction === null
-        if (!bAttackTurn && this._tick === 0) {
-            this._events.emit('combat.action', {
-                ...this.eventDefaultPayload,
-                action: this._currentAction
-            })
-        } else {
-            const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
-            if (bPartingShot || nAttackCount > 0) {
-                this._events.emit('combat.attack', {
-                    ...this.eventDefaultPayload,
-                    count: nAttackCount,
-                    opportunity: bPartingShot // if true, then no retaliation (start combat back)
-                })
+        if (this._tick === 0) {
+            const action = this.currentAction
+            if (action) {
+                if (action.ready) {
+                    this._events.emit('combat.action', {
+                        ...this.eventDefaultPayload,
+                        action: action
+                    })
+                    this._currentAction = ''
+                    return
+                }
             }
+        }
+        const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
+        if (bPartingShot || nAttackCount > 0) {
+            this._events.emit('combat.attack', {
+                ...this.eventDefaultPayload,
+                count: nAttackCount,
+                opportunity: bPartingShot // if true, then no retaliation (start combat back)
+            })
         }
     }
 
     advance () {
+        let bHasMoved = false
         if (this._tick === 0) {
             this.selectMostSuitableAction() // this will select current action for this turn
             // can be attack with weapon, or casting spell, or using spell like ability
@@ -219,13 +236,23 @@ class Combat {
             // if target is in weapon range
             if (!this.isTargetInRange()) {
                 this.approachTarget()
+                bHasMoved = true
             }
         }
-        this.playFighterAction()
+        if (!bHasMoved) {
+            this.playFighterAction()
+        }
         this._events.emit('combat.tick.end', {
             ...this.eventDefaultPayload
         })
         this.nextTick()
+        if (this._tick === 0) {
+            // start of next turn
+            if (this._currentAction === '') {
+                this._currentAction = this._nextAction
+                this._nextAction = ''
+            }
+        }
     }
 
     /**
@@ -260,8 +287,8 @@ class Combat {
      * @returns {boolean}
      */
     isTargetInRange () {
-        if (this._currentAction) {
-            return this._distance <= this._currentAction.range
+        if (this.currentAction) {
+            return this._distance <= this.currentAction.range
         } else {
             return this.isTargetInSelectedWeaponRange()
         }
@@ -286,15 +313,13 @@ class Combat {
     }
 
     selectMostSuitableAction () {
-        this._currentAction = this._attackerState.actions[this._nextAction] || null
         this._events.emit('combat.turn', {
             ...this.eventDefaultPayload,
             action: action => {
-                this._currentAction = this._attackerState.actions[action]
+                this._currentAction = action
             }
         })
-        this._nextAction = null
-        if (this._currentAction === null) {
+        if (this._currentAction === '') {
             this.selectMostSuitableWeapon()
         }
     }
@@ -317,10 +342,20 @@ class Combat {
         this.distance = nNewDistance
     }
 
+    /**
+     * @param value {String}
+     */
     set nextAction (value) {
-        this._nextAction = value
+        if ((value === '') || (value in this._attackerState.actions)) {
+            this._nextAction = value
+        } else {
+            throw new Error(`Unknown action ${value}`)
+        }
     }
 
+    /**
+     * @returns {string}
+     */
     get nextAction () {
         return this._nextAction
     }

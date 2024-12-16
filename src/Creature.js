@@ -21,6 +21,9 @@ class Creature {
         this._dice = new Dice()
     }
 
+    /**
+     * @returns {Dice}
+     */
     get dice () {
         return this._dice
     }
