@@ -11,12 +11,14 @@ class CombatAction {
      * @param cooldown {number}
      * @param charges {number}
      * @param onHit {string} script launched when action is done
+     * @param parameters {{}} script parameters
      * @param range {number}
      */
     constructor ({
         id = '',
         actionType = CONSTS.COMBAT_ACTION_TYPE_ATTACK,
         onHit = '',
+        parameters = {},
         cooldown = 0,
         charges = 0,
         range = Infinity,
@@ -24,6 +26,7 @@ class CombatAction {
         this._id = id
         this._actionType = actionType
         this._onHit = onHit
+        this._parameters = parameters
         this._cooldownTimer = 0
         this._cooldown = cooldown
         this._charges = 0
@@ -68,6 +71,10 @@ class CombatAction {
         return this._onHit
     }
 
+    get parameters () {
+        return this._parameters
+    }
+
     use () {
         if (this.ready) {
             if (this.isLimitedInCharges) {
@@ -77,6 +84,19 @@ class CombatAction {
                 this._cooldownTimer = this._cooldown
             }
         }
+    }
+
+    /**
+     * Used for cooling down the action
+     */
+    updateCooldown () {
+        if (this._cooldownTimer > 0) {
+            --this._cooldownTimer
+        }
+    }
+
+    restoreCharges () {
+        this._charges = this._dailyCharges
     }
 }
 

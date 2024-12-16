@@ -1,11 +1,12 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-13T13:41:37.963Z
+// Date : 2024-12-16T16:39:03.119Z
 // List of files in ./src/store/getters
 
 module.exports = {
   'getAbilities': require('./getAbilities.js'),
   'getAbilityBaseValues': require('./getAbilityBaseValues.js'),
   'getAbilityModifiers': require('./getAbilityModifiers.js'),
+  'getActions': require('./getActions.js'),
   'getArmorClass': require('./getArmorClass.js'),
   'getAttackBonus': require('./getAttackBonus.js'),
   'getCapabilitySet': require('./getCapabilitySet.js'),

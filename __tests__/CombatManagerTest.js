@@ -417,13 +417,13 @@ describe('advancing combat', function () {
         expect(combat.getSelectedWeaponRange()).toBe(5)
         expect(combat.isTargetInRange()).toBeTruthy()
 
-        cm.processCombats() // turn 0->1 : tick 5->0 !! new turn
-
-        cm.processCombats() // // turn 1 : tick 0->1 !! beginning of tick 0 : takin action
+        cm.processCombats() // turn 0->1 : tick 5->0 !! new turn, selecting new action
         expect(combat.nextAction).toBe('')
         expect(combat.currentAction).not.toBeNull()
         expect(combat.currentAction).toBeInstanceOf(CombatAction)
         expect(combat.currentAction.range).toBe(Infinity)
+
+        cm.processCombats() // // turn 1 : tick 0->1 !! beginning of tick 0 : taking action
         expect(logs).toHaveLength(1)
         const l0 = logs[0].action
         expect(l0.id).toBe('a1')

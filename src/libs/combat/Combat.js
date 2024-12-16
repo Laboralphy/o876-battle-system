@@ -152,10 +152,18 @@ class Combat {
     }
 
     /**
-     * @returns {CombatAction}
+     * @returns {RBSStoreGettersGetAction | null}
      */
     get currentAction () {
-        return this._attackerState.actions[this._currentAction]
+        return this._attackerState.actions[this._currentAction] || null
+    }
+
+    selectCurrentAction (value) {
+        if (value === '' || value in this._attackerState.actions) {
+            this._currentAction = value
+        } else {
+            throw new Error('Action is unknown for this creature - allowed values are : ' + Object.keys(this._attackerState.actions).join(', '))
+        }
     }
 
     notifyTargetApproach (distance) {
@@ -210,7 +218,8 @@ class Combat {
                         ...this.eventDefaultPayload,
                         action: action
                     })
-                    this._currentAction = ''
+                    attackerState.useAction(action.id)
+                    this.selectCurrentAction('')
                     return
                 }
             }
@@ -248,9 +257,9 @@ class Combat {
         this.nextTick()
         if (this._tick === 0) {
             // start of next turn
-            if (this._currentAction === '') {
-                this._currentAction = this._nextAction
-                this._nextAction = ''
+            if (!this.currentAction) {
+                this.selectCurrentAction(this._nextAction)
+                this.nextAction = ''
             }
         }
     }
@@ -316,10 +325,10 @@ class Combat {
         this._events.emit('combat.turn', {
             ...this.eventDefaultPayload,
             action: action => {
-                this._currentAction = action
+                this.currentAction = action
             }
         })
-        if (this._currentAction === '') {
+        if (!this.currentAction) {
             this.selectMostSuitableWeapon()
         }
     }

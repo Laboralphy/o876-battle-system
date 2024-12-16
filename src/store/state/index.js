@@ -1,6 +1,16 @@
 const CONSTS = require('../../consts')
 
 /**
+ * @typedef RBSStoreStateCombatAction {object}
+ * @property attackType {string}
+ * @property cooldown {number}
+ * @property cooldownTimer {number}
+ * @property charges {number}
+ * @property dailyCharges {number}
+ * @property range {number}
+ * @property onHit {string}
+ * @property parameters {{}}
+ *
  * @typedef RBSStoreState {object}
  * @property id {string}
  * @property specie {string}
@@ -21,6 +31,7 @@ const CONSTS = require('../../consts')
  * @property proficiencies {string[]}
  * @property environment {{ [env: string]: boolean }}
  * @property selectedOffensiveSlot {string}
+ * @property actions {{ [action: string]: RBSStoreStateCombatAction }}
  *
  *
  * @returns {RBSStoreState}
@@ -72,5 +83,6 @@ module.exports = () => ({
         [CONSTS.ENVIRONMENT_DIFFICULT_TERRAIN]: false,
         [CONSTS.ENVIRONMENT_UNDERWATER]: false
     },
-    selectedOffensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+    selectedOffensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
+    actions: {}
 })

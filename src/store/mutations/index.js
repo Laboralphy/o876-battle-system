@@ -1,13 +1,15 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-13T13:41:38.033Z
+// Date : 2024-12-16T16:39:03.191Z
 // List of files in ./src/store/mutations
 
 module.exports = {
   'addEffect': require('./addEffect.js'),
   'addProficiency': require('./addProficiency.js'),
   'addProperty': require('./addProperty.js'),
+  'defineAction': require('./defineAction.js'),
   'equipItem': require('./equipItem.js'),
   'removeEffect': require('./removeEffect.js'),
+  'restoreAction': require('./restoreAction.js'),
   'selectOffensiveSlot': require('./selectOffensiveSlot.js'),
   'setAbilityValue': require('./setAbilityValue.js'),
   'setClassType': require('./setClassType.js'),
@@ -21,5 +23,6 @@ module.exports = {
   'setNaturalArmorClass': require('./setNaturalArmorClass.js'),
   'setRace': require('./setRace.js'),
   'setSpecie': require('./setSpecie.js'),
-  'setSpeed': require('./setSpeed.js')
+  'setSpeed': require('./setSpeed.js'),
+  'useAction': require('./useAction.js')
 }

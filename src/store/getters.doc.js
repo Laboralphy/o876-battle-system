@@ -3,6 +3,7 @@
  * @property getAbilities {Object<string, number>}
  * @property getAbilityBaseValues {Object<string, number>}
  * @property getAbilityModifiers {Object<string, number>}
+ * @property getActions {RBSStoreGettersGetAction[]}
  * @property getArmorClass {Object<string, number>}
  * @property getAttackBonus {number}
  * @property getCapabilitySet {Set<string>}

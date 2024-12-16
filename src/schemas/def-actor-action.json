@@ -1,58 +1,41 @@
 {
-  "description": "action definition",
   "type": "object",
-  "allowAdditionnalProperties": false,
+  "description": "Definition of a combat action",
+  "allowAdditionalProperties": false,
   "required": [
-    "name",
-    "attackType",
-    "damage",
-    "damageType",
-    "count",
-    "cooldown",
-    "conveys"
+    "id",
+    "actionType",
+    "onHit"
   ],
   "properties": {
-    "name": {
-      "description": "action name - unused for mechanics",
-      "type": "string"
-    },
-    "attackType": {
-      "description": "attack type - script used to determine if attack hits",
-      "type": "string"
-    },
-    "damage": {
-      "description": "Amount of damage dealt by the action",
-      "$ref": "type-number-or-string"
-    },
-    "damageType": {
-      "description": "Nature of damage",
+    "id": {
       "type": "string",
-      "pattern": "^DAMAGE_TYPE_"
+      "description": "Action technical identifier, can be used to retrieve action name"
     },
-    "count": {
-      "description": "number of times, the attack is made in a turn",
-      "type": "number"
+    "actionType": {
+      "type": "string",
+      "pattern": "^COMBAT_ACTION_TYPE_",
+      "description": "Type of combat action, can be weapon, spell, or spell like ability"
+    },
+    "onHit": {
+      "type": "string",
+      "description": "Script used to resolve action"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "An object containing optional parameters for script onHit"
     },
     "cooldown": {
-      "description": "number of turns the action is locked and cannot be used again",
-      "type": "number"
+      "type": "number",
+      "description": "Number of cooldown turns"
     },
-    "conveys": {
-      "description": "list of scripts to be run of attack hits",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "script": {
-            "description": "script to run if this attack hit",
-            "type": "string"
-          },
-          "data": {
-            "description": "parameters passed to script",
-            "type": "object"
-          }
-        }
-      }
+    "charges": {
+      "type": "number",
+      "description": "Number of daily charges"
+    },
+    "range": {
+      "type": "number",
+      "description": "Action range (infinity by default)"
     }
   }
 }

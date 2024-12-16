@@ -45,8 +45,12 @@ class CombatFighterState {
         })
     }
 
+    /**
+     * Return all actions
+     * @returns {{ [id: string]: RBSStoreGettersGetAction }}
+     */
     get actions () {
-        return this._actions
+        return this._creature.getters.getActions
     }
 
     /**
@@ -79,6 +83,10 @@ class CombatFighterState {
      */
     get plan () {
         return this._plan
+    }
+
+    useAction (id) {
+        this._creature.mutations.useAction({ action: id })
     }
 
     /**
