@@ -71,7 +71,8 @@ class SchemaValidator {
      */
     validate (oObject, sSchemaId) {
         if (!(sSchemaId in this._schemas)) {
-            throw new Error('ERR_UNKNOWN_SCHEMA: ' + sSchemaId)
+            console.error(this._schemas)
+            throw new Error('ERR_UNKNOWN_SCHEMA: ' + sSchemaId + ' - known schemas are : ' + Object.keys(this._schemas).join(', '))
         }
         const r = this._validator.validate(oObject, this._schemas[sSchemaId])
         if (!r.valid) {

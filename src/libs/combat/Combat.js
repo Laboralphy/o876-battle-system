@@ -130,7 +130,7 @@ class Combat {
             combat: this,
             turn: this._turn,
             tick: this._tick,
-            attacker: this._attackerState.creature,
+            attacker: this.attacker,
             target: this._defender
         }
     }

@@ -14,10 +14,10 @@
  * @param state {RBSStoreState}
  * @returns {{ [id: string]: RBSStoreGettersGetAction }}
  */
-module.exports = state => Object
+module.exports = state => Object.fromEntries(
+    Object
     .entries(state.actions)
-    .filter(([, action]) => action.cooldown === 0 && (action.dailyCharges === 0 || action.charges > 0))
-    .map(([id, action]) => ({
+    .map(([id, action]) => [id, {
         id,
         attackType: action.attackType,
         cooldown: action.cooldownTimer,
@@ -25,8 +25,5 @@ module.exports = state => Object
         range: action.range,
         onHit: action.onHit,
         parameters: action.parameters,
-        ready: action.cooldown === 0 && (action.dailyCharges === 0 || action.charges > 0)
-    }))
-    .reduce((prev, [id, action]) => {
-        prev[id] = action
-    }, {})
+        ready: action.cooldownTimer === 0 && (action.dailyCharges === 0 || action.charges > 0)
+    }]))

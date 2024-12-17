@@ -16,12 +16,19 @@ class EntityBuilder {
         this._propertyBuilder = new PropertyBuilder()
     }
 
-    get schemaValidator () {
-        return this._schemaValidator
+    get propertyBuilder () {
+        return this._propertyBuilder
     }
 
     set schemaValidator (value) {
         this._schemaValidator = value
+    }
+
+    get schemaValidator () {
+        if (!this._schemaValidator) {
+            throw new ReferenceError('no schema validator has been defined for this instance')
+        }
+        return this._schemaValidator
     }
 
     get blueprints () {
@@ -82,12 +89,12 @@ class EntityBuilder {
         }
         switch (oBuiltBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
-                this._schemaValidator.validate(oBuiltBlueprint, 'blueprint-item')
+                this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-item')
                 break
             }
 
             case CONSTS.ENTITY_TYPE_ACTOR: {
-                this._schemaValidator.validate(oBuiltBlueprint, 'blueprint-actor')
+                this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-actor')
                 break
             }
         }

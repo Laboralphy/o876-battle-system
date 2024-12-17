@@ -3,7 +3,7 @@
  * @property getAbilities {Object<string, number>}
  * @property getAbilityBaseValues {Object<string, number>}
  * @property getAbilityModifiers {Object<string, number>}
- * @property getActions {RBSStoreGettersGetAction[]}
+ * @property getActions {{ [id: string]: RBSStoreGettersGetAction }}
  * @property getArmorClass {Object<string, number>}
  * @property getAttackBonus {number}
  * @property getCapabilitySet {Set<string>}
@@ -19,6 +19,7 @@
  * @property getEquipmentProperties {RBSProperty[]}
  * @property getHitPoints {number}
  * @property getId {string}
+ * @property getImmunitySet {Set<string>}
  * @property getInnateProperties {RBSProperty[]}
  * @property getLevel {number}
  * @property getMaxHitPoints {number}

@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-16T16:39:03.299Z
+// Date : 2024-12-17T14:18:45.601Z
 // List of files in ./src/effects
 
 module.exports = {
@@ -8,7 +8,6 @@ module.exports = {
   'EFFECT_ATTACK_COUNT_MODIFIER': require('./attack-count-modifier.js'),
   'EFFECT_ATTACK_MODIFIER': require('./attack-modifier.js'),
   'EFFECT_BLINDNESS': require('./blindness.js'),
-  'EFFECT_CHARM': require('./charm.js'),
   'EFFECT_CONFUSION': require('./confusion.js'),
   'EFFECT_DAMAGE_IMMUNITY': require('./damage-immunity.js'),
   'EFFECT_DAMAGE_MODIFIER': require('./damage-modifier.js'),

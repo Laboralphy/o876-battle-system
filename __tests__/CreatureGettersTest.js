@@ -806,3 +806,317 @@ describe('getWeaponRanges', function () {
         })
     })
 })
+
+describe('getActions', function () {
+    it('should return {} when create has no action', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        const a = oCreature.getters.getActions
+        expect(a).toEqual({})
+    })
+    it('should return an action when create has one aciton defined', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1'
+        })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+    })
+    it('action with cooldown should be ready by default', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1',
+            cooldown: 5
+        })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+    })
+    it('action with cooldown should not be ready when action is used', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1',
+            cooldown: 5
+        })
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 5,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+    })
+    it('action with cooldown should be ready when action is used and restored', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1',
+            cooldown: 5
+        })
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 5,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+        oCreature.mutations.coolActionsDown()
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 4,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+        oCreature.mutations.coolActionsDown()
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 3,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+        oCreature.mutations.coolActionsDown()
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 2,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+        oCreature.mutations.coolActionsDown()
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 1,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+        oCreature.mutations.coolActionsDown()
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+    })
+    it('action with charges should be ready by default', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1',
+            charges: 5
+        })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 5,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+    })
+    it('action with charges should not be ready when charges are depleted', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1',
+            charges: 5
+        })
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 4,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 3,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 2,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 1,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+    })
+    it('action with charges should be ready by default', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1',
+            charges: 5
+        })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 5,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+    })
+    it('action with charges should be ready when depleted charges are restored', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1',
+            charges: 5
+        })
+        oCreature.mutations.useAction({ action: 'a1' })
+        oCreature.mutations.useAction({ action: 'a1' })
+        oCreature.mutations.useAction({ action: 'a1' })
+        oCreature.mutations.useAction({ action: 'a1' })
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+        oCreature.mutations.restoreAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                cooldown: 0,
+                charges: 5,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+    })
+})
+
+describe('getEffects', function() {
+    it('should return 1 when appplying long duration effect', function () {
+        const c1 = new Creature({ blueprint: bpNormalActor })
+        const eLight = { id: 'e1', type: 'EFFECT_LIGHT', duration: 10, amp: 0 }
+        c1.mutations.addEffect({ effect: eLight })
+        expect(c1.getters.getEffects.length).toBe(1)
+    })
+})

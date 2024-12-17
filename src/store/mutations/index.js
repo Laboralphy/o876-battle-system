@@ -1,11 +1,12 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-16T16:39:03.191Z
+// Date : 2024-12-17T14:18:45.498Z
 // List of files in ./src/store/mutations
 
 module.exports = {
   'addEffect': require('./addEffect.js'),
   'addProficiency': require('./addProficiency.js'),
   'addProperty': require('./addProperty.js'),
+  'coolActionsDown': require('./coolActionsDown.js'),
   'defineAction': require('./defineAction.js'),
   'equipItem': require('./equipItem.js'),
   'removeEffect': require('./removeEffect.js'),

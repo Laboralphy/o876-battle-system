@@ -10,7 +10,7 @@ class PropertyBuilder {
      * Invoke effect method
      * @param oProperty {RBSProperty}
      * @param sMethod
-     * @param oItem {*} item if property is extrinsect or null if property is intrinsect
+     * @param oItem {RBSItem | null} item if property is extrinsect or null if property is intrinsect
      * @param oCreature {Creature|null} creature using item
      * @param oParams {object}
      * @returns {undefined|*}

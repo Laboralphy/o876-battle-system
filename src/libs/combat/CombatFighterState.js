@@ -1,7 +1,6 @@
 const {aggregateModifiers} = require('../aggregator')
 const CONSTS = require('../../consts')
 const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../props-effects-filters')
-const CombatAction = require('./CombatAction')
 
 /**
  * @class
@@ -20,29 +19,7 @@ class CombatFighterState {
          */
         this._creature = null
         this._lastAttackCount = 0
-        this._actions = {}
         this._attackCount = 0
-    }
-
-    addAction ({
-        id,
-        actionType = CONSTS.COMBAT_ACTION_TYPE_ATTACK,
-        onHit = '',
-        cooldown = 0,
-        charges = 0,
-        range = Infinity
-    }) {
-        if (!id) {
-            throw new Error(`id parameter is mandatory when defining action`)
-        }
-        this._actions[id] = new CombatAction({
-            id,
-            actionType,
-            onHit,
-            cooldown,
-            charges,
-            range
-        })
     }
 
     /**

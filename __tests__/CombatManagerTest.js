@@ -1,5 +1,4 @@
 const CombatManager = require('../src/libs/combat/CombatManager')
-const CombatAction = require('../src/libs/combat/CombatAction')
 const Creature = require('../src/Creature')
 const CONSTS = require('../src/consts')
 const PropertyBuilder = require('../src/PropertyBuilder')
@@ -377,7 +376,7 @@ describe('advancing combat', function () {
         const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
         const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
         const combat = cm.startCombat(c1, c2)
-        combat.attackerState.addAction({
+        combat.attacker.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
             onHit: 'script1'
@@ -420,7 +419,6 @@ describe('advancing combat', function () {
         cm.processCombats() // turn 0->1 : tick 5->0 !! new turn, selecting new action
         expect(combat.nextAction).toBe('')
         expect(combat.currentAction).not.toBeNull()
-        expect(combat.currentAction).toBeInstanceOf(CombatAction)
         expect(combat.currentAction.range).toBe(Infinity)
 
         cm.processCombats() // // turn 1 : tick 0->1 !! beginning of tick 0 : taking action
@@ -434,7 +432,7 @@ describe('advancing combat', function () {
         const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
         const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
         const combat = cm.startCombat(c1, c2)
-        combat.attackerState.addAction({
+        combat.attacker.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
             onHit: 'script1',

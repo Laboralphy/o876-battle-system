@@ -104,13 +104,94 @@ class EffectProcessor {
         oEffect.duration = duration
         oEffect.target = target.id
         oEffect.source = source.id
+        if (this.isImmuneToEffect(oEffect, target)) {
+            this._events.emit('effect-immunity', { effect: oEffect, target })
+            return null
+        }
+        if (duration > 0) {
+            target.mutations.addEffect({ effect: oEffect })
+            this._horde.setCreatureActive(target)
+        }
         this.invokeEffectMethod(oEffect, 'mutate', target, source)
         this._events.emit('effect-applied', {
             effect: oEffect,
             target,
             source
         })
+        return oEffect
     }
+
+    /**
+     * Return true if effect is rejected by immunity
+     * @param oEffect {RBSEffect}
+     * @param target {Creature}
+     */
+    isImmuneToEffect (oEffect, target) {
+        const aImmunitySet = target.getters.getImmunitySet
+        switch (oEffect.type) {
+            case CONSTS.EFFECT_STUN: {
+                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_STUN)
+            }
+
+            case CONSTS.EFFECT_PARALYSIS: {
+                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_PARALYSIS)
+            }
+
+            case CONSTS.EFFECT_BLINDNESS: {
+                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_BLINDNESS)
+            }
+
+            case CONSTS.EFFECT_CONFUSION: {
+                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_CONFUSION)
+            }
+
+            case CONSTS.EFFECT_NEGATIVE_LEVEL: {
+                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_NEGATIVE_LEVEL)
+            }
+
+            case CONSTS.EFFECT_DISEASE: {
+                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_DISEASE)
+            }
+
+            case CONSTS.EFFECT_ABILITY_MODIFIER: {
+                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_ABILITY_DECREASE)
+            }
+
+            case CONSTS.EFFECT_ARMOR_CLASS_MODIFIER: {
+                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_AC_DECREASE)
+            }
+
+            case CONSTS.EFFECT_ATTACK_MODIFIER: {
+                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_ATTACK_DECREASE)
+            }
+
+            case CONSTS.EFFECT_DAMAGE_MODIFIER: {
+                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_DAMAGE_DECREASE)
+            }
+
+            case CONSTS.EFFECT_DEATH: {
+                return oEffect.subtype === CONSTS.EFFECT_SUBTYPE_MAGICAL && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_DEATH)
+            }
+
+            case CONSTS.EFFECT_DAMAGE: {
+                return oEffect.data.damageType === CONSTS.DAMAGE_TYPE_POISON && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_POISON)
+            }
+
+            case CONSTS.EFFECT_SPEED_FACTOR: {
+                return (oEffect.amp === -Infinity && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_ROOT)) ||
+                    (oEffect.amp < 0 && oEffect.amp > -Infinity && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_SLOW))
+            }
+
+            case CONSTS.EFFECT_SAVING_THROW_MODIFIER: {
+                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_SAVING_THROW_DECREASE)
+            }
+
+            default: {
+                return false
+            }
+        }
+    }
+
 
     /**
      * Groups all specified effect. i.e : All effects will get a list of all siblings
