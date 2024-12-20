@@ -474,3 +474,41 @@ describe('advancing combat', function () {
         expect(combat.distance).toBe(820)
     })
 })
+
+describe('Try real combat', function () {
+    it('should work in real combat', function () {
+        const cm = new CombatManager()
+        cm.defaultDistance = 50
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
+        const combat = cm.startCombat(c1, c2)
+        c1.mutations.defineAction({
+            id: 'a1',
+            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+            onHit: 'script1',
+            range: 5
+        })
+        c2.mutations.defineAction({
+            id: 'a2',
+            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+            onHit: 'script2',
+            range: 5
+        })
+        const logs = []
+        cm.events.on('combat.move', ({
+            previousDistance,
+            speed,
+            distance
+        }) => {
+            logs.push({
+                type: 'move',
+                previousDistance,
+                speed
+            })
+        })
+        cm.processCombats()
+        expect(logs).toHaveLength(2)
+        expect(logs[])
+
+    })
+})

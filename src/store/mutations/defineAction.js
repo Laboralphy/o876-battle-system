@@ -21,7 +21,7 @@ module.exports = ({ state }, {
     onHit,
     parameters = {}
 }) => {
-    state.actions[id] = {
+    const oNewAction = {
         attackType,
         cooldown,
         cooldownTimer: 0,
@@ -30,5 +30,9 @@ module.exports = ({ state }, {
         range,
         onHit,
         parameters
+    }
+    state.actions = {
+        ...state.actions,
+        [id]: oNewAction
     }
 }

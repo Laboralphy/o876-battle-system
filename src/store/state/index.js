@@ -59,7 +59,7 @@ module.exports = () => ({
     },
     properties: [],
     proficiencies: [],
-    effects: {},
+    effects: [],
     equipment: {
         [CONSTS.EQUIPMENT_SLOT_INVALID]: null,
         [CONSTS.EQUIPMENT_SLOT_HEAD]: null,

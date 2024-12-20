@@ -152,7 +152,7 @@ class Combat {
     }
 
     /**
-     * @returns {RBSStoreGettersGetAction | null}
+     * @returns {RBSAction | null}
      */
     get currentAction () {
         return this._attackerState.actions[this._currentAction] || null

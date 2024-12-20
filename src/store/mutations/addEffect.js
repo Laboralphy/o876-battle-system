@@ -5,9 +5,5 @@
  * @returns {RBSEffect}
  */
 module.exports = ({ state }, { effect }) => {
-    const id = effect.id
-    if (id in state.effects) {
-        throw new Error(`An effect with the same id ${id} is already present in state`)
-    }
-    return state.effects[id] = effect
+    return state.effects[state.effects.push(effect) - 1]
 }

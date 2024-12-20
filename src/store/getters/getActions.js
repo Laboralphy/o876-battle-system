@@ -1,5 +1,5 @@
 /**
- * @typedef RBSStoreGettersGetAction {object}
+ * @typedef RBSAction {object}
  * @property id {string}
  * @property attackType {string}
  * @property cooldown {number}
@@ -12,7 +12,7 @@
  * @property ready {boolean}
  *
  * @param state {RBSStoreState}
- * @returns {{ [id: string]: RBSStoreGettersGetAction }}
+ * @returns {{ [id: string]: RBSAction }}
  */
 module.exports = state => Object.fromEntries(
     Object

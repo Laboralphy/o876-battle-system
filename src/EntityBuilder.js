@@ -16,6 +16,10 @@ class EntityBuilder {
         this._propertyBuilder = new PropertyBuilder()
     }
 
+    /**
+     *
+     * @returns {PropertyBuilder}
+     */
     get propertyBuilder () {
         return this._propertyBuilder
     }
