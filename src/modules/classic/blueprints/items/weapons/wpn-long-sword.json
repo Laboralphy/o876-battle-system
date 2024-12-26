@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "wpn-type-long-sword"
+  ],
+  "properties": []
+}

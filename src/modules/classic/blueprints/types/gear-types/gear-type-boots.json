@@ -1,0 +1,11 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "",
+  "proficiency": "",
+  "ac": "",
+  "weight": 4,
+  "properties": [],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_FEET"
+  ]
+}

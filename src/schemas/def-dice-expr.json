@@ -7,7 +7,7 @@
     {
       "description": "Dice expression (1d6 ; 2d4; 1d10+3)",
       "type": "string",
-      "pattern": "^[-+]? *\\d+ *[Dd] *\\d+ *([-+] *\\d+)?$"
+      "pattern": "^\\s*[-+]?\\s*\\d+\\s*[Dd]\\s*\\d+\\s*([-+]\\s*\\d+)?\\s*$"
     }
   ]
 }

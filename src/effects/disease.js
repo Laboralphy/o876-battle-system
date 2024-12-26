@@ -87,7 +87,20 @@ function mutate (payload) {
     }
 }
 
+/**
+ * Effect is rejected if target is immune to disease
+ * @param effect {RBSEffect}
+ * @param target {Creature}
+ * @param reject {function}
+ */
+function apply ({ effect, target, reject }) {
+    if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_DISEASE)) {
+        reject()
+    }
+}
+
 module.exports = {
     init,
-    mutate
+    mutate,
+    apply
 }

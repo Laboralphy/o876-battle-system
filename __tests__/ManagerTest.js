@@ -6,7 +6,6 @@ const bpNormalActor = {
     specie: CONSTS.SPECIE_HUMANOID,
     race: CONSTS.RACE_HUMAN,
     ac: 0,
-    hp: 6,
     proficiencies: [],
     speed: 30,
     classType: CONSTS.CLASS_TYPE_TOURIST,

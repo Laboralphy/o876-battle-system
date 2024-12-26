@@ -104,6 +104,7 @@ function aggregateModifiers (aTags, getters, {
         aFilteredProperties.forEach(f => {
             const sDisc = propSorter(f)
             if (sDisc === undefined) {
+                console.error(f)
                 console.error(propSorter.toString())
                 throw new Error('property sorted returned undefined')
             }

@@ -1,8 +1,11 @@
 /**
  * Removes an effect from creature
- * @param state {*}
+ * @param state {RBSStoreState}
  * @param effect {RBSEffect}
  */
 module.exports = ({ state }, { effect }) => {
-    delete state.effects[effect.id]
+    const iEffectIndex = state.findIndex(eff => eff.id === effect.id)
+    if (iEffectIndex >= 0) {
+        state.effects.splice(iEffectIndex, 1)
+    }
 }

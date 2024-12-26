@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-17T14:18:45.705Z
+// Date : 2024-12-26T01:35:39.341Z
 // List of files in ./src/consts
 
 module.exports = {
@@ -25,6 +25,7 @@ module.exports = {
   ...require('./proficiencies.json'),
   ...require('./properties.js'),
   ...require('./races.json'),
+  ...require('./roll-types.json'),
   ...require('./saving-throws.json'),
   ...require('./species.json'),
   ...require('./weapon-attributes.json'),

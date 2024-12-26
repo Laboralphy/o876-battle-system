@@ -59,12 +59,15 @@ class EntityBuilder {
      * @property itemType {string} item type
      * @property proficiencies {string[]} item proficiency (condition to use efficiently)
      * @property [damages] {number|string} weapon damage amount (can be dice expression)
-     * @property [damageTypes] {string[]} weapon damage type list
+     * @property [damageType] {string} weapon damage type list
      * @property weight {number} item weight
      * @property [attributes] {string[]} weapon attribute list
      * @property [size] {string} weapon size
      * @property [charges] {number} maximum number of charges
      * @property [equipmentSlots] {string[]} list of slot where item can be equipped
+     * @property [ac] {number}
+     * @property [maxDexterityBonus] {number}
+     * @property properties {RBSProperty[]}
      *
      * @param id
      * @param blueprint
@@ -174,7 +177,7 @@ class EntityBuilder {
             .values(oBlueprint.equipment)
             .forEach(item => {
                 const oItem = this.createEntity(item)
-
+                oCreature.equipItem(oItem)
             })
         return oCreature
     }

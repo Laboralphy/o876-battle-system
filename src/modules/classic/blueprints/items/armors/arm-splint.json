@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "arm-type-splint"
+  ],
+  "properties": []
+}

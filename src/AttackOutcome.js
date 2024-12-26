@@ -1,8 +1,6 @@
 const CONSTS = require('./consts')
-const DATA = require('./data')
 const Events = require('events')
 const { aggregateModifiers } = require('./libs/aggregator')
-const { filterRangedAttackTypes, filterMeleeAttackTypes } = require('./libs/props-effects-filters')
 
 /**
  * @class
@@ -50,6 +48,7 @@ class AttackOutcome {
         /// NUMERIC VALUES ///
 
         this._ac = 0
+
         /**
          * attack bonus
          * @type {number}
@@ -248,10 +247,28 @@ class AttackOutcome {
         return this._distance <= g.getWeaponRanges[slot]
     }
 
+    /**
+     * Return the attack type
+     * @returns {string}
+     */
     getAttackType () {
-        return this._attacker.getters.getSelectedWeaponAttributeSet.has(CONSTS.WEAPON_ATTRIBUTE_RANGED)
+        return this._weapon && this._weapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
             ? CONSTS.ATTACK_TYPE_RANGED
             : CONSTS.ATTACK_TYPE_MELEE
+    }
+
+    getDamageType () {
+        return this._weapon
+            ? this._weapon.blueprint.damageType
+            : CONSTS.DAMAGE_TYPE_CRUSHING
+    }
+
+    getWeaponBaseDamageAmount () {
+        if (this._weapon) {
+            return this._weapon.blueprint.damages
+        } else {
+            return '1d3'
+        }
     }
 
     /**
@@ -300,7 +317,9 @@ class AttackOutcome {
 
     computeDefenseParameters () {
         const oTarget = this._target
-        this._ac = oTarget.getters.getArmorClass[this.getAttackType()]
+        const oArmorClasses = oTarget.getters.getArmorClass
+        this._ac = oArmorClasses[this.getAttackType()] +
+            oArmorClasses[this.getDamageType()]
     }
 
     fail (sReason) {
@@ -333,9 +352,16 @@ class AttackOutcome {
             this.fail(CONSTS.ATTACK_FAILURE_VISIBILITY)
             return false
         }
+        const dt = this.getDamageType()
+        const aDamageTypes = Array.isArray(dt) ? dt : [dt]
+
         // compute target defense
         this.computeAttackParameters()
         this.computeDefenseParameters()
+
+        // Choose best damage type if needed
+
+
         if (!this.isTargetInSelectedWeaponRange()) {
             // not in range, attack failed, must rush toward target
             this.fail(CONSTS.ATTACK_FAILURE_TARGET_UNREACHABLE)
@@ -355,40 +381,17 @@ class AttackOutcome {
         this._critical = bCritical
         this._hit = bHit
 
-        // Resolve damages
-        if (bHit && this._weapon) {
-            this.rollDamages(this._weapon.blueprint.damages, CONSTS.DAMAGE_TYPE_PHYSICAL)
-        }
-        if (bHit && this._ammo) {
-            this.rollDamages(this._ammo.blueprint.damages, CONSTS.DAMAGE_TYPE_PHYSICAL)
-        }
-        if (bHit && this.sneak) {
-            const nSneakAttackRank = this.sneak
-                ? aggregateModifiers([
-                    CONSTS.PROPERTY_SNEAK_ATTACK
-                ], oAttacker.getters).sum
-                : 0
-            const sSneakDice = nSneakAttackRank.toString() + 'd6'
-            this.rollDamages(sSneakDice, CONSTS.DAMAGE_TYPE_PHYSICAL)
-        }
-
-        let pFilter = null
-
-        switch (this._attackType) {
-            case CONSTS.ATTACK_TYPE_MELEE:
-            case CONSTS.ATTACK_TYPE_MELEE_TOUCH: {
-                pFilter = filterMeleeAttackTypes
-                break
-            }
-
-            case CONSTS.ATTACK_TYPE_RANGED:
-            case CONSTS.ATTACK_TYPE_RANGED_TOUCH: {
-                pFilter = filterRangedAttackTypes
-                break
-            }
-
-            default: {
-                throw new Error('Attack type is invalid')
+        if (bHit) {
+            const sDamageType = this.getDamageType()
+            this.rollDamages(this.getWeaponBaseDamageAmount(), sDamageType)
+            if (this.sneak) {
+                const nSneakAttackRank = this.sneak
+                    ? aggregateModifiers([
+                        CONSTS.PROPERTY_SNEAK_ATTACK
+                    ], oAttacker.getters).sum
+                    : 0
+                const sSneakDice = nSneakAttackRank.toString() + 'd6'
+                this.rollDamages(sSneakDice, sDamageType)
             }
         }
 

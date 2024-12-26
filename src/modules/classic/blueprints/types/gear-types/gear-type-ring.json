@@ -1,0 +1,12 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "",
+  "proficiency": "",
+  "ac": "",
+  "weight": 0.01,
+  "properties": [],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_FINGER_LEFT",
+    "EQUIPMENT_SLOT_FINGER_RIGHT"
+  ]
+}

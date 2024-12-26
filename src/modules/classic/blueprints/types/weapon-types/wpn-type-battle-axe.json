@@ -1,0 +1,16 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_WEAPON",
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damages": "1d10",
+  "damageType": "DAMAGE_TYPE_SLASHING",
+  "weight": 4,
+  "size": "WEAPON_SIZE_MEDIUM",
+  "attributes": [
+    "WEAPON_ATTRIBUTE_VERSATILE"
+  ],
+  "properties": [],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_WEAPON_MELEE"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_ARMOR",
+  "proficiency": "PROFICIENCY_ARMOR_HEAVY",
+  "ac": 8,
+  "weight": 65,
+  "properties": [
+    {
+      "property": "PROPERTY_ARMOR_CLASS_MODIFIER",
+      "amp": 3,
+      "damageType": "DAMAGE_TYPE_SLASHING"
+    },
+    {
+      "property": "PROPERTY_ARMOR_CLASS_MODIFIER",
+      "amp": -2,
+      "damageType": "DAMAGE_TYPE_PIERCING"
+    },
+    {
+      "property": "PROPERTY_ARMOR_CLASS_MODIFIER",
+      "amp": -1,
+      "damageType": "DAMAGE_TYPE_CRUSHING"
+    },
+    {
+      "property": "PROPERTY_MAX_DEXTERITY_BONUS",
+      "amp": 0
+    },
+    {
+      "property": "PROPERTY_DISADVANTAGE",
+      "amp": 0,
+      "rollType": "ROLL_TYPE_SKILL_CHECK",
+      "ability": "ABILITY_DEXTERITY"
+    }
+  ],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_CHEST"
+  ]
+}

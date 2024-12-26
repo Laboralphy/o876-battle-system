@@ -1,9 +1,10 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-17T14:18:45.601Z
+// Date : 2024-12-26T01:35:39.098Z
 // List of files in ./src/effects
 
 module.exports = {
   'EFFECT_ABILITY_MODIFIER': require('./ability-modifier.js'),
+  'EFFECT_ADVANTAGE': require('./advantage.js'),
   'EFFECT_ARMOR_CLASS_MODIFIER': require('./armor-class-modifier.js'),
   'EFFECT_ATTACK_COUNT_MODIFIER': require('./attack-count-modifier.js'),
   'EFFECT_ATTACK_MODIFIER': require('./attack-modifier.js'),
@@ -17,6 +18,7 @@ module.exports = {
   'EFFECT_DAMAGE': require('./damage.js'),
   'EFFECT_DARKVISION': require('./darkvision.js'),
   'EFFECT_DEATH': require('./death.js'),
+  'EFFECT_DISADVANTAGE': require('./disadvantage.js'),
   'EFFECT_DISEASE': require('./disease.js'),
   'EFFECT_FEAR': require('./fear.js'),
   'EFFECT_FLAG': require('./flag.js'),

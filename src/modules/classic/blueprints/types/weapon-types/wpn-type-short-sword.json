@@ -1,0 +1,16 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_WEAPON",
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damages": "1d6",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 2,
+  "size": "WEAPON_SIZE_SMALL",
+  "attributes": [
+    "WEAPON_ATTRIBUTE_FINESSE"
+  ],
+  "properties": [],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_WEAPON_MELEE"
+  ]
+}

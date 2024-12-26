@@ -14,7 +14,6 @@ const bpNormalActor = {
     specie: CONSTS.SPECIE_HUMANOID,
     race: CONSTS.RACE_HUMAN,
     ac: 0,
-    hp: 6,
     proficiencies: [],
     speed: 30,
     classType: CONSTS.CLASS_TYPE_TOURIST,
@@ -28,6 +27,7 @@ const bpShortbow = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
     itemType: CONSTS.ITEM_TYPE_WEAPON,
     damages: '1d6',
+    damageType: CONSTS.DAMAGE_TYPE_PIERCING,
     size: CONSTS.WEAPON_SIZE_MEDIUM,
     weight: 3,
     proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
@@ -508,7 +508,5 @@ describe('Try real combat', function () {
         })
         cm.processCombats()
         expect(logs).toHaveLength(2)
-        expect(logs[])
-
     })
 })

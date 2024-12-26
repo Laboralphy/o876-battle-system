@@ -5,7 +5,7 @@ const Events = require('events')
 const Dice = require('./libs/dice')
 
 class Creature {
-    constructor ({ blueprint = null, id = null }) {
+    constructor ({ blueprint = null, id = null } = {}) {
         this._store = buildStore()
         this._blueprint = blueprint
         if (blueprint) {

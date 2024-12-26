@@ -104,7 +104,12 @@ class EffectProcessor {
         oEffect.duration = duration
         oEffect.target = target.id
         oEffect.source = source.id
-        if (this.isImmuneToEffect(oEffect, target)) {
+        let bRejected = false
+        const reject = () => {
+            bRejected = true
+        }
+        this.invokeEffectMethod(oEffect, 'apply', target, source, { reject })
+        if (bRejected) {
             this._events.emit('effect-immunity', { effect: oEffect, target })
             return null
         }
@@ -120,78 +125,6 @@ class EffectProcessor {
         })
         return oEffect
     }
-
-    /**
-     * Return true if effect is rejected by immunity
-     * @param oEffect {RBSEffect}
-     * @param target {Creature}
-     */
-    isImmuneToEffect (oEffect, target) {
-        const aImmunitySet = target.getters.getImmunitySet
-        switch (oEffect.type) {
-            case CONSTS.EFFECT_STUN: {
-                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_STUN)
-            }
-
-            case CONSTS.EFFECT_PARALYSIS: {
-                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_PARALYSIS)
-            }
-
-            case CONSTS.EFFECT_BLINDNESS: {
-                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_BLINDNESS)
-            }
-
-            case CONSTS.EFFECT_CONFUSION: {
-                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_CONFUSION)
-            }
-
-            case CONSTS.EFFECT_NEGATIVE_LEVEL: {
-                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_NEGATIVE_LEVEL)
-            }
-
-            case CONSTS.EFFECT_DISEASE: {
-                return aImmunitySet.has(CONSTS.IMMUNITY_TYPE_DISEASE)
-            }
-
-            case CONSTS.EFFECT_ABILITY_MODIFIER: {
-                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_ABILITY_DECREASE)
-            }
-
-            case CONSTS.EFFECT_ARMOR_CLASS_MODIFIER: {
-                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_AC_DECREASE)
-            }
-
-            case CONSTS.EFFECT_ATTACK_MODIFIER: {
-                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_ATTACK_DECREASE)
-            }
-
-            case CONSTS.EFFECT_DAMAGE_MODIFIER: {
-                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_DAMAGE_DECREASE)
-            }
-
-            case CONSTS.EFFECT_DEATH: {
-                return oEffect.subtype === CONSTS.EFFECT_SUBTYPE_MAGICAL && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_DEATH)
-            }
-
-            case CONSTS.EFFECT_DAMAGE: {
-                return oEffect.data.damageType === CONSTS.DAMAGE_TYPE_POISON && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_POISON)
-            }
-
-            case CONSTS.EFFECT_SPEED_FACTOR: {
-                return (oEffect.amp === -Infinity && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_ROOT)) ||
-                    (oEffect.amp < 0 && oEffect.amp > -Infinity && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_SLOW))
-            }
-
-            case CONSTS.EFFECT_SAVING_THROW_MODIFIER: {
-                return oEffect.amp < 0 && aImmunitySet.has(CONSTS.IMMUNITY_TYPE_SAVING_THROW_DECREASE)
-            }
-
-            default: {
-                return false
-            }
-        }
-    }
-
 
     /**
      * Groups all specified effect. i.e : All effects will get a list of all siblings
@@ -227,9 +160,7 @@ class EffectProcessor {
      */
     applyEffectGroup (aEffects, tags, target, duration = 0, source = null) {
         this._groupEffects(aEffects, this._forceArray(tags))
-        aEffects.forEach(effect => {
-            this.applyEffect(effect, target, duration, source)
-        })
+        return aEffects.map(effect => this.applyEffect(effect, target, duration, source))
     }
 
     /**
@@ -298,6 +229,8 @@ class EffectProcessor {
         }
         const oSource = this._horde.creatures[oEffect.source]
         this.invokeEffectMethod(oEffect, 'mutate', oTarget, oSource)
+        const nCurrentDuration = oTarget.getters.getEffectRegistry[oEffect.id].duration
+        oTarget.mutations.setEffectDuration({ effect: oEffect, duration: nCurrentDuration - 1 })
     }
 }
 

@@ -3,6 +3,7 @@
   "required": [
     "proficiency",
     "damages",
+    "damageType",
     "attributes",
     "size"
   ],
@@ -20,6 +21,10 @@
     "size": {
       "type": "string",
       "pattern": "^WEAPON_SIZE_"
+    },
+    "damageType": {
+      "type": "string",
+      "pattern": "DAMAGE_TYPE_"
     },
     "ammoType": {
       "type": "string",

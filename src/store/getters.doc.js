@@ -3,7 +3,7 @@
  * @property getAbilities {Object<string, number>}
  * @property getAbilityBaseValues {Object<string, number>}
  * @property getAbilityModifiers {Object<string, number>}
- * @property getActions {{ [id: string]: RBSStoreGettersGetAction }}
+ * @property getActions {{ [id: string]: RBSAction }}
  * @property getArmorClass {Object<string, number>}
  * @property getAttackBonus {number}
  * @property getCapabilitySet {Set<string>}
@@ -39,6 +39,7 @@
  * @property isDead {boolean}
  * @property isEquipmentProficient {{[p: string]: boolean}}
  * @property isRangedWeaponLoaded {boolean}
+ * @property isWieldingShield {boolean}
  * @property isWieldingTwoHandedWeapon {boolean}
  */
 

@@ -6,6 +6,9 @@ const Events = require('events')
 const SCHEMAS = require('./schemas')
 const SchemaValidator = require('./SchemaValidator')
 const Creature = require('./Creature')
+const { deepMerge, deepClone } = require('@laboralphy/object-fusion')
+const DATA = require('./data')
+const path = require('path')
 
 class Manager {
     constructor () {
@@ -21,6 +24,8 @@ class Manager {
         this._entityBuilder = eb
         this._effectProcessor = ep
         this._combatManager = cm
+        this._scripts = {}
+        this._data = deepClone(DATA)
         cm.events.on('combat.action', evt => this._combatManagerAction(evt))
         ep.events.on('effect-applied', ev => this._effectApplied(ev))
         ep.events.on('effect-immunity', ev => this._effectImmunity(ev))
@@ -81,6 +86,34 @@ class Manager {
         if (bIsActionCoolingDown || bIsActionChargeDepleted) {
             this._horde.setCreatureActive(evt.attacker)
         }
+    }
+
+    /**
+     * Adds a module
+     * @param blueprints
+     * @param scripts
+     * @param data
+     */
+    defineModule ({
+        blueprints = {},
+        scripts = {},
+        data = {}
+    }) {
+        this._entityBuilder.blueprints = blueprints
+        Object
+            .entries(scripts)
+            .forEach(([id, script]) => {
+                this._scripts[id] = script
+            })
+        deepMerge(this._data, data)
+    }
+
+    /**
+     * Loads a module
+     * @param sModuleId {string}
+     */
+    loadModule (sModuleId) {
+        this.defineModule(require(path.join('modules' + sModuleId)))
     }
 
     createEntity (resref, id) {

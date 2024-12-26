@@ -1,0 +1,28 @@
+#!/bin/bash
+
+MODULE_NAME="$1"
+MODULE_ROOT="./src/modules"
+MODULE_PATH="$MODULE_ROOT/$MODULE_NAME"
+
+# checks if module name has been specified
+if [ -z "$MODULE_NAME" ]
+then
+  echo "Must specify module name."
+  echo "You must select one of these modules :"
+  ls "$MODULE_ROOT"
+  exit 2
+fi
+
+# checks if module exists
+if [ ! -d "$MODULE_PATH" ]
+then
+  echo "module $MODULE_NAME not found"
+  echo "You must select one of these modules :"
+  ls "$MODULE_ROOT"
+  exit 1
+fi
+
+
+node ./bin/generate-indexes.js "$MODULE_PATH/blueprints" REQUIRE > "$MODULE_PATH/blueprints/index.js"
+
+echo done

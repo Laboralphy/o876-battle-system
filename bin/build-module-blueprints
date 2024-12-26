@@ -1,0 +1,39 @@
+#!/bin/bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+doDownloadSheet () {
+  sFileName="$1"
+  sURL="$2"
+  curl -s -L --max-redir 5 "$sURL" --output "$SCRIPT_DIR/$sFileName.csv"
+}
+
+source "$SCRIPT_DIR/../.env"
+
+doTranformDataTypes () {
+  cd "$SCRIPT_DIR" || exit 1
+  MODULE="$1"
+  BP_SUB="$2"
+  THIS_TYPE="$3"
+  URL="$4"
+  BP_PATH="$SCRIPT_DIR/../src/modules/$MODULE/blueprints/$BP_SUB/$THIS_TYPE"
+  echo downloading/building $MODULE::$THIS_TYPE
+  mkdir -p "$BP_PATH"
+  rm $BP_PATH/*.json
+  doDownloadSheet "$MODULE-$THIS_TYPE" "$URL"
+  node transform-data.js "$MODULE-$THIS_TYPE.csv" "$BP_PATH"
+  rm "$MODULE-$THIS_TYPE.csv"
+  cd - || exit 1
+}
+
+doProcessClassicModuleData () {
+  doTranformDataTypes classic types weapon-types "$URL_SHEET_CLASSIC_WEAPON_TYPES"
+  doTranformDataTypes classic types armor-types "$URL_SHEET_CLASSIC_ARMOR_TYPES"
+  doTranformDataTypes classic types ammo-types "$URL_SHEET_CLASSIC_AMMO_TYPES"
+  doTranformDataTypes classic types gear-types "$URL_SHEET_CLASSIC_GEAR_TYPES"
+  doTranformDataTypes classic items weapons "$URL_SHEET_CLASSIC_WEAPONS"
+  doTranformDataTypes classic items armors "$URL_SHEET_CLASSIC_ARMORS"
+  doTranformDataTypes classic items ammo "$URL_SHEET_CLASSIC_AMMUNITIONS"
+  doTranformDataTypes classic items gear "$URL_SHEET_CLASSIC_GEAR"
+}
+
+doProcessClassicModuleData

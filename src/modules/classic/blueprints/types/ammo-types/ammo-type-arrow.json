@@ -1,0 +1,10 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_AMMO",
+  "ammoType": "AMMO_TYPE_ARROW",
+  "weight": 0.1,
+  "properties": [],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_AMMO"
+  ]
+}

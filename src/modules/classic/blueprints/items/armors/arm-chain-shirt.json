@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "arm-type-chain-shirt"
+  ],
+  "properties": []
+}

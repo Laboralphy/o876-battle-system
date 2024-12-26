@@ -14,7 +14,6 @@ const bpNormalActor = {
     specie: CONSTS.SPECIE_HUMANOID,
     race: CONSTS.RACE_HUMAN,
     ac: 0,
-    hp: 6,
     proficiencies: [
         CONSTS.PROFICIENCY_WEAPON_MARTIAL,
         CONSTS.PROFICIENCY_WEAPON_SIMPLE,
@@ -55,6 +54,7 @@ const bpDagger = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
     itemType: CONSTS.ITEM_TYPE_WEAPON,
     damages: '1d4',
+    damageType: CONSTS.DAMAGE_TYPE_PIERCING,
     size: CONSTS.WEAPON_SIZE_SMALL,
     weight: 1,
     proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
@@ -66,6 +66,7 @@ const bpShortbow = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
     itemType: CONSTS.ITEM_TYPE_WEAPON,
     damages: '1d6',
+    damageType: CONSTS.DAMAGE_TYPE_PIERCING,
     size: CONSTS.WEAPON_SIZE_MEDIUM,
     weight: 3,
     proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
@@ -86,6 +87,7 @@ const bpShortSword = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
     itemType: CONSTS.ITEM_TYPE_WEAPON,
     damages: '1d6',
+    damageType: CONSTS.DAMAGE_TYPE_PIERCING,
     size: CONSTS.WEAPON_SIZE_MEDIUM,
     weight: 1,
     proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
@@ -97,6 +99,7 @@ const bpLongSword = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
     itemType: CONSTS.ITEM_TYPE_WEAPON,
     damages: '1d8',
+    damageType: CONSTS.DAMAGE_TYPE_SLASHING,
     size: CONSTS.WEAPON_SIZE_MEDIUM,
     weight: 3,
     proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL,
@@ -155,6 +158,89 @@ describe('damages', function () {
         expect(ao.roll).toBe(11)
         expect(ao.attackBonus).toBe(3)
         expect(ao.hit).toBeTruthy()
-        expect(ao.damages.types).toEqual({ [CONSTS.DAMAGE_TYPE_PHYSICAL]: { amount: 4, resisted: 0 }})
+        expect(ao.damages.types).toEqual({ [CONSTS.DAMAGE_TYPE_PIERCING]: { amount: 4, resisted: 0 }})
+    })
+})
+
+describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
+    it('should return 1d3 Melee Crushing when having no weapon', function () {
+        const c1 = eb.createEntity(bpNormalActor)
+        c1.mutations.setLevel({ value: 5 })
+        c1.dice.cheat(0.5)
+        const c2 = eb.createEntity(bpNormalActor)
+        c2.mutations.setLevel({ value: 5 })
+        const ao = new AttackOutcome()
+        ao.attacker = c1
+        ao.target = c2
+        ao.computeAttackParameters()
+        ao.computeDefenseParameters()
+        expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_MELEE)
+        expect(ao.getDamageType()).toBe(CONSTS.DAMAGE_TYPE_CRUSHING)
+        expect(ao.getWeaponBaseDamageAmount()).toBe('1d3')
+    })
+    it('should return 1D4 melee piercing when equipping dagguer', function () {
+        const c1 = eb.createEntity(bpNormalActor)
+        c1.mutations.setLevel({ value: 5 })
+        c1.dice.cheat(0.5)
+        const c2 = eb.createEntity(bpNormalActor)
+        c2.mutations.setLevel({ value: 5 })
+        const dagger = eb.createEntity(bpDagger)
+        c1.equipItem(dagger)
+        const ao = new AttackOutcome()
+        ao.attacker = c1
+        ao.target = c2
+        ao.computeAttackParameters()
+        ao.computeDefenseParameters()
+        expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_MELEE)
+        expect(ao.getDamageType()).toBe(CONSTS.DAMAGE_TYPE_PIERCING)
+        expect(ao.getWeaponBaseDamageAmount()).toBe('1d4')
+    })
+    it('should return 1d6 piercing ranged when equipping bow with ammo', function () {
+        const c1 = eb.createEntity(bpNormalActor)
+        c1.mutations.setLevel({ value: 5 })
+        c1.dice.cheat(0.5)
+        const c2 = eb.createEntity(bpNormalActor)
+        c2.mutations.setLevel({ value: 5 })
+        const bow = eb.createEntity(bpShortbow)
+        const arrow = eb.createEntity(bpArrow)
+        c1.equipItem(bow)
+        c1.equipItem(arrow)
+        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
+        expect(c1._store._state.selectedOffensiveSlot).toBe(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
+        expect(c1.getters.getOffensiveSlots).toEqual([
+            CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED,
+            CONSTS.EQUIPMENT_SLOT_AMMO
+        ])
+        const ao = new AttackOutcome()
+        ao.attacker = c1
+        ao.target = c2
+        ao.computeAttackParameters()
+        ao.computeDefenseParameters()
+        expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_RANGED)
+        expect(ao.getDamageType()).toBe(CONSTS.DAMAGE_TYPE_PIERCING)
+        expect(ao.getWeaponBaseDamageAmount()).toBe('1d6')
+    })
+    it('should throw error when equipping bow without ammo', function () {
+        const c1 = eb.createEntity(bpNormalActor)
+        c1.mutations.setLevel({ value: 5 })
+        c1.dice.cheat(0.5)
+        const c2 = eb.createEntity(bpNormalActor)
+        c2.mutations.setLevel({ value: 5 })
+        const bow = eb.createEntity(bpShortbow)
+        c1.equipItem(bow)
+        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED })
+        expect(c1._store._state.selectedOffensiveSlot).toBe(CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED)
+        expect(c1.getters.getOffensiveSlots).toEqual([
+            CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+        ])
+        const ao = new AttackOutcome()
+        ao.attacker = c1
+        ao.target = c2
+        ao.computeAttackParameters()
+        ao.computeDefenseParameters()
+        expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_RANGED)
+        expect(() => ao.getDamageType()).not.toThrow()
+        expect(ao.getDamageType()).toBe(CONSTS.DAMAGE_TYPE_PIERCING)
+        expect(ao.getWeaponBaseDamageAmount()).toBe('1d6')
     })
 })

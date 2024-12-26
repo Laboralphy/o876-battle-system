@@ -17,6 +17,7 @@ describe('defineBlueprint', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
             size: CONSTS.WEAPON_SIZE_SMALL,
             weight: 2,
@@ -33,6 +34,7 @@ describe('defineBlueprint', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
             size: CONSTS.WEAPON_SIZE_SMALL,
             weight: 2,
@@ -98,6 +100,7 @@ describe('defineBlueprint', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
             size: CONSTS.WEAPON_SIZE_SMALL,
             weight: 6,
@@ -113,6 +116,7 @@ describe('defineBlueprint', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
             size: CONSTS.WEAPON_SIZE_SMALL,
             weight: 6,
@@ -143,6 +147,7 @@ describe('defineBlueprint', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
             size: CONSTS.WEAPON_SIZE_SMALL,
             weight: 2,
@@ -172,6 +177,7 @@ describe('createEntity', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
             size: CONSTS.WEAPON_SIZE_SMALL,
             weight: 6,
@@ -190,6 +196,7 @@ describe('createEntity', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL,
             damages: '1d8',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [],
             size: CONSTS.WEAPON_SIZE_MEDIUM,
             weight: 6,
@@ -207,6 +214,7 @@ describe('createEntity', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
             size: CONSTS.WEAPON_SIZE_SMALL,
             weight: 6,
@@ -233,6 +241,7 @@ describe('createEntity', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
             size: CONSTS.WEAPON_SIZE_SMALL,
             weight: 6,
@@ -339,6 +348,7 @@ describe('createEntity', function () {
             itemType: CONSTS.ITEM_TYPE_WEAPON,
             proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
             damages: '1d6',
+            damageType: CONSTS.DAMAGE_TYPE_PIERCING,
             attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
             size: CONSTS.WEAPON_SIZE_SMALL,
             weight: 2,
@@ -356,5 +366,50 @@ describe('createEntity', function () {
         expect(sShortSwordBPRef).toBe(s1.blueprint.ref)
         expect(sShortSwordBPRef).toBe(s2.blueprint.ref)
         expect(sShortSwordBPRef).toBe(s3.blueprint.ref)
+    })
+})
+
+describe('building a monster', function () {
+    it('should build a monster with natural weapon that inflict poison damage', function () {
+        const bpSnake = {
+            entityType: CONSTS.ENTITY_TYPE_ACTOR,
+            specie: CONSTS.SPECIE_BEAST,
+            proficiencies: [CONSTS.PROFICIENCY_WEAPON_NATURAL],
+            ac: 4,
+            hd: 6,
+            level: 3,
+            classType: 'CLASS_TYPE_MONSTER',
+            speed: 40,
+            properties: [],
+            actions: [],
+            equipment: [{
+                entityType: CONSTS.ENTITY_TYPE_ITEM,
+                itemType: CONSTS.ITEM_TYPE_WEAPON,
+                proficiency: CONSTS.PROFICIENCY_WEAPON_NATURAL,
+                damages: '1d6',
+                damageType: CONSTS.DAMAGE_TYPE_PIERCING,
+                attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
+                size: CONSTS.WEAPON_SIZE_SMALL,
+                weight: 0,
+                properties: [{
+                    type: CONSTS.PROPERTY_DAMAGE_MODIFIER,
+                    amp: '1d6',
+                    damageType: CONSTS.DAMAGE_TYPE_TOXIN
+                }],
+                equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+            }]
+        }
+        const ib = new EntityBuilder()
+        ib.schemaValidator = oSchemaValidator
+        const snake = ib.createEntity(bpSnake)
+        expect(snake).toBeDefined()
+        expect(snake).toBeInstanceOf(Creature)
+        expect(snake.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE].properties[0]).toEqual({
+            type: CONSTS.PROPERTY_DAMAGE_MODIFIER,
+            amp: '1d6',
+            data: {
+                damageType: CONSTS.DAMAGE_TYPE_TOXIN
+            }
+        })
     })
 })

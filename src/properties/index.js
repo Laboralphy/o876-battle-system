@@ -1,9 +1,10 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-17T14:18:45.670Z
+// Date : 2024-12-26T01:35:39.222Z
 // List of files in ./src/properties
 
 module.exports = {
   'PROPERTY_ABILITY_MODIFIER': require('./ability-modifier.js'),
+  'PROPERTY_ADVANTAGE': require('./advantage.js'),
   'PROPERTY_ARMOR_CLASS_MODIFIER': require('./armor-class-modifier.js'),
   'PROPERTY_ATTACK_COUNT_MODIFIER': require('./attack-count-modifier.js'),
   'PROPERTY_ATTACK_MODIFIER': require('./attack-modifier.js'),
@@ -14,11 +15,13 @@ module.exports = {
   'PROPERTY_DAMAGE_RESISTANCE': require('./damage-resistance.js'),
   'PROPERTY_DAMAGE_VULNERABILITY': require('./damage-vulnerability.js'),
   'PROPERTY_DARKVISION': require('./darkvision.js'),
+  'PROPERTY_DISADVANTAGE': require('./disadvantage.js'),
   'PROPERTY_EXTRA_HITPOINTS': require('./extra-hitpoints.js'),
   'PROPERTY_HEALING_FACTOR': require('./healing-factor.js'),
   'PROPERTY_HEALING_MODIFIER': require('./healing-modifier.js'),
   'PROPERTY_IMMUNITY': require('./immunity.js'),
   'PROPERTY_LIGHT': require('./light.js'),
+  'PROPERTY_MAX_DEXTERITY_BONUS': require('./max-dexterity-bonus.js'),
   'PROPERTY_ON_WEAPON_HIT': require('./on-weapon-hit.js'),
   'PROPERTY_REGENERATION': require('./regeneration.js'),
   'PROPERTY_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),

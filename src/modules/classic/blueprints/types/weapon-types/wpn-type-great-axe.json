@@ -1,0 +1,16 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_WEAPON",
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damages": "1d12",
+  "damageType": "DAMAGE_TYPE_SLASHING",
+  "weight": 14,
+  "size": "WEAPON_SIZE_LARGE",
+  "attributes": [
+    "WEAPON_ATTRIBUTE_TWO_HANDED"
+  ],
+  "properties": [],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_WEAPON_MELEE"
+  ]
+}

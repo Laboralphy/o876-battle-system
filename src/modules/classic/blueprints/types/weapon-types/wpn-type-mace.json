@@ -1,0 +1,14 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_WEAPON",
+  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+  "damages": "1d6",
+  "damageType": "DAMAGE_TYPE_CRUSHING",
+  "weight": 4,
+  "size": "WEAPON_SIZE_SMALL",
+  "attributes": [],
+  "properties": [],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_WEAPON_MELEE"
+  ]
+}

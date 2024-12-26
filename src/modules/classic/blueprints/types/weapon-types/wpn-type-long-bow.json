@@ -1,0 +1,18 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_WEAPON",
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damages": "1d8",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 4,
+  "size": "WEAPON_SIZE_LARGE",
+  "attributes": [
+    "WEAPON_ATTRIBUTE_TWO_HANDED",
+    "WEAPON_ATTRIBUTE_RANGED",
+    "WEAPON_ATTRIBUTE_AMMUNITION"
+  ],
+  "properties": [],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_WEAPON_RANGED"
+  ]
+}

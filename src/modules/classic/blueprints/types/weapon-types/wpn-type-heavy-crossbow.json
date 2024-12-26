@@ -1,0 +1,19 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_WEAPON",
+  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+  "damages": "1d10",
+  "damageType": "DAMAGE_TYPE_PIERCING",
+  "weight": 18,
+  "size": "WEAPON_SIZE_LARGE",
+  "attributes": [
+    "WEAPON_ATTRIBUTE_TWO_HANDED",
+    "WEAPON_ATTRIBUTE_AMMUNITION",
+    "WEAPON_ATTRIBUTE_LOADING",
+    "WEAPON_ATTRIBUTE_RANGED"
+  ],
+  "properties": [],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_WEAPON_RANGED"
+  ]
+}

@@ -4,8 +4,13 @@
     "proficiency",
     "ac"
   ],
+  "allowAdditionalProperties": "false",
   "properties": {
     "ac": {
+      "type": "number"
+    },
+    "maxDexterityBonus": {
+      "description": "Optional maximum of dexterity bonus",
       "type": "number"
     },
     "proficiency": {

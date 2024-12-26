@@ -1,0 +1,16 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "",
+  "proficiency": "",
+  "ac": "",
+  "weight": 1,
+  "properties": [
+    {
+      "property": "PROPERTY_LIGHT",
+      "amp": 0
+    }
+  ],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_SHIELD"
+  ]
+}
