@@ -1,0 +1,53 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "classType": "CLASS_TYPE_MONSTER",
+  "proficiencies": [
+    "PROFICIENCY_WEAPON_NATURAL"
+  ],
+  "specie": "SPECIE_MONSTROSITY",
+  "ac": 5,
+  "hd": 8,
+  "level": 8,
+  "speed": 20,
+  "abilities": {
+    "strength": 10,
+    "dexterity": 10,
+    "constitution": 10,
+    "intelligence": 10,
+    "wisdom": 10,
+    "charisma": 10
+  },
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_WEAPON",
+      "proficiency": "PROFICIENCY_WEAPON_NATURAL",
+      "weight": 0,
+      "size": "WEAPON_SIZE_MEDIUM",
+      "attributes": [],
+      "damages": "1d6",
+      "damageType": "DAMAGE_TYPE_SLASHING",
+      "properties": [
+        {
+          "type": "PROPERTY_DAMAGE_MODIFIER",
+          "amp": "1d4",
+          "damageType": "DAMAGE_TYPE_TOXIN"
+        }
+      ],
+      "equipmentSlots": [
+        "EQUIPMENT_SLOT_WEAPON_MELEE"
+      ]
+    }
+  ],
+  "properties": [],
+  "actions": [
+    {
+      "id": "act-petrifying gaze",
+      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
+      "onHit": "at-petrifying-gaze",
+      "range": 30,
+      "parameters": {},
+      "cooldown": 2
+    }
+  ]
+}

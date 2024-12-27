@@ -71,7 +71,7 @@ class SmartData {
      */
     compile (oCodes) {
         const aCompiled = []
-        for (const [, sCode] of Object.entries(oCodes)) {
+        for (const [idCode, sCode] of Object.entries(oCodes)) {
             aCompiled.push(new vm.Script(sCode))
         }
         return aCompiled
@@ -83,7 +83,6 @@ class SmartData {
             _id: '',
             value: '',
             leftValue: '',
-            resolvedValue: '',
             _output: {},
         }
 
@@ -144,9 +143,8 @@ class SmartData {
         }
         aRow.forEach((value, i) => {
             if (value !== '') {
-                value = isNaN(+value) ? value : parseInt(value)
+                value = isNaN(+value) ? value : parseFloat(value)
                 oContext.value = value
-                oContext.resolvedValue = this.searchConst(value)
 
                 try {
                     if (aScripts[i]) {
@@ -173,10 +171,10 @@ class SmartData {
             prev[curr] = aScripts[i]
             return prev
         }, {})
-        const oCompiledScripts = this.compile(oScripts)
+        const aCompiledScripts = this.compile(oScripts)
         const oContext = this.createContext()
         aData.forEach((row, i) => {
-            this.runRow(row, oCompiledScripts, oContext)
+            this.runRow(row, aCompiledScripts, oContext)
         })
         oContext.output()
         return oContext._output

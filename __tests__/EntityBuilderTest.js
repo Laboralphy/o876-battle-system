@@ -372,32 +372,57 @@ describe('createEntity', function () {
 describe('building a monster', function () {
     it('should build a monster with natural weapon that inflict poison damage', function () {
         const bpSnake = {
-            entityType: CONSTS.ENTITY_TYPE_ACTOR,
-            specie: CONSTS.SPECIE_BEAST,
-            proficiencies: [CONSTS.PROFICIENCY_WEAPON_NATURAL],
-            ac: 4,
-            hd: 6,
-            level: 3,
-            classType: 'CLASS_TYPE_MONSTER',
-            speed: 40,
-            properties: [],
-            actions: [],
-            equipment: [{
-                entityType: CONSTS.ENTITY_TYPE_ITEM,
-                itemType: CONSTS.ITEM_TYPE_WEAPON,
-                proficiency: CONSTS.PROFICIENCY_WEAPON_NATURAL,
-                damages: '1d6',
-                damageType: CONSTS.DAMAGE_TYPE_PIERCING,
-                attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
-                size: CONSTS.WEAPON_SIZE_SMALL,
-                weight: 0,
-                properties: [{
-                    type: CONSTS.PROPERTY_DAMAGE_MODIFIER,
-                    amp: '1d6',
-                    damageType: CONSTS.DAMAGE_TYPE_TOXIN
-                }],
-                equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
-            }]
+            "entityType": "ENTITY_TYPE_ACTOR",
+            "classType": "CLASS_TYPE_MONSTER",
+            "proficiencies": [
+                "PROFICIENCY_WEAPON_NATURAL"
+            ],
+            "specie": "SPECIE_ABERRATION",
+            "ac": 4,
+            "hd": 10,
+            "level": 3,
+            "speed": 35,
+            "equipment": [
+                {
+                    "entityType": "ENTITY_TYPE_ITEM",
+                    "itemType": "ITEM_TYPE_WEAPON",
+                    "weight": 0,
+                    "size": "WEAPON_SIZE_MEDIUM",
+                    "attributes": [],
+                    "damages": "1d6",
+                    "damageType": "DAMAGE_TYPE_PIERCING",
+                    "properties": [
+                        {
+                            "type": "PROPERTY_DAMAGE_MODIFIER",
+                            "amp": "1d4",
+                            "damageType": "DAMAGE_TYPE_FIRE"
+                        }
+                    ],
+                    "equipmentSlots": [
+                        "EQUIPMENT_SLOT_WEAPON_MELEE"
+                    ]
+                }
+            ],
+            "properties": [
+                {
+                    "type": "PROPERTY_DAMAGE_REDUCTION",
+                    "amp": 4,
+                    "damageType": "DAMAGE_TYPE_FIRE"
+                }
+            ],
+            "actions": [
+                {
+                    "id": "act-test-action",
+                    "actionType": "ACTION_TYPE_SPELL_LIKE_ABILITY",
+                    "onHit": "at-been-hit",
+                    "range": 25,
+                    "parameters": {
+                        "oneParam": "oneValue"
+                    },
+                    "cooldown": 6,
+                    "charges": 5
+                }
+            ]
         }
         const ib = new EntityBuilder()
         ib.schemaValidator = oSchemaValidator
@@ -411,5 +436,96 @@ describe('building a monster', function () {
                 damageType: CONSTS.DAMAGE_TYPE_TOXIN
             }
         })
+    })
+})
+
+describe('create a complex monster', function () {
+    const bpMonster = {
+        "entityType": "ENTITY_TYPE_ACTOR",
+        "classType": "CLASS_TYPE_MONSTER",
+        "proficiencies": [
+            "PROFICIENCY_WEAPON_NATURAL"
+        ],
+        "specie": "SPECIE_ABERRATION",
+        "ac": 4,
+        "hd": 10,
+        "level": 3,
+        "speed": 35,
+        "abilities": {
+            "strength": 10,
+            "dexterity": 10,
+            "constitution": 10,
+            "intelligence": 10,
+            "wisdom": 10,
+            "charisma": 10
+        },
+        "equipment": [
+            {
+                "entityType": "ENTITY_TYPE_ITEM",
+                "itemType": "ITEM_TYPE_WEAPON",
+                "proficiency": "PROFICIENCY_WEAPON_NATURAL",
+                "weight": 0,
+                "size": "WEAPON_SIZE_MEDIUM",
+                "attributes": [],
+                "damages": "1d6",
+                "damageType": "DAMAGE_TYPE_PIERCING",
+                "properties": [
+                    {
+                        "type": "PROPERTY_DAMAGE_MODIFIER",
+                        "amp": "1d4",
+                        "damageType": "DAMAGE_TYPE_THERMAL"
+                    }
+                ],
+                "equipmentSlots": [
+                    "EQUIPMENT_SLOT_WEAPON_MELEE"
+                ]
+            },
+            {
+                "entityType": "ENTITY_TYPE_ITEM",
+                "itemType": "ITEM_TYPE_WEAPON",
+                "proficiency": "PROFICIENCY_WEAPON_NATURAL",
+                "weight": 0,
+                "size": "WEAPON_SIZE_MEDIUM",
+                "attributes": [
+                    "WEAPON_ATTRIBUTE_RANGED"
+                ],
+                "damages": "1d6",
+                "damageType": "DAMAGE_TYPE_PIERCING",
+                "properties": [],
+                "equipmentSlots": [
+                    "EQUIPMENT_SLOT_WEAPON_RANGED"
+                ]
+            }
+        ],
+        "properties": [
+            {
+                "type": "PROPERTY_DAMAGE_REDUCTION",
+                "amp": 4,
+                "damageType": "DAMAGE_TYPE_THERMAL"
+            }
+        ],
+        "actions": [
+            {
+                "id": "act-test-action",
+                "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
+                "onHit": "at-been-hit",
+                "range": 25,
+                "parameters": {
+                    "oneParam": "oneValue"
+                },
+                "cooldown": 6,
+                "charges": 5
+            }
+        ]
+    }
+    it('should not throw error when creating this monster', function () {
+        const ib = new EntityBuilder()
+        ib.schemaValidator = oSchemaValidator
+        let monster
+        expect(() => {
+            monster = ib.createEntity(bpMonster)
+        }).not.toThrow()
+        expect(monster.getters.getMaxHitPoints).toBe(30)
+        expect(monster.getters.getAbilities)
     })
 })

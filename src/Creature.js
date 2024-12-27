@@ -72,7 +72,7 @@ class Creature {
         m.setNaturalArmorClass({ value: blueprint.ac || 0 })
         m.setSpeed({ value: blueprint.speed })
         m.setClassType({ value: blueprint.classType })
-
+        m.setHitDie({ value: blueprint.hd })
         m.setLevel({ value: blueprint.level })
         blueprint.proficiencies.forEach(value => m.addProficiency({ value }))
         if ('abilities' in blueprint) {
@@ -83,6 +83,7 @@ class Creature {
             m.setAbilityValue({ ability: CONSTS.ABILITY_WISDOM, value: blueprint.abilities.wisdom })
             m.setAbilityValue({ ability: CONSTS.ABILITY_CHARISMA, value: blueprint.abilities.charisma })
         }
+        m.setHitPoints({ value: this.getters.getMaxHitPoints })
         this._blueprint = blueprint
     }
 
@@ -186,6 +187,8 @@ class Creature {
         }
         this.mutations.setHitPoints({ value: hp })
     }
+
+    rollSavingThrow (sAbility)
 }
 
 module.exports = Creature

@@ -24,7 +24,7 @@ describe('test1', function () {
             ['atk', 'damage',   'damageType', 'fire'],
             [   '',       '', 'amount', '3d6']
         ])
-        expect(o).toEqual({'2': { name: 'atk', actions:[{ opcode: 'damage', data: { damageType: 'fire', amount: '3d6' } }] }})
+        expect(o).toEqual({'': { name: 'atk', actions:[{ opcode: 'damage', data: { damageType: 'fire', amount: '3d6' } }] }})
     })
 })
 
