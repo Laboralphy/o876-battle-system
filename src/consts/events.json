@@ -1,3 +1,24 @@
 {
-  "EVENT_CREATURE_SELECT_WEAPON": "EVENT_CREATURE_SELECT_WEAPON"
+  "EVENT_CREATURE_SELECT_WEAPON": "creature.select-weapon",
+  "EVENT_CREATURE_SAVING_THROW": "creature.saving-throw",
+  "EVENT_CREATURE_REVIVE": "creature.revive",
+  "EVENT_CREATURE_EFFECT_APPLIED": "creature.effect-applied",
+  "EVENT_CREATURE_EFFECT_DISPOSED": "creature.effect-disposed",
+  "EVENT_CREATURE_EFFECT_IMMUNITY": "creature.effect-immunity",
+  "EVENT_CREATURE_DEATH": "creature.death",
+  "EVENT_CREATURE_HEAL": "creature.heal",
+  "EVENT_CREATURE_DAMAGED": "creature.damaged",
+  "EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY": "effect-immunity",
+  "EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED": "effect-applied",
+  "EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED": "effect-disposed",
+  "EVENT_COMBAT_DISTANCE": "combat.distance",
+  "EVENT_COMBAT_ACTION": "combat.action",
+  "EVENT_COMBAT_ATTACK": "combat.attack",
+  "EVENT_COMBAT_TICK_END": "combat.tick-end",
+  "EVENT_COMBAT_TURN": "combat.turn",
+  "EVENT_COMBAT_MOVE": "combat.move",
+  "EVENT_COMBAT_START": "combat.start",
+  "EVENT_COMBAT_END": "combat.end",
+  "EVENT_COMBAT_SCRIPT": "combat.script",
+  "EVENT_COMBAT_OFFENSIVE_SLOT": "combat.offensive-slot"
 }

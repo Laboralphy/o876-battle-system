@@ -20,7 +20,7 @@ function mutate ({ effect: oEffect, target, source }) {
     const nHealAmount = oEffect.amp
     const nHealAmountAmplified = Math.floor(nHealAmount * nFactor)
     target.hitPoints += nHealAmountAmplified
-    target.events.emit('heal', {
+    target.events.emit(CONSTS.EVENT_CREATURE_HEAL, {
         healer: source,
         amount: nHealAmountAmplified,
         factor: nFactor,

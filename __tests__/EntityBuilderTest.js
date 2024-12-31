@@ -262,7 +262,7 @@ describe('createEntity', function () {
             properties: [{
                 type: 'PROPERTY_DAMAGE_MODIFIER',
                 amp: 1,
-                damageType: CONSTS.DAMAGE_TYPE_THERMAL
+                damageType: CONSTS.DAMAGE_TYPE_FIRE
             }],
             damages: '1d6-1'
         })
@@ -281,7 +281,7 @@ describe('createEntity', function () {
                 type: 'PROPERTY_DAMAGE_MODIFIER',
                 amp: 1,
                 data: {
-                    damageType: 'DAMAGE_TYPE_THERMAL'
+                    damageType: 'DAMAGE_TYPE_FIRE'
                 }
             }
         ])
@@ -391,6 +391,7 @@ describe('building a monster', function () {
                     "attributes": [],
                     "damages": "1d6",
                     "damageType": "DAMAGE_TYPE_PIERCING",
+                    "proficiency": "PROFICIENCY_WEAPON_NATURAL",
                     "properties": [
                         {
                             "type": "PROPERTY_DAMAGE_MODIFIER",
@@ -413,7 +414,7 @@ describe('building a monster', function () {
             "actions": [
                 {
                     "id": "act-test-action",
-                    "actionType": "ACTION_TYPE_SPELL_LIKE_ABILITY",
+                    "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
                     "onHit": "at-been-hit",
                     "range": 25,
                     "parameters": {
@@ -431,9 +432,9 @@ describe('building a monster', function () {
         expect(snake).toBeInstanceOf(Creature)
         expect(snake.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE].properties[0]).toEqual({
             type: CONSTS.PROPERTY_DAMAGE_MODIFIER,
-            amp: '1d6',
+            amp: '1d4',
             data: {
-                damageType: CONSTS.DAMAGE_TYPE_TOXIN
+                damageType: CONSTS.DAMAGE_TYPE_FIRE
             }
         })
     })
@@ -473,7 +474,7 @@ describe('create a complex monster', function () {
                     {
                         "type": "PROPERTY_DAMAGE_MODIFIER",
                         "amp": "1d4",
-                        "damageType": "DAMAGE_TYPE_THERMAL"
+                        "damageType": "DAMAGE_TYPE_FIRE"
                     }
                 ],
                 "equipmentSlots": [
@@ -501,7 +502,7 @@ describe('create a complex monster', function () {
             {
                 "type": "PROPERTY_DAMAGE_REDUCTION",
                 "amp": 4,
-                "damageType": "DAMAGE_TYPE_THERMAL"
+                "damageType": "DAMAGE_TYPE_FIRE"
             }
         ],
         "actions": [

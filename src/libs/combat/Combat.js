@@ -31,6 +31,11 @@ class Combat {
          */
         this._tick = 0
         this._tickCount = tickCount
+        /**
+         *
+         * @type {module:events.EventEmitter | module:events.EventEmitter<DefaultEventMap>}
+         * @private
+         */
         this._events = new Events()
         this._distance = distance
         /**
@@ -143,7 +148,7 @@ class Combat {
         const nOldDistance = this._distance
         if (nOldDistance !== value) {
             this._distance = Math.max(0, value)
-            this._events.emit('combat.distance', {
+            this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, {
                 ...this.eventDefaultPayload,
                 distance: this._distance,
                 previousDistance: nOldDistance
@@ -214,7 +219,7 @@ class Combat {
             const action = this.currentAction
             if (action) {
                 if (action.ready) {
-                    this._events.emit('combat.action', {
+                    this._events.emit(CONSTS.EVENT_COMBAT_ACTION, {
                         ...this.eventDefaultPayload,
                         action: action
                     })
@@ -226,7 +231,7 @@ class Combat {
         }
         const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
         if (bPartingShot || nAttackCount > 0) {
-            this._events.emit('combat.attack', {
+            this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
                 ...this.eventDefaultPayload,
                 count: nAttackCount,
                 opportunity: bPartingShot // if true, then no retaliation (start combat back)
@@ -251,7 +256,7 @@ class Combat {
         if (!bHasMoved) {
             this.playFighterAction()
         }
-        this._events.emit('combat.tick.end', {
+        this._events.emit(CONSTS.EVENT_COMBAT_TICK_END, {
             ...this.eventDefaultPayload
         })
         this.nextTick()
@@ -322,7 +327,7 @@ class Combat {
     }
 
     selectMostSuitableAction () {
-        this._events.emit('combat.turn', {
+        this._events.emit(CONSTS.EVENT_COMBAT_TURN, {
             ...this.eventDefaultPayload,
             action: action => {
                 this.currentAction = action
@@ -340,7 +345,7 @@ class Combat {
         const nRunSpeed = this.attacker.getters.getSpeed
         const previousDistance = this.distance
         let nNewDistance = Math.max(this.getSelectedWeaponRange(), this.distance - nRunSpeed)
-        this._events.emit('combat.move', {
+        this._events.emit(CONSTS.EVENT_COMBAT_MOVE, {
             ...this.eventDefaultPayload,
             speed: nRunSpeed,
             previousDistance,

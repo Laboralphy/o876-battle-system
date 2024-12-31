@@ -15,9 +15,10 @@ function getSumOr0 (x) {
  *
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
+ * @param externals {{}}
  * @returns {Object<string, number>}
  */
-module.exports = (state, getters) => {
+module.exports = (state, getters, externals) => {
     const eq = getters.getEquipment
     const capa = getters.getCapabilitySet
 
@@ -161,7 +162,7 @@ module.exports = (state, getters) => {
     // **** Results **** Results **** Results **** Results **** Results **** Results **** Results ****
     // **** Results **** Results **** Results **** Results **** Results **** Results **** Results ****
 
-    const nBaseArmorClass = 10 + nACDexBonus
+    const nBaseArmorClass = externals.VARIABLES.BASE_ARMOR_CLASS + nACDexBonus
     const nACArmorMeleeBonus = nACArmorBaseBonus + nACArmorPropMeleeBonus
     const nACArmorRangedBonus = nACArmorBaseBonus + nACArmorPropRangedBonus
     const nACShieldMeleeBonus = nACShieldBaseBonus + nACShieldPropMeleeBonus

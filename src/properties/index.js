@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-27T14:58:15.274Z
+// Date : 2024-12-29T20:45:49.055Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -22,11 +22,12 @@ module.exports = {
   'PROPERTY_IMMUNITY': require('./immunity.js'),
   'PROPERTY_LIGHT': require('./light.js'),
   'PROPERTY_MAX_DEXTERITY_BONUS': require('./max-dexterity-bonus.js'),
-  'PROPERTY_ON_WEAPON_HIT': require('./on-weapon-hit.js'),
+  'PROPERTY_ON_ATTACK_HIT': require('./on-attack-hit.js'),
   'PROPERTY_REGENERATION': require('./regeneration.js'),
   'PROPERTY_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
   'PROPERTY_SNEAK_ATTACK': require('./sneak-attack.js'),
   'PROPERTY_SPEED_FACTOR': require('./speed-factor.js'),
+  'PROPERTY_SPELL_POWER': require('./spell-power.js'),
   'PROPERTY_UNIDENTIFIED': require('./unidentified.js'),
   'PROPERTY_WEIGHT_FACTOR': require('./weight-factor.js')
 }

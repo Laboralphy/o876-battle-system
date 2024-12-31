@@ -88,6 +88,12 @@ class AttackOutcome {
          */
         this._visibility = CONSTS.CREATURE_VISIBILITY_VISIBLE
 
+        /**
+         * Advantage / Disadvantaged
+         */
+        this._advantaged = false
+        this._disadvantaged = false
+
         /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME ///
         /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME ///
         /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME ///
@@ -103,6 +109,10 @@ class AttackOutcome {
          * @type {boolean}
          */
         this._critical = false
+        /**
+         * Auto miss
+         */
+        this._fumble = false
         /**
          * target hit by attack
          * @type {boolean}
@@ -173,6 +183,10 @@ class AttackOutcome {
         return this._critical
     }
 
+    get fumble () {
+        return this._fumble
+    }
+
     get distance() {
         return this._distance
     }
@@ -235,6 +249,14 @@ class AttackOutcome {
 
     get damages() {
         return this._damages
+    }
+
+    get advantaged() {
+        return this._advantaged
+    }
+
+    get disadvantaged() {
+        return this._disadvantaged
     }
 
     /**
@@ -338,6 +360,50 @@ class AttackOutcome {
         oDamageType[sDamageType].amount += this._attacker.dice.roll(xAmount)
     }
 
+    isAttackerAttackAdvantaged () {
+        const oAttacker = this._attacker
+        const oTarget = this._target
+
+        // Attacker is advantaged when
+        // - Attacker is not detected by target
+        // - Target is unable to fight
+
+        // checking target visibility
+        const bTargetIsVisible = oAttacker.getCreatureVisibility(oTarget) === CONSTS.CREATURE_VISIBILITY_VISIBLE
+        const bAttackerIsVisible = oTarget.getCreatureVisibility(oAttacker) === CONSTS.CREATURE_VISIBILITY_VISIBLE
+
+        // checking target capability of fighting
+        const bTargetCanFight = oTarget.getters.getCapabilitySet[CONSTS.CAPABILITY_FIGHT]
+
+        // result
+        return bTargetIsVisible && (!bAttackerIsVisible || !bTargetCanFight)
+    }
+
+    isAttackerAttackDisadvantaged () {
+        // Attacker is disadvantaed when
+        // - Attacker wearing non proficient armor or shield
+        // - Attacker is poisoned, confused or rooted
+        // - Target is not detectable
+        const oAttacker = this._attacker
+        const oTarget = this._target
+
+        // checking target visibility
+        const bTargetIsVisible = oAttacker.getCreatureVisibility(oTarget) === CONSTS.CREATURE_VISIBILITY_VISIBLE
+
+        // checking armor and shield proficiency
+        const eqp = oAttacker.getters.isEquipmentProficient
+        const bGoodEquip = eqp[CONSTS.EQUIPMENT_SLOT_CHEST] && eqp[CONSTS.EQUIPMENT_SLOT_SHIELD]
+
+        // Checking attacker condition
+        const oConditionSet = oAttacker.getters.getConditionSet
+        const bPoisoned = oConditionSet.has(CONSTS.CONDITION_POISONED)
+        const bRooted = oConditionSet.has(CONSTS.CONDITION_RESTRAINED)
+        const bConfused = oConditionSet.has(CONSTS.CONDITION_CONFUSED)
+
+        // result
+        return !bTargetIsVisible || bPoisoned || bConfused || bRooted || !bGoodEquip
+    }
+
     /**
      * Proceed to an attack against target, using melee or ranged weapon
      */
@@ -359,9 +425,6 @@ class AttackOutcome {
         this.computeAttackParameters()
         this.computeDefenseParameters()
 
-        // Choose best damage type if needed
-
-
         if (!this.isTargetInSelectedWeaponRange()) {
             // not in range, attack failed, must rush toward target
             this.fail(CONSTS.ATTACK_FAILURE_TARGET_UNREACHABLE)
@@ -371,14 +434,27 @@ class AttackOutcome {
         const oAttacker = this._attacker
         const oTarget = this._target
 
-
         // rolling attack
-        const nRoll = oAttacker.dice.roll('1d20')
+        let nRoll = oAttacker.dice.roll('1d20')
+        const bAdvantaged = this._advantaged = this.isAttackerAttackAdvantaged()
+        const bDisadvantaged = this._disadvantaged = this.isAttackerAttackDisadvantaged()
+        if (bAdvantaged && !bDisadvantaged) {
+            const nRoll2 = oAttacker.dice.roll('1d20')
+            nRoll = Math.max(nRoll, nRoll2)
+        } else if (!bDisadvantaged && !bAdvantaged) {
+            const nRoll2 = oAttacker.dice.roll('1d20')
+            nRoll = Math.min(nRoll, nRoll2)
+        }
         const bCritical = nRoll === 20
-        const bHit = bCritical || (nRoll + this._attackBonus) >= this._ac
-
+        const bFumble = nRoll === 1
+        const bHit = bFumble
+            ? false
+            : bCritical
+                ? true
+                : ((nRoll + this._attackBonus) >= this._ac)
         this._roll = nRoll
         this._critical = bCritical
+        this._fumble = bFumble
         this._hit = bHit
 
         if (bHit) {
@@ -421,7 +497,15 @@ class AttackOutcome {
     }
 
     applyDamages () {
-        this._effectProcessor.applyEffectGroup(this._damages.effects, [], this._target, 0, this._attacker)
+        const aDamages = this
+            ._effectProcessor
+            .applyEffectGroup(this._damages.effects, [], this._target, 0, this._attacker)
+        const dam = this._damages
+        aDamages.forEach(({ amp, data: { damageType, resistedAmount } }) => {
+            dam.amount += amp
+            dam.types[damageType].amount += amp
+            dam.types[damageType].resisted += resistedAmount
+        })
     }
 }
 

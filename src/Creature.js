@@ -3,6 +3,7 @@ const { buildStore } = require('./store')
 const CONSTS = require('./consts')
 const Events = require('events')
 const Dice = require('./libs/dice')
+const {aggregateModifiers} = require("./libs/aggregator");
 
 class Creature {
     constructor ({ blueprint = null, id = null } = {}) {
@@ -16,7 +17,6 @@ class Creature {
         } else {
             this.mutations.setId({ value: getUniqueId() })
         }
-        this._actions = {}
         this._events = new Events
         this._dice = new Dice()
     }
@@ -110,7 +110,6 @@ class Creature {
         }
     }
 
-
     /**
      * Returns true if this creature can detect its target
      * @param oTarget {Creature}
@@ -152,21 +151,11 @@ class Creature {
     }
 
     /**
-     * Attack target with equipped weapon
-     * @param oTarget {Creature}
-     * @param oAttackOutcome
-     */
-    attack (oTarget, oAttackOutcome) {
-        oAttackOutcome.target = oTarget
-    }
-
-
-    /**
      * Revive a dead creature
      */
     revive () {
         if (this.getters.isDead) {
-            this._events.emit('revive')
+            this._events.emit(CONSTS.EVENT_CREATURE_REVIVE)
             this.mutations.setHitPoints({ value: 1 })
         }
     }
@@ -188,7 +177,24 @@ class Creature {
         this.mutations.setHitPoints({ value: hp })
     }
 
-    rollSavingThrow (sAbility)
+    rollSavingThrow (sAbility, dc) {
+        const roll = this._dice.roll('1d20')
+        const bonus = this.getters.getSavingThrowBonus[sAbility]
+        const success = roll === 1
+            ? false
+            : roll === 20
+                ? true
+                : (roll + bonus >= dc)
+        const result = {
+            roll,
+            dc,
+            success,
+            bonus,
+            ability: sAbility
+        }
+        this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, result)
+        return result
+    }
 }
 
 module.exports = Creature

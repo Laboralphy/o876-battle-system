@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-27T14:58:15.148Z
+// Date : 2024-12-29T20:45:48.937Z
 // List of files in ./src/effects
 
 module.exports = {
@@ -32,6 +32,7 @@ module.exports = {
   'EFFECT_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
   'EFFECT_SEE_INVISIBILITY': require('./see-invisibility.js'),
   'EFFECT_SPEED_FACTOR': require('./speed-factor.js'),
+  'EFFECT_SPELL_POWER': require('./spell-power.js'),
   'EFFECT_SPIKE_DAMAGE': require('./spike-damage.js'),
   'EFFECT_STEALTH': require('./stealth.js'),
   'EFFECT_STUN': require('./stun.js')

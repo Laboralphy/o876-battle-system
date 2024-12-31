@@ -30,11 +30,13 @@
  * @property getProperties {RBSProperty[]}
  * @property getPropertySet {Set<string>}
  * @property getRangedAttackBonus {number}
+ * @property getSavingThrowBonus {{[ability: string]: number}}
  * @property getSelectedOffensiveSlot {string} EQUIPMENT_SLOT_WEAPON_MELEE or RANGED
  * @property getSelectedWeapon {RBSItem|null}
  * @property getSelectedWeaponAttributeSet {Set<string>}
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
  * @property getSpeed {number}
+ * @property getSpellDifficultyClass {{[ability: string]: number}}
  * @property getWeaponRanges {number}
  * @property isDead {boolean}
  * @property isEquipmentProficient {{[p: string]: boolean}}

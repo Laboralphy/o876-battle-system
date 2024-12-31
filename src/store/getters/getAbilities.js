@@ -1,6 +1,7 @@
 const CONSTS = require('../../consts')
 const { aggregateModifiers } = require('../../libs/aggregator')
 const { shallowMap } = require('@laboralphy/object-fusion')
+const {filterAbility} = require("../../libs/props-effects-filters");
 
 /**
  * List of all ability modifiers
@@ -15,8 +16,8 @@ module.exports = (state, getters) => {
         ],
         getters,
         {
-            effectSorter: effect => effect.data.ability,
-            propSorter: prop => prop.data.ability
+            effectSorter: filterAbility,
+            propSorter: filterAbility
         }
     )
     return shallowMap(state.abilities, (nValue, sAbility) => {

@@ -9,6 +9,8 @@ const Creature = require('./Creature')
 const { deepMerge, deepClone } = require('@laboralphy/object-fusion')
 const DATA = require('./data')
 const path = require('path')
+const AttackOutcome = require('./AttackOutcome')
+const CONSTS = require('./consts')
 
 class Manager {
     constructor () {
@@ -26,10 +28,16 @@ class Manager {
         this._combatManager = cm
         this._scripts = {}
         this._data = deepClone(DATA)
-        cm.events.on('combat.action', evt => this._combatManagerAction(evt))
-        ep.events.on('effect-applied', ev => this._effectApplied(ev))
-        ep.events.on('effect-immunity', ev => this._effectImmunity(ev))
-        ep.events.on('effect-disposed', ev => this._effectDisposed(ev))
+        cm.events.on(CONSTS.EVENT_COMBAT_TURN, evt => this._events.emit(CONSTS.EVENT_COMBAT_TURN, evt))
+        cm.events.on(CONSTS.EVENT_COMBAT_START, evt => this._events.emit(CONSTS.EVENT_COMBAT_START, evt))
+        cm.events.on(CONSTS.EVENT_COMBAT_END, evt => this._events.emit(CONSTS.EVENT_COMBAT_END, evt))
+        cm.events.on(CONSTS.EVENT_COMBAT_MOVE, evt => this._events.emit(CONSTS.EVENT_COMBAT_MOVE, evt))
+        cm.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, evt))
+        cm.events.on(CONSTS.EVENT_COMBAT_ACTION, evt => this._combatManagerAction(evt))
+        cm.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => this._combatManagerAttack(evt))
+        ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED, ev => this._effectApplied(ev))
+        ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, ev => this._effectImmunity(ev))
+        ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, ev => this._effectDisposed(ev))
     }
 
     /**
@@ -51,13 +59,21 @@ class Manager {
     }
 
     /**
+     * return instance of combat manager
+     * @returns {CombatManager}
+     */
+    get combatManager () {
+        return this._combatManager
+    }
+
+    /**
      * A new effect has been applied on a creatures. The manager must keep track of this effect if duration is > 0
      * @param effect {RBSEffect}
      * @param target {Creature}
      * @param source {Creature}
      */
     _effectApplied({effect, target, source}) {
-        this._events.emit('creature.effect.applied', {manager: this, effect, target, source})
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, {manager: this, effect, target, source})
     }
 
     /**
@@ -67,7 +83,7 @@ class Manager {
      * @private
      */
     _effectImmunity({effect, target}) {
-        this._events.emit('creature.effect.immunity', {manager: this, effect, target})
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_IMMUNITY, {manager: this, effect, target})
     }
 
     /**
@@ -77,15 +93,60 @@ class Manager {
      * @param source {Creature}
      */
     _effectDisposed({effect, target, source}) {
-        this._events.emit('creature.effect.disposed', {manager: this, effect, target, source})
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_DISPOSED, {manager: this, effect, target, source})
     }
 
+    /**
+     * Initiate a combat action.
+     * Must run the script associated with this action
+     * @param evt
+     * @private
+     */
     _combatManagerAction (evt) {
-        const bIsActionCoolingDown = evt.action.cooldownTimer > 0
-        const bIsActionChargeDepleted = evt.action.dailyCharges > 0 && evt.action.charges === 0
-        if (bIsActionCoolingDown || bIsActionChargeDepleted) {
-            this._horde.setCreatureActive(evt.attacker)
+        this._events.emit(CONSTS.EVENT_COMBAT_ACTION, evt)
+        const {
+            action,
+            attacker
+        } = evt
+        const bIsActionCoolingDown = action.cooldownTimer > 0
+        if (bIsActionCoolingDown) {
+            this._horde.setCreatureActive(attacker)
         }
+    }
+
+    _combatManagerAttack (evt) {
+        const {
+            combat,
+            turn,
+            tick,
+            attacker,
+            target,
+            combatManager,
+            count,
+            opportunity
+        } = evt
+        const oAttackOutcome = new AttackOutcome({ effectProcessor: this._effectProcessor })
+        oAttackOutcome.attacker = attacker
+        oAttackOutcome.target = target
+        oAttackOutcome.computeAttackParameters()
+        oAttackOutcome.computeDefenseParameters()
+        oAttackOutcome.attack()
+        if (oAttackOutcome.hit) {
+            oAttackOutcome.createDamageEffects()
+            this.runPropEffectScript(attacker, 'attack', {
+                attack: oAttackOutcome,
+                manager: this
+            })
+            this.runPropEffectScript(target, 'attacked', {
+                attack: oAttackOutcome,
+                manager: this
+            })
+            oAttackOutcome.applyDamages()
+        }
+        this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
+            attack: oAttackOutcome,
+            ...evt
+        })
     }
 
     /**
@@ -120,12 +181,20 @@ class Manager {
         const oEntity = this._entityBuilder.createEntity(resref, id)
         if (oEntity instanceof Creature) {
             this._horde.linkCreature(oEntity)
+            oEntity.events.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => this._events.emit(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REVIVE, evt => this._events.emit(CONSTS.EVENT_CREATURE_REVIVE, evt))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, evt))
         }
         return oEntity
     }
 
+    /**
+     * Destroy an entity
+     * @param oEntity
+     */
     destroyEntity (oEntity) {
         if (oEntity instanceof Creature) {
+            this._combatManager.removeFighter(oEntity)
             this._horde.unlinkCreature(oEntity)
         }
     }
@@ -142,8 +211,11 @@ class Manager {
             .forEach(effect => {
                 this._effectProcessor.processEffect(effect)
             })
-        this._combatManager.processCombats()
         this._horde.shrinkActiveCreatureRegistry()
+    }
+
+    processCombats () {
+        this._combatManager.processCombats()
     }
 
     /**
@@ -162,7 +234,7 @@ class Manager {
         const pb = this._entityBuilder.propertyBuilder
         const gsp = oCreature.getters.getSlotProperties
         const eq = oCreature.getters.getEquipment
-        for (const slot of gsp) {
+        for (const [slot, aProps] of Object.entries(gsp)) {
             const aProps = gsp[slot]
             const oItem = eq[slot]
             aProps.forEach(prop => {
@@ -172,6 +244,16 @@ class Manager {
         oCreature.getters.getInnateProperties.forEach(prop => {
             pb.invokePropertyMethod(prop, sScript, null, oCreature, oParams)
         })
+    }
+
+    /**
+     * Starts a commbat beetween c1 & c2
+     * @param c1 {Creature}
+     * @param c2 {Creature}
+     * @returns {Combat}
+     */
+    startCombat (c1, c2) {
+        return this._combatManager.startCombat(c1, c2)
     }
 }
 

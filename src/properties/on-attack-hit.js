@@ -5,20 +5,20 @@ const CONSTS = require("../consts");
  * @param property {RBSProperty}
  * @param chance {string} Dice expression
  * @param savingThrow {string} ability
- * @param extraParam {string}
+ * @param extraParams {string}
  * @param ailment {string}
  */
-function init ({ property, ailment, chance = '', savingThrow = '', extraParam = '' }) {
+function init ({ property, ailment, chance = '', savingThrow = '', extraParams = '' }) {
     if (!CONSTS[ailment]) {
         throw new ReferenceError('unknown ailment ' + ailment)
     }
     property.data.ailment = ailment
     property.data.savingThrow = savingThrow
     property.data.chance = chance
-    property.extraParam = extraParam
+    property.data.extraParams = extraParams
 }
 
-function onWeaponHit ({ property, manager, attack }) {
+function attack ({ property, item, creature, manager, attack }) {
     const oDicer = attack.attacker
     if (property.data.chance) {
         if (oDicer.dice.roll(property.data.chance) > 1) {
@@ -32,5 +32,5 @@ function onWeaponHit ({ property, manager, attack }) {
 
 module.exports = {
     init,
-    onWeaponHit
+    attack
 }

@@ -110,7 +110,7 @@ class EffectProcessor {
         }
         this.invokeEffectMethod(oEffect, 'apply', target, source, { reject })
         if (bRejected) {
-            this._events.emit('effect-immunity', { effect: oEffect, target })
+            this._events.emit(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, { effect: oEffect, target })
             return null
         }
         if (duration > 0) {
@@ -118,7 +118,7 @@ class EffectProcessor {
             this._horde.setCreatureActive(target)
         }
         this.invokeEffectMethod(oEffect, 'mutate', target, source)
-        this._events.emit('effect-applied', {
+        this._events.emit(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED, {
             effect: oEffect,
             target,
             source
@@ -189,7 +189,7 @@ class EffectProcessor {
         target.mutations.setEffectDuration({ effect: oEffect, duration: Math.max(0, nDuration) })
         if (nDuration <= 0) {
             this.invokeEffectMethod(oEffect, 'dispose', target, source)
-            this._events.emit('effect-disposed', {
+            this._events.emit(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, {
                 effect: oEffect,
                 target,
                 source

@@ -70,6 +70,15 @@ function filterPiercingDamageTypes (effectOrProp) {
         effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_ANY
 }
 
+/**
+ * This filter will return data.ability. use with propSorter and effectSorter
+ * @param effectOrProp {{ data: { ability: string }}}
+ * @return {string}
+ */
+function filterAbility (effectOrProp) {
+    return effectOrProp.data.ability
+}
+
 module.exports = {
     filterMeleeAttackTypes,
     filterRangedAttackTypes,
@@ -77,5 +86,6 @@ module.exports = {
     filterRangedTouchAttackTypes,
     filterSlashingDamageTypes,
     filterCrushingDamageTypes,
-    filterPiercingDamageTypes
+    filterPiercingDamageTypes,
+    filterAbility
 }

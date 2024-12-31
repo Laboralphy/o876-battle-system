@@ -26,6 +26,14 @@ class CombatManager {
         this._defaultDistance = value
     }
 
+    get defaultTickCount () {
+        return this._defaultTickCount
+    }
+
+    set defaultTickCount (value) {
+        this._defaultTickCount = value
+    }
+
     /**
      * Returns a list of combats
      * @returns {Combat[]}
@@ -56,7 +64,7 @@ class CombatManager {
     _sendCombatActionEvent (ev) {
         // Special case concerning multi melee actions :
         // Instead of striking target we strike a random offending target
-        this._events.emit('combat.action', this._addManagerToObject(ev))
+        this._events.emit(CONSTS.EVENT_COMBAT_ACTION, this._addManagerToObject(ev))
         if (!ev.opportunity && !this.isCreatureFighting(ev.target)) {
             this.startCombat(ev.target, ev.attacker, ev.combat.distance)
         }
@@ -68,7 +76,7 @@ class CombatManager {
      * @private
      */
     _sendCombatAttackEvent (ev) {
-        this._events.emit('combat.attack', this._addManagerToObject(ev))
+        this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, this._addManagerToObject(ev))
         if (!ev.opportunity && !this.isCreatureFighting(ev.target)) {
             this.startCombat(ev.target, ev.attacker, ev.combat.distance)
         }
@@ -87,15 +95,15 @@ class CombatManager {
             distance: this._defaultDistance,
             tickCount: this._defaultTickCount
         })
-        combat.events.on('combat.turn', ev => this._events.emit('combat.turn', this._addManagerToObject(ev)))
-        combat.events.on('combat.tick.end', ev => this._events.emit('combat.tick.end', this._addManagerToObject(ev)))
-        combat.events.on('combat.action', ev => this._sendCombatActionEvent(ev))
-        combat.events.on('combat.attack', ev => this._sendCombatAttackEvent(ev))
-        combat.events.on('combat.script', ev => this._events.emit('combat.script', this._addManagerToObject(ev)))
-        combat.events.on('combat.offensive-slot', ev => this._events.emit('combat.offensive-slot', this._addManagerToObject(ev)))
-        combat.events.on('combat.distance', ev => {
+        combat.events.on(CONSTS.EVENT_COMBAT_TURN, ev => this._events.emit(CONSTS.EVENT_COMBAT_TURN, this._addManagerToObject(ev)))
+        combat.events.on(CONSTS.EVENT_COMBAT_TICK_END, ev => this._events.emit(CONSTS.EVENT_COMBAT_TICK_END, this._addManagerToObject(ev)))
+        combat.events.on(CONSTS.EVENT_COMBAT_ACTION, ev => this._sendCombatActionEvent(ev))
+        combat.events.on(CONSTS.EVENT_COMBAT_ATTACK, ev => this._sendCombatAttackEvent(ev))
+        combat.events.on(CONSTS.EVENT_COMBAT_SCRIPT, ev => this._events.emit(CONSTS.EVENT_COMBAT_SCRIPT, this._addManagerToObject(ev)))
+        combat.events.on(CONSTS.EVENT_COMBAT_OFFENSIVE_SLOT, ev => this._events.emit(CONSTS.EVENT_COMBAT_OFFENSIVE_SLOT, this._addManagerToObject(ev)))
+        combat.events.on(CONSTS.EVENT_COMBAT_DISTANCE, ev => {
             const { attacker, target, distance } = ev
-            this._events.emit('combat.distance', this._addManagerToObject(ev))
+            this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, this._addManagerToObject(ev))
             if (this.isCreatureFighting(attacker, target)) {
                 // also change target distance with attacker if different
                 const oTargetCombat = this.getCombat(oTarget)
@@ -104,9 +112,12 @@ class CombatManager {
                 }
             }
         })
-        combat.events.on('combat.move', ev => this._events.emit('combat.move', this._addManagerToObject(ev)))
+        combat.events.on(CONSTS.EVENT_COMBAT_MOVE, ev => this._events.emit(CONSTS.EVENT_COMBAT_MOVE, this._addManagerToObject(ev)))
         combat.setFighters(oCreature, oTarget)
         combat.distance = nStartingDistance === null ? this.defaultDistance : nStartingDistance
+        this._events.emit(CONSTS.EVENT_COMBAT_START, this._addManagerToObject({
+            combat
+        }))
         return combat
     }
 
@@ -180,7 +191,7 @@ class CombatManager {
         if (this.isCreatureFighting(oCreature)) {
             const oCombat = this._fighters[oCreature.id]
             const oDefender = oCombat.defender
-            this._events.emit('combat.end', this._addManagerToObject({
+            this._events.emit(CONSTS.EVENT_COMBAT_END, this._addManagerToObject({
                 ...oCombat.eventDefaultPayload,
                 victory: !oCreature.getters.isDead && oDefender.getters.isDead,
                 defeat: oCreature.getters.isDead && !oDefender.getters.isDead

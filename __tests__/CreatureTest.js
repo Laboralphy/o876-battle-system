@@ -669,7 +669,7 @@ describe('getSlotProperties', function () {
             proficiency: CONSTS.PROFICIENCY_ARMOR_LIGHT,
             properties: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
-                damageType: CONSTS.DAMAGE_TYPE_THERMAL
+                damageType: CONSTS.DAMAGE_TYPE_FIRE
             }],
             weight: 10,
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST]
@@ -682,7 +682,7 @@ describe('getSlotProperties', function () {
             proficiency: '',
             properties: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
-                damageType: CONSTS.DAMAGE_TYPE_THERMAL
+                damageType: CONSTS.DAMAGE_TYPE_FIRE
             }],
             weight: 0.1,
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT, CONSTS.EQUIPMENT_SLOT_FINGER_LEFT]
@@ -693,14 +693,14 @@ describe('getSlotProperties', function () {
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
                 amp: 0,
                 data: {
-                    damageType: CONSTS.DAMAGE_TYPE_THERMAL
+                    damageType: CONSTS.DAMAGE_TYPE_FIRE
                 }
             }],
             [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT]: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
                 amp: 0,
                 data: {
-                    damageType: CONSTS.DAMAGE_TYPE_THERMAL
+                    damageType: CONSTS.DAMAGE_TYPE_FIRE
                 }
             }]
         })
@@ -716,7 +716,7 @@ describe('getSlotProperties', function () {
                 amp: 1
             }, {
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
-                damageType: CONSTS.DAMAGE_TYPE_THERMAL
+                damageType: CONSTS.DAMAGE_TYPE_FIRE
             }],
             weight: 10,
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST]
@@ -728,7 +728,7 @@ describe('getSlotProperties', function () {
             proficiency: '',
             properties: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
-                damageType: CONSTS.DAMAGE_TYPE_THERMAL
+                damageType: CONSTS.DAMAGE_TYPE_FIRE
             }],
             weight: 0.1,
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT, CONSTS.EQUIPMENT_SLOT_FINGER_LEFT]
@@ -749,14 +749,14 @@ describe('getSlotProperties', function () {
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
                 amp: 0,
                 data: {
-                    damageType: CONSTS.DAMAGE_TYPE_THERMAL
+                    damageType: CONSTS.DAMAGE_TYPE_FIRE
                 }
             }],
             [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT]: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
                 amp: 0,
                 data: {
-                    damageType: CONSTS.DAMAGE_TYPE_THERMAL
+                    damageType: CONSTS.DAMAGE_TYPE_FIRE
                 }
             }]
         })
@@ -1173,5 +1173,79 @@ describe('getEffects', function() {
         const eLight = { id: 'e1', type: 'EFFECT_LIGHT', duration: 10, amp: 0 }
         c1.mutations.addEffect({ effect: eLight })
         expect(c1.getters.getEffects.length).toBe(1)
+    })
+})
+
+describe('getSavingThrowBonus', function () {
+    it('should return 0 for all abilities', function () {
+        const c1 = new Creature({ blueprint: bpNormalActor })
+        expect(c1.getters.getSavingThrowBonus).toEqual({
+            [CONSTS.ABILITY_STRENGTH]: 0,
+            [CONSTS.ABILITY_DEXTERITY]: 0,
+            [CONSTS.ABILITY_CONSTITUTION]: 0,
+            [CONSTS.ABILITY_INTELLIGENCE]: 0,
+            [CONSTS.ABILITY_WISDOM]: 0,
+            [CONSTS.ABILITY_CHARISMA]: 0
+        })
+    })
+    it('should return 3 for constitution when having saving throw constitution proficiency', function () {
+        const c1 = new Creature({ blueprint: bpNormalActor })
+        c1.mutations.setLevel({ value: 5 })
+        c1.mutations.addProficiency({ value: CONSTS.PROFICIENCY_SAVING_THROW_CONSTITUTION })
+        expect(c1.getters.getSavingThrowBonus).toEqual({
+            [CONSTS.ABILITY_STRENGTH]: 0,
+            [CONSTS.ABILITY_DEXTERITY]: 0,
+            [CONSTS.ABILITY_CONSTITUTION]: 3,
+            [CONSTS.ABILITY_INTELLIGENCE]: 0,
+            [CONSTS.ABILITY_WISDOM]: 0,
+            [CONSTS.ABILITY_CHARISMA]: 0
+        })
+    })
+    it('should return 5 for constitution when having effect bonus and proficiency', function () {
+        const c1 = new Creature({ blueprint: bpNormalActor })
+        c1.mutations.setLevel({ value: 5 })
+        c1.mutations.addProficiency({ value: CONSTS.PROFICIENCY_SAVING_THROW_CONSTITUTION })
+        c1.mutations.addProperty({
+            property: {
+                id: 'xxxx1',
+                type: CONSTS.PROPERTY_SAVING_THROW_MODIFIER,
+                amp: 2,
+                data: {
+                    ability: CONSTS.ABILITY_CONSTITUTION,
+                    universal: false
+                }
+            }
+        })
+        expect(c1.getters.getSavingThrowBonus).toEqual({
+            [CONSTS.ABILITY_STRENGTH]: 0,
+            [CONSTS.ABILITY_DEXTERITY]: 0,
+            [CONSTS.ABILITY_CONSTITUTION]: 5,
+            [CONSTS.ABILITY_INTELLIGENCE]: 0,
+            [CONSTS.ABILITY_WISDOM]: 0,
+            [CONSTS.ABILITY_CHARISMA]: 0
+        })
+    })
+    it('should return 2 for all abilities when having effect bonus universal', function () {
+        const c1 = new Creature({ blueprint: bpNormalActor })
+        c1.mutations.setLevel({ value: 5 })
+        c1.mutations.addProficiency({ value: CONSTS.PROFICIENCY_SAVING_THROW_CONSTITUTION })
+        c1.mutations.addProperty({
+            property: {
+                id: 'xxxx1',
+                type: CONSTS.PROPERTY_SAVING_THROW_MODIFIER,
+                amp: 2,
+                data: {
+                    universal: true
+                }
+            }
+        })
+        expect(c1.getters.getSavingThrowBonus).toEqual({
+            [CONSTS.ABILITY_STRENGTH]: 2,
+            [CONSTS.ABILITY_DEXTERITY]: 2,
+            [CONSTS.ABILITY_CONSTITUTION]: 5,
+            [CONSTS.ABILITY_INTELLIGENCE]: 2,
+            [CONSTS.ABILITY_WISDOM]: 2,
+            [CONSTS.ABILITY_CHARISMA]: 2
+        })
     })
 })

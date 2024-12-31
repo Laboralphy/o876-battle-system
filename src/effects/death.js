@@ -8,7 +8,7 @@ const CONSTS = require('../consts')
 function mutate ({ target, source }) {
     // will drop hp to 0
     target.hitPoints = 0
-    target.events.emit('death', {
+    target.events.emit(CONSTS.EVENT_CREATURE_DEATH, {
         creature: target,
         killer: source
     })

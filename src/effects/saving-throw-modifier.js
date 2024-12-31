@@ -1,8 +1,13 @@
 const CONSTS = require('../consts')
-const {checkConst} = require("../libs/check-const");
+const { checkConst } = require('../libs/check-const')
 
-function init ({ effect, savingThrow = CONSTS.SAVING_THROW_ANY }) {
-    effect.data.savingThrow = checkConst(savingThrow)
+function init ({ effect, ability = '' }) {
+    if (ability) {
+        effect.data.ability = checkConst(ability)
+        effect.data.universal = false
+    } else {
+        effect.data.universal = true
+    }
 }
 
 /**

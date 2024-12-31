@@ -75,14 +75,14 @@ function mutate ({ effect, target, source }) {
     ed.appliedAmount = oRecentDamage.amount
     ed.resistedAmount = oRecentDamage.resisted
     target.hitPoints -= oRecentDamage.amount
-    target.events.emit('damaged', {
+    target.events.emit(CONSTS.EVENT_CREATURE_DAMAGED, {
         ...oRecentDamage,
         damageType: ed.damageType,
         source,
         subtype: effect.subtype
     })
     if (target.getters.isDead) {
-        target.events.emit('death', {
+        target.events.emit(CONSTS.EVENT_CREATURE_DEATH, {
             creature: target,
             killer: source
         })

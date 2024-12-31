@@ -35,16 +35,6 @@ A creature is moving, and the client process can change final distance
 | speed            | number            | moving creature speed   |
 | distance         | function(number)  | change final distance   |
 
-## combat.move
-
-A creature is moving, and the client process can change final distance
-
-| Property         | Type              | Description             |
-|------------------|-------------------|-------------------------|
-| previousDistance | number            | Distance before move    |
-| speed            | number            | moving creature speed   |
-| distance         | function(number)  | change final distance   |
-
 ## combat.distance
 
 A creature has moved, this event tells about the new distance between attacker and target.
@@ -53,4 +43,13 @@ A creature has moved, this event tells about the new distance between attacker a
 |------------------|--------|-------------------------|
 | distance         | number | change final distance   |
 | previousDistance | number | Distance before move    |
+
+## combat.attack
+
+A creature has attacked.
+
+| Property    | Type    | Description                                     |
+|-------------|---------|-------------------------------------------------|
+| count       | number  | number of attacks                               |
+| opportunity | boolean | This is a free attack because target is fleeing |
 
