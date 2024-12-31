@@ -336,11 +336,18 @@ describe('attack advantage', function () {
             const m = new Manager()
             const cm = m.combatManager
             cm.defaultDistance = 50
-            const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
-            const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
+            const c1 = m.createEntity(bpNormalActor, 'c1')
+            const c2 = m.createEntity(bpNormalActor, 'c2')
             const combat = m.startCombat(c1, c2)
             const logs = []
-            m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => logs.push(evt.attack))
+            m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => {
+                const a = evt.attack
+                logs.push({
+                    attacker: a.attacker.id,
+                    advantaged: a.advantaged,
+                    disadvantaged: a.disadvantaged
+                })
+            })
             m.processEntities()
             m.processCombats()
             m.processCombats()
@@ -348,7 +355,23 @@ describe('attack advantage', function () {
             m.processCombats()
             m.processCombats()
             m.processCombats()
-            console.log(logs)
+
+            expect(logs[0].advantaged).toBeFalsy()
+            expect(logs[1].advantaged).toBeFalsy()
+
+            const eBlind = m.createEffect(CONSTS.EFFECT_BLINDNESS)
+            m.applyEffect(eBlind, c2, 10)
+
+            m.processEntities()
+            m.processCombats()
+            m.processCombats()
+            m.processCombats()
+            m.processCombats()
+            m.processCombats()
+            m.processCombats()
+
+            expect(logs[2].advantaged).toBeTruthy()
+            expect(logs[3].advantaged).toBeFalsy()
         })
     })
 })

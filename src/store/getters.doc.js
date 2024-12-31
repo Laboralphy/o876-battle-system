@@ -5,6 +5,7 @@
  * @property getAbilityModifiers {Object<string, number>}
  * @property getActions {{ [id: string]: RBSAction }}
  * @property getArmorClass {Object<string, number>}
+ * @property getAttackAbility {{[p: string]: string}}
  * @property getAttackBonus {number}
  * @property getCapabilitySet {Set<string>}
  * @property getConditionSet {Set<string>}

@@ -1,6 +1,6 @@
 const { aggregateModifiers } = require('../../libs/aggregator');
 const CONSTS = require('../../consts');
-const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/props-effects-filters')
+const { filterRangedAttackTypes } = require('../../libs/props-effects-filters')
 
 /**
  * Returns true if weapon needs ammunition and correct ammo type is equipped
@@ -9,9 +9,11 @@ const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/
  * @return {boolean}
  */
 function shouldAmmoBeConsidered (getters) {
+    const SLOT_RANGED = CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+
     const eq = getters.getEquipment
     // get the corresponding weapon
-    const oWeapon = eq[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]
+    const oWeapon = eq[SLOT_RANGED]
     if (!oWeapon) {
         // no weapon : exit
         return false
@@ -33,6 +35,7 @@ function shouldAmmoBeConsidered (getters) {
  */
 module.exports = (state, getters) => {
     const SLOT_RANGED = CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+    const sAbility = getters.getAttackAbility[SLOT_RANGED]
 
     // Weapon proficiency bonus
     const nProficiencyBonus = getters.isEquipmentProficient[SLOT_RANGED]
@@ -58,6 +61,6 @@ module.exports = (state, getters) => {
             propFilter: filterRangedAttackTypes,
             restrictSlots: aSlots
         }).sum
-    const nAbilityBonus = getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY]
+    const nAbilityBonus = getters.getAbilityModifiers[sAbility]
     return nAbilityBonus + nProficiencyBonus + nWeaponAttackBonus
 }

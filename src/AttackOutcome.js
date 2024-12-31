@@ -1,6 +1,10 @@
 const CONSTS = require('./consts')
 const Events = require('events')
 const { aggregateModifiers } = require('./libs/aggregator')
+const oAttacker = require("./Creature");
+const prop = require("@laboralphy/store/src/DependencyRegistry");
+const effect = require("@laboralphy/store/src/DependencyRegistry");
+const aDamages = require("./Horde");
 
 /**
  * @class
@@ -89,6 +93,11 @@ class AttackOutcome {
         this._visibility = CONSTS.CREATURE_VISIBILITY_VISIBLE
 
         /**
+         * Offensive ability
+         */
+        this._ability = ''
+
+        /**
          * Advantage / Disadvantaged
          */
         this._advantaged = false
@@ -149,6 +158,14 @@ class AttackOutcome {
             effects: []
         }
 
+    }
+
+    get ability() {
+        return this._ability;
+    }
+
+    get attackType() {
+        return this._attackType;
     }
 
     set distance(value) {
@@ -302,6 +319,7 @@ class AttackOutcome {
         const w = ag.getSelectedWeapon
         const wa = ag.getSelectedWeaponAttributeSet
         this._weapon = w
+        this._ability = ag.getAttackAbility[ag.getSelectedOffensiveSlot]
         let n = 0
         if (wa.has(CONSTS.WEAPON_ATTRIBUTE_RANGED) && ag.isRangedWeaponLoaded) {
             this._ammo = ag.getEquipment[CONSTS.EQUIPMENT_SLOT_AMMO]
@@ -367,16 +385,21 @@ class AttackOutcome {
         // Attacker is advantaged when
         // - Attacker is not detected by target
         // - Target is unable to fight
+        // - Attacker has an effect or a prop that gives advantage
 
         // checking target visibility
         const bTargetIsVisible = oAttacker.getCreatureVisibility(oTarget) === CONSTS.CREATURE_VISIBILITY_VISIBLE
         const bAttackerIsVisible = oTarget.getCreatureVisibility(oAttacker) === CONSTS.CREATURE_VISIBILITY_VISIBLE
 
         // checking target capability of fighting
-        const bTargetCanFight = oTarget.getters.getCapabilitySet[CONSTS.CAPABILITY_FIGHT]
+        const bTargetCanFight = oTarget.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)
+
+        // Checking effect and props
+        const bPropEffAdv = oAttacker.getters.getPropertySet.has(CONSTS.PROPERTY_ADVANTAGE) ||
+            oAttacker.getters.getEffectSet.has(CONSTS.EFFECT_ADVANTAGE)
 
         // result
-        return bTargetIsVisible && (!bAttackerIsVisible || !bTargetCanFight)
+        return bTargetIsVisible && (bPropEffAdv || !bAttackerIsVisible || !bTargetCanFight)
     }
 
     isAttackerAttackDisadvantaged () {
@@ -400,8 +423,12 @@ class AttackOutcome {
         const bRooted = oConditionSet.has(CONSTS.CONDITION_RESTRAINED)
         const bConfused = oConditionSet.has(CONSTS.CONDITION_CONFUSED)
 
+        // checking effects and props
+        const bPropEffDisadv = oAttacker.getters.getPropertySet.has(CONSTS.PROPERTY_DISADVANTAGE) ||
+            oAttacker.getters.getEffectSet.has(CONSTS.EFFECT_DISADVANTAGE)
+
         // result
-        return !bTargetIsVisible || bPoisoned || bConfused || bRooted || !bGoodEquip
+        return !bTargetIsVisible || bPoisoned || bConfused || bRooted || !bGoodEquip || bPropEffDisadv
     }
 
     /**
@@ -439,11 +466,9 @@ class AttackOutcome {
         const bAdvantaged = this._advantaged = this.isAttackerAttackAdvantaged()
         const bDisadvantaged = this._disadvantaged = this.isAttackerAttackDisadvantaged()
         if (bAdvantaged && !bDisadvantaged) {
-            const nRoll2 = oAttacker.dice.roll('1d20')
-            nRoll = Math.max(nRoll, nRoll2)
-        } else if (!bDisadvantaged && !bAdvantaged) {
-            const nRoll2 = oAttacker.dice.roll('1d20')
-            nRoll = Math.min(nRoll, nRoll2)
+            nRoll = Math.max(nRoll, oAttacker.dice.roll('1d20'))
+        } else if (bDisadvantaged && !bAdvantaged) {
+            nRoll = Math.min(nRoll, oAttacker.dice.roll('1d20'))
         }
         const bCritical = nRoll === 20
         const bFumble = nRoll === 1

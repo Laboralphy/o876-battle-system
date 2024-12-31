@@ -255,6 +255,28 @@ class Manager {
     startCombat (c1, c2) {
         return this._combatManager.startCombat(c1, c2)
     }
+
+    /**
+     * Creates an effect
+     * @param sEffect {string}
+     * @param amp {number}
+     * @param data {{}}
+     */
+    createEffect (sEffect, amp = 0, data = {}) {
+        return this._effectProcessor.createEffect(sEffect, amp, data)
+    }
+
+    /**
+     * Applies an effect to a creature
+     * @param oEffect {RBSEffect}
+     * @param oTarget {Creature}
+     * @param duration {number}
+     * @param oSource {Creature|null}
+     * @returns {RBSEffect}
+     */
+    applyEffect (oEffect, oTarget, duration = 0, oSource = null) {
+        return this._effectProcessor.applyEffect(oEffect, oTarget, duration, oSource)
+    }
 }
 
 module.exports = Manager

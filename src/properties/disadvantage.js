@@ -8,7 +8,12 @@ const {checkConst} = require("../libs/check-const");
  */
 function init ({ property, rollType, ability }) {
     property.data.rollType = checkConst(rollType)
-    property.data.ability = checkConst(ability)
+    if (ability) {
+        property.data.ability = checkConst(ability)
+        property.data.universal = false
+    } else {
+        property.data.universal = true
+    }
 }
 
 module.exports = {
