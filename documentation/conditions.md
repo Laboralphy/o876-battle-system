@@ -18,7 +18,7 @@
 | Paralysis | act, move, fight, cast | strength     | Nothing to do, just wait.                        |
 | Root      | move                   | dexterity    | Retaliate with ranged attack                     |
 | Weakness  |                        | constitution | Will disadvantage attack roll and ability checks |
-| Confused  | cast                   | intelligence | Cannot use proficiency                           |
-| Blinded   | see, cast.target       | wisdom       | You may fight, but with penalties                |
+| Confusion | cast                   | intelligence | Cannot use proficiency                           |
+| Blindness | see, cast.target       | wisdom       | You may fight, but with penalties                |
 | Fear      | act, fight, cast       | charisma     | You may flee.                                    |
 

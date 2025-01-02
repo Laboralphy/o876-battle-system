@@ -1,10 +1,6 @@
 const CONSTS = require('./consts')
 const Events = require('events')
 const { aggregateModifiers } = require('./libs/aggregator')
-const oAttacker = require("./Creature");
-const prop = require("@laboralphy/store/src/DependencyRegistry");
-const effect = require("@laboralphy/store/src/DependencyRegistry");
-const aDamages = require("./Horde");
 
 /**
  * @class
@@ -306,7 +302,7 @@ class AttackOutcome {
         if (this._weapon) {
             return this._weapon.blueprint.damages
         } else {
-            return '1d3'
+            return this._attacker.getters.getVariables['BASE_UNHARMED_DAMAGES']
         }
     }
 
@@ -459,7 +455,6 @@ class AttackOutcome {
         }
 
         const oAttacker = this._attacker
-        const oTarget = this._target
 
         // rolling attack
         let nRoll = oAttacker.dice.roll('1d20')
@@ -470,8 +465,8 @@ class AttackOutcome {
         } else if (bDisadvantaged && !bAdvantaged) {
             nRoll = Math.min(nRoll, oAttacker.dice.roll('1d20'))
         }
-        const bCritical = nRoll === 20
-        const bFumble = nRoll === 1
+        const bCritical = nRoll === this._attacker.getters.getVariables['ROLL_CRITICAL_HIT_VALUE']
+        const bFumble = nRoll === this._attacker.getters.getVariables['ROLL_FUMBLE_VALUE']
         const bHit = bFumble
             ? false
             : bCritical

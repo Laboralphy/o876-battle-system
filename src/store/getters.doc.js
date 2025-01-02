@@ -38,6 +38,7 @@
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
  * @property getSpeed {number}
  * @property getSpellDifficultyClass {{[ability: string]: number}}
+ * @property getVariables {{[variable: string]: number|string}}
  * @property getWeaponRanges {number}
  * @property isDead {boolean}
  * @property isEquipmentProficient {{[p: string]: boolean}}

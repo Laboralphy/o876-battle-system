@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-31T10:37:52.012Z
+// Date : 2024-12-31T22:09:33.902Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -41,6 +41,7 @@ module.exports = {
   'getSlotProperties': require('./getSlotProperties.js'),
   'getSpeed': require('./getSpeed.js'),
   'getSpellDifficultyClass': require('./getSpellDifficultyClass.js'),
+  'getVariables': require('./getVariables.js'),
   'getWeaponRanges': require('./getWeaponRanges.js'),
   'isDead': require('./isDead.js'),
   'isEquipmentProficient': require('./isEquipmentProficient.js'),

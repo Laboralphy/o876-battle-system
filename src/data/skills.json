@@ -1,0 +1,17 @@
+{
+  "SKILL_ATHLETICS": {
+    "ability": "ABILITY_STRENGTH"
+  },
+  "SKILL_UNLOCK": {
+    "ability": "ABILITY_DEXTERITY"
+  },
+  "SKILL_STEALTH": {
+    "ability": "ABILITY_DEXTERITY"
+  },
+  "SKILL_ARCANA": {
+    "ability": "ABILITY_INTELLIGENCE"
+  },
+  "SKILL_INVESTIGATION": {
+    "ability": "ABILITY_INTELLIGENCE"
+  }
+}
