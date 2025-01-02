@@ -10,6 +10,9 @@ class CombatManager {
         this._defaultTickCount = 6
     }
 
+    /**
+     * @returns {module:events.EventEmitter | module:events.EventEmitter<DefaultEventMap>}
+     */
     get events () {
         return this._events
     }

@@ -1,5 +1,5 @@
-const REGEX_XDY = /^([-+]?) *(\d+) *d *(\d+) *(([-+]) *(\d+))?$/
-const REGEX_NUM = /^([-+]?) *(\d+) *$/
+const REGEX_XDY = /^([-+]?)\s*(\d+)\s*[Dd]\s*(\d+)\s*(([-+])\s*(\d+))?$/
+const REGEX_NUM = /^([-+]?)\s*(\d+)\s*$/
 
 /**
  * @class
@@ -113,10 +113,10 @@ class Dice {
     if (sValueType !== 'string') {
       throw new TypeError('value of type ' + sValueType + ' is not allowed')
     }
-    value = value
-        .trim()
-        .replace(/ +/g, '')
-        .toLowerCase()
+    // value = value
+    //     .trim()
+    //     .replace(/ +/g, '')
+    //     .toLowerCase()
     if (value in this._cachexdy) {
       return this._cachexdy[value]
     }

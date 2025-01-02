@@ -3,6 +3,7 @@ const { buildStore } = require('./store')
 const CONSTS = require('./consts')
 const Events = require('events')
 const Dice = require('./libs/dice')
+const { checkConst } = require('./libs/check-const')
 const {aggregateModifiers} = require("./libs/aggregator");
 
 class Creature {
@@ -19,6 +20,10 @@ class Creature {
         }
         this._events = new Events
         this._dice = new Dice()
+    }
+
+    get data () {
+        return this._store.externals
     }
 
     /**
@@ -194,6 +199,28 @@ class Creature {
         }
         this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, result)
         return result
+    }
+
+    checkAbility (sAbility, dc, nBonus = 0) {
+        checkConst(sAbility)
+        const nModifier = this.getters.getAbilityModifiers[sAbility]
+        const nRoll = this._dice.roll('1d20')
+        return (nRoll + nModifier + nBonus) >= dc
+    }
+
+    checkSkill (sSkill) {
+        const oSkillData = this.data['SKILLS'][sSkill]
+        if (!oSkillData) {
+            throw new Error(`Could not find skill ${sSkill} data`)
+        }
+        const { ability, proficiency } = oSkillData
+        let nSkillBonus = 0
+        if (this.getters.getProficiencySet.has(proficiency)) {
+            nSkillBonus += this.getters.getProficiencyBonus
+        }
+        // nSkillBonus += aggregateModifiers([
+        //
+        // ])
     }
 }
 

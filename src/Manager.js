@@ -7,10 +7,10 @@ const SCHEMAS = require('./schemas')
 const SchemaValidator = require('./SchemaValidator')
 const Creature = require('./Creature')
 const { deepMerge, deepClone } = require('@laboralphy/object-fusion')
-const DATA = require('./data')
 const path = require('path')
 const AttackOutcome = require('./AttackOutcome')
 const CONSTS = require('./consts')
+const { loadData } = require('./store')
 
 class Manager {
     constructor () {
@@ -27,7 +27,7 @@ class Manager {
         this._effectProcessor = ep
         this._combatManager = cm
         this._scripts = {}
-        this._data = deepClone(DATA)
+        this._time = 0
         cm.events.on(CONSTS.EVENT_COMBAT_TURN, evt => this._events.emit(CONSTS.EVENT_COMBAT_TURN, evt))
         cm.events.on(CONSTS.EVENT_COMBAT_START, evt => this._events.emit(CONSTS.EVENT_COMBAT_START, evt))
         cm.events.on(CONSTS.EVENT_COMBAT_END, evt => this._events.emit(CONSTS.EVENT_COMBAT_END, evt))
@@ -114,6 +114,11 @@ class Manager {
         }
     }
 
+    /**
+     * combat.attack listener
+     * @param evt
+     * @private
+     */
     _combatManagerAttack (evt) {
         const {
             combat,
@@ -166,7 +171,7 @@ class Manager {
             .forEach(([id, script]) => {
                 this._scripts[id] = script
             })
-        deepMerge(this._data, data)
+        loadData(data)
     }
 
     /**
@@ -177,6 +182,12 @@ class Manager {
         this.defineModule(require(path.join('modules' + sModuleId)))
     }
 
+    /**
+     * Creates a new Entity
+     * @param resref {string}
+     * @param id {string}
+     * @returns {Creature|RBSItem}
+     */
     createEntity (resref, id) {
         const oEntity = this._entityBuilder.createEntity(resref, id)
         if (oEntity instanceof Creature) {
@@ -216,6 +227,15 @@ class Manager {
 
     processCombats () {
         this._combatManager.processCombats()
+    }
+
+    process () {
+        if ((this._time % this._combatManager.defaultTickCount) === 0) {
+            // Processing entities each turn begin
+            this.processEntities()
+        }
+        this.processCombats()
+        ++this._time
     }
 
     /**

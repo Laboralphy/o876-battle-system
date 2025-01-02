@@ -6,6 +6,7 @@ const externals = require('../data')
 
 require('./getters.doc')
 require('./mutations.doc')
+const {deepMerge} = require("@laboralphy/object-fusion");
 
 const MUTATION_PARAM_ORDER_PAYLOAD_CONTEXT = 1
 const MUTATION_PARAM_ORDER_CONTEXT_PAYLOAD = 2
@@ -24,5 +25,8 @@ function buildStore () {
 }
 
 module.exports = {
-    buildStore
+    buildStore,
+    loadData: function (data) {
+        deepMerge(externals, data)
+    }
 }
