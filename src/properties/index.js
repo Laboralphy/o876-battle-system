@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-31T22:09:34.409Z
+// Date : 2025-01-02T19:18:02.678Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -25,6 +25,7 @@ module.exports = {
   'PROPERTY_ON_ATTACK_HIT': require('./on-attack-hit.js'),
   'PROPERTY_REGENERATION': require('./regeneration.js'),
   'PROPERTY_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
+  'PROPERTY_SKILL_MODIFIER': require('./skill-modifier.js'),
   'PROPERTY_SNEAK_ATTACK': require('./sneak-attack.js'),
   'PROPERTY_SPEED_FACTOR': require('./speed-factor.js'),
   'PROPERTY_SPELL_POWER': require('./spell-power.js'),

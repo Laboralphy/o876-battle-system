@@ -201,14 +201,14 @@ class Creature {
         return result
     }
 
-    checkAbility (sAbility, dc, nBonus = 0) {
+    checkAbility (sAbility, dc) {
         checkConst(sAbility)
         const nModifier = this.getters.getAbilityModifiers[sAbility]
         const nRoll = this._dice.roll('1d20')
-        return (nRoll + nModifier + nBonus) >= dc
+        return (nRoll + nModifier) >= dc
     }
 
-    checkSkill (sSkill) {
+    checkSkill (sSkill, dc) {
         const oSkillData = this.data['SKILLS'][sSkill]
         if (!oSkillData) {
             throw new Error(`Could not find skill ${sSkill} data`)
@@ -218,9 +218,23 @@ class Creature {
         if (this.getters.getProficiencySet.has(proficiency)) {
             nSkillBonus += this.getters.getProficiencyBonus
         }
-        // nSkillBonus += aggregateModifiers([
-        //
-        // ])
+        nSkillBonus += aggregateModifiers([
+            CONSTS.EFFECT_SKILL_MODIFIER,
+            CONSTS.PROPERTY_SKILL_MODIFIER
+        ], this.getters).sum
+        const nAbilityModifier = this.getters.getAbilityModifiers[ability]
+        const roll = this._dice.roll('1d20')
+        const bonus = nSkillBonus + nAbilityModifier
+        const result = {
+            skill: sSkill,
+            ability,
+            roll: roll,
+            bonus,
+            dc,
+            success: roll + bonus >= dc
+        }
+        this.events.emit(CONSTS.EVENT_CREATURE_SKILL_CHECK, result)
+        return result
     }
 }
 

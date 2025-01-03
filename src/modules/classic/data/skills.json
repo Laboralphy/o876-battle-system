@@ -1,0 +1,10 @@
+{
+  "SKILL_ATHLETICS": {
+    "ability": "ABILITY_STRENGTH",
+    "proficiency": "PROFICIENCY_SKILL_ATHLETICS"
+  },
+  "SKILL_ARCANA": {
+    "ability": "ABILITY_INTELLIGENCE",
+    "proficiency": "PROFICIENCY_SKILL_ARCANA"
+  }
+}

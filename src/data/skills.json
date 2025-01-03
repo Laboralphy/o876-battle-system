@@ -1,8 +1,4 @@
 {
-  "SKILL_ATHLETICS": {
-    "ability": "ABILITY_STRENGTH",
-    "proficiency": "PROFICIENCY_SKILL_ATHLETICS"
-  },
   "SKILL_UNLOCK": {
     "ability": "ABILITY_DEXTERITY",
     "proficiency": "PROFICIENCY_SKILL_UNLOCK"
@@ -10,10 +6,6 @@
   "SKILL_STEALTH": {
     "ability": "ABILITY_DEXTERITY",
     "proficiency": "PROFICIENCY_SKILL_STEALTH"
-  },
-  "SKILL_ARCANA": {
-    "ability": "ABILITY_INTELLIGENCE",
-    "proficiency": "PROFICIENCY_SKILL_ARCANA"
   },
   "SKILL_INVESTIGATION": {
     "ability": "ABILITY_INTELLIGENCE",
