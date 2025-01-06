@@ -9,6 +9,10 @@ class Horde {
         return this._creatures
     }
 
+    get count () {
+        return Object.values(this._creatures).length
+    }
+
     forEach (f) {
         const aCreatures = Object.values(this._creatures)
         aCreatures.forEach(((creature, index) => f(creature, index, aCreatures)))
@@ -52,7 +56,7 @@ class Horde {
         }
         this.activeCreatures.forEach(creature => {
             if (!this.isCreatureActive(creature)) {
-                tac.remove(creature)
+                tac.delete(creature)
             }
         })
     }

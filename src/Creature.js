@@ -4,7 +4,7 @@ const CONSTS = require('./consts')
 const Events = require('events')
 const Dice = require('./libs/dice')
 const { checkConst } = require('./libs/check-const')
-const {aggregateModifiers} = require("./libs/aggregator");
+const { aggregateModifiers } = require("./libs/aggregator");
 
 class Creature {
     constructor ({ blueprint = null, id = null } = {}) {
@@ -161,7 +161,7 @@ class Creature {
     revive () {
         if (this.getters.isDead) {
             this._events.emit(CONSTS.EVENT_CREATURE_REVIVE)
-            this.mutations.setHitPoints({ value: 1 })
+            this.mutations.setHitPoints({ value: this.getters.getVariables.REVIVE_HIT_POINTS })
         }
     }
 
@@ -182,12 +182,18 @@ class Creature {
         this.mutations.setHitPoints({ value: hp })
     }
 
+    /**
+     * Check saving throw
+     * @param sAbility
+     * @param dc
+     * @returns {{success: boolean, bonus: number, roll: number, ability: string, dc: number}}
+     */
     rollSavingThrow (sAbility, dc) {
         const roll = this._dice.roll('1d20')
         const bonus = this.getters.getSavingThrowBonus[sAbility]
-        const success = roll === 1
+        const success = roll === this.getters.getVariables['ROLL_FUMBLE_VALUE']
             ? false
-            : roll === 20
+            : roll === this.getters.getVariables['ROLL_CRITICAL_SUCCESS_VALUE']
                 ? true
                 : (roll + bonus >= dc)
         const result = {
@@ -201,33 +207,41 @@ class Creature {
         return result
     }
 
+    /**
+     * Checks an ability for a non-skill task
+     * @param sAbility {string}
+     * @param dc {number}
+     * @returns {{ability: string, roll: number, bonus: number, success: boolean}}
+     */
     checkAbility (sAbility, dc) {
         checkConst(sAbility)
         const nModifier = this.getters.getAbilityModifiers[sAbility]
         const nRoll = this._dice.roll('1d20')
-        return (nRoll + nModifier) >= dc
+        const result = {
+            ability: sAbility,
+            roll: nRoll,
+            bonus: nModifier,
+            success: (nRoll + nModifier) >= dc
+        }
+        this.events.emit(CONSTS.EVENT_CREATURE_ABILITY_CHECK, result)
+        return result
     }
 
+    /**
+     * Checks a skill
+     * @param sSkill
+     * @param dc
+     * @returns {{bonus: string, success: boolean, skill: string, roll: number, dc: number}}
+     */
     checkSkill (sSkill, dc) {
-        const oSkillData = this.data['SKILLS'][sSkill]
-        if (!oSkillData) {
-            throw new Error(`Could not find skill ${sSkill} data`)
+        const sv = this.getters.getSkillValues
+        if (!(sSkill in sv)) {
+            throw new Error(`Invalid skill ${sSkill}`)
         }
-        const { ability, proficiency } = oSkillData
-        let nSkillBonus = 0
-        if (this.getters.getProficiencySet.has(proficiency)) {
-            nSkillBonus += this.getters.getProficiencyBonus
-        }
-        nSkillBonus += aggregateModifiers([
-            CONSTS.EFFECT_SKILL_MODIFIER,
-            CONSTS.PROPERTY_SKILL_MODIFIER
-        ], this.getters).sum
-        const nAbilityModifier = this.getters.getAbilityModifiers[ability]
+        const bonus = sv[sSkill]
         const roll = this._dice.roll('1d20')
-        const bonus = nSkillBonus + nAbilityModifier
         const result = {
             skill: sSkill,
-            ability,
             roll: roll,
             bonus,
             dc,

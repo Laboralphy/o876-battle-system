@@ -1,3 +1,4 @@
 module.exports = {
-    blueprints: require('./blueprints')
+    blueprints: require('./blueprints'),
+    data: require('./data')
 }

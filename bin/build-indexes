@@ -2,6 +2,15 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+for i in "$SCRIPT_DIR"/../src/modules/*
+do
+  if [ -d "$i" ]
+  then
+    m=$(basename "$i")
+    "$SCRIPT_DIR"/build-module "$m"
+  fi
+done
+"$SCRIPT_DIR"/build-proficiencies
 "$SCRIPT_DIR"/build-schemas
 "$SCRIPT_DIR"/build-data
 "$SCRIPT_DIR"/build-store

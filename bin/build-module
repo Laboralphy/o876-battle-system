@@ -23,6 +23,13 @@ then
 fi
 
 
-node ./bin/generate-indexes.js "$MODULE_PATH/blueprints" REQUIRE > "$MODULE_PATH/blueprints/index.js"
+if [ -d "$MODULE_PATH/blueprints" ]
+then
+  node ./bin/generate-indexes.js "$MODULE_PATH/blueprints" REQUIRE > "$MODULE_PATH/blueprints/index.js"
+fi
+if [ -d "$MODULE_PATH/data" ]
+then
+  node ./bin/generate-indexes.js "$MODULE_PATH/data" REQUIRE > "$MODULE_PATH/data/index.js"
+fi
 
 echo done

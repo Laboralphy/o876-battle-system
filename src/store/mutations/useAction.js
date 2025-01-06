@@ -4,13 +4,14 @@
  * @param idAction {string}
  */
 module.exports = ({ state }, { action: idAction }) => {
+    /**
+     * @var {RBSStoreStateAction}
+     */
     const oAction = state.actions[idAction]
     if (oAction) {
-        if (oAction.cooldown > 0) {
-            oAction.cooldownTimer = oAction.cooldown
-        }
-        if (oAction.dailyCharges > 0 && oAction.charges) {
-            --oAction.charges
+        if (oAction.limited) {
+            oAction.cooldownTimer.push(oAction.cooldown)
+            console.log(oAction)
         }
     } else {
         throw new Error(`Unknown action ${idAction}`)

@@ -6,8 +6,7 @@
 module.exports = ({ state }, { action: idAction }) => {
     const oAction = state.actions[idAction]
     if (oAction) {
-        oAction.cooldownTimer = 0
-        oAction.charges = oAction.dailyCharges
+        oAction.cooldownTimer.splice(0, oAction.cooldown.length)
     } else {
         throw new Error(`Unknown action ${idAction}`)
     }

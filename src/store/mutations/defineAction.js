@@ -1,13 +1,22 @@
 const CONSTS = require('../../consts')
 
 /**
+ * @typedef RBSStoreStateAction {object}
+ * @property id {string}
+ * @property limited {boolean} if true, the action has limited use (limited charges, or/and limited cooldown)
+ * @property attackType {string} ACTION_LIMITATION_TYPE_*
+ * @property cooldown {number}
+ * @property cooldownTimer {number}
+ * @property dailyCharges {number}
+ * @property range {number}
+ * @property onHit {string}
+ * @property parameters {{}}
+ *
  * @param state {RBSStoreState}
  * @param id {string}
  * @param attackType {string}
  * @param cooldown {number}
- * @param cooldownTimer {number}
  * @param charges {number}
- * @param dailyCharges {number}
  * @param range {number}
  * @param onHit {string}
  * @param parameters {{}}
@@ -21,11 +30,34 @@ module.exports = ({ state }, {
     onHit,
     parameters = {}
 }) => {
+    const bHasCooldown = cooldown > 0
+    const bHasCharges = charges > 0
+    const s = (bHasCooldown ? 10 : 0) + (bHasCharges ? 1 : 0)
+    let limited = false
+    switch (s) {
+        case 1: {
+            // has no cooldown but has charges, this is typically an action with a number of uses per day
+            cooldown = Infinity
+            limited = true
+            break
+        }
+        case 10: {
+            // has cooldown but no charge : set charges to 1
+            charges = 1
+            limited = true
+            break
+        }
+        case 11: {
+            // has coolddown and charges
+            limited = true
+            break
+        }
+    }
     const oNewAction = {
         attackType,
+        limited,
         cooldown,
-        cooldownTimer: 0,
-        charges,
+        cooldownTimer: [],
         dailyCharges: charges,
         range,
         onHit,

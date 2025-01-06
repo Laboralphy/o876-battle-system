@@ -1,8 +1,10 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2024-12-25T23:36:53.880Z
+// Date : 2025-01-06T16:40:27.800Z
 // List of files in ./src/modules/classic/blueprints
 
 module.exports = {
+  'c-type-basilisk': require('./creatures/monster-types/c-type-basilisk.json'),
+  'c-type-test': require('./creatures/monster-types/c-type-test.json'),
   'ammo-arrow': require('./items/ammo/ammo-arrow.json'),
   'ammo-quarrel': require('./items/ammo/ammo-quarrel.json'),
   'arm-breast-plate': require('./items/armors/arm-breast-plate.json'),
@@ -16,7 +18,16 @@ module.exports = {
   'arm-scale-mail': require('./items/armors/arm-scale-mail.json'),
   'arm-splint': require('./items/armors/arm-splint.json'),
   'arm-studded-leather': require('./items/armors/arm-studded-leather.json'),
-  'tool-torch': require('./items/tools/tool-torch.json'),
+  'gear-belt': require('./items/gear/gear-belt.json'),
+  'gear-boots': require('./items/gear/gear-boots.json'),
+  'gear-bracers': require('./items/gear/gear-bracers.json'),
+  'gear-gauntlets': require('./items/gear/gear-gauntlets.json'),
+  'gear-gloves': require('./items/gear/gear-gloves.json'),
+  'gear-hat': require('./items/gear/gear-hat.json'),
+  'gear-helm': require('./items/gear/gear-helm.json'),
+  'gear-necklace': require('./items/gear/gear-necklace.json'),
+  'gear-ring': require('./items/gear/gear-ring.json'),
+  'gear-torch': require('./items/gear/gear-torch.json'),
   'wpn-battle-axe': require('./items/weapons/wpn-battle-axe.json'),
   'wpn-dagger': require('./items/weapons/wpn-dagger.json'),
   'wpn-great-axe': require('./items/weapons/wpn-great-axe.json'),
@@ -45,13 +56,13 @@ module.exports = {
   'gear-type-belt': require('./types/gear-types/gear-type-belt.json'),
   'gear-type-boots': require('./types/gear-types/gear-type-boots.json'),
   'gear-type-bracers': require('./types/gear-types/gear-type-bracers.json'),
-  'gear-type-cloak': require('./types/gear-types/gear-type-cloak.json'),
   'gear-type-gauntlets': require('./types/gear-types/gear-type-gauntlets.json'),
   'gear-type-gloves': require('./types/gear-types/gear-type-gloves.json'),
   'gear-type-hat': require('./types/gear-types/gear-type-hat.json'),
   'gear-type-helm': require('./types/gear-types/gear-type-helm.json'),
   'gear-type-necklace': require('./types/gear-types/gear-type-necklace.json'),
   'gear-type-ring': require('./types/gear-types/gear-type-ring.json'),
+  'gear-type-torch': require('./types/gear-types/gear-type-torch.json'),
   'wpn-type-battle-axe': require('./types/weapon-types/wpn-type-battle-axe.json'),
   'wpn-type-dagger': require('./types/weapon-types/wpn-type-dagger.json'),
   'wpn-type-great-axe': require('./types/weapon-types/wpn-type-great-axe.json'),

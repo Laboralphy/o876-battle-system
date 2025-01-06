@@ -1,8 +1,8 @@
 /**
  * Change an effect duration. Setting duration to 0 will remove effect from creatures
  * @param state {*}
- * @param effect {RBSEffect}
  * @param getters {RBSStoreGetters}
+ * @param effect {RBSEffect}
  * @param duration {number}
  */
 module.exports = ({ state, getters }, { effect, duration }) => {

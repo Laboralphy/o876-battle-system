@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-01-02T19:18:02.229Z
+// Date : 2025-01-06T16:40:28.006Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -38,6 +38,7 @@ module.exports = {
   'getSelectedOffensiveSlot': require('./getSelectedOffensiveSlot.js'),
   'getSelectedWeapon': require('./getSelectedWeapon.js'),
   'getSelectedWeaponAttributeSet': require('./getSelectedWeaponAttributeSet.js'),
+  'getSkillValues': require('./getSkillValues.js'),
   'getSlotProperties': require('./getSlotProperties.js'),
   'getSpeed': require('./getSpeed.js'),
   'getSpellDifficultyClass': require('./getSpellDifficultyClass.js'),

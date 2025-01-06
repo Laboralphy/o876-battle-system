@@ -465,7 +465,7 @@ class AttackOutcome {
         } else if (bDisadvantaged && !bAdvantaged) {
             nRoll = Math.min(nRoll, oAttacker.dice.roll('1d20'))
         }
-        const bCritical = nRoll === this._attacker.getters.getVariables['ROLL_CRITICAL_HIT_VALUE']
+        const bCritical = nRoll === this._attacker.getters.getVariables['ROLL_CRITICAL_SUCCESS_VALUE']
         const bFumble = nRoll === this._attacker.getters.getVariables['ROLL_FUMBLE_VALUE']
         const bHit = bFumble
             ? false

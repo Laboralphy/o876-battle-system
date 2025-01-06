@@ -877,6 +877,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
+                limited: false,
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 cooldown: 0,
                 charges: 0,
@@ -898,8 +899,9 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 0,
-                charges: 0,
+                charges: 1,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -919,6 +921,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 5,
                 charges: 0,
                 range: Infinity,
@@ -935,13 +938,29 @@ describe('getActions', function () {
             onHit: 'script1',
             cooldown: 5
         })
-        oCreature.mutations.useAction({ action: 'a1' })
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
+                cooldown: 0,
+                charges: 1,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+        console.log('USE')
+        oCreature.mutations.useAction({ action: 'a1' })
+        console.log('GET')
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 5,
-                charges: 0,
+                charges: 1,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -953,6 +972,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limitType: CONSTS.ACTION_LIMITATION_TYPE_COOLDOWN_CHARGES,
                 cooldown: 4,
                 charges: 0,
                 range: Infinity,
@@ -1118,6 +1138,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 0,
                 charges: 5,
                 range: Infinity,
@@ -1143,7 +1164,8 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-                cooldown: 0,
+                limited: true,
+                cooldown: Infinity,
                 charges: 0,
                 range: Infinity,
                 onHit: 'script1',
@@ -1246,6 +1268,37 @@ describe('getSavingThrowBonus', function () {
             [CONSTS.ABILITY_INTELLIGENCE]: 2,
             [CONSTS.ABILITY_WISDOM]: 2,
             [CONSTS.ABILITY_CHARISMA]: 2
+        })
+    })
+})
+
+describe('rollSkill', function () {
+    it('should have 0 to all skill', function () {
+        const c = new Creature()
+        expect(c.getters.getSkillValues).toEqual({
+            "SKILL_INVESTIGATION": 0,
+            "SKILL_STEALTH": 0,
+            "SKILL_UNLOCK": 0
+        })
+    })
+    it('should have 1 to unlock and stealth skill when dexterity is 12', function () {
+        const c = new Creature()
+        c.mutations.setAbilityValue({ ability: 'ABILITY_DEXTERITY', value: 12})
+        expect(c.getters.getSkillValues).toEqual({
+            "SKILL_INVESTIGATION": 0,
+            "SKILL_STEALTH": 1,
+            "SKILL_UNLOCK": 1
+        })
+    })
+    it('should have 4 to unlock and 1 to stealth skill when dexterity is 12 and level is 5 and has proficiency to unlock', function () {
+        const c = new Creature()
+        c.mutations.setAbilityValue({ ability: 'ABILITY_DEXTERITY', value: 12 })
+        c.mutations.addProficiency({ value: 'PROFICIENCY_SKILL_UNLOCK' })
+        c.mutations.setLevel({ value: 5 })
+        expect(c.getters.getSkillValues).toEqual({
+            "SKILL_INVESTIGATION": 0,
+            "SKILL_STEALTH": 1,
+            "SKILL_UNLOCK": 4
         })
     })
 })

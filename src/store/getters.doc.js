@@ -35,6 +35,7 @@
  * @property getSelectedOffensiveSlot {string} EQUIPMENT_SLOT_WEAPON_MELEE or RANGED
  * @property getSelectedWeapon {RBSItem|null}
  * @property getSelectedWeaponAttributeSet {Set<string>}
+ * @property getSkillValues {{[skill: string]: number}}
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
  * @property getSpeed {number}
  * @property getSpellDifficultyClass {{[ability: string]: number}}

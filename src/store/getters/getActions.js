@@ -1,11 +1,11 @@
+const CONSTS = require('../../consts')
+
 /**
  * @typedef RBSAction {object}
  * @property id {string}
- * @property attackType {string}
+ * @property limited {boolean}
  * @property cooldown {number}
- * @property cooldownTimer {number}
  * @property charges {number}
- * @property dailyCharges {number}
  * @property range {number}
  * @property onHit {string}
  * @property parameters {{}}
@@ -17,13 +17,26 @@
 module.exports = state => Object.fromEntries(
     Object
     .entries(state.actions)
-    .map(([id, action]) => [id, {
-        id,
-        attackType: action.attackType,
-        cooldown: action.cooldownTimer,
-        charges: action.charges,
-        range: action.range,
-        onHit: action.onHit,
-        parameters: action.parameters,
-        ready: action.cooldownTimer === 0 && (action.dailyCharges === 0 || action.charges > 0)
-    }]))
+    .map(([id, action]) => {
+        const acdt = action.cooldownTimer
+        const acdtl = acdt.length
+        const charges = action.dailyCharges - acdtl // remaining charge for that day
+            console.log(action)
+        const cooldown = (!action.limited || charges > 0)
+            ? 0
+            : acdt[acdtl - 1]
+        const ready = action.limited ? charges > 0 : true
+        const oAction = {
+                id,
+                limited: action.limited,
+                attackType: action.attackType,
+                cooldown,
+                charges,
+                range: action.range,
+                onHit: action.onHit,
+                parameters: action.parameters,
+                ready
+        }
+        return [id, oAction]
+    })
+)
