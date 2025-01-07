@@ -11,7 +11,6 @@ module.exports = ({ state }, { action: idAction }) => {
     if (oAction) {
         if (oAction.limited) {
             oAction.cooldownTimer.push(oAction.cooldown)
-            console.log(oAction)
         }
     } else {
         throw new Error(`Unknown action ${idAction}`)

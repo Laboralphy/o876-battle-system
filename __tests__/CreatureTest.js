@@ -931,6 +931,51 @@ describe('getActions', function () {
             }
         })
     })
+    it('should deplete the only charge and add a cooldown of 5 when using action', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1',
+            cooldown: 5
+        })
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
+                cooldown: 5,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+    })
+    it('should deplete the only charge and add a cooldown of 5 when asking getAction prior to use action', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'a1',
+            onHit: 'script1',
+            cooldown: 5
+        })
+        expect(oCreature.getters.getActions).toHaveProperty('a1')
+        oCreature.mutations.useAction({ action: 'a1' })
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
+                cooldown: 5,
+                charges: 0,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: false
+            }
+        })
+    })
     it('action with cooldown should be ready when action is used and restored', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({

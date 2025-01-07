@@ -19,9 +19,8 @@ module.exports = state => Object.fromEntries(
     .entries(state.actions)
     .map(([id, action]) => {
         const acdt = action.cooldownTimer
-        const acdtl = acdt.length
+        const acdtl = acdt.$length
         const charges = action.dailyCharges - acdtl // remaining charge for that day
-            console.log(action)
         const cooldown = (!action.limited || charges > 0)
             ? 0
             : acdt[acdtl - 1]
