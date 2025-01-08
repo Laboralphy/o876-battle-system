@@ -1,14 +1,14 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-01-06T16:40:28.074Z
+// Date : 2025-01-08T15:25:54.241Z
 // List of files in ./src/store/mutations
 
 module.exports = {
   'addEffect': require('./addEffect.js'),
   'addProficiency': require('./addProficiency.js'),
   'addProperty': require('./addProperty.js'),
-  'coolActionsDown': require('./coolActionsDown.js'),
   'defineAction': require('./defineAction.js'),
   'equipItem': require('./equipItem.js'),
+  'rechargeActions': require('./rechargeActions.js'),
   'removeEffect': require('./removeEffect.js'),
   'restoreAction': require('./restoreAction.js'),
   'selectOffensiveSlot': require('./selectOffensiveSlot.js'),

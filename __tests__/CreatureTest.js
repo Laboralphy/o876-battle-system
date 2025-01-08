@@ -881,6 +881,7 @@ describe('getActions', function () {
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 cooldown: 0,
                 charges: 0,
+                recharging: false,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -902,6 +903,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 1,
+                recharging: false,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -924,6 +926,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 5,
                 charges: 0,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -946,6 +949,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 5,
                 charges: 0,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -970,6 +974,7 @@ describe('getActions', function () {
                 cooldown: 5,
                 charges: 0,
                 range: Infinity,
+                recharging: true,
                 onHit: 'script1',
                 parameters: {},
                 ready: false
@@ -990,6 +995,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 1,
+                recharging: false,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1004,13 +1010,14 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 5,
                 charges: 0,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
                 ready: false
             }
         })
-        oCreature.mutations.coolActionsDown()
+        oCreature.mutations.rechargeActions()
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
@@ -1018,13 +1025,14 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 4,
                 charges: 0,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
                 ready: false
             }
         })
-        oCreature.mutations.coolActionsDown()
+        oCreature.mutations.rechargeActions()
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
@@ -1032,13 +1040,14 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 3,
                 charges: 0,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
                 ready: false
             }
         })
-        oCreature.mutations.coolActionsDown()
+        oCreature.mutations.rechargeActions()
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
@@ -1046,13 +1055,14 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 2,
                 charges: 0,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
                 ready: false
             }
         })
-        oCreature.mutations.coolActionsDown()
+        oCreature.mutations.rechargeActions()
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
@@ -1060,13 +1070,14 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 1,
                 charges: 0,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
                 ready: false
             }
         })
-        oCreature.mutations.coolActionsDown()
+        oCreature.mutations.rechargeActions()
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
@@ -1074,13 +1085,14 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 1,
+                recharging: false,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
                 ready: true
             }
         })
-        oCreature.mutations.coolActionsDown()
+        oCreature.mutations.rechargeActions()
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
@@ -1088,6 +1100,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 1,
+                recharging: false,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1109,6 +1122,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 5,
+                recharging: false,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1131,6 +1145,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 4,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1145,6 +1160,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 3,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1159,6 +1175,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 2,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1173,6 +1190,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 1,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1187,6 +1205,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: Infinity,
                 charges: 0,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1208,6 +1227,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 5,
+                recharging: false,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1234,6 +1254,7 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: Infinity,
                 charges: 0,
+                recharging: true,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1248,12 +1269,79 @@ describe('getActions', function () {
                 limited: true,
                 cooldown: 0,
                 charges: 5,
+                recharging: false,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
                 ready: true
             }
         })
+    })
+
+    it('should work as a slotted spell system when defining an action (launch level 3 spell) with cooldown 20 and 5 charges', function () {
+        const oCreature = eb.createEntity(bpNormalActor)
+        oCreature.mutations.defineAction({
+            id: 'cast-l3-spell',
+            onHit: 'script1',
+            charges: 5,
+            cooldown: 20
+        })
+        const l3 = () => {
+            const { charges, cooldown } = oCreature.getters.getActions['cast-l3-spell']
+            return { charges, cooldown }
+        }
+        const advance = n => {
+            for (let i = 0; i < n; ++i) {
+                oCreature.mutations.rechargeActions()
+            }
+        }
+        expect(l3().charges).toBe(5)
+        expect(l3().cooldown).toBe(0)
+        advance(500)
+        expect(l3().charges).toBe(5)
+        expect(l3().cooldown).toBe(0)
+
+        // casting spell
+        oCreature.mutations.useAction({ action: 'cast-l3-spell' })
+        advance(5) // [0] is at 15
+        expect(l3().charges).toBe(4)
+        expect(l3().cooldown).toBe(0) // can cast another spell immediatly
+
+        // casting spell
+        oCreature.mutations.useAction({ action: 'cast-l3-spell' })
+        expect(l3().charges).toBe(3)
+        expect(l3().cooldown).toBe(0) // can cast another spell immediatly
+
+        advance(1) // [0] is at 14
+
+        // casting spell
+        oCreature.mutations.useAction({ action: 'cast-l3-spell' })
+        expect(l3().charges).toBe(2)
+        expect(l3().cooldown).toBe(0) // can cast another spell immediatly
+
+        advance(1) // [0] is at 13
+
+        // casting spell
+        expect(oCreature.mutations.useAction({ action: 'cast-l3-spell' })).toBeTruthy()
+        expect(l3().charges).toBe(1)
+        expect(l3().cooldown).toBe(0) // can cast another spell immediatly
+
+        advance(1) // [0] is at 12
+
+        expect(oCreature.mutations.useAction({ action: 'cast-l3-spell' })).toBeTruthy()
+        expect(l3().charges).toBe(0)
+        expect(l3().cooldown).toBe(12)
+
+        advance(11) // [0] is at 1
+
+        expect(l3().charges).toBe(0)
+        expect(l3().cooldown).toBe(1)
+        expect(oCreature.mutations.useAction({ action: 'cast-l3-spell' })).toBeFalsy()
+
+        advance(1) // [0] is at 1
+        expect(l3().charges).toBe(1)
+        expect(l3().cooldown).toBe(0)
+
     })
 })
 

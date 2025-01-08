@@ -215,7 +215,7 @@ class Manager {
             ._horde
             .activeCreatures
             .map(creature => {
-                creature.mutations.coolActionsDown()
+                creature.mutations.rechargeActions()
                 return creature.getters.getEffects
             })
             .flat()

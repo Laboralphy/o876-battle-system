@@ -2,9 +2,14 @@
  * @param action {RBSStoreStateAction}
  */
 function cooldownAction (action) {
-    if (action.cooldown > 0) {
-        const a = action.cooldownTimer.map(n => n - 1).filter(n => n > 0)
-        action.cooldownTimer.splice(0, action.cooldownTimer.length, ...a)
+    if (action.cooldown > 0 && action.cooldown !== Infinity) {
+        const acdt = action.cooldownTimer
+        for (let i = acdt.length - 1; i >= 0; --i) {
+            --acdt[i]
+            if (acdt[i] <= 0) {
+                acdt.splice(i, 1)
+            }
+        }
     }
 }
 
