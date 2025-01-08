@@ -996,16 +996,14 @@ describe('getActions', function () {
                 ready: true
             }
         })
-        console.log('USE')
         oCreature.mutations.useAction({ action: 'a1' })
-        console.log('GET')
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 5,
-                charges: 1,
+                charges: 0,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1017,7 +1015,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-                limitType: CONSTS.ACTION_LIMITATION_TYPE_COOLDOWN_CHARGES,
+                limited: true,
                 cooldown: 4,
                 charges: 0,
                 range: Infinity,
@@ -1031,6 +1029,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 3,
                 charges: 0,
                 range: Infinity,
@@ -1044,6 +1043,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 2,
                 charges: 0,
                 range: Infinity,
@@ -1057,6 +1057,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 1,
                 charges: 0,
                 range: Infinity,
@@ -1070,8 +1071,23 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 0,
-                charges: 0,
+                charges: 1,
+                range: Infinity,
+                onHit: 'script1',
+                parameters: {},
+                ready: true
+            }
+        })
+        oCreature.mutations.coolActionsDown()
+        expect(oCreature.getters.getActions).toEqual({
+            a1: {
+                id: 'a1',
+                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
+                cooldown: 0,
+                charges: 1,
                 range: Infinity,
                 onHit: 'script1',
                 parameters: {},
@@ -1090,6 +1106,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 0,
                 charges: 5,
                 range: Infinity,
@@ -1111,6 +1128,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 0,
                 charges: 4,
                 range: Infinity,
@@ -1124,6 +1142,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 0,
                 charges: 3,
                 range: Infinity,
@@ -1137,6 +1156,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 0,
                 charges: 2,
                 range: Infinity,
@@ -1150,6 +1170,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 0,
                 charges: 1,
                 range: Infinity,
@@ -1163,7 +1184,8 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-                cooldown: 0,
+                limited: true,
+                cooldown: Infinity,
                 charges: 0,
                 range: Infinity,
                 onHit: 'script1',
@@ -1223,6 +1245,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                limited: true,
                 cooldown: 0,
                 charges: 5,
                 range: Infinity,
