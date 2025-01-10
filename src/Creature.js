@@ -250,14 +250,6 @@ class Creature {
         this.events.emit(CONSTS.EVENT_CREATURE_SKILL_CHECK, result)
         return result
     }
-
-    /**
-     * Entering / exiting stealth mode
-     * @param bEnter {boolean}
-     */
-    stealthMode (bEnter) {
-
-    }
 }
 
 module.exports = Creature

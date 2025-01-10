@@ -1,6 +1,7 @@
 const CONSTS = require('./consts')
 const Events = require('events')
 const { aggregateModifiers } = require('./libs/aggregator')
+const { isAttackAdvantaged, isAttackDisadvantaged } = require('./advantages/attack-roll')
 
 /**
  * @class
@@ -374,55 +375,12 @@ class AttackOutcome {
         oDamageType[sDamageType].amount += this._attacker.dice.roll(xAmount)
     }
 
-    isAttackerAttackAdvantaged () {
-        const oAttacker = this._attacker
-        const oTarget = this._target
-
-        // Attacker is advantaged when
-        // - Attacker is not detected by target
-        // - Target is unable to fight
-        // - Attacker has an effect or a prop that gives advantage
-
-        // checking target visibility
-        const bTargetIsVisible = oAttacker.getCreatureVisibility(oTarget) === CONSTS.CREATURE_VISIBILITY_VISIBLE
-        const bAttackerIsVisible = oTarget.getCreatureVisibility(oAttacker) === CONSTS.CREATURE_VISIBILITY_VISIBLE
-
-        // checking target capability of fighting
-        const bTargetCanFight = oTarget.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)
-
-        // Checking effect and props
-        // .... no effect / prop at the moment
-
-        // result
-        return bTargetIsVisible && (!bAttackerIsVisible || !bTargetCanFight)
+    isAttackAdvantaged () {
+        return isAttackAdvantaged(this)
     }
 
     isAttackerAttackDisadvantaged () {
-        // Attacker is disadvantaed when
-        // - Attacker wearing non proficient armor or shield
-        // - Attacker is poisoned, confused or rooted
-        // - Target is not detectable
-        const oAttacker = this._attacker
-        const oTarget = this._target
-
-        // checking target visibility
-        const bTargetIsVisible = oAttacker.getCreatureVisibility(oTarget) === CONSTS.CREATURE_VISIBILITY_VISIBLE
-
-        // checking armor and shield proficiency
-        const eqp = oAttacker.getters.isEquipmentProficient
-        const bGoodEquip = eqp[CONSTS.EQUIPMENT_SLOT_CHEST] && eqp[CONSTS.EQUIPMENT_SLOT_SHIELD]
-
-        // Checking attacker condition
-        const oConditionSet = oAttacker.getters.getConditionSet
-        const bPoisoned = oConditionSet.has(CONSTS.CONDITION_POISONED)
-        const bRooted = oConditionSet.has(CONSTS.CONDITION_RESTRAINED)
-        const bConfused = oConditionSet.has(CONSTS.CONDITION_CONFUSED)
-
-        // checking effects and props
-        // .... no effect / prop at the moment
-
-        // result
-        return !bTargetIsVisible || bPoisoned || bConfused || bRooted || !bGoodEquip
+        return isAttackDisadvantaged(this)
     }
 
     /**
@@ -454,12 +412,27 @@ class AttackOutcome {
 
         // rolling attack
         let nRoll = oAttacker.dice.roll('1d20')
-        const bAdvantaged = this._advantaged = this.isAttackerAttackAdvantaged()
-        const bDisadvantaged = this._disadvantaged = this.isAttackerAttackDisadvantaged()
-        if (bAdvantaged && !bDisadvantaged) {
-            nRoll = Math.max(nRoll, oAttacker.dice.roll('1d20'))
-        } else if (bDisadvantaged && !bAdvantaged) {
-            nRoll = Math.min(nRoll, oAttacker.dice.roll('1d20'))
+        const bAdvantaged = this.isAttackAdvantaged()
+        const bDisadvantaged = this.isAttackerAttackDisadvantaged()
+        const sAdvDisMask = (bAdvantaged ? 10 : 0) + (bDisadvantaged ? 1 : 0)
+        switch (sAdvDisMask) {
+            case 1: {
+                // only disadvantage
+                nRoll = Math.min(nRoll, oAttacker.dice.roll('1d20'))
+                this._disadvantaged = true
+                break
+            }
+
+            case 10: {
+                // only advantage
+                nRoll = Math.max(nRoll, oAttacker.dice.roll('1d20'))
+                this._advantaged = true
+                break
+            }
+
+            default: {
+                break
+            }
         }
         const bCritical = nRoll === this._attacker.getters.getVariables['ROLL_CRITICAL_SUCCESS_VALUE']
         const bFumble = nRoll === this._attacker.getters.getVariables['ROLL_FUMBLE_VALUE']
