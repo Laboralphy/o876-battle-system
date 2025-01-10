@@ -23,6 +23,10 @@
     "description": "Cause by spells or grasp. Prevent from doing anything, except seeing. This is a body affliction.",
     "prevents": ["CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
   },
+  "CONDITION_PETRIFIED": {
+    "description": "Cause by spells or monster abilities. Prevent from doing anything. Condition is close to death. This is a body affliction.",
+    "prevents": ["CAPABILITY_ACT", "CAPABILITY_SEE", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
+  },
   "CONDITION_POISONED": {
     "description": "Damage over time with poison damage, will give disadvantages",
     "prevents": []

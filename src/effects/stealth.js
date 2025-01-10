@@ -1,12 +1,7 @@
 const CONSTS = require('../consts')
 
-/**
- * Stealth ends when taking hostile actions
- * Stealth is just like invisibility, but cannot be detected by EFFECT_SEE_INVISIBILITY
- * @param effect {RBSEffect}
- */
 function init ({ effect }) {
-    effect.stackingRule = CONSTS.EFFECT_STACKING_RULE_NO_STACK
+    this.data.lastCheck = 0
 }
 
 /**
@@ -18,7 +13,20 @@ function attack ({ effect, attackOutcome }) {
     attackOutcome.attacker.mutations.removeEffect({ effect })
 }
 
+/**
+ * Each time : do a roll Skill, it will be used as a difficulty class for any skill-investigation
+ * @param effect
+ */
+function mutate ({ effect }) {
+
+}
+
+function apply ({ target, reject }) {
+    if (target.getters.getters.getEffectSet.has(CONSTS.EFFECT_STEALTH)) {
+        reject()
+    }
+}
+
 module.exports = {
-    attack,
-    init
+    attack
 }

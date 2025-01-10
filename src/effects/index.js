@@ -1,10 +1,9 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-01-08T15:25:54.343Z
+// Date : 2025-01-10T12:57:25.823Z
 // List of files in ./src/effects
 
 module.exports = {
   'EFFECT_ABILITY_MODIFIER': require('./ability-modifier.js'),
-  'EFFECT_ADVANTAGE': require('./advantage.js'),
   'EFFECT_ARMOR_CLASS_MODIFIER': require('./armor-class-modifier.js'),
   'EFFECT_ATTACK_COUNT_MODIFIER': require('./attack-count-modifier.js'),
   'EFFECT_ATTACK_MODIFIER': require('./attack-modifier.js'),
@@ -18,7 +17,6 @@ module.exports = {
   'EFFECT_DAMAGE': require('./damage.js'),
   'EFFECT_DARKVISION': require('./darkvision.js'),
   'EFFECT_DEATH': require('./death.js'),
-  'EFFECT_DISADVANTAGE': require('./disadvantage.js'),
   'EFFECT_DISEASE': require('./disease.js'),
   'EFFECT_FEAR': require('./fear.js'),
   'EFFECT_FLAG': require('./flag.js'),
@@ -29,6 +27,7 @@ module.exports = {
   'EFFECT_LIGHT': require('./light.js'),
   'EFFECT_NEGATIVE_LEVEL': require('./negative-level.js'),
   'EFFECT_PARALYSIS': require('./paralysis.js'),
+  'EFFECT_PETRIFICATION': require('./petrification.js'),
   'EFFECT_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
   'EFFECT_SEE_INVISIBILITY': require('./see-invisibility.js'),
   'EFFECT_SKILL_MODIFIER': require('./skill-modifier.js'),

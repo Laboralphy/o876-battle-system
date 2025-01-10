@@ -391,11 +391,10 @@ class AttackOutcome {
         const bTargetCanFight = oTarget.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)
 
         // Checking effect and props
-        const bPropEffAdv = oAttacker.getters.getPropertySet.has(CONSTS.PROPERTY_ADVANTAGE) ||
-            oAttacker.getters.getEffectSet.has(CONSTS.EFFECT_ADVANTAGE)
+        // .... no effect / prop at the moment
 
         // result
-        return bTargetIsVisible && (bPropEffAdv || !bAttackerIsVisible || !bTargetCanFight)
+        return bTargetIsVisible && (!bAttackerIsVisible || !bTargetCanFight)
     }
 
     isAttackerAttackDisadvantaged () {
@@ -420,11 +419,10 @@ class AttackOutcome {
         const bConfused = oConditionSet.has(CONSTS.CONDITION_CONFUSED)
 
         // checking effects and props
-        const bPropEffDisadv = oAttacker.getters.getPropertySet.has(CONSTS.PROPERTY_DISADVANTAGE) ||
-            oAttacker.getters.getEffectSet.has(CONSTS.EFFECT_DISADVANTAGE)
+        // .... no effect / prop at the moment
 
         // result
-        return !bTargetIsVisible || bPoisoned || bConfused || bRooted || !bGoodEquip || bPropEffDisadv
+        return !bTargetIsVisible || bPoisoned || bConfused || bRooted || !bGoodEquip
     }
 
     /**
@@ -441,8 +439,6 @@ class AttackOutcome {
             this.fail(CONSTS.ATTACK_FAILURE_VISIBILITY)
             return false
         }
-        const dt = this.getDamageType()
-        const aDamageTypes = Array.isArray(dt) ? dt : [dt]
 
         // compute target defense
         this.computeAttackParameters()

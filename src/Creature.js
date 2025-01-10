@@ -233,7 +233,7 @@ class Creature {
      * @param dc
      * @returns {{bonus: string, success: boolean, skill: string, roll: number, dc: number}}
      */
-    checkSkill (sSkill, dc) {
+    checkSkill (sSkill, dc = 0) {
         const sv = this.getters.getSkillValues
         if (!(sSkill in sv)) {
             throw new Error(`Invalid skill ${sSkill}`)
@@ -249,6 +249,14 @@ class Creature {
         }
         this.events.emit(CONSTS.EVENT_CREATURE_SKILL_CHECK, result)
         return result
+    }
+
+    /**
+     * Entering / exiting stealth mode
+     * @param bEnter {boolean}
+     */
+    stealthMode (bEnter) {
+
     }
 }
 
