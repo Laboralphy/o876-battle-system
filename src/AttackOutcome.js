@@ -1,7 +1,7 @@
 const CONSTS = require('./consts')
 const Events = require('events')
 const { aggregateModifiers } = require('./libs/aggregator')
-const { isAttackAdvantaged, isAttackDisadvantaged } = require('./advantages/attack-roll')
+const { getAttackAdvantages } = require('./advantages/attack-roll')
 
 /**
  * @class
@@ -95,10 +95,14 @@ class AttackOutcome {
         this._ability = ''
 
         /**
-         * Advantage / Disadvantaged
+         * @type {{result: number, advantages: Set<string>, disadvantages: Set<string>}}
+         * @private
          */
-        this._advantaged = false
-        this._disadvantaged = false
+        this._rollBias = {
+            advantages: new Set(),
+            disadvantages: new Set(),
+            result: 0
+        }
 
         /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME ///
         /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME /// /// ATTACK OUTCOME ///
@@ -189,6 +193,10 @@ class AttackOutcome {
         return this._ac
     }
 
+    get rollBias () {
+        return this._rollBias
+    }
+
     get attackBonus() {
         return this._attackBonus
     }
@@ -263,14 +271,6 @@ class AttackOutcome {
 
     get damages() {
         return this._damages
-    }
-
-    get advantaged() {
-        return this._advantaged
-    }
-
-    get disadvantaged() {
-        return this._disadvantaged
     }
 
     /**
@@ -375,14 +375,6 @@ class AttackOutcome {
         oDamageType[sDamageType].amount += this._attacker.dice.roll(xAmount)
     }
 
-    isAttackAdvantaged () {
-        return isAttackAdvantaged(this)
-    }
-
-    isAttackerAttackDisadvantaged () {
-        return isAttackDisadvantaged(this)
-    }
-
     /**
      * Proceed to an attack against target, using melee or ranged weapon
      */
@@ -392,10 +384,21 @@ class AttackOutcome {
             this.fail(CONSTS.ATTACK_FAILURE_CONDITION)
             return false
         }
-        if (this._attacker.getCreatureVisibility(this._target) === CONSTS.CREATURE_VISIBILITY_INVISIBLE) {
+        this._visibility = this._attacker.getCreatureVisibility(this._target)
+        if (this._visibility === CONSTS.CREATURE_VISIBILITY_INVISIBLE) {
             // Cannot see target
             this.fail(CONSTS.ATTACK_FAILURE_VISIBILITY)
             return false
+        }
+
+        if (this._visibility === CONSTS.CREATURE_VISIBILITY_HIDDEN) {
+            // roll check steal vs investigation
+            const rInvestig = this._attacker.checkSkill('SKILL_INVESTIGATION', 0)
+            const dc = rInvestig.roll + rInvestig.bonus
+            const rStealth = this._attacker.checkSkill('SKILL_STEALTH', dc)
+            if (rStealth.success) {
+                this._visibility = CONSTS.CREATURE_VISIBILITY_VISIBLE
+            }
         }
 
         // compute target defense
@@ -412,21 +415,17 @@ class AttackOutcome {
 
         // rolling attack
         let nRoll = oAttacker.dice.roll('1d20')
-        const bAdvantaged = this.isAttackAdvantaged()
-        const bDisadvantaged = this.isAttackerAttackDisadvantaged()
-        const sAdvDisMask = (bAdvantaged ? 10 : 0) + (bDisadvantaged ? 1 : 0)
-        switch (sAdvDisMask) {
-            case 1: {
+        this._rollBias = getAttackAdvantages(this)
+        switch (this._rollBias.result) {
+            case -1: {
                 // only disadvantage
                 nRoll = Math.min(nRoll, oAttacker.dice.roll('1d20'))
-                this._disadvantaged = true
                 break
             }
 
-            case 10: {
+            case 1: {
                 // only advantage
                 nRoll = Math.max(nRoll, oAttacker.dice.roll('1d20'))
-                this._advantaged = true
                 break
             }
 

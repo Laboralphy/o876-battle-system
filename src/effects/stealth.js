@@ -28,5 +28,8 @@ function apply ({ target, reject }) {
 }
 
 module.exports = {
-    attack
+    init,
+    attack,
+    mutate,
+    apply
 }

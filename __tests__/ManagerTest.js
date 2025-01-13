@@ -344,8 +344,7 @@ describe('attack advantage', function () {
                 const a = evt.attack
                 logs.push({
                     attacker: a.attacker.id,
-                    advantaged: a.advantaged,
-                    disadvantaged: a.disadvantaged
+                    rollBias: a.rollBias
                 })
             })
             m.processEntities()
@@ -356,8 +355,8 @@ describe('attack advantage', function () {
             m.processCombats()
             m.processCombats()
 
-            expect(logs[0].advantaged).toBeFalsy()
-            expect(logs[1].advantaged).toBeFalsy()
+            expect(logs[0].rollBias.result).toBe(0)
+            expect(logs[1].rollBias.result).toBe(0)
 
             const eBlind = m.createEffect(CONSTS.EFFECT_BLINDNESS)
             m.applyEffect(eBlind, c2, 10)
@@ -370,8 +369,17 @@ describe('attack advantage', function () {
             m.processCombats()
             m.processCombats()
 
-            expect(logs[2].advantaged).toBeTruthy()
-            expect(logs[3].advantaged).toBeFalsy()
+            // target can't detect attacker
+            // attack should be advantaged
+            expect(logs[2].attacker).toBe(c1.id)
+            expect(logs[2].rollBias.result).toBe(1)
+            expect(logs[2].rollBias.advantages.size).toBe(1)
+            expect(logs[2].rollBias.advantages.has(CONSTS.ADV_ATTACK_UNDETECTED_BY_TARGET)).toBeTruthy()
+
+            expect(logs[3].attacker).toBe(c2.id)
+            expect(logs[3].rollBias.result).toBe(-1)
+            expect(logs[3].rollBias.disadvantages.size).toBe(1)
+            expect(logs[3].rollBias.disadvantages.has(CONSTS.DIS_ATTACK_TARGET_UNDETECTED)).toBeTruthy()
         })
     })
 })

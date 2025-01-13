@@ -4,7 +4,6 @@ const CONSTS = require('./consts')
 const Events = require('events')
 const Dice = require('./libs/dice')
 const { checkConst } = require('./libs/check-const')
-const { aggregateModifiers } = require("./libs/aggregator");
 
 class Creature {
     constructor ({ blueprint = null, id = null } = {}) {
@@ -229,9 +228,9 @@ class Creature {
 
     /**
      * Checks a skill
-     * @param sSkill
-     * @param dc
-     * @returns {{bonus: string, success: boolean, skill: string, roll: number, dc: number}}
+     * @param sSkill {string}
+     * @param dc {number}
+     * @returns {{bonus: number, success: boolean, skill: string, roll: number, dc: number}}
      */
     checkSkill (sSkill, dc = 0) {
         const sv = this.getters.getSkillValues
