@@ -350,6 +350,9 @@ class AttackOutcome {
         }
         this._range = this.attacker.getters.getWeaponRanges[this.attacker.getters.getSelectedOffensiveSlot]
         this._attackBonus = ag.getAttackBonus
+        if (this._attacker.getters.getEffectSet.has(CONSTS.EFFECT_STEALTH)) {
+            this._sneak = true
+        }
     }
 
     computeDefenseParameters () {
