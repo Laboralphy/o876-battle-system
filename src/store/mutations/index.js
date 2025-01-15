@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-01-13T10:11:06.817Z
+// Date : 2025-01-14T21:20:24.126Z
 // List of files in ./src/store/mutations
 
 module.exports = {

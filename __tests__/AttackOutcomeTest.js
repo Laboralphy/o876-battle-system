@@ -244,3 +244,37 @@ describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
         expect(ao.getWeaponBaseDamageAmount()).toBe('1d6')
     })
 })
+
+describe('Sneak attack', function () {
+    it('should approach target without being detected', function () {
+        // setup attacker
+        const c1 = eb.createEntity(bpNormalActor)
+        c1.mutations.setLevel({ value: 5 })
+        c1.dice.cheat(0.5)
+        const sword1 = eb.createEntity(bpShortSword)
+        c1.equipItem(sword1)
+        c1.mutations.addProperty({ property: {
+            type: CONSTS.PROPERTY_SNEAK_ATTACK,
+            amp: 3
+        }})
+        c1.mutations.addEffect({ effect: {
+            type: CONSTS.EFFECT_STEALTH
+        }})
+
+        // setup target
+        const c2 = eb.createEntity(bpNormalActor)
+        c2.mutations.setLevel({ value: 2 })
+        c2.dice.cheat(0.3)
+        const sword2 = eb.createEntity(bpShortSword)
+        c2.equipItem(sword2)
+
+        // assaut
+        const ao = new AttackOutcome()
+        ao.attacker = c1
+        ao.target = c2
+        ao.computeAttackParameters()
+        ao.computeDefenseParameters()
+        ao.attack()
+        console.log(ao)
+    })
+})
