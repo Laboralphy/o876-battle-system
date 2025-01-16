@@ -350,9 +350,8 @@ class AttackOutcome {
         }
         this._range = this.attacker.getters.getWeaponRanges[this.attacker.getters.getSelectedOffensiveSlot]
         this._attackBonus = ag.getAttackBonus
-        if (this._attacker.getters.getEffectSet.has(CONSTS.EFFECT_STEALTH)) {
-            this._sneak = true
-        }
+        this._visibility = this._target.getCreatureVisibility(this._attacker)
+        this._sneak = this._visibility === CONSTS.CREATURE_VISIBILITY_HIDDEN
     }
 
     computeDefenseParameters () {
@@ -387,7 +386,6 @@ class AttackOutcome {
             this.fail(CONSTS.ATTACK_FAILURE_CONDITION)
             return false
         }
-        this._visibility = this._attacker.getCreatureVisibility(this._target)
         if (this._visibility === CONSTS.CREATURE_VISIBILITY_INVISIBLE) {
             // Cannot see target
             this.fail(CONSTS.ATTACK_FAILURE_VISIBILITY)
@@ -399,7 +397,7 @@ class AttackOutcome {
             const rInvestig = this._attacker.checkSkill('SKILL_INVESTIGATION', 0)
             const dc = rInvestig.roll + rInvestig.bonus
             const rStealth = this._attacker.checkSkill('SKILL_STEALTH', dc)
-            if (rStealth.success) {
+            if (!rStealth.success) {
                 this._visibility = CONSTS.CREATURE_VISIBILITY_VISIBLE
             }
         }
