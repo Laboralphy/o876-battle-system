@@ -69,10 +69,13 @@ class AttackOutcome {
         /// BOOLEAN INDICATORS ///
 
         /**
-         * This attack is made from behind, a rogue may have damage bonus
-         * @type {boolean}
+         * This reflects the use of sneak attack.
+         * The value is the number of sneak attack rank
+         * 0 = no rank
+         *
+         * @type {number}
          */
-        this._sneak = false
+        this._sneak = 0
 
         /**
          * this was an attack of opportunity
@@ -351,7 +354,6 @@ class AttackOutcome {
         this._range = this.attacker.getters.getWeaponRanges[this.attacker.getters.getSelectedOffensiveSlot]
         this._attackBonus = ag.getAttackBonus
         this._visibility = this._target.getCreatureVisibility(this._attacker)
-        this._sneak = this._visibility === CONSTS.CREATURE_VISIBILITY_HIDDEN
     }
 
     computeDefenseParameters () {
@@ -394,10 +396,10 @@ class AttackOutcome {
 
         if (this._visibility === CONSTS.CREATURE_VISIBILITY_HIDDEN) {
             // roll check steal vs investigation
-            const rInvestig = this._attacker.checkSkill('SKILL_INVESTIGATION', 0)
-            const dc = rInvestig.roll + rInvestig.bonus
-            const rStealth = this._attacker.checkSkill('SKILL_STEALTH', dc)
-            if (!rStealth.success) {
+            const rAtk = this._attacker.checkSkill('SKILL_STEALTH', 0)
+            const dc = rAtk.roll + rAtk.bonus
+            const rTarg = this._target.checkSkill('SKILL_INVESTIGATION', dc)
+            if (!rTarg.success) {
                 this._visibility = CONSTS.CREATURE_VISIBILITY_VISIBLE
             }
         }
@@ -449,14 +451,14 @@ class AttackOutcome {
         if (bHit) {
             const sDamageType = this.getDamageType()
             this.rollDamages(this.getWeaponBaseDamageAmount(), sDamageType)
-            if (this.sneak) {
-                const nSneakAttackRank = this.sneak
-                    ? aggregateModifiers([
-                        CONSTS.PROPERTY_SNEAK_ATTACK
-                    ], oAttacker.getters).sum
-                    : 0
-                const sSneakDice = nSneakAttackRank.toString() + 'd6'
-                this.rollDamages(sSneakDice, sDamageType)
+            if (this._rollBias.result > 0) {
+                this._sneak = aggregateModifiers([
+                    CONSTS.PROPERTY_SNEAK_ATTACK
+                ], oAttacker.getters).sum
+                if (this._sneak > 0) {
+                    const sSneakDice = this._sneak.toString() + 'd6'
+                    this.rollDamages(sSneakDice, sDamageType)
+                }
             }
         }
 

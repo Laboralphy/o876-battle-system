@@ -271,49 +271,117 @@ describe('Sneak attack', function () {
         ao.target = c2
         ao.computeAttackParameters()
         ao.computeDefenseParameters()
-        expect(ao.sneak).toBeFalsy()
+        expect(ao.sneak).toBe(0)
 
         ao.attack()
         expect(ao.damages.types.DAMAGE_TYPE_PIERCING.amount).toBe(4)
     })
-    it('should do a sneak attack when attacking having a stealth effect', function () {
-        // setup attacker
-        const c1 = eb.createEntity(bpNormalActor)
-        c1.mutations.setLevel({ value: 5 })
-        c1.dice.cheat(0.5)
-        const sword1 = eb.createEntity(bpShortSword)
-        c1.equipItem(sword1)
-        c1.mutations.addProperty({ property: {
-            type: CONSTS.PROPERTY_SNEAK_ATTACK,
-            amp: 3
-        }})
+    describe('when attacker have a stealth effect', function () {
+        it('should have three ranks in sneak when having prop sneak attack III', function () {
+            // setup attacker
+            const c1 = eb.createEntity(bpNormalActor)
+            c1.mutations.setLevel({ value: 5 })
+            c1.dice.cheat(0.5)
+            const sword1 = eb.createEntity(bpShortSword)
+            c1.equipItem(sword1)
+            c1.mutations.addProperty({ property: {
+                    type: CONSTS.PROPERTY_SNEAK_ATTACK,
+                    amp: 3
+                }})
 
-        c1.mutations.addEffect({ effect: {
-            type: CONSTS.EFFECT_STEALTH,
-            amp: 0,
-            duration: 10,
-            source: c1.id,
-            data: {}
-        }})
+            c1.mutations.addEffect({ effect: {
+                    type: CONSTS.EFFECT_STEALTH,
+                    amp: 0,
+                    duration: 10,
+                    source: c1.id,
+                    data: {}
+                }})
 
-        // setup target
-        const c2 = eb.createEntity(bpNormalActor)
-        c2.mutations.setLevel({ value: 2 })
-        c2.dice.cheat(0.3)
-        const sword2 = eb.createEntity(bpShortSword)
-        c2.equipItem(sword2)
+            // setup target
+            const c2 = eb.createEntity(bpNormalActor)
+            c2.mutations.setLevel({ value: 2 })
+            c2.dice.cheat(0.3)
+            const sword2 = eb.createEntity(bpShortSword)
+            c2.equipItem(sword2)
 
-        // assaut
-        const ao = new AttackOutcome()
-        ao.attacker = c1
-        ao.target = c2
-        ao.computeAttackParameters()
-        ao.computeDefenseParameters()
-        expect(c2.getCreatureVisibility(c1)).toBe(CONSTS.CREATURE_VISIBILITY_HIDDEN)
-        expect(ao.visibility).toBe(CONSTS.CREATURE_VISIBILITY_HIDDEN)
-        expect(ao.sneak).toBeTruthy()
+            // assaut
+            const ao = new AttackOutcome()
+            ao.attacker = c1
+            ao.target = c2
+            ao.computeAttackParameters()
+            ao.computeDefenseParameters()
+            expect(c2.getCreatureVisibility(c1)).toBe(CONSTS.CREATURE_VISIBILITY_HIDDEN)
+            expect(ao.visibility).toBe(CONSTS.CREATURE_VISIBILITY_HIDDEN)
 
-        ao.attack()
-        expect(ao.damages.types.DAMAGE_TYPE_PIERCING.amount).toBe(16) // 4 base + 3*4 sneak attack
+            ao.attack()
+            expect(ao.sneak).toBe(3)
+            expect(ao.damages.types.DAMAGE_TYPE_PIERCING.amount).toBe(16) // 4 base + 3*4 sneak attack
+        })
+        it('should triggers a stealth skill check and investigation skill check after attacking', function () {
+            // setup attacker
+            const c1 = eb.createEntity(bpNormalActor)
+            c1.mutations.setLevel({ value: 5 })
+            c1.dice.cheat(0.5)
+            const sword1 = eb.createEntity(bpShortSword)
+            c1.equipItem(sword1)
+            c1.mutations.addProperty({ property: {
+                    type: CONSTS.PROPERTY_SNEAK_ATTACK,
+                    amp: 3
+                }})
+
+            c1.mutations.addEffect({ effect: {
+                    type: CONSTS.EFFECT_STEALTH,
+                    amp: 0,
+                    duration: 10,
+                    source: c1.id,
+                    data: {}
+                }})
+
+            // setup target
+            const c2 = eb.createEntity(bpNormalActor)
+            c2.mutations.setLevel({ value: 2 })
+            c2.dice.cheat(0.3)
+            const sword2 = eb.createEntity(bpShortSword)
+            c2.equipItem(sword2)
+
+            const c1log = []
+            const c2log = []
+
+            c1.events.on(CONSTS.EVENT_CREATURE_SKILL_CHECK, evt => {
+                c1log.push(evt)
+            })
+            c2.events.on(CONSTS.EVENT_CREATURE_SKILL_CHECK, evt => {
+                c2log.push(evt)
+            })
+
+            // assaut
+            const ao = new AttackOutcome()
+            ao.attacker = c1
+            ao.target = c2
+            ao.computeAttackParameters()
+            ao.computeDefenseParameters()
+
+            ao.attack()
+
+            const lastC1Log = c1log[c1log.length - 1]
+            const dc = lastC1Log.roll + lastC1Log.bonus
+
+            expect(c1log).toEqual([{
+                skill: 'SKILL_STEALTH',
+                roll: 11,
+                bonus: 0,
+                dc: 0,
+                success: true // allways a success : only th roll+bonus is relevant
+            }])
+
+            expect(c2log).toEqual([{
+                bonus: 0,
+                dc: dc,
+                roll: 7,
+                skill: 'SKILL_INVESTIGATION',
+                success: false
+            }])
+
+        })
     })
 })
