@@ -363,25 +363,30 @@ describe('Sneak attack', function () {
 
             ao.attack()
 
-            const lastC1Log = c1log[c1log.length - 1]
-            const dc = lastC1Log.roll + lastC1Log.bonus
-
             expect(c1log).toEqual([{
                 skill: 'SKILL_STEALTH',
                 roll: 11,
                 bonus: 0,
                 dc: 0,
-                success: true // allways a success : only th roll+bonus is relevant
+                success: true // always a success : only th roll+bonus is relevant
             }])
 
-            expect(c2log).toEqual([{
-                bonus: 0,
-                dc: dc,
-                roll: 7,
-                skill: 'SKILL_INVESTIGATION',
-                success: false
-            }])
-
+            expect(c2log).toEqual([
+                {
+                    "bonus": 0,
+                    "dc": 11,
+                    "roll": 7,
+                    "skill": "SKILL_INVESTIGATION",
+                    "success": false
+                },
+                {
+                    "bonus": 0,
+                    "dc": 11,
+                    "roll": 7,
+                    "skill": "SKILL_LISTEN",
+                    "success": false
+                }
+            ])
         })
     })
 })

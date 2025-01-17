@@ -8,12 +8,13 @@ const CONSTS = require("../consts");
  * @param extraParams {string}
  * @param ailment {string}
  */
-function init ({ property, ailment, chance = '', savingThrow = '', extraParams = '' }) {
+function init ({ property, ailment, chance = '', savingThrow = '', dc = 0,  extraParams = '' }) {
     if (!CONSTS[ailment]) {
         throw new ReferenceError('unknown ailment ' + ailment)
     }
     property.data.ailment = ailment
     property.data.savingThrow = savingThrow
+    property.data.dc = dc
     property.data.chance = chance
     property.data.extraParams = extraParams
 }

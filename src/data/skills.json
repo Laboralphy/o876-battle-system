@@ -10,5 +10,9 @@
   "SKILL_INVESTIGATION": {
     "ability": "ABILITY_INTELLIGENCE",
     "proficiency": "PROFICIENCY_SKILL_INVESTIGATION"
+  },
+  "SKILL_LISTEN": {
+    "ability": "ABILITY_WISDOM",
+    "proficiency": "PROFICIENCY_SKILL_LISTEN"
   }
 }

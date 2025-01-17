@@ -1434,7 +1434,8 @@ describe('rollSkill', function () {
         expect(c.getters.getSkillValues).toEqual({
             "SKILL_INVESTIGATION": 0,
             "SKILL_STEALTH": 0,
-            "SKILL_UNLOCK": 0
+            "SKILL_UNLOCK": 0,
+            "SKILL_LISTEN": 0
         })
     })
     it('should have 1 to unlock and stealth skill when dexterity is 12', function () {
@@ -1443,7 +1444,8 @@ describe('rollSkill', function () {
         expect(c.getters.getSkillValues).toEqual({
             "SKILL_INVESTIGATION": 0,
             "SKILL_STEALTH": 1,
-            "SKILL_UNLOCK": 1
+            "SKILL_UNLOCK": 1,
+            "SKILL_LISTEN": 0
         })
     })
     it('should have 4 to unlock and 1 to stealth skill when dexterity is 12 and level is 5 and has proficiency to unlock', function () {
@@ -1454,7 +1456,8 @@ describe('rollSkill', function () {
         expect(c.getters.getSkillValues).toEqual({
             "SKILL_INVESTIGATION": 0,
             "SKILL_STEALTH": 1,
-            "SKILL_UNLOCK": 4
+            "SKILL_UNLOCK": 4,
+            "SKILL_LISTEN": 0
         })
     })
 })
