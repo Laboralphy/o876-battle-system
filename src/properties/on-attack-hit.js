@@ -5,6 +5,7 @@ const CONSTS = require("../consts");
  * @param property {RBSProperty}
  * @param chance {string} Dice expression
  * @param savingThrow {string} ability
+ * @param dc {number}
  * @param extraParams {string}
  * @param ailment {string}
  */

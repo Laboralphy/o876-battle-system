@@ -3,6 +3,12 @@ const { getUniqueId } = require('../unique-id')
 const CombatFighterState = require('./CombatFighterState')
 const CONSTS = require("../../consts");
 
+const NATURAL_SLOTS = new Set([
+    CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1,
+    CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2,
+    CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3
+])
+
 class Combat {
     constructor ({ distance = 0, tickCount }) {
         this._id = getUniqueId()
@@ -270,12 +276,19 @@ class Combat {
     }
 
     /**
-     * Returns true if target is in melee weapon range
-     * @returns {boolean}
+     * Returns true for each slot the target is in range
+     * @returns {{[slot: string]: boolean}}
      */
-    isTargetInMeleeWeaponRange () {
-        const g = this.attacker.getters
-        return this._distance <= g.getWeaponRanges[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
+    getTargetInCreatureWeaponRange () {
+        const d = this._distance
+        const gwr = this.attacker.getters.getWeaponRanges
+        return {
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: d <= gwr[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE],
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: d <= gwr[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED],
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]: d <= gwr[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1],
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]: d <= gwr[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2],
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]: d <= gwr[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]
+        }
     }
 
     /**
@@ -313,13 +326,21 @@ class Combat {
      * @return {string}
      */
     getMostSuitableSlot () {
-        if (this.isTargetInMeleeWeaponRange()) {
-            return CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
-        }
-        if (this.attacker.getters.isRangedWeaponLoaded) {
+        const oAttacker = this.attacker
+        if (oAttacker.getters.isRangedWeaponLoaded) {
             return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
         }
-        return CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
+
+        const bHasMeleeWeapon = oAttacker.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE] !== null
+        const aSuitableSlots = Object.entries(this
+            .getTargetInCreatureWeaponRange())
+            .filter(([slot, bInRange]) => bInRange && NATURAL_SLOTS.has(slot))
+            .map(([slot]) => slot)
+        // Only if equipped with melee weapon, or not having any natural weapons
+        if (bHasMeleeWeapon || aSuitableSlots.length === 0) {
+            aSuitableSlots.push(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        }
+        return aSuitableSlots[Math.floor(this.attacker.dice.random() * aSuitableSlots.length)]
     }
 
     selectMostSuitableWeapon () {

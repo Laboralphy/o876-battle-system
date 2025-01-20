@@ -6,19 +6,12 @@ function init ({ effect }) {
 
 /**
  * @param effect
+ * @param effectProcessor {EffectProcessor}
  * @param target
- * @param attackOutcome
+ * @param attackOutcome {AttackOutcome}
  */
-function attack ({ effect, attackOutcome }) {
-    attackOutcome.attacker.mutations.removeEffect({ effect })
-}
-
-/**
- * Each time : do a roll Skill, it will be used as a difficulty class for any skill-investigation
- * @param effect
- */
-function mutate ({ effect }) {
-
+function attack ({ effect, effectProcessor, attackOutcome }) {
+    effectProcessor.removeEffect(effect)
 }
 
 function apply ({ target, reject }) {
@@ -30,6 +23,5 @@ function apply ({ target, reject }) {
 module.exports = {
     init,
     attack,
-    mutate,
     apply
 }

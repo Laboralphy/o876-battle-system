@@ -24,7 +24,7 @@ module.exports = (state, getters, externals) => {
             .entries(result)
             .map(([ sAbility, nAbilityModifier ]) => [
                 sAbility,
-                nAbilityModifier + externals.VARIABLES.BASE_SPELL_DIFFICULTY_CLASS + (spellPower[sAbility]?.sum || 0)
+                getters.getProficiencyBonus + nAbilityModifier + externals.VARIABLES.BASE_SPELL_DIFFICULTY_CLASS + (spellPower[sAbility]?.sum || 0)
             ])
     )
 }

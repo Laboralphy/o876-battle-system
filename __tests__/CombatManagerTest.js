@@ -23,6 +23,52 @@ const bpNormalActor = {
     equipment: []
 }
 
+const bpNaturalWeapon = {
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    weight: 0,
+    proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]
+}
+
+const bpClaws2d6 = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    extends: ['bpNaturalWeapon'],
+    damages: '2d6',
+    damageType: CONSTS.DAMAGE_TYPE_SLASHING,
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    properties: [],
+    attributes: []
+}
+
+const bpFangs3d6 = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    extends: ['bpNaturalWeapon'],
+    damages: '3d6',
+    damageType: CONSTS.DAMAGE_TYPE_PIERCING,
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    properties: [],
+    attributes: []
+}
+
+const bpMonster1 = {
+    entityType: CONSTS.ENTITY_TYPE_ACTOR,
+    specie: CONSTS.SPECIE_MONSTROSITY,
+    race: CONSTS.RACE_UNKNOWN,
+    ac: 0,
+    proficiencies: [],
+    speed: 30,
+    classType: CONSTS.CLASS_TYPE_MONSTER,
+    level: 1,
+    hd: 6,
+    actions: [],
+    equipment: [
+        'bpClaws2d6',
+        'bpFangs3d6'
+    ]
+}
+
 const bpShortbow = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
     itemType: CONSTS.ITEM_TYPE_WEAPON,
@@ -508,5 +554,36 @@ describe('Try real combat', function () {
         })
         cm.processCombats()
         expect(logs).toHaveLength(2)
+    })
+})
+
+describe('combat vs monster with claws and fangs', function () {
+    it('should select a natural weapon when attacking', function () {
+        const eb = new EntityBuilder()
+        eb.schemaValidator = oSchemaValidator
+        eb.blueprints = {
+            bpNaturalWeapon,
+            bpClaws2d6,
+            bpFangs3d6,
+            bpNormalActor,
+            bpMonster1
+        }
+        const cm = new CombatManager()
+        cm.defaultDistance = 50
+        const c1 = eb.createEntity('bpNormalActor', 'c1')
+        const c2 = eb.createEntity('bpMonster1', 'c2')
+        c2.dice.cheat(0.01)
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).not.toBeNull()
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]).not.toBeNull()
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]).toBeNull()
+
+        const oCombat = cm.startCombat(c2, c1)
+        expect(oCombat.distance).toBe(50)
+        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        oCombat.distance = 5
+        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1)
+
+        c2.dice.cheat(0.99)
+        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2)
     })
 })

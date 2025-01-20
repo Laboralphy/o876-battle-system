@@ -6,7 +6,7 @@
  * @property getActions {{ [id: string]: RBSAction }}
  * @property getArmorClass {Object<string, number>}
  * @property getAttackAbility {{[p: string]: string}}
- * @property getAttackBonus {number}
+ * @property getAttackBonus {{[slot: string]: number}}
  * @property getCapabilitySet {Set<string>}
  * @property getConditionSet {Set<string>}
  * @property getDamageMitigation {Object<string, RBSOneDamageMitigation>}}
