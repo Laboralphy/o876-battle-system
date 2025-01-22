@@ -837,7 +837,10 @@ describe('getWeaponRanges', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         expect(oCreature.getters.getWeaponRanges).toEqual({
             [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: 5,
-            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: 0
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: -1,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]: -1,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]: -1,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]: -1
         })
     })
     it('should return melee 5, ranged 0 when equipping ranged weapon without ammo', function () {
@@ -846,7 +849,10 @@ describe('getWeaponRanges', function () {
         oCreature.equipItem(oBow)
         expect(oCreature.getters.getWeaponRanges).toEqual({
             [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: 5,
-            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: 0
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: -1,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]: -1,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]: -1,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]: -1
         })
     })
     it('should return melee 5, ranged 100 when equipping ranged weapon with ammo', function () {
@@ -857,7 +863,10 @@ describe('getWeaponRanges', function () {
         oCreature.equipItem(oArrow)
         expect(oCreature.getters.getWeaponRanges).toEqual({
             [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: 5,
-            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: 100
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: 100,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]: -1,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]: -1,
+            [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]: -1
         })
     })
 })

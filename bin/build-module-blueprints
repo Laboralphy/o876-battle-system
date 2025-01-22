@@ -6,6 +6,13 @@ doDownloadSheet () {
   sFileName="$1"
   sURL="$2"
   curl -s -L --max-redir 5 "$sURL" --output "$SCRIPT_DIR/$sFileName.csv"
+  if [ ! -f "$SCRIPT_DIR/$sFileName.csv" ]
+  then
+    echo "FILE NOT DOWNLOADED"
+    echo "url: $sURL"
+    echo "file: $SCRIPT_DIR/$sFileName.csv"
+    exit 3
+  fi
 }
 
 doTransformDataTypes () {
@@ -14,9 +21,9 @@ doTransformDataTypes () {
   THIS_TYPE="$3"
   URL="$4"
   BP_PATH="$SCRIPT_DIR/../src/modules/$MODULE/blueprints/$BP_SUB/$THIS_TYPE"
-  echo downloading/building $MODULE::$THIS_TYPE
+  echo "downloading/building $MODULE::$THIS_TYPE"
   mkdir -p "$BP_PATH"
-  rm $BP_PATH/*.json
+  rm "$BP_PATH"/*.json
   doDownloadSheet "$MODULE-$THIS_TYPE" "$URL"
   node transform-data.js "$MODULE-$THIS_TYPE.csv" "$BP_PATH"
   rm "$MODULE-$THIS_TYPE.csv"
@@ -24,16 +31,16 @@ doTransformDataTypes () {
 
 doProcessClassicModuleData () {
   cd "$SCRIPT_DIR" || exit 1
-  # doTransformDataTypes classic types weapon-types "$URL_SHEET_CLASSIC_WEAPON_TYPES"
-  # doTransformDataTypes classic types armor-types "$URL_SHEET_CLASSIC_ARMOR_TYPES"
-  # doTransformDataTypes classic types ammo-types "$URL_SHEET_CLASSIC_AMMO_TYPES"
-  # doTransformDataTypes classic types gear-types "$URL_SHEET_CLASSIC_GEAR_TYPES"
-  # doTransformDataTypes classic items weapons "$URL_SHEET_CLASSIC_WEAPONS"
-  # doTransformDataTypes classic items armors "$URL_SHEET_CLASSIC_ARMORS"
-  # doTransformDataTypes classic items ammo "$URL_SHEET_CLASSIC_AMMUNITIONS"
-  # doTransformDataTypes classic items gear "$URL_SHEET_CLASSIC_GEAR"
-  doTransformDataTypes classic creatures monster-types "$URL_SHEET_CLASSIC_MONSTER_TYPES"
-  echo done with data transform, returning to previous directory
+  doTransformDataTypes classic types weapon-types "$URL_SHEET_CLASSIC_WEAPON_TYPES"
+  doTransformDataTypes classic types armor-types "$URL_SHEET_CLASSIC_ARMOR_TYPES"
+  doTransformDataTypes classic types ammo-types "$URL_SHEET_CLASSIC_AMMO_TYPES"
+  doTransformDataTypes classic types gear-types "$URL_SHEET_CLASSIC_GEAR_TYPES"
+  doTransformDataTypes classic items weapons "$URL_SHEET_CLASSIC_WEAPONS"
+  doTransformDataTypes classic items armors "$URL_SHEET_CLASSIC_ARMORS"
+  doTransformDataTypes classic items ammo "$URL_SHEET_CLASSIC_AMMUNITIONS"
+  doTransformDataTypes classic items gear "$URL_SHEET_CLASSIC_GEAR"
+  doTransformDataTypes classic creatures monsters "$URL_SHEET_CLASSIC_MONSTERS"
+  echo "done with data transform, returning to previous directory"
   cd - || exit 1
 }
 

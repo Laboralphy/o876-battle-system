@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "ammo-type-quarrel"
+  ],
+  "properties": [
+    {
+      "type": "PROPERTY_DAMAGE_MODIFIER",
+      "amp": "1d4",
+      "damageType": "DAMAGE_TYPE_FIRE"
+    }
+  ]
+}

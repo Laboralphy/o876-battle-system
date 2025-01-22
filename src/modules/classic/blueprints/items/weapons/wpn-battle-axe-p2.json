@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "wpn-type-battle-axe"
+  ],
+  "properties": [
+    {
+      "type": "PROPERTY_ATTACK_MODIFIER",
+      "amp": 2
+    },
+    {
+      "type": "PROPERTY_DAMAGE_MODIFIER",
+      "amp": 2
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "classType": "CLASS_TYPE_MONSTER",
+  "proficiencies": [
+    "PROFICIENCY_WEAPON_NATURAL",
+    "PROFICIENCY_WEAPON_SIMPLE",
+    "PROFICIENCY_WEAPON_MARTIAL",
+    "PROFICIENCY_ARMOR_LIGHT",
+    "PROFICIENCY_ARMOR_MEDIUM",
+    "PROFICIENCY_ARMOR_HEAVY"
+  ],
+  "specie": "SPECIE_MONSTROSITY",
+  "ac": 0,
+  "hd": 6,
+  "level": 6,
+  "speed": 20,
+  "abilities": {
+    "strength": 6,
+    "dexterity": 12,
+    "constitution": 12,
+    "intelligence": 2,
+    "wisdom": 13,
+    "charisma": 5
+  },
+  "equipment": [
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_WEAPON",
+      "proficiency": "PROFICIENCY_WEAPON_NATURAL",
+      "weight": 0,
+      "size": "WEAPON_SIZE_SMALL",
+      "attributes": [],
+      "damages": "1d4",
+      "damageType": "DAMAGE_TYPE_PIERCING",
+      "properties": [
+        {
+          "type": "PROPERTY_ON_ATTACK_HIT",
+          "amp": 0,
+          "ailment": "ON_ATTACK_HIT_PETRIFICATION",
+          "savingThrow": "ABILITY_CONSTITUTION"
+        }
+      ],
+      "equipmentSlots": [
+        "EQUIPMENT_SLOT_NATURAL_WEAPON_1",
+        "EQUIPMENT_SLOT_NATURAL_WEAPON_2",
+        "EQUIPMENT_SLOT_NATURAL_WEAPON_3"
+      ]
+    }
+  ],
+  "properties": [],
+  "actions": []
+}

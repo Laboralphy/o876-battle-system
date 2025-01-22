@@ -15,7 +15,7 @@ const Horde = require('./Horde')
  * @property source {string}
  * @property data {object}
  * @property siblings {string[]}
- * @property tags {string[]}
+ * @property tag {string}
  */
 
 class EffectProcessor {
@@ -87,7 +87,7 @@ class EffectProcessor {
             target: '',
             source: '',
             siblings: [],
-            tags: []
+            tag: ''
         }
         this.invokeEffectMethod(oEffect, 'init', null, null, data)
         return oEffect
@@ -132,38 +132,30 @@ class EffectProcessor {
     /**
      * Groups all specified effect. i.e : All effects will get a list of all siblings
      * @param aEffects {RBSEffect[]}
-     * @param tags {string[]}
-     * @private
+     * @param tag {string}
      */
-    _groupEffects (aEffects, tags = []) {
+    groupEffects (aEffects, tag = '') {
         const aSiblings = aEffects.map(({ id }) => id)
         aEffects.forEach(effect => {
             effect.siblings = aSiblings
-            effect.tags.push(...tags)
+            if (tag !== '') {
+                effect.tag = tag
+            }
         })
-    }
-
-    /**
-     * Parameter will be output in an array, expect if parameter is already array
-     * @param x {*}
-     * @returns {[]}
-     * @private
-     */
-    _forceArray (x) {
-        return Array.isArray(x) ? x : [x]
+        return aEffects
     }
 
     /**
      * Will apply all specified effects as a group
      * @param aEffects {RBSEffect[]}
-     * @param tags {string | string[]}
+     * @param tag {string}
      * @param target {Creature}
      * @param duration {number}
      * @param source {Creature|null}
      */
-    applyEffectGroup (aEffects, tags, target, duration = 0, source = null) {
-        this._groupEffects(aEffects, this._forceArray(tags))
-        return aEffects.map(effect => this.applyEffect(effect, target, duration, source))
+    applyEffectGroup (aEffects, tag, target, duration = 0, source = null) {
+        return this.groupEffects(aEffects, tag)
+            .map(effect => this.applyEffect(effect, target, duration, source))
     }
 
     /**

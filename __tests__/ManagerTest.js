@@ -2,6 +2,7 @@ const Manager = require('../src/Manager')
 const CONSTS = require("../src/consts");
 const CombatManager = require("../src/libs/combat/CombatManager");
 const Creature = require("../src/Creature");
+const EntityBuilder = require("../src/EntityBuilder");
 
 const bpNormalActor = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -16,6 +17,87 @@ const bpNormalActor = {
     actions: [],
     equipment: []
 }
+
+const bpNaturalWeapon = {
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    weight: 0,
+    proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]
+}
+
+const bpClaws2d6 = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    extends: ['bpNaturalWeapon'],
+    damages: '2d6',
+    damageType: CONSTS.DAMAGE_TYPE_SLASHING,
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    properties: [],
+    attributes: []
+}
+
+const bpFangs3d6 = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    extends: ['bpNaturalWeapon'],
+    damages: '3d6',
+    damageType: CONSTS.DAMAGE_TYPE_PIERCING,
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    properties: [],
+    attributes: []
+}
+
+const bpSting1d6Poison = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    extends: ['bpNaturalWeapon'],
+    damages: '1d6',
+    damageType: CONSTS.DAMAGE_TYPE_PIERCING,
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    properties: [{
+        type: CONSTS.PROPERTY_ON_ATTACK_HIT,
+        ailment: CONSTS.ON_ATTACK_HIT_POISON,
+        amp: '1d2',
+        subtype: CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY,
+        duration: 11
+    }],
+    attributes: []
+}
+
+const bpMonster1 = {
+    entityType: CONSTS.ENTITY_TYPE_ACTOR,
+    specie: CONSTS.SPECIE_MONSTROSITY,
+    race: CONSTS.RACE_UNKNOWN,
+    ac: 0,
+    proficiencies: [],
+    speed: 30,
+    classType: CONSTS.CLASS_TYPE_MONSTER,
+    level: 1,
+    hd: 6,
+    actions: [],
+    equipment: [
+        'bpClaws2d6',
+        'bpFangs3d6'
+    ]
+}
+
+const bpMonster2 = {
+    entityType: CONSTS.ENTITY_TYPE_ACTOR,
+    specie: CONSTS.SPECIE_MONSTROSITY,
+    race: CONSTS.RACE_UNKNOWN,
+    ac: 0,
+    proficiencies: [],
+    speed: 30,
+    classType: CONSTS.CLASS_TYPE_MONSTER,
+    level: 1,
+    hd: 6,
+    actions: [],
+    equipment: [
+        'bpSting1d6Poison'
+    ]
+}
+
+
 
 describe('createEntity / destroyEntity', function () {
     it('should add creature to horde when creating creature', function () {
@@ -381,5 +463,70 @@ describe('attack advantage', function () {
             expect(logs[3].rollBias.disadvantages.size).toBe(1)
             expect(logs[3].rollBias.disadvantages.has(CONSTS.DIS_ATTACK_TARGET_UNDETECTED)).toBeTruthy()
         })
+    })
+})
+
+describe('combat with monster with on-attack-hit property weapon', function () {
+    it('should apply poison when attack hit', function () {
+        const m = new Manager()
+        const cm = m.combatManager
+        cm.defaultDistance = 50
+        m.defineModule({
+            blueprints: {
+                bpNaturalWeapon,
+                bpClaws2d6,
+                bpFangs3d6,
+                bpSting1d6Poison,
+                bpNormalActor,
+                bpMonster1,
+                bpMonster2
+            }
+        })
+        cm.defaultDistance = 50
+        const c1 = m.createEntity('bpNormalActor', 'player')
+        const c2 = m.createEntity('bpMonster2', 'monster')
+        c2.dice.cheat(0.6)
+        c1.dice.cheat(0.5)
+        const oCombat = m.startCombat(c2, c1)
+        oCombat.distance = 5
+        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1)
+        const logs = []
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => logs.push({
+            what: 'attack',
+            who: evt.attacker.id,
+            time: evt.turn.toString() + ':' + evt.tick
+        }))
+        m.events.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, evt => logs.push({
+            what: 'effect applied',
+            who: evt.target.id,
+            effect: evt.effect
+        }))
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        cm.processCombats()
+        expect(logs[0]).toEqual(expect.objectContaining({
+            what: 'effect applied',
+            who: 'player',
+            effect: expect.objectContaining({
+                type: 'EFFECT_DAMAGE',
+                subtype: 'EFFECT_SUBTYPE_EXTRAORDINARY',
+                amp: '1d2',
+                data: {
+                    damageType: 'DAMAGE_TYPE_POISON',
+                    appliedAmount: 2,
+                    resistedAmount: 0,
+                    critical: false
+                },
+                duration: 11,
+                target: 'player',
+                source: 'monster',
+                siblings: [],
+                tag: ''
+            })
+        }))
+        expect(c1.getters.getConditionSet.has(CONSTS.CONDITION_POISONED)).toBeTruthy()
     })
 })

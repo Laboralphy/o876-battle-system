@@ -8,9 +8,10 @@ const { checkConst } = require('./libs/check-const')
 class Creature {
     constructor ({ blueprint = null, id = null } = {}) {
         this._store = buildStore()
-        this._blueprint = blueprint
         if (blueprint) {
             this.blueprint = blueprint
+        } else {
+            this._blueprint = null
         }
         if (id) {
             this.mutations.setId({ value: id })

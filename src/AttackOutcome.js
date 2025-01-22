@@ -351,8 +351,9 @@ class AttackOutcome {
                 throw new Error('failed to select attack type')
             }
         }
-        this._range = this.attacker.getters.getWeaponRanges[this.attacker.getters.getSelectedOffensiveSlot]
-        this._attackBonus = ag.getAttackBonus
+        const sSelectedSlot = ag.getSelectedOffensiveSlot
+        this._range = ag.getWeaponRanges[sSelectedSlot]
+        this._attackBonus = ag.getAttackBonus[sSelectedSlot]
         this._visibility = this._target.getCreatureVisibility(this._attacker)
     }
 

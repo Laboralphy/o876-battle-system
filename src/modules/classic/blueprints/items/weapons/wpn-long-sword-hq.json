@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "wpn-type-long-sword"
+  ],
+  "properties": [
+    {
+      "type": "PROPERTY_ATTACK_MODIFIER",
+      "amp": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "ammo-type-arrow"
+  ],
+  "properties": [
+    {
+      "type": "PROPERTY_ATTACK_MODIFIER",
+      "amp": 1
+    }
+  ]
+}

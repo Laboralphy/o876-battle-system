@@ -1,6 +1,6 @@
 /**
  * Aggrège les effets spécifiés dans la liste, selon un prédicat
- * @param aTags {string[]} liste des effets désirés
+ * @param aPropAndEffectTypes {string[]} liste des effets désirés
  * @param getters {RBSStoreGetters}
  * @param effectFilter {function}
  * @param effectAmpMapper {function}
@@ -14,7 +14,7 @@
  * @param excludeInnate {boolean}
  * @returns {{sorter: Object<String, {sum: number, max: number, count: number}>, max: number, min: number, sum: number, count: number, effects: number, ip: number }}
  */
-function aggregateModifiers (aTags, getters, {
+function aggregateModifiers (aPropAndEffectTypes, getters, {
     effectFilter = null,
     propFilter = null,
     effectAmpMapper = null,
@@ -27,9 +27,9 @@ function aggregateModifiers (aTags, getters, {
     excludeInnate = false
 } = {}) {
     const aTypeSet = new Set(
-        Array.isArray(aTags)
-            ? aTags
-            : [aTags]
+        Array.isArray(aPropAndEffectTypes)
+            ? aPropAndEffectTypes
+            : [aPropAndEffectTypes]
     )
     const aFilteredEffects = getters
         .getEffects

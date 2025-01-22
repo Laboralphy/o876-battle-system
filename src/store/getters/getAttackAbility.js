@@ -22,7 +22,18 @@ function shouldUseDexterity (getters) {
 function isWeaponFinesse (oWeapon) {
     return oWeapon
         ? oWeapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_FINESSE)
-        : true // bare hand is weapon finesse
+        : false
+}
+
+/**
+ * Returns true if weapon is ranged
+ * @param oWeapon {RBSItem}
+ * @returns {boolean}
+ */
+function isWeaponRanged (oWeapon) {
+    return oWeapon
+        ? oWeapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
+        : false
 }
 
 /**
@@ -32,13 +43,20 @@ function isWeaponFinesse (oWeapon) {
  * @returns {{[p: string]: string}}
  */
 module.exports = (state, getters) => {
-    const SLOT_MELEE = CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE
-    const sMeleeAbility = (isWeaponFinesse(getters.getEquipment[SLOT_MELEE]) && shouldUseDexterity(getters))
-        ? CONSTS.ABILITY_DEXTERITY
-        : CONSTS.ABILITY_STRENGTH
-    const sRangedAbility = CONSTS.ABILITY_DEXTERITY
+    const bShouldIUseDex = shouldUseDexterity(getters)
+    const getWeaponOffensiveAbility = (slot) => {
+        const oWeapon = getters.getEquipment[slot]
+        const bWeaponFinesse = isWeaponFinesse(oWeapon)
+        const bWeaponRanged = isWeaponRanged(oWeapon)
+        return ((bWeaponFinesse || bWeaponRanged) && bShouldIUseDex)
+            ? CONSTS.ABILITY_DEXTERITY
+            : CONSTS.ABILITY_STRENGTH
+    }
     return {
-        [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: sMeleeAbility,
-        [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: sRangedAbility
+        [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: getWeaponOffensiveAbility(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE),
+        [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: CONSTS.ABILITY_DEXTERITY,
+        [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]: getWeaponOffensiveAbility(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1),
+        [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]: getWeaponOffensiveAbility(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2),
+        [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]: getWeaponOffensiveAbility(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3)
     }
 }
