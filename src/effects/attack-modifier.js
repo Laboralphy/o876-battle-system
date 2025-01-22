@@ -1,6 +1,11 @@
 const CONSTS = require('../consts')
 const {checkConst} = require("../libs/check-const");
 
+/**
+ *
+ * @param effect {RBSEffect}
+ * @param attackType {string} ATTACK_TYPE_*
+ */
 function init ({ effect, attackType = CONSTS.ATTACK_TYPE_ANY } = {}) {
     effect.data.attackType = checkConst(attackType)
 }

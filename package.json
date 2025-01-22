@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build-indexes": "./bin/build-indexes"
+    "build-indexes": "./bin/build-indexes",
+    "build-module-blueprints": "./bin/build-module-blueprints"
   },
   "keywords": [],
   "author": "",

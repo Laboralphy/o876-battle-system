@@ -6,22 +6,22 @@
   "weight": 20,
   "properties": [
     {
-      "property": "PROPERTY_ARMOR_CLASS_MODIFIER",
+      "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
       "amp": 1,
       "damageType": "DAMAGE_TYPE_SLASHING"
     },
     {
-      "property": "PROPERTY_ARMOR_CLASS_MODIFIER",
+      "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
       "amp": -2,
       "damageType": "DAMAGE_TYPE_PIERCING"
     },
     {
-      "property": "PROPERTY_ARMOR_CLASS_MODIFIER",
+      "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
       "amp": -1,
       "damageType": "DAMAGE_TYPE_CRUSHING"
     },
     {
-      "property": "PROPERTY_MAX_DEXTERITY_BONUS",
+      "type": "PROPERTY_MAX_DEXTERITY_BONUS",
       "amp": 2
     }
   ],

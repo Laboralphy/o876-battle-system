@@ -21,17 +21,11 @@ const CONSTS = require('../consts')
 function init ({ effect, disease, stages }) {
     effect.data.disease = disease
     effect.data.stages = stages
-    effect.stackingRule = CONSTS.EFFECT_STACKING_RULE_UPDATE_DURATION
-    effect.tags.push(CONSTS.EFFECT_TAG_DISEASE, disease)
-    effect.key = disease
 }
 
 function doMutationStage ({ effectProcessor, effect: eDisease, target, source }, oReadyStage) {
     const { savingThrow = false, potency = 0 } = oReadyStage
-    if (savingThrow && target.rollSavingThrow(CONSTS.SAVING_THROW_DEATH_RAY_POISON, {
-        ability: CONSTS.ABILITY_CONSTITUTION,
-        adjustment: potency
-    }).success) {
+    if (savingThrow && target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, potency).success) {
         // this stage allow saving throw, and saving throw is success
         // No previously applied bad effects are removed, they must be cured separately with cure_disease effect or likewise
         if (oReadyStage.endDisease) {
@@ -45,12 +39,13 @@ function doMutationStage ({ effectProcessor, effect: eDisease, target, source },
         const { type: sEffectType, amp = 0, duration = 0 } = oReadyStage.effect
         const effect = effectProcessor.createEffect(sEffectType, amp, oData)
         effect.subtype = CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY
-        effect.tags.push(CONSTS.EFFECT_TAG_DISEASE, eDisease.data.disease)
+        effect.tag = 'EFFECT_TAG_DISEASE::' + eDisease.data.disease
         // Effects applied by disease are autonomous effects, they keep the disease tag, so they can be removed by cure
         // but when disease end, those effects stay until their own duration depletion.
         effectProcessor.applyEffect(effect, target, duration, source)
     }
 }
+
 
 function mutateArrayTime (payload, oReadyStage) {
     for (let i = oReadyStage.time.length - 1; i >= 0; --i) {
@@ -95,6 +90,10 @@ function mutate (payload) {
  */
 function apply ({ effect, target, reject }) {
     if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_DISEASE)) {
+        reject()
+    }
+    if (target.getters.getEffectTagSet.has(effect.tag)) {
+        // A disease can't be applied twice
         reject()
     }
 }

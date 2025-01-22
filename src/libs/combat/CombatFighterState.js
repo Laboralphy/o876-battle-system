@@ -105,7 +105,7 @@ class CombatFighterState {
         const nExtraAttackPerTurn = bRanged
             ? this.getRangedExtraAttackCount()
             : this.getMeleeExtraAttackCount()
-        const nAttackPerTurn = 1 + nExtraAttackPerTurn
+        const nAttackPerTurn = Math.max(1, 1 + nExtraAttackPerTurn)
         this._attackCount = nAttackPerTurn
         if (nAttackPerTurn === this._lastAttackCount) {
             return this.plan

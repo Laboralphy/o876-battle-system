@@ -52,6 +52,23 @@ const bpFangs3d6 = {
     attributes: []
 }
 
+const bpSting1d6Poison = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    extends: ['bpNaturalWeapon'],
+    damages: '1d6',
+    damageType: CONSTS.DAMAGE_TYPE_PIERCING,
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    properties: [{
+        type: CONSTS.PROPERTY_ON_ATTACK_HIT,
+        ailment: CONSTS.ON_ATTACK_HIT_POISON,
+        amp: '1d2',
+        subtype: CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY,
+        duration: 11
+    }],
+    attributes: []
+}
+
 const bpMonster1 = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
     specie: CONSTS.SPECIE_MONSTROSITY,
@@ -66,6 +83,22 @@ const bpMonster1 = {
     equipment: [
         'bpClaws2d6',
         'bpFangs3d6'
+    ]
+}
+
+const bpMonster2 = {
+    entityType: CONSTS.ENTITY_TYPE_ACTOR,
+    specie: CONSTS.SPECIE_MONSTROSITY,
+    race: CONSTS.RACE_UNKNOWN,
+    ac: 0,
+    proficiencies: [],
+    speed: 30,
+    classType: CONSTS.CLASS_TYPE_MONSTER,
+    level: 1,
+    hd: 6,
+    actions: [],
+    equipment: [
+        'bpSting1d6Poison'
     ]
 }
 

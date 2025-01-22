@@ -13,6 +13,7 @@
  * @property getDefensiveSlots {string[]}
  * @property getEffectRegistry {Object<string, RBSEffect>}
  * @property getEffectSet {Set<string>}
+ * @property getEffectTagSet {Set<string>}
  * @property getEffects {RBSEffect[]}
  * @property getEncumbrance {{value: number, capacity: number}}
  * @property getEnvironment {{ darkness: boolean, windy: boolean, difficultTerrain: boolean, underwater: boolean }}

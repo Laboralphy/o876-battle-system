@@ -89,7 +89,14 @@ function mutate ({ effect, target, source }) {
     }
 }
 
+function apply ({ effect, target, reject }) {
+    if (effect.data.damageType === CONSTS.DAMAGE_TYPE_POISON && target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_POISON)) {
+        reject()
+    }
+}
+
 module.exports = {
     init,
-    mutate
+    mutate,
+    apply
 }

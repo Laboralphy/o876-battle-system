@@ -15,7 +15,7 @@ module.exports = (state, getters) => {
         [CONSTS.CONDITION_INCAPACITATED]: getters.isDead,
         [CONSTS.CONDITION_PARALYZED]: aEffectSet.has(CONSTS.EFFECT_PARALYSIS),
         [CONSTS.CONDITION_POISONED]: aEffectSet.has(CONSTS.EFFECT_DAMAGE) &&
-            getters.getEffects.some(eff => eff.type === CONSTS.EFFECT_DAMAGE && eff.damageType === CONSTS.DAMAGE_TYPE_POISON),
+            getters.getEffects.some(eff => eff.type === CONSTS.EFFECT_DAMAGE && eff.data.damageType === CONSTS.DAMAGE_TYPE_POISON),
         [CONSTS.CONDITION_RESTRAINED]: getters.getSpeed === 0,
         [CONSTS.CONDITION_STUNNED]: aEffectSet.has(CONSTS.EFFECT_STUN)
     }

@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "arm-type-ring-mail"
+  ],
+  "properties": [
+    {
+      "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
+      "amp": 2
+    }
+  ]
+}
