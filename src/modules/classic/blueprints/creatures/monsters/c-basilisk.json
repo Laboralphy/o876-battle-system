@@ -40,7 +40,12 @@
       ]
     }
   ],
-  "properties": [],
+  "properties": [
+    {
+      "type": "PROPERTY_DARKVISION",
+      "amp": 0
+    }
+  ],
   "actions": [
     {
       "id": "act-petrifying gaze",

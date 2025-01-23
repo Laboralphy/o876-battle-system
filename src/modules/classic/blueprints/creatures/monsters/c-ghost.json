@@ -122,6 +122,10 @@
       "type": "PROPERTY_DAMAGE_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_FEAR"
+    },
+    {
+      "type": "PROPERTY_DARKVISION",
+      "amp": 0
     }
   ],
   "actions": [
@@ -131,6 +135,17 @@
       "onHit": "at-horrifying-visage",
       "range": 60,
       "parameters": {},
+      "cooldown": 6
+    },
+    {
+      "id": "act-elemental-breath",
+      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
+      "onHit": "at-elemental-breath",
+      "range": 90,
+      "parameters": {
+        "damageType": "DAMAGE_TYPE_COLD",
+        "amount": "10d6"
+      },
       "cooldown": 6
     }
   ]

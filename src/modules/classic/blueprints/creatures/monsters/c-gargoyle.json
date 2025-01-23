@@ -61,6 +61,10 @@
       "type": "PROPERTY_DAMAGE_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_PETRIFICATION"
+    },
+    {
+      "type": "PROPERTY_DARKVISION",
+      "amp": 0
     }
   ],
   "actions": []

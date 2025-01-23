@@ -67,6 +67,10 @@
       "type": "PROPERTY_DAMAGE_IMMUNITY",
       "amp": 0,
       "damageType": "DAMAGE_TYPE_FIRE"
+    },
+    {
+      "type": "PROPERTY_DARKVISION",
+      "amp": 0
     }
   ],
   "actions": [
