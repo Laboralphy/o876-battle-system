@@ -1,0 +1,38 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "classType": "CLASS_TYPE_MONSTER",
+  "proficiencies": [
+    "PROFICIENCY_WEAPON_NATURAL",
+    "PROFICIENCY_WEAPON_SIMPLE",
+    "PROFICIENCY_WEAPON_MARTIAL",
+    "PROFICIENCY_ARMOR_LIGHT",
+    "PROFICIENCY_ARMOR_MEDIUM",
+    "PROFICIENCY_ARMOR_HEAVY"
+  ],
+  "specie": "SPECIE_HUMANOID",
+  "ac": 0,
+  "hd": 6,
+  "level": 3,
+  "speed": 30,
+  "abilities": {
+    "strength": 16,
+    "dexterity": 16,
+    "constitution": 16,
+    "intelligence": 12,
+    "wisdom": 10,
+    "charisma": 9
+  },
+  "equipment": [
+    "wpn-short-sword-hq",
+    "wpn-short-bow-hq",
+    "ammo-arrow",
+    "arm-leather"
+  ],
+  "properties": [
+    {
+      "type": "PROPERTY_DARKVISION",
+      "amp": 0
+    }
+  ],
+  "actions": []
+}
