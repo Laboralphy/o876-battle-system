@@ -13,12 +13,16 @@ function onAttacked (effectProcessor, attackOutcome, amp, data) {
     }
     const {
         attacker,
-        target
+        target,
+        ability
     } = attackOutcome
     // check saving throw
-    // if (data.savingThrow && attacker.rollSavingThrow(CONSTS.SAVING_THROW_DEATH_RAY_POISON).success) {
-    //     return
-    // }
+    if (
+        data.savingThrow &&
+        attacker.rollSavingThrow(CONSTS.ABILITY_DEXTERITY, attacker.getters.getSpellDifficultyClass[ability]).success
+    ) {
+        return
+    }
     // The attacker will take damage
     const eDamage = effectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, amp, {
         damageType: data.damageType

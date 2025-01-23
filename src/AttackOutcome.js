@@ -399,10 +399,7 @@ class AttackOutcome {
             // roll check steal vs investigation
             const rAtk = this._attacker.checkSkill('SKILL_STEALTH', 0)
             const dc = rAtk.roll + rAtk.bonus
-            if (!this._target.checkSkill('SKILL_INVESTIGATION', dc).success) {
-                this._visibility = CONSTS.CREATURE_VISIBILITY_VISIBLE
-            }
-            if (!this._target.checkSkill('SKILL_LISTEN', dc).success) {
+            if (!this._target.checkSkill('SKILL_PERCEPTION', dc).success) {
                 this._visibility = CONSTS.CREATURE_VISIBILITY_VISIBLE
             }
         }

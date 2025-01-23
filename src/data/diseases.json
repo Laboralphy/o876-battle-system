@@ -1,6 +1,10 @@
 {
   "DISEASE_GHOUL_FEVER": {
     "description": "After 24h the target dies",
+    "excludeSpecies": [
+      "SPECIE_UNDEAD",
+      "SPECIE_CONSTRUCT"
+    ],
     "stages": [
       {
         "time": 14400,
@@ -12,6 +16,10 @@
   },
   "DISEASE_MUMMY_ROT": {
     "description": "The target cannot heal, during one day",
+    "excludeSpecies": [
+      "SPECIE_UNDEAD",
+      "SPECIE_CONSTRUCT"
+    ],
     "stages": [
       {
         "time": 0,
@@ -25,6 +33,10 @@
   },
   "DISEASE_RAT_SICKNESS": {
     "description": "The target loses 1 CON each hours. Sickness ends when saving throw against death is successful",
+    "excludeSpecies": [
+      "SPECIE_UNDEAD",
+      "SPECIE_CONSTRUCT"
+    ],
     "stages": [
       {
         "time": [600, 1200, 1800, 2400, 3000, 3600, 4200, 4800, 5400, 6000, 6600, 7200, 7800, 8400, 9000, 9600, 10200, 10800, 11400, 12000, 12600, 13200, 13800, 14400],
