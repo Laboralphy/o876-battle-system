@@ -89,10 +89,17 @@ function mutate (payload) {
  * @param reject {function}
  */
 function apply ({ effect, target, reject }) {
-    if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_DISEASE)) {
+    const sTargetSpecie = target.getters.getSpecie
+    const disease = effect.data.disease
+    const { affectSpecies = [], excludeSpecies = [] } = target.data.DISEASES[disease]
+    let bImmunized
+    if (affectSpecies.length > 0 && affectSpecies.includes(sTargetSpecie)) {
         reject()
-    }
-    if (target.getters.getEffectTagSet.has(effect.tag)) {
+    } else if (excludeSpecies.includes(sTargetSpecie)) {
+        reject()
+    } else if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_DISEASE)) {
+        reject()
+    } else if (target.getters.getEffectTagSet.has(effect.tag)) {
         // A disease can't be applied twice
         reject()
     }

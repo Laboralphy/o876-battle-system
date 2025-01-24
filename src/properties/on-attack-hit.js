@@ -65,8 +65,11 @@ function _createAilmentEffect (property, oTarget, oSource, oEffectProcessor) {
         }
         case CONSTS.ON_ATTACK_HIT_DISEASE: {
             const { disease } = extraParams
-            const stages = oSource.data.DISEASES[disease]
-            oEffect = oEffectProcessor.createEffect(CONSTS.EFFECT_DISEASE, nAmp, { disease, stages })
+            const { stages } = oSource.data.DISEASES[disease]
+            oEffect = oEffectProcessor.createEffect(CONSTS.EFFECT_DISEASE, nAmp, {
+                disease,
+                stages
+            })
             break
         }
         case CONSTS.ON_ATTACK_HIT_FEAR: {

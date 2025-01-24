@@ -38,6 +38,7 @@
  * @property getSelectedWeaponAttributeSet {Set<string>}
  * @property getSkillValues {{[skill: string]: number}}
  * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
+ * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getSpellDifficultyClass {{[ability: string]: number}}
  * @property getVariables {{[variable: string]: number|string}}
