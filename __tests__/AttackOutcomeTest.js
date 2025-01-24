@@ -376,14 +376,7 @@ describe('Sneak attack', function () {
                     "bonus": 0,
                     "dc": 11,
                     "roll": 7,
-                    "skill": "SKILL_INVESTIGATION",
-                    "success": false
-                },
-                {
-                    "bonus": 0,
-                    "dc": 11,
-                    "roll": 7,
-                    "skill": "SKILL_LISTEN",
+                    "skill": "SKILL_PERCEPTION",
                     "success": false
                 }
             ])

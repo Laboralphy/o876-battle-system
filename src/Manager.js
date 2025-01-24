@@ -115,21 +115,11 @@ class Manager {
     }
 
     /**
-     * combat.attack listener
-     * @param evt
-     * @private
+     * Do an attack between attacker and target
+     * @param attacker
+     * @param target
      */
-    _combatManagerAttack (evt) {
-        const {
-            combat,
-            turn,
-            tick,
-            attacker,
-            target,
-            combatManager,
-            count,
-            opportunity
-        } = evt
+    deliverAttack (attacker, target) {
         const oAttackOutcome = new AttackOutcome({ effectProcessor: this._effectProcessor })
         oAttackOutcome.attacker = attacker
         oAttackOutcome.target = target
@@ -150,8 +140,28 @@ class Manager {
         }
         this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
             attack: oAttackOutcome,
-            ...evt
         })
+    }
+
+    /**
+     * combat.attack listener
+     * @param evt
+     * @private
+     */
+    _combatManagerAttack (evt) {
+        const {
+            combat,
+            turn,
+            tick,
+            attacker,
+            target,
+            combatManager,
+            count,
+            opportunity
+        } = evt
+        for (let i = 0; i < count; ++i) {
+            this.deliverAttack(attacker, target)
+        }
     }
 
     /**
