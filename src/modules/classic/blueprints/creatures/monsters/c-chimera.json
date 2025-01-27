@@ -9,11 +9,6 @@
     "PROFICIENCY_ARMOR_MEDIUM",
     "PROFICIENCY_ARMOR_HEAVY"
   ],
-  "specie": "SPECIE_MONSTROSITY",
-  "ac": 4,
-  "hd": 10,
-  "level": 12,
-  "speed": 30,
   "abilities": {
     "strength": 19,
     "dexterity": 11,
@@ -79,7 +74,12 @@
       ]
     }
   ],
-  "properties": [],
+  "properties": [
+    {
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 2
+    }
+  ],
   "actions": [
     {
       "id": "act-elemental-breath",
@@ -92,5 +92,10 @@
       },
       "cooldown": 6
     }
-  ]
+  ],
+  "specie": "SPECIE_MONSTROSITY",
+  "ac": 4,
+  "level": 12,
+  "hd": 10,
+  "speed": 30
 }

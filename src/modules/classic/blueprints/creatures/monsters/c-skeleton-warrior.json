@@ -9,31 +9,17 @@
     "PROFICIENCY_ARMOR_MEDIUM",
     "PROFICIENCY_ARMOR_HEAVY"
   ],
-  "abilities": {
-    "strength": 16,
-    "dexterity": 16,
-    "constitution": 16,
-    "intelligence": 12,
-    "wisdom": 10,
-    "charisma": 9
-  },
+  "abilities": {},
   "equipment": [
+    "arm-chain-shirt",
     "wpn-short-sword-hq",
     "wpn-short-bow-hq",
-    "ammo-arrow",
-    "arm-leather",
-    "shd-small"
+    "ammo-arrow"
   ],
-  "properties": [
-    {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
-    }
-  ],
+  "properties": [],
   "actions": [],
-  "specie": "SPECIE_HUMANOID",
-  "ac": 0,
-  "level": 3,
-  "hd": 6,
-  "speed": 30
+  "extends": [
+    "c-base-skeleton"
+  ],
+  "level": 4
 }

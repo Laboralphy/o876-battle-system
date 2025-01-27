@@ -10,19 +10,15 @@
     "PROFICIENCY_ARMOR_HEAVY"
   ],
   "abilities": {
-    "strength": 15,
-    "dexterity": 14,
-    "constitution": 14,
-    "intelligence": 12,
-    "wisdom": 10,
-    "charisma": 9
+    "strength": 16,
+    "dexterity": 12,
+    "constitution": 16,
+    "intelligence": 7,
+    "wisdom": 11,
+    "charisma": 10
   },
   "equipment": [
-    "wpn-short-sword",
-    "wpn-short-bow",
-    "ammo-arrow",
-    "arm-leather",
-    "shd-small"
+    "wpn-great-axe"
   ],
   "properties": [
     {
@@ -34,6 +30,6 @@
   "specie": "SPECIE_HUMANOID",
   "ac": 0,
   "level": 2,
-  "hd": 6,
+  "hd": 8,
   "speed": 30
 }

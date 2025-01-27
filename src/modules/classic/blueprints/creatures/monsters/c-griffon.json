@@ -10,11 +10,11 @@
     "PROFICIENCY_ARMOR_HEAVY"
   ],
   "abilities": {
-    "strength": 16,
-    "dexterity": 8,
-    "constitution": 15,
+    "strength": 20,
+    "dexterity": 11,
+    "constitution": 18,
     "intelligence": 2,
-    "wisdom": 8,
+    "wisdom": 12,
     "charisma": 7
   },
   "equipment": [
@@ -25,16 +25,25 @@
       "weight": 0,
       "size": "WEAPON_SIZE_SMALL",
       "attributes": [],
-      "damages": "2d6",
+      "damages": "1d8",
       "damageType": "DAMAGE_TYPE_PIERCING",
-      "properties": [
-        {
-          "type": "PROPERTY_ON_ATTACK_HIT",
-          "amp": "1d4",
-          "ailment": "ON_ATTACK_HIT_POISON",
-          "savingThrow": "ABILITY_CONSTITUTION"
-        }
-      ],
+      "properties": [],
+      "equipmentSlots": [
+        "EQUIPMENT_SLOT_NATURAL_WEAPON_1",
+        "EQUIPMENT_SLOT_NATURAL_WEAPON_2",
+        "EQUIPMENT_SLOT_NATURAL_WEAPON_3"
+      ]
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_WEAPON",
+      "proficiency": "PROFICIENCY_WEAPON_NATURAL",
+      "weight": 0,
+      "size": "WEAPON_SIZE_SMALL",
+      "attributes": [],
+      "damages": "2d6",
+      "damageType": "DAMAGE_TYPE_SLASHING",
+      "properties": [],
       "equipmentSlots": [
         "EQUIPMENT_SLOT_NATURAL_WEAPON_1",
         "EQUIPMENT_SLOT_NATURAL_WEAPON_2",
@@ -44,23 +53,23 @@
   ],
   "properties": [
     {
+      "type": "PROPERTY_SKILL_MODIFIER",
+      "amp": 19,
+      "skill": "SKILL_PERCEPTION"
+    },
+    {
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 1
+    },
+    {
       "type": "PROPERTY_DARKVISION",
       "amp": 0
     }
   ],
-  "actions": [
-    {
-      "id": "act-petrifying gaze",
-      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-petrifying-gaze",
-      "range": 30,
-      "parameters": {},
-      "cooldown": 2
-    }
-  ],
+  "actions": [],
   "specie": "SPECIE_MONSTROSITY",
-  "ac": 6,
-  "level": 12,
-  "hd": 8,
-  "speed": 20
+  "ac": 2,
+  "level": 7,
+  "hd": 10,
+  "speed": 30
 }

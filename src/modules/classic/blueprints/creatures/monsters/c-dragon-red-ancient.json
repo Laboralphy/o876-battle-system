@@ -9,11 +9,6 @@
     "PROFICIENCY_ARMOR_MEDIUM",
     "PROFICIENCY_ARMOR_HEAVY"
   ],
-  "specie": "SPECIE_DRAGON",
-  "ac": 12,
-  "hd": 20,
-  "level": 28,
-  "speed": 40,
   "abilities": {
     "strength": 30,
     "dexterity": 10,
@@ -71,6 +66,10 @@
     {
       "type": "PROPERTY_DARKVISION",
       "amp": 0
+    },
+    {
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 2
     }
   ],
   "actions": [
@@ -103,5 +102,10 @@
       },
       "cooldown": 6
     }
-  ]
+  ],
+  "specie": "SPECIE_DRAGON",
+  "ac": 12,
+  "level": 28,
+  "hd": 20,
+  "speed": 40
 }

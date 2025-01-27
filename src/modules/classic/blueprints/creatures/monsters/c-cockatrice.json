@@ -9,11 +9,6 @@
     "PROFICIENCY_ARMOR_MEDIUM",
     "PROFICIENCY_ARMOR_HEAVY"
   ],
-  "specie": "SPECIE_MONSTROSITY",
-  "ac": 0,
-  "hd": 6,
-  "level": 6,
-  "speed": 20,
   "abilities": {
     "strength": 6,
     "dexterity": 12,
@@ -53,5 +48,10 @@
       "amp": 0
     }
   ],
-  "actions": []
+  "actions": [],
+  "specie": "SPECIE_MONSTROSITY",
+  "ac": 0,
+  "level": 6,
+  "hd": 6,
+  "speed": 20
 }

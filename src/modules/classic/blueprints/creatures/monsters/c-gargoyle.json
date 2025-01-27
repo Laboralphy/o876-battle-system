@@ -9,11 +9,6 @@
     "PROFICIENCY_ARMOR_MEDIUM",
     "PROFICIENCY_ARMOR_HEAVY"
   ],
-  "specie": "SPECIE_ELEMENTAL",
-  "ac": 5,
-  "hd": 8,
-  "level": 7,
-  "speed": 30,
   "abilities": {
     "strength": 15,
     "dexterity": 11,
@@ -65,7 +60,16 @@
     {
       "type": "PROPERTY_DARKVISION",
       "amp": 0
+    },
+    {
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 1
     }
   ],
-  "actions": []
+  "actions": [],
+  "specie": "SPECIE_ELEMENTAL",
+  "ac": 5,
+  "level": 7,
+  "hd": 8,
+  "speed": 30
 }

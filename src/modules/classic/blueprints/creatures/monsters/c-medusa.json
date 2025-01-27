@@ -10,12 +10,12 @@
     "PROFICIENCY_ARMOR_HEAVY"
   ],
   "abilities": {
-    "strength": 16,
-    "dexterity": 8,
-    "constitution": 15,
-    "intelligence": 2,
-    "wisdom": 8,
-    "charisma": 7
+    "strength": 10,
+    "dexterity": 15,
+    "constitution": 16,
+    "intelligence": 12,
+    "wisdom": 13,
+    "charisma": 15
   },
   "equipment": [
     {
@@ -25,14 +25,13 @@
       "weight": 0,
       "size": "WEAPON_SIZE_SMALL",
       "attributes": [],
-      "damages": "2d6",
+      "damages": "1d4+2",
       "damageType": "DAMAGE_TYPE_PIERCING",
       "properties": [
         {
-          "type": "PROPERTY_ON_ATTACK_HIT",
-          "amp": "1d4",
-          "ailment": "ON_ATTACK_HIT_POISON",
-          "savingThrow": "ABILITY_CONSTITUTION"
+          "type": "PROPERTY_DAMAGE_MODIFIER",
+          "amp": "4d6",
+          "damageType": "DAMAGE_TYPE_POISON"
         }
       ],
       "equipmentSlots": [
@@ -40,9 +39,16 @@
         "EQUIPMENT_SLOT_NATURAL_WEAPON_2",
         "EQUIPMENT_SLOT_NATURAL_WEAPON_3"
       ]
-    }
+    },
+    "wpn-short-sword",
+    "wpn-long-bow",
+    "ammo-arrow"
   ],
   "properties": [
+    {
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 2
+    },
     {
       "type": "PROPERTY_DARKVISION",
       "amp": 0
@@ -59,8 +65,8 @@
     }
   ],
   "specie": "SPECIE_MONSTROSITY",
-  "ac": 6,
-  "level": 12,
+  "ac": 3,
+  "level": 17,
   "hd": 8,
-  "speed": 20
+  "speed": 30
 }

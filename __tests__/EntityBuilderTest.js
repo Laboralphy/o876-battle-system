@@ -527,6 +527,98 @@ describe('create a complex monster', function () {
             monster = ib.createEntity(bpMonster)
         }).not.toThrow()
         expect(monster.getters.getMaxHitPoints).toBe(30)
-        expect(monster.getters.getAbilities)
+        expect(monster.getters.getAbilities).toEqual({
+            "ABILITY_STRENGTH": 10,
+            "ABILITY_DEXTERITY": 10,
+            "ABILITY_CONSTITUTION": 10,
+            "ABILITY_INTELLIGENCE": 10,
+            "ABILITY_WISDOM": 10,
+            "ABILITY_CHARISMA": 10
+        })
+    })
+})
+
+describe('extends again, see if base monster is properly extended', function () {
+    const bpSkeletonBase = {
+        "entityType": "ENTITY_TYPE_ACTOR",
+        "classType": "CLASS_TYPE_MONSTER",
+        "proficiencies": [
+            "PROFICIENCY_WEAPON_NATURAL",
+            "PROFICIENCY_WEAPON_SIMPLE",
+            "PROFICIENCY_WEAPON_MARTIAL",
+            "PROFICIENCY_ARMOR_LIGHT",
+            "PROFICIENCY_ARMOR_MEDIUM",
+            "PROFICIENCY_ARMOR_HEAVY"
+        ],
+        "abilities": {
+            "strength": 10,
+            "dexterity": 14,
+            "constitution": 15,
+            "intelligence": 6,
+            "wisdom": 8,
+            "charisma": 5
+        },
+        "equipment": [],
+        "properties": [
+            {
+                "type": "PROPERTY_DAMAGE_VULNERABILITY",
+                "amp": 0,
+                "damageType": "DAMAGE_TYPE_CRUSHING"
+            },
+            {
+                "type": "PROPERTY_DAMAGE_IMMUNITY",
+                "amp": 0,
+                "damageType": "DAMAGE_TYPE_POISON"
+            },
+            {
+                "type": "PROPERTY_DAMAGE_IMMUNITY",
+                "amp": 0,
+                "damageType": "DAMAGE_TYPE_POISON"
+            },
+            {
+                "type": "PROPERTY_DARKVISION",
+                "amp": 0
+            }
+        ],
+        "actions": [],
+        "specie": "SPECIE_UNDEAD",
+        "ac": 0,
+        "level": 2,
+        "hd": 8,
+        "speed": 30
+    }
+    const bpSkeleton = {
+        "entityType": "ENTITY_TYPE_ACTOR",
+        "classType": "CLASS_TYPE_MONSTER",
+        "proficiencies": [
+            "PROFICIENCY_WEAPON_NATURAL",
+            "PROFICIENCY_WEAPON_SIMPLE",
+            "PROFICIENCY_WEAPON_MARTIAL",
+            "PROFICIENCY_ARMOR_LIGHT",
+            "PROFICIENCY_ARMOR_MEDIUM",
+            "PROFICIENCY_ARMOR_HEAVY"
+        ],
+        "abilities": {},
+        "equipment": [
+        ],
+        "properties": [],
+        "actions": [],
+        "extends": [
+            "c-base-skeleton"
+        ]
+    }
+    it ('should build a complete monster', function () {
+        const eb = new EntityBuilder()
+        eb.schemaValidator = oSchemaValidator
+        eb.blueprints = {
+            'c-base-skeleton': bpSkeletonBase,
+            'c-skeleton': bpSkeleton
+        }
+        let monster
+        expect(() => {
+            monster = eb.createEntity('c-skeleton')
+        }).not.toThrow()
+        expect(monster.getters.getMaxHitPoints).toBe(16)
+        expect(monster.getters.getAbilities[CONSTS.ABILITY_DEXTERITY]).toBe(14)
     })
 })

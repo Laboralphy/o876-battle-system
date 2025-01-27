@@ -9,11 +9,6 @@
     "PROFICIENCY_ARMOR_MEDIUM",
     "PROFICIENCY_ARMOR_HEAVY"
   ],
-  "specie": "SPECIE_MONSTROSITY",
-  "ac": 0,
-  "hd": 10,
-  "level": 6,
-  "speed": 50,
   "abilities": {
     "strength": 18,
     "dexterity": 14,
@@ -43,6 +38,16 @@
     "ammo-arrow",
     "wpn-short-spear"
   ],
-  "properties": [],
-  "actions": []
+  "properties": [
+    {
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 1
+    }
+  ],
+  "actions": [],
+  "specie": "SPECIE_MONSTROSITY",
+  "ac": 0,
+  "level": 6,
+  "hd": 10,
+  "speed": 50
 }
