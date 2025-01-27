@@ -65,12 +65,12 @@
       "damageType": "DAMAGE_TYPE_POISON"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_CONFUSION"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_POISON"
     },

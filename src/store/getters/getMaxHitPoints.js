@@ -9,10 +9,10 @@ const { aggregateModifiers } = require('../../libs/aggregator')
  * @returns {number}
  */
 module.exports = (state, getters, externals) => {
-    const hd = state.hitDie
+    const hd = (state.hitDie / 2) + 0.5
     const nExtraHitPoints = aggregateModifiers([
         CONSTS.PROPERTY_EXTRA_HITPOINTS
     ], getters).sum
     const nLevel = getters.getLevel
-    return Math.max(1, nLevel * hd + nExtraHitPoints)
+    return Math.max(1, Math.floor(nLevel * hd) + nExtraHitPoints)
 }

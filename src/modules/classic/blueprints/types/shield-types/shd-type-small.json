@@ -1,7 +1,7 @@
 {
   "entityType": "ENTITY_TYPE_ITEM",
   "itemType": "ITEM_TYPE_SHIELD",
-  "proficiency": "shield",
+  "proficiency": "PROFICIENCY_SHIELD",
   "ac": 1,
   "weight": 3,
   "properties": [

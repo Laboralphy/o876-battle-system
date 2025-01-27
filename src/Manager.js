@@ -184,12 +184,16 @@ class Manager {
         loadData(data)
     }
 
+    get blueprints () {
+        return this._entityBuilder.blueprints
+    }
+
     /**
      * Loads a module
      * @param sModuleId {string}
      */
     loadModule (sModuleId) {
-        this.defineModule(require(path.join('modules' + sModuleId)))
+        this.defineModule(require(path.resolve(__dirname, 'modules', sModuleId)))
     }
 
     /**

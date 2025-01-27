@@ -55,12 +55,17 @@ class SmartData {
             return s.endsWith(sSearchUpper)
         }
 
-        let sFound = Object.values(CONSTS).find(fSearch)
+        const ff = a => a
+            .filter(fSearch)
+            .sort((a, b) => a.toString().length - b.toString().length)
+            .find(fSearch)
+
+        let sFound = ff(Object.values(CONSTS))
         if (sFound) {
             return sFound
         }
         sSearchUpper = '_' + this.toSNAKECASE(sSearch)
-        sFound = Object.values(CONSTS).find(fSearch)
+        sFound = ff(Object.values(CONSTS))
         return sFound === undefined ? sSearch : sFound
     }
 

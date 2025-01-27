@@ -250,163 +250,181 @@ describe('Real Combat simulator', function () {
         process()
         process()
         expect(logs).toEqual([
-            { event: 'combat.start', attacker: 'c1', target: 'c2' },
-            { event: 'combat.start', attacker: 'c2', target: 'c1' },
-            { event: 'combat.turn', attacker: 'c1', target: 'c2', turn: 0 },
-            { event: 'combat.distance', turn: 0, attacker: 'c1', target: 'c1', distance: 20 },
-            { event: 'combat.turn', attacker: 'c2', target: 'c1', turn: 0 },
-            { event: 'combat.distance', turn: 0, attacker: 'c2', target: 'c2', distance: 5 },
             {
-                event: 'combat.attack',
-                attacker: 'c1',
-                target: 'c2',
-                hit: true,
-                roll: 11,
-                ac: 10,
-                damages: 4
+                "attacker": "c1",
+                "event": "combat.start",
+                "target": "c2"
             },
             {
-                event: 'combat.attack',
-                attacker: 'c2',
-                target: 'c1',
-                hit: false,
-                roll: 9,
-                ac: 10,
-                damages: 0
-            },
-            { event: 'combat.turn', attacker: 'c1', target: 'c2', turn: 1 },
-            { event: 'combat.turn', attacker: 'c2', target: 'c1', turn: 1 },
-            {
-                event: 'combat.attack',
-                attacker: 'c1',
-                target: 'c2',
-                hit: true,
-                roll: 11,
-                ac: 10,
-                damages: 4
+                "attacker": "c2",
+                "event": "combat.start",
+                "target": "c1"
             },
             {
-                event: 'combat.attack',
-                attacker: 'c2',
-                target: 'c1',
-                hit: false,
-                roll: 9,
-                ac: 10,
-                damages: 0
-            },
-            { event: 'combat.turn', attacker: 'c1', target: 'c2', turn: 2 },
-            { event: 'combat.turn', attacker: 'c2', target: 'c1', turn: 2 },
-            {
-                event: 'combat.attack',
-                attacker: 'c1',
-                target: 'c2',
-                hit: true,
-                roll: 11,
-                ac: 10,
-                damages: 4
+                "attacker": "c1",
+                "event": "combat.turn",
+                "target": "c2",
+                "turn": 0
             },
             {
-                event: 'combat.attack',
-                attacker: 'c2',
-                target: 'c1',
-                hit: false,
-                roll: 9,
-                ac: 10,
-                damages: 0
-            },
-            { event: 'combat.turn', attacker: 'c1', target: 'c2', turn: 3 },
-            { event: 'combat.turn', attacker: 'c2', target: 'c1', turn: 3 },
-            {
-                event: 'combat.attack',
-                attacker: 'c1',
-                target: 'c2',
-                hit: true,
-                roll: 11,
-                ac: 10,
-                damages: 4
+                "attacker": "c1",
+                "distance": 20,
+                "event": "combat.distance",
+                "target": "c1",
+                "turn": 0
             },
             {
-                event: 'combat.attack',
-                attacker: 'c2',
-                target: 'c1',
-                hit: false,
-                roll: 9,
-                ac: 10,
-                damages: 0
-            },
-            { event: 'combat.turn', attacker: 'c1', target: 'c2', turn: 4 },
-            { event: 'combat.turn', attacker: 'c2', target: 'c1', turn: 4 },
-            {
-                event: 'combat.attack',
-                attacker: 'c1',
-                target: 'c2',
-                hit: true,
-                roll: 11,
-                ac: 10,
-                damages: 4
+                "attacker": "c2",
+                "event": "combat.turn",
+                "target": "c1",
+                "turn": 0
             },
             {
-                event: 'combat.attack',
-                attacker: 'c2',
-                target: 'c1',
-                hit: false,
-                roll: 9,
-                ac: 10,
-                damages: 0
-            },
-            { event: 'combat.turn', attacker: 'c1', target: 'c2', turn: 5 },
-            { event: 'combat.turn', attacker: 'c2', target: 'c1', turn: 5 },
-            {
-                event: 'combat.attack',
-                attacker: 'c1',
-                target: 'c2',
-                hit: true,
-                roll: 11,
-                ac: 10,
-                damages: 4
+                "attacker": "c2",
+                "distance": 5,
+                "event": "combat.distance",
+                "target": "c2",
+                "turn": 0
             },
             {
-                event: 'combat.attack',
-                attacker: 'c2',
-                target: 'c1',
-                hit: false,
-                roll: 9,
-                ac: 10,
-                damages: 0
-            },
-            { event: 'combat.turn', attacker: 'c1', target: 'c2', turn: 6 },
-            { event: 'combat.turn', attacker: 'c2', target: 'c1', turn: 6 },
-            {
-                event: 'combat.attack',
-                attacker: 'c1',
-                target: 'c2',
-                hit: true,
-                roll: 11,
-                ac: 10,
-                damages: 4
+                "ac": 10,
+                "attacker": "c1",
+                "damages": 4,
+                "event": "combat.attack",
+                "hit": true,
+                "roll": 11,
+                "target": "c2"
             },
             {
-                event: 'combat.attack',
-                attacker: 'c2',
-                target: 'c1',
-                hit: false,
-                roll: 9,
-                ac: 10,
-                damages: 0
+                "ac": 10,
+                "attacker": "c2",
+                "damages": 0,
+                "event": "combat.attack",
+                "hit": false,
+                "roll": 9,
+                "target": "c1"
             },
-            { event: 'combat.turn', attacker: 'c1', target: 'c2', turn: 7 },
-            { event: 'combat.turn', attacker: 'c2', target: 'c1', turn: 7 },
             {
-                event: 'combat.attack',
-                attacker: 'c1',
-                target: 'c2',
-                hit: true,
-                roll: 11,
-                ac: 10,
-                damages: 4
+                "attacker": "c1",
+                "event": "combat.turn",
+                "target": "c2",
+                "turn": 1
             },
-            { event: 'combat.end', attacker: 'c2', target: 'c1' },
-            { event: 'combat.end', attacker: 'c1', target: 'c2' }
+            {
+                "attacker": "c2",
+                "event": "combat.turn",
+                "target": "c1",
+                "turn": 1
+            },
+            {
+                "ac": 10,
+                "attacker": "c1",
+                "damages": 4,
+                "event": "combat.attack",
+                "hit": true,
+                "roll": 11,
+                "target": "c2"
+            },
+            {
+                "ac": 10,
+                "attacker": "c2",
+                "damages": 0,
+                "event": "combat.attack",
+                "hit": false,
+                "roll": 9,
+                "target": "c1"
+            },
+            {
+                "attacker": "c1",
+                "event": "combat.turn",
+                "target": "c2",
+                "turn": 2
+            },
+            {
+                "attacker": "c2",
+                "event": "combat.turn",
+                "target": "c1",
+                "turn": 2
+            },
+            {
+                "ac": 10,
+                "attacker": "c1",
+                "damages": 4,
+                "event": "combat.attack",
+                "hit": true,
+                "roll": 11,
+                "target": "c2"
+            },
+            {
+                "ac": 10,
+                "attacker": "c2",
+                "damages": 0,
+                "event": "combat.attack",
+                "hit": false,
+                "roll": 9,
+                "target": "c1"
+            },
+            {
+                "attacker": "c1",
+                "event": "combat.turn",
+                "target": "c2",
+                "turn": 3
+            },
+            {
+                "attacker": "c2",
+                "event": "combat.turn",
+                "target": "c1",
+                "turn": 3
+            },
+            {
+                "ac": 10,
+                "attacker": "c1",
+                "damages": 4,
+                "event": "combat.attack",
+                "hit": true,
+                "roll": 11,
+                "target": "c2"
+            },
+            {
+                "ac": 10,
+                "attacker": "c2",
+                "damages": 0,
+                "event": "combat.attack",
+                "hit": false,
+                "roll": 9,
+                "target": "c1"
+            },
+            {
+                "attacker": "c1",
+                "event": "combat.turn",
+                "target": "c2",
+                "turn": 4
+            },
+            {
+                "attacker": "c2",
+                "event": "combat.turn",
+                "target": "c1",
+                "turn": 4
+            },
+            {
+                "ac": 10,
+                "attacker": "c1",
+                "damages": 4,
+                "event": "combat.attack",
+                "hit": true,
+                "roll": 11,
+                "target": "c2"
+            },
+            {
+                "attacker": "c2",
+                "event": "combat.end",
+                "target": "c1"
+            },
+            {
+                "attacker": "c1",
+                "event": "combat.end",
+                "target": "c2"
+            }
         ])
     })
 })

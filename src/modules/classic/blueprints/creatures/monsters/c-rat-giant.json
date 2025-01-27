@@ -31,7 +31,8 @@
         {
           "type": "PROPERTY_ON_ATTACK_HIT",
           "amp": 0,
-          "disease": "DISEASE_RAT_SICKNESS"
+          "disease": "DISEASE_RAT_SICKNESS",
+          "ailment": "ON_ATTACK_HIT_DISEASE"
         }
       ],
       "equipmentSlots": [

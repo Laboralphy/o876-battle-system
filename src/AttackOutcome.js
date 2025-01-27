@@ -276,6 +276,10 @@ class AttackOutcome {
         return this._damages
     }
 
+    get effectProcessor () {
+        return this._effectProcessor
+    }
+
     /**
      * Returns true if target is in selected weapon range
      * @returns {boolean}

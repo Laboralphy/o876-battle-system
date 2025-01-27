@@ -1,6 +1,6 @@
 {
   "entityType": "ENTITY_TYPE_ITEM",
-  "itemType": "",
+  "itemType": "ITEM_TYPE_GAUNTLETS",
   "proficiency": "",
   "ac": "",
   "weight": 3,

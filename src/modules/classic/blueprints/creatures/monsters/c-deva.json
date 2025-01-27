@@ -1,0 +1,76 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "classType": "CLASS_TYPE_MONSTER",
+  "proficiencies": [
+    "PROFICIENCY_WEAPON_NATURAL",
+    "PROFICIENCY_WEAPON_SIMPLE",
+    "PROFICIENCY_WEAPON_MARTIAL",
+    "PROFICIENCY_ARMOR_LIGHT",
+    "PROFICIENCY_ARMOR_MEDIUM",
+    "PROFICIENCY_ARMOR_HEAVY",
+    "PROFICIENCY_SAVING_THROW_WISDOM",
+    "PROFICIENCY_SAVING_THROW_CHARISMA"
+  ],
+  "abilities": {
+    "strength": 18,
+    "dexterity": 18,
+    "constitution": 18,
+    "intelligence": 17,
+    "wisdom": 20,
+    "charisma": 20
+  },
+  "equipment": [
+    "wpn-mace-deva",
+    "arm-splint"
+  ],
+  "properties": [
+    {
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 1
+    },
+    {
+      "type": "PROPERTY_DARKVISION",
+      "amp": 0
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_RADIANT"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_SLASHING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_CRUSHING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_PIERCING"
+    },
+    {
+      "type": "PROPERTY_IMMUNITY",
+      "amp": 0,
+      "immunityType": "IMMUNITY_TYPE_FEAR"
+    }
+  ],
+  "actions": [
+    {
+      "id": "act-healing",
+      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
+      "onHit": "at-healing",
+      "range": 100,
+      "parameters": {},
+      "cooldown": 6
+    }
+  ],
+  "specie": "SPECIE_CELESTIAL",
+  "ac": 3,
+  "level": 16,
+  "hd": 8,
+  "speed": 30
+}

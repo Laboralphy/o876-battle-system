@@ -94,16 +94,20 @@ class EntityBuilder {
         if (!('properties' in oBuiltBlueprint)) {
             oBuiltBlueprint.properties = []
         }
-        switch (oBuiltBlueprint.entityType) {
-            case CONSTS.ENTITY_TYPE_ITEM: {
-                this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-item')
-                break
-            }
+        try {
+            switch (oBuiltBlueprint.entityType) {
+                case CONSTS.ENTITY_TYPE_ITEM: {
+                    this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-item')
+                    break
+                }
 
-            case CONSTS.ENTITY_TYPE_ACTOR: {
-                this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-actor')
-                break
+                case CONSTS.ENTITY_TYPE_ACTOR: {
+                    this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-actor')
+                    break
+                }
             }
+        } catch (e) {
+            throw new Error(`Schema validation error on blueprint : ${id}`, { cause: e })
         }
         return this._blueprints[id] = deepFreeze(oBuiltBlueprint)
     }
@@ -168,18 +172,22 @@ class EntityBuilder {
     }
 
     createCreatureFromResRef (resref, id = undefined) {
-        const oBlueprint = this._checkResRef(resref)
-        const oCreature = new Creature({ blueprint: oBlueprint, id })
-        this
-            ._buildProperties(oBlueprint.properties)
-            .forEach(property => oCreature.mutations.addProperty({ property }))
-        Object
-            .values(oBlueprint.equipment)
-            .forEach(item => {
-                const oItem = this.createEntity(item)
-                oCreature.equipItem(oItem)
-            })
-        return oCreature
+        try {
+            const oBlueprint = this._checkResRef(resref)
+            const oCreature = new Creature({ blueprint: oBlueprint, id })
+            this
+                ._buildProperties(oBlueprint.properties)
+                .forEach(property => oCreature.mutations.addProperty({ property }))
+            Object
+                .values(oBlueprint.equipment)
+                .forEach(item => {
+                    const oItem = this.createEntity(item)
+                    oCreature.equipItem(oItem)
+                })
+            return oCreature
+        } catch (e) {
+            throw new Error(`Could not build creature ${resref} : ${e.message}`, { cause: e })
+        }
     }
 
     createEntity (blueprint, id) {

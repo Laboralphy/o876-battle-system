@@ -55,6 +55,24 @@
         "EQUIPMENT_SLOT_NATURAL_WEAPON_2",
         "EQUIPMENT_SLOT_NATURAL_WEAPON_3"
       ]
+    },
+    {
+      "entityType": "ENTITY_TYPE_ITEM",
+      "itemType": "ITEM_TYPE_WEAPON",
+      "proficiency": "PROFICIENCY_WEAPON_NATURAL",
+      "weight": 0,
+      "size": "WEAPON_SIZE_SMALL",
+      "attributes": [
+        "WEAPON_ATTRIBUTE_REACH"
+      ],
+      "damages": "2d8",
+      "damageType": "DAMAGE_TYPE_CRUSHING",
+      "properties": [],
+      "equipmentSlots": [
+        "EQUIPMENT_SLOT_NATURAL_WEAPON_1",
+        "EQUIPMENT_SLOT_NATURAL_WEAPON_2",
+        "EQUIPMENT_SLOT_NATURAL_WEAPON_3"
+      ]
     }
   ],
   "properties": [
@@ -87,7 +105,7 @@
     {
       "id": "act-frightful-roar",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-frightful-roar",
+      "onHit": "at-frightful-presence",
       "range": 60,
       "parameters": {},
       "cooldown": 6

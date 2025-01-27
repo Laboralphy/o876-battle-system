@@ -1,6 +1,6 @@
 {
   "entityType": "ENTITY_TYPE_ITEM",
-  "itemType": "",
+  "itemType": "ITEM_TYPE_NECKLACE",
   "proficiency": "",
   "ac": "",
   "weight": 0.4,

@@ -66,7 +66,7 @@
     {
       "type": "PROPERTY_DAMAGE_RESISTANCE",
       "amp": 0,
-      "damageType": "DAMAGE_TYPE_ELECTRICAL"
+      "damageType": "DAMAGE_TYPE_ELECTRICITY"
     },
     {
       "type": "PROPERTY_DAMAGE_IMMUNITY",
@@ -89,37 +89,37 @@
       "damageType": "DAMAGE_TYPE_RADIANT"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_DEATH"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_POISON"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_PARALYSIS"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_PETRIFICATION"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_ROOT"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_FEAR"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_CONFUSION"
     },
@@ -132,7 +132,7 @@
     {
       "id": "act-horrifying-visage",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-horrifying-visage",
+      "onHit": "at-frightful-presence",
       "range": 60,
       "parameters": {},
       "cooldown": 6

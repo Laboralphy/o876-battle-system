@@ -10,12 +10,12 @@
     "PROFICIENCY_ARMOR_HEAVY"
   ],
   "abilities": {
-    "strength": 20,
-    "dexterity": 12,
-    "constitution": 20,
-    "intelligence": 2,
-    "wisdom": 10,
-    "charisma": 7
+    "strength": 8,
+    "dexterity": 17,
+    "constitution": 13,
+    "intelligence": 15,
+    "wisdom": 12,
+    "charisma": 20
   },
   "equipment": [
     {
@@ -24,9 +24,11 @@
       "proficiency": "PROFICIENCY_WEAPON_NATURAL",
       "weight": 0,
       "size": "WEAPON_SIZE_SMALL",
-      "attributes": [],
-      "damages": "1d10",
-      "damageType": "DAMAGE_TYPE_PIERCING",
+      "attributes": [
+        "WEAPON_ATTRIBUTE_FINESSE"
+      ],
+      "damages": "1d6",
+      "damageType": "DAMAGE_TYPE_SLASHING",
       "properties": [],
       "equipmentSlots": [
         "EQUIPMENT_SLOT_NATURAL_WEAPON_1",
@@ -43,16 +45,23 @@
   ],
   "actions": [
     {
-      "id": "act-multi-attack",
+      "id": "act-charm",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-multi-attack",
+      "onHit": "at-charm",
+      "range": 30,
+      "parameters": {}
+    },
+    {
+      "id": "act-draining-kiss",
+      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
+      "onHit": "at-draining-kiss",
       "range": 5,
       "parameters": {}
     }
   ],
-  "specie": "SPECIE_MONSTROSITY",
-  "ac": 4,
-  "level": 15,
-  "hd": 12,
+  "specie": "SPECIE_FIEND",
+  "ac": 2,
+  "level": 12,
+  "hd": 8,
   "speed": 30
 }

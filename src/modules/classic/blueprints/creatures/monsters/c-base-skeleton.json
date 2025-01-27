@@ -30,9 +30,9 @@
       "damageType": "DAMAGE_TYPE_POISON"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
-      "immunityType": "POISON"
+      "immunityType": "IMMUNITY_TYPE_POISON"
     },
     {
       "type": "PROPERTY_DARKVISION",

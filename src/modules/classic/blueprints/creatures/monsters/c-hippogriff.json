@@ -7,7 +7,8 @@
     "PROFICIENCY_WEAPON_MARTIAL",
     "PROFICIENCY_ARMOR_LIGHT",
     "PROFICIENCY_ARMOR_MEDIUM",
-    "PROFICIENCY_ARMOR_HEAVY"
+    "PROFICIENCY_ARMOR_HEAVY",
+    "PROFICIENCY_SKILL_PERCEPTION"
   ],
   "abilities": {
     "strength": 17,
@@ -52,11 +53,6 @@
     }
   ],
   "properties": [
-    {
-      "type": "PROPERTY_SKILL_MODIFIER",
-      "amp": 19,
-      "skill": "SKILL_PERCEPTION"
-    },
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
       "amp": 1

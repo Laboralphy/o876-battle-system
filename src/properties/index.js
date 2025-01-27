@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-01-24T09:14:15.666Z
+// Date : 2025-01-27T16:50:11.949Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -29,6 +29,7 @@ module.exports = {
   'PROPERTY_SNEAK_ATTACK': require('./sneak-attack.js'),
   'PROPERTY_SPEED_FACTOR': require('./speed-factor.js'),
   'PROPERTY_SPELL_POWER': require('./spell-power.js'),
+  'PROPERTY_SPIKE_DAMAGE': require('./spike-damage.js'),
   'PROPERTY_UNIDENTIFIED': require('./unidentified.js'),
   'PROPERTY_WEIGHT_FACTOR': require('./weight-factor.js')
 }

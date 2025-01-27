@@ -67,27 +67,27 @@
       "damageType": "DAMAGE_TYPE_FIRE"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_FEAR"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_PARALYSIS"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_PETRIFICATION"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_POISON"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "type": "PROPERTY_IMMUNITY",
       "amp": 0,
       "immunityType": "IMMUNITY_TYPE_CONFUSION"
     },

@@ -105,7 +105,7 @@
     {
       "id": "act-frightful-roar",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-frightful-roar",
+      "onHit": "at-frightful-presence",
       "range": 60,
       "parameters": {},
       "cooldown": 6
