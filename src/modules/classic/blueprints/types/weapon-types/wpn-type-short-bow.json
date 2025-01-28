@@ -14,5 +14,6 @@
   "properties": [],
   "equipmentSlots": [
     "EQUIPMENT_SLOT_WEAPON_RANGED"
-  ]
+  ],
+  "tag": "wpn-type-short-bow"
 }

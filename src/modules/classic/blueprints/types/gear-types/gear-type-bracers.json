@@ -7,5 +7,6 @@
   "properties": [],
   "equipmentSlots": [
     "EQUIPMENT_SLOT_ARMS"
-  ]
+  ],
+  "tag": "gear-type-bracers"
 }

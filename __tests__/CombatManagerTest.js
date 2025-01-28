@@ -192,8 +192,8 @@ describe('fleeCombat', function () {
         cm.fleeCombat(c2)
         expect(logs.length).toBe(1)
         expect(logs[0].combat === combat).toBeTruthy()
-        expect(logs[0].attacker).toBe(c1)
-        expect(logs[0].target).toBe(c2)
+        expect(logs[0].combat.attacker).toBe(c1)
+        expect(logs[0].combat.target).toBe(c2)
         expect(logs[0].count).toBe(1)
         expect(logs[0].opportunity).toBeTruthy()
     })
@@ -212,9 +212,9 @@ describe('advancing combat', function () {
         cm.events.on('combat.attack', evt => {
             logs.push({
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id,
-                turn: evt.turn,
-                tick: evt.tick
+                target: evt.combat.target.id,
+                turn: evt.combat.turn,
+                tick: evt.combat.tick
             })
         })
         cm.processCombats() // tick 0
@@ -242,9 +242,9 @@ describe('advancing combat', function () {
         cm.events.on('combat.attack', evt => {
             logs.push({
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id,
-                turn: evt.turn,
-                tick: evt.tick
+                target: evt.combat.target.id,
+                turn: evt.combat.turn,
+                tick: evt.combat.tick
             })
         })
         cm.processCombats() // tick 0
@@ -280,18 +280,18 @@ describe('advancing combat', function () {
             logs.push({
                 type: 'combat.attack',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id,
-                turn: evt.turn,
-                tick: evt.tick
+                target: evt.combat.target.id,
+                turn: evt.combat.turn,
+                tick: evt.combat.tick
             })
         })
         cm.events.on('combat.distance', evt => {
             logs.push({
                 type: 'combat.distance',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id,
-                turn: evt.turn,
-                tick: evt.tick,
+                target: evt.combat.target.id,
+                turn: evt.combat.turn,
+                tick: evt.combat.tick,
                 previousDistance: evt.previousDistance,
                 distance: evt.distance
             })
@@ -318,7 +318,7 @@ describe('advancing combat', function () {
             }
         ])
     })
-    it('c1 should attack c2 with ranged weapon and c2 should rush toward c1 when c2 has bow and c2 has no ranged weapon', function () {
+    it('c1 should attack c2 with ranged weapon and c2 should rush toward c1 when c1 has bow and c2 has no ranged weapon', function () {
         const cm = new CombatManager()
         expect(cm.defaultDistance).toBe(0)
         cm.defaultDistance = 50
@@ -327,30 +327,30 @@ describe('advancing combat', function () {
         const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
         c1.equipItem(eb.createEntity(bpShortbow))
         c1.equipItem(eb.createEntity(bpArrow))
-        cm.startCombat(c1, c2)
+        const combat = cm.startCombat(c1, c2)
         const logs = []
         cm.events.on('combat.attack', evt => {
             logs.push({
                 type: 'combat.attack',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id,
-                turn: evt.turn,
-                tick: evt.tick
+                target: evt.combat.target.id,
+                turn: evt.combat.turn,
+                tick: evt.combat.tick
             })
         })
         cm.events.on('combat.distance', evt => {
             logs.push({
                 type: 'combat.distance',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id,
-                turn: evt.turn,
-                tick: evt.tick,
+                target: evt.combat.target.id,
+                turn: evt.combat.turn,
+                tick: evt.combat.tick,
                 previousDistance: evt.previousDistance,
                 distance: evt.distance
             })
         })
         cm.processCombats() // tick 0
-        expect(logs).toEqual([{
+        expect(logs).toEqual([{ // c2 rushes toward c1
             type: 'combat.distance',
             attacker: 'c2',
             target: 'c1',
@@ -363,6 +363,7 @@ describe('advancing combat', function () {
         cm.processCombats() // tick 2
         cm.processCombats() // tick 3
         cm.processCombats() // tick 4
+
         expect(logs).toEqual([{
             type: 'combat.distance',
             attacker: 'c2',
@@ -372,7 +373,9 @@ describe('advancing combat', function () {
             previousDistance: 50,
             distance: 20
         }])
+
         cm.processCombats() // tick 5
+
         expect(logs).toEqual([
             {
                 type: 'combat.distance',
@@ -389,15 +392,11 @@ describe('advancing combat', function () {
                 tick: 5,
                 turn: 0,
                 type: "combat.attack"
-            },
-            {
-                attacker: "c2",
-                target: "c1",
-                tick: 5,
-                turn: 0,
-                type: "combat.attack"
             }
         ])
+
+        expect(combat.distance).toBe(20)
+
     })
     it('should not cast an action when not calling nextAction', function () {
         const cm = new CombatManager()
@@ -410,9 +409,9 @@ describe('advancing combat', function () {
             logs.push({
                 type: 'combat.attack',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id,
-                turn: evt.turn,
-                tick: evt.tick
+                target: evt.combat.target.id,
+                turn: evt.combat.turn,
+                tick: evt.combat.tick
             })
         })
         cm.processCombats()
@@ -465,9 +464,9 @@ describe('advancing combat', function () {
             logs.push({
                 type: 'combat.attack',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id,
-                turn: evt.turn,
-                tick: evt.tick,
+                target: evt.combat.target.id,
+                turn: evt.combat.turn,
+                tick: evt.combat.tick,
                 action: evt.action
             })
         })

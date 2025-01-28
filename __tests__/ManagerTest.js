@@ -177,28 +177,28 @@ describe('Real Combat simulator', function () {
             logs.push({
                 event: 'combat.start',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id
+                target: evt.combat.target.id
             })
         })
         m.events.on(CONSTS.EVENT_COMBAT_END, evt => {
             logs.push({
                 event: 'combat.end',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.defender.id
+                target: evt.combat.target.id
             })
         })
         m.events.on(CONSTS.EVENT_COMBAT_TURN, evt => {
             logs.push({
                 event: 'combat.turn',
-                attacker: evt.attacker.id,
-                target: evt.target.id,
-                turn: evt.turn
+                attacker: evt.combat.attacker.id,
+                target: evt.combat.target.id,
+                turn: evt.combat.turn
             })
         })
         m.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => {
             logs.push({
                 event: 'combat.distance',
-                turn: evt.turn,
+                turn: evt.combat.turn,
                 attacker: evt.combat.attacker.id,
                 target: evt.combat.attacker.id,
                 distance: evt.distance
@@ -215,8 +215,7 @@ describe('Real Combat simulator', function () {
                 target: ao.target.id,
                 hit: ao.hit,
                 roll: ao.roll,
-                ac: ao.ac,
-                damages: ao.damages.amount
+                ac: ao.ac
             })
         })
         const c1 = m.createEntity(bpNormalActor, 'c1')
@@ -289,7 +288,6 @@ describe('Real Combat simulator', function () {
             {
                 "ac": 10,
                 "attacker": "c1",
-                "damages": 4,
                 "event": "combat.attack",
                 "hit": true,
                 "roll": 11,
@@ -298,7 +296,6 @@ describe('Real Combat simulator', function () {
             {
                 "ac": 10,
                 "attacker": "c2",
-                "damages": 0,
                 "event": "combat.attack",
                 "hit": false,
                 "roll": 9,
@@ -319,7 +316,6 @@ describe('Real Combat simulator', function () {
             {
                 "ac": 10,
                 "attacker": "c1",
-                "damages": 4,
                 "event": "combat.attack",
                 "hit": true,
                 "roll": 11,
@@ -328,7 +324,6 @@ describe('Real Combat simulator', function () {
             {
                 "ac": 10,
                 "attacker": "c2",
-                "damages": 0,
                 "event": "combat.attack",
                 "hit": false,
                 "roll": 9,
@@ -349,7 +344,6 @@ describe('Real Combat simulator', function () {
             {
                 "ac": 10,
                 "attacker": "c1",
-                "damages": 4,
                 "event": "combat.attack",
                 "hit": true,
                 "roll": 11,
@@ -358,7 +352,6 @@ describe('Real Combat simulator', function () {
             {
                 "ac": 10,
                 "attacker": "c2",
-                "damages": 0,
                 "event": "combat.attack",
                 "hit": false,
                 "roll": 9,
@@ -379,7 +372,6 @@ describe('Real Combat simulator', function () {
             {
                 "ac": 10,
                 "attacker": "c1",
-                "damages": 4,
                 "event": "combat.attack",
                 "hit": true,
                 "roll": 11,
@@ -388,7 +380,6 @@ describe('Real Combat simulator', function () {
             {
                 "ac": 10,
                 "attacker": "c2",
-                "damages": 0,
                 "event": "combat.attack",
                 "hit": false,
                 "roll": 9,
@@ -409,7 +400,6 @@ describe('Real Combat simulator', function () {
             {
                 "ac": 10,
                 "attacker": "c1",
-                "damages": 4,
                 "event": "combat.attack",
                 "hit": true,
                 "roll": 11,

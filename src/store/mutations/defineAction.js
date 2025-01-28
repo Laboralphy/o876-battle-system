@@ -53,7 +53,11 @@ module.exports = ({ state }, {
             break
         }
     }
-    const oNewAction = {
+    if (!id) {
+        throw new Error('This action has no ID')
+    }
+    state.actions[id] = {
+        id,
         attackType,
         limited,
         cooldown,
@@ -62,9 +66,5 @@ module.exports = ({ state }, {
         range,
         onHit,
         parameters
-    }
-    state.actions = {
-        ...state.actions,
-        [id]: oNewAction
     }
 }

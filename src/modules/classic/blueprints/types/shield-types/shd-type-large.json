@@ -13,5 +13,6 @@
   ],
   "equipmentSlots": [
     "EQUIPMENT_SLOT_SHIELD"
-  ]
+  ],
+  "tag": "shd-type-large"
 }

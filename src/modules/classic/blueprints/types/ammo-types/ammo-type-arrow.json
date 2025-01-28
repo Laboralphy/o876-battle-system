@@ -6,5 +6,6 @@
   "properties": [],
   "equipmentSlots": [
     "EQUIPMENT_SLOT_AMMO"
-  ]
+  ],
+  "tag": "ammo-type-arrow"
 }

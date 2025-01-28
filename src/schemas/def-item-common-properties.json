@@ -39,6 +39,10 @@
         "type": "string",
         "pattern": "^EQUIPMENT_SLOT_"
       }
+    },
+    "tag": {
+      "description": "A non-unique technical reference. Useful for identifying an item",
+      "type": "string"
     }
   }
 }

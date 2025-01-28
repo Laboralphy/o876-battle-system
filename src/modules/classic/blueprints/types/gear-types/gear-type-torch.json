@@ -12,5 +12,6 @@
   ],
   "equipmentSlots": [
     "EQUIPMENT_SLOT_SHIELD"
-  ]
+  ],
+  "tag": "gear-type-torch"
 }

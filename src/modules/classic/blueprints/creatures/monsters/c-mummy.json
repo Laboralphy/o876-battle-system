@@ -21,6 +21,7 @@
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_WEAPON",
+      "tag": "natural-weapon-rotting-fist",
       "proficiency": "PROFICIENCY_WEAPON_NATURAL",
       "weight": 0,
       "size": "WEAPON_SIZE_SMALL",

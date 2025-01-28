@@ -65,23 +65,26 @@ class CombatManager {
      * @private
      */
     _sendCombatActionEvent (ev) {
+        const { combat } = ev
         // Special case concerning multi melee actions :
         // Instead of striking target we strike a random offending target
         this._events.emit(CONSTS.EVENT_COMBAT_ACTION, this._addManagerToObject(ev))
-        if (!ev.opportunity && !this.isCreatureFighting(ev.target)) {
-            this.startCombat(ev.target, ev.attacker, ev.combat.distance)
+        if (!ev.opportunity && !this.isCreatureFighting(combat.target)) {
+            this.startCombat(combat.target, combat.attacker, combat.distance)
         }
     }
 
     /**
      * Sends a combat attack event.
-     * @param ev
+     * @param opportunity {boolean}
+     * @param combat {Combat}
+     * @param count {number}
      * @private
      */
-    _sendCombatAttackEvent (ev) {
-        this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, this._addManagerToObject(ev))
-        if (!ev.opportunity && !this.isCreatureFighting(ev.target)) {
-            this.startCombat(ev.target, ev.attacker, ev.combat.distance)
+    _sendCombatAttackEvent ({ opportunity, combat, count  }) {
+        this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, this._addManagerToObject({ opportunity, combat, count  }))
+        if (!opportunity && !this.isCreatureFighting(combat.target)) {
+            this.startCombat(combat.target, combat.attacker, combat.distance)
         }
     }
 
@@ -105,7 +108,8 @@ class CombatManager {
         combat.events.on(CONSTS.EVENT_COMBAT_SCRIPT, ev => this._events.emit(CONSTS.EVENT_COMBAT_SCRIPT, this._addManagerToObject(ev)))
         combat.events.on(CONSTS.EVENT_COMBAT_OFFENSIVE_SLOT, ev => this._events.emit(CONSTS.EVENT_COMBAT_OFFENSIVE_SLOT, this._addManagerToObject(ev)))
         combat.events.on(CONSTS.EVENT_COMBAT_DISTANCE, ev => {
-            const { attacker, target, distance } = ev
+            const { combat } = ev
+            const { attacker, target: target, distance } = combat
             this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, this._addManagerToObject(ev))
             if (this.isCreatureFighting(attacker, target)) {
                 // also change target distance with attacker if different
@@ -131,7 +135,7 @@ class CombatManager {
         this.combats
             .forEach(combat => {
                 const oAttacker = combat.attacker
-                if (oAttacker.getters.isDead || combat.defender.getters.isDead) {
+                if (oAttacker.getters.isDead || combat.target.getters.isDead) {
                     this.endCombat(oAttacker, true)
                 } else {
                     combat.advance()
@@ -147,7 +151,7 @@ class CombatManager {
      */
     isCreatureFighting (oCreature, oTarget = null) {
         return oTarget
-            ? this.isCreatureFighting(oCreature) && this._fighters[oCreature.id].defender === oTarget
+            ? this.isCreatureFighting(oCreature) && this._fighters[oCreature.id].target === oTarget
             : oCreature.id in this._fighters
     }
 
@@ -159,14 +163,14 @@ class CombatManager {
      */
     getOffenders (oCreature, nRange = Infinity) {
         return this.combats
-            .filter(combat => combat.defender === oCreature && combat.distance <= nRange)
+            .filter(combat => combat.target === oCreature && combat.distance <= nRange)
             .map(combat => combat.attacker)
     }
 
     isCreatureAttacked (oCreature) {
         return this
             .combats
-            .some(combat => combat.defender === oCreature)
+            .some(combat => combat.target === oCreature)
     }
 
     /**
@@ -176,11 +180,13 @@ class CombatManager {
      * @param oCreature {Creature}
      */
     removeFighter (oCreature) {
-        this
-            .getOffenders(oCreature)
-            .forEach(creature => {
-                this.endCombat(creature, true)
-            })
+        if (this.isCreatureAttacked(oCreature)) {
+            this
+                .getOffenders(oCreature)
+                .forEach(creature => {
+                    this.endCombat(creature, true)
+                })
+        }
         this.endCombat(oCreature)
     }
 
@@ -193,15 +199,15 @@ class CombatManager {
     endCombat (oCreature, bBothSides = false) {
         if (this.isCreatureFighting(oCreature)) {
             const oCombat = this._fighters[oCreature.id]
-            const oDefender = oCombat.defender
+            const oTarget = oCombat.target
             this._events.emit(CONSTS.EVENT_COMBAT_END, this._addManagerToObject({
                 ...oCombat.eventDefaultPayload,
-                victory: !oCreature.getters.isDead && oDefender.getters.isDead,
-                defeat: oCreature.getters.isDead && !oDefender.getters.isDead
+                victory: !oCreature.getters.isDead && oTarget.getters.isDead,
+                defeat: oCreature.getters.isDead && !oTarget.getters.isDead
             }))
             delete this._fighters[oCreature.id]
-            if (bBothSides && this.isCreatureFighting(oDefender, oCreature)) {
-                this.endCombat(oDefender)
+            if (bBothSides && this.isCreatureFighting(oTarget, oCreature)) {
+                this.endCombat(oTarget)
             }
             oCombat._events.removeAllListeners()
         }

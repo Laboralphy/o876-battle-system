@@ -21,6 +21,7 @@
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_WEAPON",
+      "tag": "natural-weapon-bite",
       "proficiency": "PROFICIENCY_WEAPON_NATURAL",
       "weight": 0,
       "size": "WEAPON_SIZE_SMALL",
@@ -43,6 +44,7 @@
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_WEAPON",
+      "tag": "natural-weapon-claws",
       "proficiency": "PROFICIENCY_WEAPON_NATURAL",
       "weight": 0,
       "size": "WEAPON_SIZE_SMALL",
@@ -59,6 +61,7 @@
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_WEAPON",
+      "tag": "natural-weapon-tail",
       "proficiency": "PROFICIENCY_WEAPON_NATURAL",
       "weight": 0,
       "size": "WEAPON_SIZE_SMALL",

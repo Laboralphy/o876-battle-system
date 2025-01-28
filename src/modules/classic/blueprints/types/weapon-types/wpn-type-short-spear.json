@@ -12,5 +12,6 @@
   "properties": [],
   "equipmentSlots": [
     "EQUIPMENT_SLOT_WEAPON_MELEE"
-  ]
+  ],
+  "tag": "wpn-type-short-spear"
 }

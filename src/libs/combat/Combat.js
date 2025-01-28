@@ -23,7 +23,7 @@ class Combat {
          * @type {Creature}
          * @private
          */
-        this._defender = null
+        this._target = null
         /**
          * Number of elapsed combat turn
          * @type {number}
@@ -128,26 +128,22 @@ class Combat {
      * Return defending creature instance
      * @returns {Creature}
      */
-    get defender () {
-        return this._defender
+    get target () {
+        return this._target
     }
 
     /**
      * Returns a default payload template to be sent by events
-     * @returns {{attacker: (Creature), combat: Combat, turn: number, tick: number, target: Creature}}
+     * @returns {{ combat: Combat }}
      */
     get eventDefaultPayload () {
         return {
-            combat: this,
-            turn: this._turn,
-            tick: this._tick,
-            attacker: this.attacker,
-            target: this._defender
+            combat: this
         }
     }
 
     /**
-     * Define new distance between attacker and defender
+     * Define new distance between attacker and target
      * @param value {number}
      */
     set distance (value) {
@@ -169,6 +165,10 @@ class Combat {
         return this._attackerState.actions[this._currentAction] || null
     }
 
+    /**
+     * Select a new action
+     * @param value {string}
+     */
     selectCurrentAction (value) {
         if (value === '' || value in this._attackerState.actions) {
             this._currentAction = value
@@ -182,7 +182,7 @@ class Combat {
     }
 
     /**
-     * returns distance between attacker and defender
+     * returns distance between attacker and target
      * @returns {number}
      */
     get distance () {
@@ -192,13 +192,13 @@ class Combat {
     /**
      * Define combat creatures
      * @param attacker {Creature}
-     * @param defender {Creature}
+     * @param target {Creature}
      */
-    setFighters (attacker, defender) {
+    setFighters (attacker, target) {
         // TODO compute initiative here
         this._attackerState = new CombatFighterState()
         this._attackerState.creature = attacker
-        this._defender = defender
+        this._target = target
     }
 
     /**
@@ -259,7 +259,7 @@ class Combat {
                 bHasMoved = true
             }
         }
-        if (!bHasMoved) {
+        if (!bHasMoved && this.isTargetInRange()) {
             this.playFighterAction()
         }
         this._events.emit(CONSTS.EVENT_COMBAT_TICK_END, {
@@ -348,13 +348,25 @@ class Combat {
     }
 
     selectMostSuitableAction () {
+        console.log('XXXXXXXXXXXXX')
+        const attacker = this.attacker
+        const distance = this.distance
+        const aAvailableActions = Object
+            .values(attacker.getters.getActions)
+            .filter(action => action.ready && action.range <= distance)
+        const sSelectAction = aAvailableActions.length > 0
+            ? aAvailableActions[Math.floor(attacker.dice.random() * aAvailableActions.length)].id
+            : ''
+        console.log(this.attacker.id, 'select action', aAvailableActions.map(({ id }) => id).join(', '), 'selected :', sSelectAction)
+        this.selectCurrentAction(sSelectAction)
         this._events.emit(CONSTS.EVENT_COMBAT_TURN, {
             ...this.eventDefaultPayload,
             action: action => {
-                this.currentAction = action
+                this.selectCurrentAction(action)
             }
         })
         if (!this.currentAction) {
+            console.log('YYYYYY')
             this.selectMostSuitableWeapon()
         }
     }

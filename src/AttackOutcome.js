@@ -491,16 +491,20 @@ class AttackOutcome {
             })
     }
 
+    /**
+     * Applies damage effects described in the attack outcome
+     */
     applyDamages () {
         const aDamages = this
             ._effectProcessor
-            .applyEffectGroup(this._damages.effects, [], this._target, 0, this._attacker)
+            .applyEffectGroup(this._damages.effects, '', this._target, 0, this._attacker)
         const dam = this._damages
         aDamages.forEach(({ amp, data: { damageType, resistedAmount } }) => {
             dam.amount += amp
             dam.types[damageType].amount += amp
             dam.types[damageType].resisted += resistedAmount
         })
+        return aDamages
     }
 }
 

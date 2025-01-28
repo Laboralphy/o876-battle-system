@@ -68,7 +68,6 @@ function mutate ({ effect, target, source }) {
     const ed = effect.data
     const oRecentDamage = rollDamageAmount({
         damageType: ed.damageType,
-        material: ed.material,
         amp: effect.amp,
         target
     })
@@ -83,7 +82,6 @@ function mutate ({ effect, target, source }) {
     })
     if (target.getters.isDead) {
         target.events.emit(CONSTS.EVENT_CREATURE_DEATH, {
-            creature: target,
             killer: source
         })
     }

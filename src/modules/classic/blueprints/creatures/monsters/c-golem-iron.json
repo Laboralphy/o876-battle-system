@@ -21,6 +21,7 @@
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_WEAPON",
+      "tag": "natural-weapon-slam",
       "proficiency": "PROFICIENCY_WEAPON_NATURAL",
       "weight": 0,
       "size": "WEAPON_SIZE_SMALL",
@@ -42,6 +43,7 @@
     {
       "entityType": "ENTITY_TYPE_ITEM",
       "itemType": "ITEM_TYPE_WEAPON",
+      "tag": "natural-weapon-sword",
       "proficiency": "PROFICIENCY_WEAPON_NATURAL",
       "weight": 0,
       "size": "WEAPON_SIZE_SMALL",

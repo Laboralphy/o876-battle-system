@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "build-indexes": "./bin/build-indexes",
-    "build-module-blueprints": "./bin/build-module-blueprints && jest -t 'check all classic blueprints'"
+    "build-module-blueprints": "./bin/build-module-blueprints && jest __tests__/MonsterBlueprintTest.js"
   },
   "keywords": [],
   "author": "",

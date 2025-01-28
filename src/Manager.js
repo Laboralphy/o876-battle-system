@@ -28,16 +28,16 @@ class Manager {
         this._combatManager = cm
         this._scripts = {}
         this._time = 0
-        cm.events.on(CONSTS.EVENT_COMBAT_TURN, evt => this._events.emit(CONSTS.EVENT_COMBAT_TURN, evt))
+        cm.events.on(CONSTS.EVENT_COMBAT_TURN, evt => this._combatManagerTurn(evt))
         cm.events.on(CONSTS.EVENT_COMBAT_START, evt => this._events.emit(CONSTS.EVENT_COMBAT_START, evt))
         cm.events.on(CONSTS.EVENT_COMBAT_END, evt => this._events.emit(CONSTS.EVENT_COMBAT_END, evt))
         cm.events.on(CONSTS.EVENT_COMBAT_MOVE, evt => this._events.emit(CONSTS.EVENT_COMBAT_MOVE, evt))
         cm.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, evt))
         cm.events.on(CONSTS.EVENT_COMBAT_ACTION, evt => this._combatManagerAction(evt))
         cm.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => this._combatManagerAttack(evt))
-        ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED, ev => this._effectApplied(ev))
-        ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, ev => this._effectImmunity(ev))
-        ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, ev => this._effectDisposed(ev))
+        ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED, evt => this._effectApplied(evt))
+        ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, evt => this._effectImmunity(evt))
+        ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, evt => this._effectDisposed(evt))
     }
 
     /**
@@ -96,6 +96,15 @@ class Manager {
         this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_DISPOSED, {manager: this, effect, target, source})
     }
 
+    _combatManagerTurn (evt) {
+        const {
+            action,
+            combat
+        } = evt
+        this.runPropEffectScript(combat.attacker, 'combatTurn', evt)
+        this._events.emit(CONSTS.EVENT_COMBAT_TURN, evt)
+    }
+
     /**
      * Initiate a combat action.
      * Must run the script associated with this action
@@ -136,11 +145,23 @@ class Manager {
                 attack: oAttackOutcome,
                 manager: this
             })
-            oAttackOutcome.applyDamages()
         }
         this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
             attack: oAttackOutcome,
         })
+        if (oAttackOutcome.hit) {
+            oAttackOutcome.applyDamages()
+            Object.entries(oAttackOutcome.damages.types).forEach(([damageType, { amount, resisted }]) => {
+                this.runPropEffectScript(target, 'damaged', {
+                    damageType,
+                    amount,
+                    resisted,
+                    manager: this,
+                    creature: oAttackOutcome.target,
+                    source: oAttackOutcome.attacker
+                })
+            })
+        }
     }
 
     /**
@@ -151,16 +172,11 @@ class Manager {
     _combatManagerAttack (evt) {
         const {
             combat,
-            turn,
-            tick,
-            attacker,
-            target,
-            combatManager,
             count,
             opportunity
         } = evt
         for (let i = 0; i < count; ++i) {
-            this.deliverAttack(attacker, target)
+            this.deliverAttack(combat.attacker, combat.target)
         }
     }
 
@@ -182,6 +198,14 @@ class Manager {
                 this._scripts[id] = script
             })
         loadData(data)
+    }
+
+    runScript (sScript, ...params) {
+        if (sScript in this._scripts) {
+            this._scripts[sScript].apply(this, params)
+        } else {
+            throw new Error(`script ${sScript} not found.`)
+        }
     }
 
     get blueprints () {
@@ -206,9 +230,11 @@ class Manager {
         const oEntity = this._entityBuilder.createEntity(resref, id)
         if (oEntity instanceof Creature) {
             this._horde.linkCreature(oEntity)
-            oEntity.events.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => this._events.emit(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt))
-            oEntity.events.on(CONSTS.EVENT_CREATURE_REVIVE, evt => this._events.emit(CONSTS.EVENT_CREATURE_REVIVE, evt))
-            oEntity.events.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, evt))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => this._events.emit(CONSTS.EVENT_CREATURE_SELECT_WEAPON, { creature: oEntity, ...evt }))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REVIVE, evt => this._events.emit(CONSTS.EVENT_CREATURE_REVIVE, { creature: oEntity, ...evt }))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, { creature: oEntity, ...evt }))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_DAMAGED, evt => this._events.emit(CONSTS.EVENT_CREATURE_DAMAGED, { creature: oEntity, ...evt }))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_DEATH, evt => this._events.emit(CONSTS.EVENT_CREATURE_DEATH, { creature: oEntity, ...evt }))
         }
         return oEntity
     }

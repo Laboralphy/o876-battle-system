@@ -167,6 +167,7 @@ class EntityBuilder {
             id: id || getUniqueId(),
             blueprint: oBlueprint,
             remainingCharges: oBlueprint.charges || 0,
+            tag: 'tag' in oBlueprint ? oBlueprint.tag : '',
             properties: this._buildProperties(oBlueprint.properties)
         }
     }
@@ -183,6 +184,11 @@ class EntityBuilder {
                 .forEach(item => {
                     const oItem = this.createEntity(item)
                     oCreature.equipItem(oItem)
+                })
+            Object
+                .values(oBlueprint.actions)
+                .forEach(action => {
+                    oCreature.mutations.defineAction(action)
                 })
             return oCreature
         } catch (e) {

@@ -32,5 +32,6 @@
   ],
   "equipmentSlots": [
     "EQUIPMENT_SLOT_CHEST"
-  ]
+  ],
+  "tag": "arm-type-ring-mail"
 }

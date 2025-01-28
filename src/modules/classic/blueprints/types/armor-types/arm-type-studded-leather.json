@@ -18,5 +18,6 @@
   ],
   "equipmentSlots": [
     "EQUIPMENT_SLOT_CHEST"
-  ]
+  ],
+  "tag": "arm-type-studded-leather"
 }
