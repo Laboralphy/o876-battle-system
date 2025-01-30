@@ -162,7 +162,14 @@ class Combat {
      * @returns {RBSAction | null}
      */
     get currentAction () {
-        return this._attackerState.actions[this._currentAction] || null
+        if (this._currentAction === '') {
+            return null
+        }
+        if (this._currentAction in this._attackerState.actions) {
+            return this._attackerState.actions[this._currentAction]
+        }
+        const aActionList = Object.keys(this._attackerState.actions).join(', ')
+        throw new Error(`this action ${this._currentAction} does not exists in action list ${aActionList}`)
     }
 
     /**
@@ -170,10 +177,13 @@ class Combat {
      * @param value {string}
      */
     selectCurrentAction (value) {
-        if (value === '' || value in this._attackerState.actions) {
+        console.log('selectAction', this.attacker.id, value)
+        if (value === '') {
+            this._currentAction = ''
+        } else if (value in this._attackerState.actions) {
             this._currentAction = value
         } else {
-            throw new Error('Action is unknown for this creature - allowed values are : ' + Object.keys(this._attackerState.actions).join(', '))
+            throw new Error(`Action ${value} is unknown for this creature - allowed values are : ` + Object.keys(this._attackerState.actions).join(', '))
         }
     }
 
@@ -222,9 +232,11 @@ class Combat {
         const attackerState = this._attackerState
         // If no current action then we are attacking during this turn
         if (this._tick === 0) {
+            console.log('TICK 0', this.attacker.id, this.currentAction?.id)
             const action = this.currentAction
             if (action) {
                 if (action.ready) {
+                    console.log('emit event combat action', action.id)
                     this._events.emit(CONSTS.EVENT_COMBAT_ACTION, {
                         ...this.eventDefaultPayload,
                         action: action
@@ -232,7 +244,11 @@ class Combat {
                     attackerState.useAction(action.id)
                     this.selectCurrentAction('')
                     return
+                } else {
+                    console.log('playFighterAction', this.attacker.id, 'action', action.id, 'not ready')
                 }
+            } else {
+                console.log('playFighterAction', this.attacker.id, 'no action selected')
             }
         }
         const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
@@ -268,10 +284,8 @@ class Combat {
         this.nextTick()
         if (this._tick === 0) {
             // start of next turn
-            if (!this.currentAction) {
-                this.selectCurrentAction(this._nextAction)
-                this.nextAction = ''
-            }
+            this.selectCurrentAction(this._nextAction)
+            this.nextAction = ''
         }
     }
 
@@ -348,7 +362,6 @@ class Combat {
     }
 
     selectMostSuitableAction () {
-        console.log('XXXXXXXXXXXXX')
         const attacker = this.attacker
         const distance = this.distance
         const aAvailableActions = Object
@@ -357,7 +370,6 @@ class Combat {
         const sSelectAction = aAvailableActions.length > 0
             ? aAvailableActions[Math.floor(attacker.dice.random() * aAvailableActions.length)].id
             : ''
-        console.log(this.attacker.id, 'select action', aAvailableActions.map(({ id }) => id).join(', '), 'selected :', sSelectAction)
         this.selectCurrentAction(sSelectAction)
         this._events.emit(CONSTS.EVENT_COMBAT_TURN, {
             ...this.eventDefaultPayload,
@@ -366,7 +378,6 @@ class Combat {
             }
         })
         if (!this.currentAction) {
-            console.log('YYYYYY')
             this.selectMostSuitableWeapon()
         }
     }
