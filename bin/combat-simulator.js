@@ -25,11 +25,11 @@ class CombatSimulator {
         e.on(CONSTS.EVENT_COMBAT_TURN, ({ combat, action }) => {
             const currentAction = combat.currentAction
             if (currentAction) {
-                this.sendTextEvent(combat.attacker.id, 'uses action', currentAction.id)
+                this.sendTextEvent(combat.attacker.id, 'prepares action', currentAction.id)
             }
         })
         e.on(CONSTS.EVENT_COMBAT_ACTION, ({ combat, action }) => {
-            this.sendTextEvent(combat.attacker.id, 'is using', action.id, 'script:', action.onHit)
+            this.sendTextEvent(combat.attacker.id, 'used action', action.id)
         })
         e.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, ({ creature, slot }) => {
             const weapon = creature.getters.getSelectedWeapon
@@ -37,6 +37,10 @@ class CombatSimulator {
             this.sendTextEvent(creature.id, 'switches to', sWeaponTechName)
         })
         e.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
+            if (attack.failed) {
+                this.sendTextEvent(attack.target.id, 'failed to attack:', attack.failure)
+                return
+            }
             const bias = attack.rollBias.value > 0
                 ? '(advantaged)'
                 : attack.rollBias.value < 0
@@ -76,6 +80,29 @@ class CombatSimulator {
                 killer
             } = evt
             this.sendTextEvent(creature.id, 'died', '(killed by', (killer?.id || 'someone') + ')')
+        })
+        e.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => {
+            const {
+                creature,
+                roll,
+                dc,
+                success,
+                bonus,
+                ability
+            } = evt
+            if (success) {
+                this.sendTextEvent(creature.id, `saving throw ${ability} **SUCCESS** : ${roll} + ${bonus} = ${roll + bonus} vs. ${dc}`)
+            } else {
+                this.sendTextEvent(creature.id, `saving throw ${ability} **FAILURE**: ${roll} + ${bonus} = ${roll + bonus} vs. ${dc}`)
+            }
+        })
+        e.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, (evt) => {
+            const { target, effect } = evt
+            this.sendTextEvent(target.id, `effect applied ${effect.type}`)
+        })
+        e.on(CONSTS.EVENT_CREATURE_EFFECT_DISPOSED, (evt) => {
+            const { target, effect } = evt
+            this.sendTextEvent(target.id, `effect ran out ${effect.type}`)
         })
     }
 

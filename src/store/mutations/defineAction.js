@@ -9,7 +9,7 @@ const CONSTS = require('../../consts')
  * @property cooldownTimer {number}
  * @property dailyCharges {number}
  * @property range {number}
- * @property onHit {string}
+ * @property script {string}
  * @property parameters {{}}
  *
  * @param state {RBSStoreState}
@@ -18,7 +18,7 @@ const CONSTS = require('../../consts')
  * @param cooldown {number}
  * @param charges {number}
  * @param range {number}
- * @param onHit {string}
+ * @param script {string}
  * @param parameters {{}}
  */
 module.exports = ({ state }, {
@@ -27,7 +27,7 @@ module.exports = ({ state }, {
     cooldown = 0,
     charges = 0,
     range = Infinity,
-    onHit,
+    script,
     parameters = {}
 }) => {
     const bHasCooldown = cooldown > 0
@@ -64,7 +64,7 @@ module.exports = ({ state }, {
         cooldownTimer: [],
         dailyCharges: charges,
         range,
-        onHit,
+        script,
         parameters
     }
 }

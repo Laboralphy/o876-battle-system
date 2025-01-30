@@ -5,7 +5,7 @@
   "required": [
     "id",
     "actionType",
-    "onHit"
+    "script"
   ],
   "properties": {
     "id": {
@@ -17,13 +17,13 @@
       "pattern": "^COMBAT_ACTION_TYPE_",
       "description": "Type of combat action, can be weapon, spell, or spell like ability"
     },
-    "onHit": {
+    "script": {
       "type": "string",
       "description": "Script used to resolve action"
     },
     "parameters": {
       "type": "object",
-      "description": "An object containing optional parameters for script onHit"
+      "description": "An object containing optional parameters for script script"
     },
     "cooldown": {
       "type": "number",

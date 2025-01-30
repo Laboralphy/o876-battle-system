@@ -46,7 +46,7 @@
     {
       "id": "act-multi-attack",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-multi-attack",
+      "script": "at-multi-attack",
       "range": 5,
       "parameters": {}
     }

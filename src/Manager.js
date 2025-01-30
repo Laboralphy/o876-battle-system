@@ -40,6 +40,10 @@ class Manager {
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, evt => this._effectDisposed(evt))
     }
 
+    get CONSTS () {
+        return CONSTS
+    }
+
     /**
      * @returns {EffectProcessor}
      */
@@ -73,7 +77,7 @@ class Manager {
      * @param source {Creature}
      */
     _effectApplied({effect, target, source}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, {manager: this, effect, target, source})
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, { manager: this, effect, target, source })
     }
 
     /**
@@ -83,7 +87,7 @@ class Manager {
      * @private
      */
     _effectImmunity({effect, target}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_IMMUNITY, {manager: this, effect, target})
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_IMMUNITY, { manager: this, effect, target })
     }
 
     /**
@@ -115,8 +119,14 @@ class Manager {
         this._events.emit(CONSTS.EVENT_COMBAT_ACTION, evt)
         const {
             action,
+            combat,
             attacker
         } = evt
+        // Lancement de l'action
+        if (!action) {
+            throw new Error(`combat action is null or undefined`)
+        }
+        this.runScript(action.script, { manager: this, combat, action })
         const bIsActionCoolingDown = action.cooldownTimer > 0
         if (bIsActionCoolingDown) {
             this._horde.setCreatureActive(attacker)
@@ -202,7 +212,7 @@ class Manager {
 
     runScript (sScript, ...params) {
         if (sScript in this._scripts) {
-            this._scripts[sScript].apply(this, params)
+            this._scripts[sScript](...params)
         } else {
             throw new Error(`script ${sScript} not found.`)
         }

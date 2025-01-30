@@ -180,6 +180,10 @@ class EffectProcessor {
      * @param nDuration {number} new duration
      */
     setEffectDuration (oEffect, nDuration) {
+        const nPreviousEffectDuration = oEffect.duration
+        if (nPreviousEffectDuration !== nDuration) {
+            return
+        }
         const { target, source } = this.getEffectTargetSource(oEffect)
         target.mutations.setEffectDuration({ effect: oEffect, duration: Math.max(0, nDuration) })
         if (nDuration <= 0) {

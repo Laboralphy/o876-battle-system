@@ -3,7 +3,7 @@
  * @property addEffect {function({ effect: RBSEffect }): RBSEffect}
  * @property addProficiency {function({ value: string })}
  * @property addProperty {function({ property: RBSProperty })}
- * @property defineAction {function({ id: string, attackType: string, cooldown: number, charges: number, range: number, onHit: string, parameters: {} })}
+ * @property defineAction {function({ id: string, attackType: string, cooldown: number, charges: number, range: number, script: string, parameters: {} })}
  * @property equipItem {function({ item: RBSItem, slot: string, bypassCurse: boolean }): *}
  * @property rechargeActions {function({  })}
  * @property removeEffect {function({ effect: RBSEffect })}

@@ -20,7 +20,7 @@ An action should be taken.
 |-------------------|--------------|-----------------------------|
 | action            | RBSAction    |                             |
 | action.id         | string       | Action identifier           |
-| action.onHit      | string       | script to launch            |
+| action.script      | string       | script to launch            |
 | action.parameters | object       | parameter to pass to script |
 | action.attackType | string       | ATTACK_TYPE_*               |
 | action.range      | number       | action range                |

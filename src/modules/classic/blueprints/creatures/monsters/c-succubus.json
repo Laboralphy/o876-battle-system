@@ -48,14 +48,14 @@
     {
       "id": "act-charm",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-charm",
+      "script": "at-charm",
       "range": 30,
       "parameters": {}
     },
     {
       "id": "act-draining-kiss",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-draining-kiss",
+      "script": "at-draining-kiss",
       "range": 5,
       "parameters": {}
     }

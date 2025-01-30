@@ -62,7 +62,7 @@
     {
       "id": "act-healing",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-healing",
+      "script": "at-healing",
       "range": 100,
       "parameters": {},
       "cooldown": 6

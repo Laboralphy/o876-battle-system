@@ -881,7 +881,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1'
+            script: 'script1'
         })
         expect(oCreature.getters.getActions).toEqual({
             a1: {
@@ -892,7 +892,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: false,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -902,7 +902,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1',
+            script: 'script1',
             cooldown: 5
         })
         expect(oCreature.getters.getActions).toEqual({
@@ -914,7 +914,7 @@ describe('getActions', function () {
                 charges: 1,
                 recharging: false,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -924,7 +924,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1',
+            script: 'script1',
             cooldown: 5
         })
         oCreature.mutations.useAction({ action: 'a1' })
@@ -937,7 +937,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -947,7 +947,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1',
+            script: 'script1',
             cooldown: 5
         })
         oCreature.mutations.useAction({ action: 'a1' })
@@ -960,7 +960,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -970,7 +970,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1',
+            script: 'script1',
             cooldown: 5
         })
         expect(oCreature.getters.getActions).toHaveProperty('a1')
@@ -984,7 +984,7 @@ describe('getActions', function () {
                 charges: 0,
                 range: Infinity,
                 recharging: true,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -994,7 +994,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1',
+            script: 'script1',
             cooldown: 5
         })
         expect(oCreature.getters.getActions).toEqual({
@@ -1006,7 +1006,7 @@ describe('getActions', function () {
                 charges: 1,
                 recharging: false,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1021,7 +1021,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -1036,7 +1036,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -1051,7 +1051,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -1066,7 +1066,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -1081,7 +1081,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -1096,7 +1096,7 @@ describe('getActions', function () {
                 charges: 1,
                 recharging: false,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1111,7 +1111,7 @@ describe('getActions', function () {
                 charges: 1,
                 recharging: false,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1121,7 +1121,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1',
+            script: 'script1',
             charges: 5
         })
         expect(oCreature.getters.getActions).toEqual({
@@ -1133,7 +1133,7 @@ describe('getActions', function () {
                 charges: 5,
                 recharging: false,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1143,7 +1143,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1',
+            script: 'script1',
             charges: 5
         })
         oCreature.mutations.useAction({ action: 'a1' })
@@ -1156,7 +1156,7 @@ describe('getActions', function () {
                 charges: 4,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1171,7 +1171,7 @@ describe('getActions', function () {
                 charges: 3,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1186,7 +1186,7 @@ describe('getActions', function () {
                 charges: 2,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1201,7 +1201,7 @@ describe('getActions', function () {
                 charges: 1,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1216,7 +1216,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -1226,7 +1226,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1',
+            script: 'script1',
             charges: 5
         })
         expect(oCreature.getters.getActions).toEqual({
@@ -1238,7 +1238,7 @@ describe('getActions', function () {
                 charges: 5,
                 recharging: false,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1248,7 +1248,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'a1',
-            onHit: 'script1',
+            script: 'script1',
             charges: 5
         })
         oCreature.mutations.useAction({ action: 'a1' })
@@ -1265,7 +1265,7 @@ describe('getActions', function () {
                 charges: 0,
                 recharging: true,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: false
             }
@@ -1280,7 +1280,7 @@ describe('getActions', function () {
                 charges: 5,
                 recharging: false,
                 range: Infinity,
-                onHit: 'script1',
+                script: 'script1',
                 parameters: {},
                 ready: true
             }
@@ -1291,7 +1291,7 @@ describe('getActions', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         oCreature.mutations.defineAction({
             id: 'cast-l3-spell',
-            onHit: 'script1',
+            script: 'script1',
             charges: 5,
             cooldown: 20
         })

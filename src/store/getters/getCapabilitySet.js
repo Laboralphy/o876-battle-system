@@ -1,7 +1,7 @@
 const CONSTS = require('../../consts')
 
 /**
- * Retursna registry of thing that can do a creature
+ * Returs a registry of thing that can do a creature
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
  * @param externals

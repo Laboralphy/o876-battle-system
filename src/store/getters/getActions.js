@@ -9,7 +9,7 @@ const CONSTS = require('../../consts')
  * @property charges {number} number of uses left
  * @property recharging {boolean} if true then this action is recharging (need to call rechargeActions regularly
  * @property range {number} action range
- * @property onHit {string} script to call if action hits
+ * @property script {string} script to call if action hits
  * @property parameters {{}} parameters passed to script
  * @property ready {boolean} if true this action is ready to use, else, action cannot be used
  *
@@ -36,7 +36,7 @@ module.exports = state => Object.fromEntries(
                 charges,
                 recharging,
                 range: action.range,
-                onHit: action.onHit,
+                script: action.script,
                 parameters: action.parameters,
                 ready
         }

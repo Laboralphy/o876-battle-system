@@ -415,7 +415,7 @@ describe('building a monster', function () {
                 {
                     "id": "act-test-action",
                     "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-                    "onHit": "at-been-hit",
+                    "script": "at-been-hit",
                     "range": 25,
                     "parameters": {
                         "oneParam": "oneValue"
@@ -509,7 +509,7 @@ describe('create a complex monster', function () {
             {
                 "id": "act-test-action",
                 "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-                "onHit": "at-been-hit",
+                "script": "at-been-hit",
                 "range": 25,
                 "parameters": {
                     "oneParam": "oneValue"

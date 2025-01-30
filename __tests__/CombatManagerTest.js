@@ -457,7 +457,7 @@ describe('advancing combat', function () {
         combat.attacker.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-            onHit: 'script1'
+            script: 'script1'
         })
         const logs = []
         cm.events.on('combat.action', evt => {
@@ -513,7 +513,7 @@ describe('advancing combat', function () {
         combat.attacker.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-            onHit: 'script1',
+            script: 'script1',
             range: 5
         })
         const logs = []
@@ -563,13 +563,13 @@ describe('Try real combat', function () {
         c1.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-            onHit: 'script1',
+            script: 'script1',
             range: 5
         })
         c2.mutations.defineAction({
             id: 'a2',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-            onHit: 'script2',
+            script: 'script2',
             range: 5
         })
         const logs = []

@@ -8,7 +8,7 @@ const CONSTS = require('../../consts')
  * @property charges {number}
  * @property dailyCharges {number}
  * @property range {number}
- * @property onHit {string}
+ * @property script {string}
  * @property parameters {{}}
  *
  * @typedef RBSStoreState {object}

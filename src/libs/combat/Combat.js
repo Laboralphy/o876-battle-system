@@ -177,7 +177,9 @@ class Combat {
      * @param value {string}
      */
     selectCurrentAction (value) {
-        console.log('selectAction', this.attacker.id, value)
+        if (value === this._currentAction) {
+            return
+        }
         if (value === '') {
             this._currentAction = ''
         } else if (value in this._attackerState.actions) {
@@ -232,32 +234,26 @@ class Combat {
         const attackerState = this._attackerState
         // If no current action then we are attacking during this turn
         if (this._tick === 0) {
-            console.log('TICK 0', this.attacker.id, this.currentAction?.id)
+        }
+        const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
+        if (bPartingShot || nAttackCount > 0) {
             const action = this.currentAction
             if (action) {
                 if (action.ready) {
-                    console.log('emit event combat action', action.id)
                     this._events.emit(CONSTS.EVENT_COMBAT_ACTION, {
                         ...this.eventDefaultPayload,
                         action: action
                     })
                     attackerState.useAction(action.id)
                     this.selectCurrentAction('')
-                    return
-                } else {
-                    console.log('playFighterAction', this.attacker.id, 'action', action.id, 'not ready')
                 }
-            } else {
-                console.log('playFighterAction', this.attacker.id, 'no action selected')
+            } else if (this.attacker.getters.getSelectedWeapon) {
+                this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
+                    ...this.eventDefaultPayload,
+                    count: nAttackCount,
+                    opportunity: bPartingShot // if true, then no retaliation (start combat back)
+                })
             }
-        }
-        const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
-        if (bPartingShot || nAttackCount > 0) {
-            this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
-                ...this.eventDefaultPayload,
-                count: nAttackCount,
-                opportunity: bPartingShot // if true, then no retaliation (start combat back)
-            })
         }
     }
 
@@ -351,14 +347,21 @@ class Combat {
             .filter(([slot, bInRange]) => bInRange && NATURAL_SLOTS.has(slot))
             .map(([slot]) => slot)
         // Only if equipped with melee weapon, or not having any natural weapons
-        if (bHasMeleeWeapon || aSuitableSlots.length === 0) {
-            aSuitableSlots.push(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        if (aSuitableSlots.length === 0) {
+            if (bHasMeleeWeapon) {
+                aSuitableSlots.push(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+            } else {
+                return ''
+            }
         }
         return aSuitableSlots[Math.floor(this.attacker.dice.random() * aSuitableSlots.length)]
     }
 
     selectMostSuitableWeapon () {
-        this.attacker.selectOffensiveSlot(this.getMostSuitableSlot())
+        const slot = this.getMostSuitableSlot()
+        if (slot) {
+            this.attacker.selectOffensiveSlot(this.getMostSuitableSlot())
+        }
     }
 
     selectMostSuitableAction () {
@@ -366,7 +369,7 @@ class Combat {
         const distance = this.distance
         const aAvailableActions = Object
             .values(attacker.getters.getActions)
-            .filter(action => action.ready && action.range <= distance)
+            .filter(action => action.ready && action.range >= distance)
         const sSelectAction = aAvailableActions.length > 0
             ? aAvailableActions[Math.floor(attacker.dice.random() * aAvailableActions.length)].id
             : ''

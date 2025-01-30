@@ -53,7 +53,7 @@
     {
       "id": "act-petrifying gaze",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "onHit": "at-petrifying-gaze",
+      "script": "at-petrifying-gaze",
       "range": 30,
       "parameters": {},
       "cooldown": 2

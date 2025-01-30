@@ -31,5 +31,9 @@ if [ -d "$MODULE_PATH/data" ]
 then
   node ./bin/generate-indexes.js "$MODULE_PATH/data" REQUIRE > "$MODULE_PATH/data/index.js"
 fi
+if [ -d "$MODULE_PATH/scripts" ]
+then
+  node ./bin/generate-indexes.js "$MODULE_PATH/scripts" REQUIRE > "$MODULE_PATH/scripts/index.js"
+fi
 
 echo done
