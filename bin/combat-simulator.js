@@ -38,7 +38,7 @@ class CombatSimulator {
         })
         e.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
             if (attack.failed) {
-                this.sendTextEvent(attack.target.id, 'failed to attack:', attack.failure)
+                this.sendTextEvent(attack.attacker.id, 'failed to attack:', attack.failure)
                 return
             }
             const bias = attack.rollBias.value > 0
