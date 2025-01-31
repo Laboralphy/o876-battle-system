@@ -389,18 +389,23 @@ class Combat {
      * This action is used when a creature has no ranged capabilities and is trying to move toward its target
      */
     approachTarget () {
-        const nRunSpeed = this.attacker.getters.getSpeed
-        const previousDistance = this.distance
-        let nNewDistance = Math.max(this.getSelectedWeaponRange(), this.distance - nRunSpeed)
-        this._events.emit(CONSTS.EVENT_COMBAT_MOVE, {
-            ...this.eventDefaultPayload,
-            speed: nRunSpeed,
-            previousDistance,
-            distance: d => {
-                nNewDistance = parseFloat(d) || 0
-            }
-        })
-        this.distance = nNewDistance
+        if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_MOVE) &&
+            this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_SEE) &&
+            this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)
+        ) {
+            const nRunSpeed = this.attacker.getters.getSpeed
+            const previousDistance = this.distance
+            let nNewDistance = Math.max(this.getSelectedWeaponRange(), this.distance - nRunSpeed)
+            this._events.emit(CONSTS.EVENT_COMBAT_MOVE, {
+                ...this.eventDefaultPayload,
+                speed: nRunSpeed,
+                previousDistance,
+                distance: d => {
+                    nNewDistance = parseFloat(d) || 0
+                }
+            })
+            this.distance = nNewDistance
+        }
     }
 
     /**

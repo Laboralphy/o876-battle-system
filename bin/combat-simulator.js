@@ -93,7 +93,7 @@ class CombatSimulator {
             if (success) {
                 this.sendTextEvent(creature.id, `saving throw ${ability} **SUCCESS** : ${roll} + ${bonus} = ${roll + bonus} vs. ${dc}`)
             } else {
-                this.sendTextEvent(creature.id, `saving throw ${ability} **FAILURE**: ${roll} + ${bonus} = ${roll + bonus} vs. ${dc}`)
+                // this.sendTextEvent(creature.id, `saving throw ${ability} **FAILURE**: ${roll} + ${bonus} = ${roll + bonus} vs. ${dc}`)
             }
         })
         e.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, (evt) => {
