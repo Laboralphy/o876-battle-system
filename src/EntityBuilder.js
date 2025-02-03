@@ -1,5 +1,5 @@
 const crypto = require('crypto')
-const { deepMerge, deepFreeze} = require('@laboralphy/object-fusion')
+const { deepMerge, deepFreeze } = require('@laboralphy/object-fusion')
 const { getUniqueId } = require('./libs/unique-id')
 const CONSTS = require('./consts')
 const Creature = require('./Creature')

@@ -505,7 +505,7 @@ describe('combat with monster with on-attack-hit property weapon', function () {
         }))
         m.events.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, evt => logs.push({
             what: 'effect applied',
-            who: evt.target.id,
+            who: evt.creature.id,
             effect: evt.effect
         }))
         cm.processCombats()

@@ -1,7 +1,7 @@
 const Events = require('events')
 const { getUniqueId } = require('../unique-id')
 const CombatFighterState = require('./CombatFighterState')
-const CONSTS = require("../../consts");
+const CONSTS = require('../../consts')
 
 const NATURAL_SLOTS = new Set([
     CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1,
@@ -251,12 +251,6 @@ class Combat {
                     count: nAttackCount,
                     opportunity: bPartingShot // if true, then no retaliation (start combat back)
                 })
-            } else {
-                console.log('could not do opportunity attack')
-                console.log(this.attacker.getters.getSelectedOffensiveSlot)
-                console.log(this.getMostSuitableSlot())
-                console.log(this.distance)
-                console.log(this.attacker.getters.getWeaponRanges)
             }
         }
     }
@@ -399,7 +393,8 @@ class Combat {
         ) {
             const nRunSpeed = this.attacker.getters.getSpeed
             const previousDistance = this.distance
-            let nNewDistance = Math.max(this.getSelectedWeaponRange(), this.distance - nRunSpeed)
+            const nMinRange = Math.max(this.getSelectedWeaponRange(), this.attacker.data.VARIABLES.WEAPON_RANGE_MINIMUM_VALUE)
+            let nNewDistance = Math.max(nMinRange, this.distance - nRunSpeed)
             this._events.emit(CONSTS.EVENT_COMBAT_MOVE, {
                 ...this.eventDefaultPayload,
                 speed: nRunSpeed,

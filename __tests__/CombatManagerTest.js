@@ -125,6 +125,30 @@ const bpArrow = {
     equipmentSlots: [CONSTS.EQUIPMENT_SLOT_AMMO]
 }
 
+const bpFist1d3 = {
+    entityType: CONSTS.ENTITY_TYPE_ITEM,
+    itemType: CONSTS.ITEM_TYPE_WEAPON,
+    weight: 0,
+    proficiency: CONSTS.PROFICIENCY_WEAPON_NATURAL,
+    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3],
+    damages: '1d3',
+    damageType: CONSTS.DAMAGE_TYPE_CRUSHING,
+    size: CONSTS.WEAPON_SIZE_SMALL,
+    properties: [],
+    attributes: []
+}
+
+const ebArmCreature = new EntityBuilder()
+ebArmCreature.schemaValidator = oSchemaValidator
+ebArmCreature.blueprints = {
+    bpFist1d3
+}
+
+
+function armCreature (oCreature) {
+    oCreature.equipItem(ebArmCreature.createEntity('bpFist1d3'))
+}
+
 
 describe('isCreatureFighting', function () {
     it('should return false when testing a non fighting creature', function () {
@@ -221,6 +245,8 @@ describe('advancing combat', function () {
         const cm = new CombatManager()
         const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
         const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
+        armCreature(c1)
+        armCreature(c2)
         cm.startCombat(c1, c2)
         const logs = []
         cm.events.on('combat.attack', evt => {
@@ -247,6 +273,8 @@ describe('advancing combat', function () {
         const cm = new CombatManager()
         const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
         const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
+        armCreature(c1)
+        armCreature(c2)
         c1.mutations.addProperty({ property: pb.buildProperty({
             type: CONSTS.PROPERTY_ATTACK_COUNT_MODIFIER,
             amp: 1
@@ -468,12 +496,14 @@ describe('advancing combat', function () {
         const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
         const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
         const combat = cm.startCombat(c1, c2)
+        expect(combat.distance).toBe(50)
         combat.attacker.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
             script: 'script1'
         })
         const logs = []
+        const distancelogs = []
         cm.events.on('combat.action', evt => {
             logs.push({
                 type: 'combat.attack',
@@ -484,10 +514,24 @@ describe('advancing combat', function () {
                 action: evt.action
             })
         })
+        cm.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => {
+            distancelogs.push({
+                type: 'combat.distance',
+                attacker: evt.combat.attacker.id,
+                target: evt.combat.target.id,
+                turn: evt.combat.turn,
+                tick: evt.combat.tick,
+                prevDistance: evt.previousDistance,
+                distance: evt.distance
+            })
+        })
         expect(combat.distance).toBe(50)
+        expect(cm.combats).toHaveLength(2)
 
         cm.processCombats() // turn 0 : tick 0->1
-        expect(combat.distance).toBe(5)
+        // Only c2 will move as it is out of range
+        expect(combat.currentAction.id).toBe('a1')
+        expect(combat.distance).toBe(20)
         expect(combat.tick).toBe(1)
         expect(logs).toHaveLength(0)
 
@@ -504,8 +548,8 @@ describe('advancing combat', function () {
         cm.processCombats() // turn 0 : tick 4->5
         expect(logs).toHaveLength(0)
         expect(combat.nextAction).toBe('a1')
-        expect(combat.distance).toBe(5)
-        expect(combat.getSelectedWeaponRange()).toBe(5)
+        expect(combat.distance).toBe(20)
+        expect(combat.getSelectedWeaponRange()).toBe(-1) // Absolutely no weapon (natural or other)
         expect(combat.isTargetInRange()).toBeTruthy()
 
         cm.processCombats() // turn 0->1 : tick 5->0 !! new turn, selecting new action

@@ -833,36 +833,36 @@ describe('isWieldingTwoHandedWeapon', function () {
 })
 
 describe('getWeaponRanges', function () {
-    it('should return melee: 5, ranged: 0 when equipping NO weapon', function () {
+    it('should return melee: -1, ranged: -1 when equipping NO weapon', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         expect(oCreature.getters.getWeaponRanges).toEqual({
-            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: 5,
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: -1,
             [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: -1,
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]: -1,
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]: -1,
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]: -1
         })
     })
-    it('should return melee 5, ranged 0 when equipping ranged weapon without ammo', function () {
+    it('should return melee -1, ranged -1 when equipping ranged weapon without ammo, and no melee weapon', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         const oBow = eb.createEntity(bpShortbow)
         oCreature.equipItem(oBow)
         expect(oCreature.getters.getWeaponRanges).toEqual({
-            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: 5,
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: -1,
             [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: -1,
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]: -1,
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]: -1,
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]: -1
         })
     })
-    it('should return melee 5, ranged 100 when equipping ranged weapon with ammo', function () {
+    it('should return melee -1, ranged 100 when equipping ranged weapon with ammo and equipped NO melee weapon', function () {
         const oCreature = eb.createEntity(bpNormalActor)
         const oBow = eb.createEntity(bpShortbow)
         const oArrow = eb.createEntity(bpArrow)
         oCreature.equipItem(oBow)
         oCreature.equipItem(oArrow)
         expect(oCreature.getters.getWeaponRanges).toEqual({
-            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: 5,
+            [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: -1,
             [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: 100,
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]: -1,
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]: -1,

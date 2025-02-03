@@ -248,6 +248,11 @@ class CombatManager {
         return oCombat
     }
 
+    /**
+     * Get the instance of combat associated with that creature. Returns null if no combat is bound to this creature
+     * @param oCreature {Creature}
+     * @returns {Combat|null}
+     */
     getCombat (oCreature) {
         if (this.isCreatureFighting(oCreature)) {
             return this._fighters[oCreature.id]
