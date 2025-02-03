@@ -181,15 +181,29 @@ describe('endCombat', function () {
 
 describe('fleeCombat', function () {
     it('should do a parting strike before fleeing combat', function () {
+        const eb = new EntityBuilder()
+        eb.schemaValidator = oSchemaValidator
+        eb.blueprints = {
+            bpNaturalWeapon,
+            bpClaws2d6,
+            bpFangs3d6,
+            bpNormalActor,
+            bpMonster1
+        }
         const cm = new CombatManager()
-        const c1 = new Creature({ blueprint: bpNormalActor })
-        const c2 = new Creature({ blueprint: bpNormalActor })
+        cm.defaultDistance = 5
+        const c1 = eb.createEntity('bpMonster1')
+        const c2 = eb.createEntity('bpMonster1')
         const combat = cm.startCombat(c1, c2)
         const logs = []
         cm.events.on('combat.attack', evt => {
             logs.push(evt)
         })
+        expect(cm.isCreatureFighting(c1)).toBeTruthy()
+        expect(cm.isCreatureFighting(c2)).toBeTruthy()
         cm.fleeCombat(c2)
+        expect(cm.isCreatureFighting(c1)).toBeFalsy()
+        expect(cm.isCreatureFighting(c2)).toBeFalsy()
         expect(logs.length).toBe(1)
         expect(logs[0].combat === combat).toBeTruthy()
         expect(logs[0].combat.attacker).toBe(c1)
@@ -504,7 +518,7 @@ describe('advancing combat', function () {
         const l0 = logs[0].action
         expect(l0.id).toBe('a1')
     })
-    it('should not use action when target is too far for action range', function () {
+    it('should not select and use action when target is too far for action range', function () {
         const cm = new CombatManager()
         cm.defaultDistance = 1000
         const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
@@ -537,19 +551,29 @@ describe('advancing combat', function () {
 
         expect(logs).toHaveLength(0)
         cm.processCombats() // turn 1 : tick 0->1
+        expect(combat.currentAction).toBeNull()
         expect(combat.distance).toBe(880)
-        expect(combat.currentAction.range).toBe(5)
+        expect(combat.currentAction).toBeNull()
         expect(logs).toHaveLength(0)
         cm.processCombats() // turn 1 : tick 1->2
         cm.processCombats() // turn 1 : tick 2->3
         cm.processCombats() // turn 1 : tick 3->4
         cm.processCombats() // turn 1 : tick 4->5
-        expect(combat.currentAction.id).toBe('a1')
+        expect(combat.currentAction).toBeNull()
         cm.processCombats() // turn 1->2 : tick 5->0
-        expect(combat.currentAction.id).toBe('a1')
+        expect(combat.currentAction).toBeNull()
         cm.processCombats() // turn 2 : tick 0->1
-        expect(combat.currentAction.id).toBe('a1')
+        expect(combat.currentAction).toBeNull()
         expect(combat.distance).toBe(820)
+        combat.nextAction = 'a1'
+        combat.distance = 5 // now action a1 can be used
+        cm.processCombats() // turn 2 : tick 1->2
+        cm.processCombats() // turn 2 : tick 2->3
+        cm.processCombats() // turn 2 : tick 3->4
+        cm.processCombats() // turn 2 : tick 4->5
+        cm.processCombats() // turn 2->3 : tick 5->0
+        expect(combat.currentAction).not.toBeNull()
+        expect(combat.currentAction.id).toBe('a1')
     })
 })
 
@@ -590,7 +614,7 @@ describe('Try real combat', function () {
 })
 
 describe('combat vs monster with claws and fangs', function () {
-    it('should select a natural weapon when attacking', function () {
+    it('should not select weapon when target is out of range and not having ranged weapon', function () {
         const eb = new EntityBuilder()
         eb.schemaValidator = oSchemaValidator
         eb.blueprints = {
@@ -611,8 +635,30 @@ describe('combat vs monster with claws and fangs', function () {
 
         const oCombat = cm.startCombat(c2, c1)
         expect(oCombat.distance).toBe(50)
-        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        expect(oCombat.getMostSuitableSlot()).toBe('')
+    })
+    it('should select a natural weapon when attacking', function () {
+        const eb = new EntityBuilder()
+        eb.schemaValidator = oSchemaValidator
+        eb.blueprints = {
+            bpNaturalWeapon,
+            bpClaws2d6,
+            bpFangs3d6,
+            bpNormalActor,
+            bpMonster1
+        }
+        const cm = new CombatManager()
+        cm.defaultDistance = 50
+        const c1 = eb.createEntity('bpNormalActor', 'c1')
+        const c2 = eb.createEntity('bpMonster1', 'c2')
+        c2.dice.cheat(0.01)
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).not.toBeNull()
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]).not.toBeNull()
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]).toBeNull()
+
+        const oCombat = cm.startCombat(c2, c1)
         oCombat.distance = 5
+        expect(oCombat.distance).toBe(5)
         expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1)
 
         c2.dice.cheat(0.99)

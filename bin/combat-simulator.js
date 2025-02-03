@@ -97,11 +97,11 @@ class CombatSimulator {
             }
         })
         e.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, (evt) => {
-            const { target, effect } = evt
+            const { creature: target, effect } = evt
             this.sendTextEvent(target.id, `effect applied ${effect.type}`)
         })
         e.on(CONSTS.EVENT_CREATURE_EFFECT_DISPOSED, (evt) => {
-            const { target, effect } = evt
+            const { creature: target, effect } = evt
             this.sendTextEvent(target.id, `effect ran out ${effect.type}`)
         })
     }

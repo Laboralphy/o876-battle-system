@@ -36,7 +36,7 @@ module.exports = (state, getters, externals) => {
     const oNaturalWeapon3 = eq[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]
 
     const nDefaultMeleeRange = externals['WEAPON_RANGES']['WEAPON_RANGE_MELEE'].range
-    const nMeleeRange = Math.max(nDefaultMeleeRange, getWeaponRange(oMeleeWeapon, externals))
+    const nMeleeRange = oMeleeWeapon ? Math.max(nDefaultMeleeRange, getWeaponRange(oMeleeWeapon, externals)) : -1
     const nRangedRange = (oRangedWeapon && getters.isRangedWeaponLoaded) ? getWeaponRange(oRangedWeapon, externals) : -1
     const nNaturalWeapon1Range = oNaturalWeapon1 ? Math.max(nDefaultMeleeRange, getWeaponRange(oNaturalWeapon1, externals)) : -1
     const nNaturalWeapon2Range = oNaturalWeapon2 ? Math.max(nDefaultMeleeRange, getWeaponRange(oNaturalWeapon2, externals)) : -1

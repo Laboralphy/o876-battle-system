@@ -77,7 +77,7 @@ class Manager {
      * @param source {Creature}
      */
     _effectApplied({effect, target, source}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, { manager: this, effect, target, source })
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, { manager: this, effect, creature: target, source })
     }
 
     /**
@@ -87,7 +87,7 @@ class Manager {
      * @private
      */
     _effectImmunity({effect, target}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_IMMUNITY, { manager: this, effect, target })
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_IMMUNITY, { manager: this, effect, creature: target })
     }
 
     /**
@@ -97,7 +97,7 @@ class Manager {
      * @param source {Creature}
      */
     _effectDisposed({effect, target, source}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_DISPOSED, {manager: this, effect, target, source})
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_DISPOSED, {manager: this, effect, creature: target, source})
     }
 
     _combatManagerTurn (evt) {

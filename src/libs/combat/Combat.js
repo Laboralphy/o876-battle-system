@@ -233,8 +233,6 @@ class Combat {
     playFighterAction (bPartingShot = false) {
         const attackerState = this._attackerState
         // If no current action then we are attacking during this turn
-        if (this._tick === 0) {
-        }
         const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
         if (bPartingShot || nAttackCount > 0) {
             const action = this.currentAction
@@ -253,6 +251,12 @@ class Combat {
                     count: nAttackCount,
                     opportunity: bPartingShot // if true, then no retaliation (start combat back)
                 })
+            } else {
+                console.log('could not do opportunity attack')
+                console.log(this.attacker.getters.getSelectedOffensiveSlot)
+                console.log(this.getMostSuitableSlot())
+                console.log(this.distance)
+                console.log(this.attacker.getters.getWeaponRanges)
             }
         }
     }

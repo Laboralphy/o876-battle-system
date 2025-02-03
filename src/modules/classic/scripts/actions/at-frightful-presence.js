@@ -8,7 +8,7 @@
  * @param combat {Combat}
  */
 function main ({ manager, action, combat }) {
-    const { range } = action
+    const { range, duration = 3 } = action
     const aOffenders = manager.combatManager.getOffenders(combat.attacker, range)
     aOffenders.forEach(offender => {
         const { success } = offender.rollSavingThrow(
@@ -17,7 +17,7 @@ function main ({ manager, action, combat }) {
         )
         if (!success) {
             const eFear = manager.createEffect(manager.CONSTS.EFFECT_FEAR)
-            manager.applyEffect(eFear, offender, 3, combat.attacker)
+            manager.applyEffect(eFear, offender, duration, combat.attacker)
         }
     })
 }
