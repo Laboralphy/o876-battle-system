@@ -181,7 +181,7 @@ class EffectProcessor {
      */
     setEffectDuration (oEffect, nDuration) {
         const nPreviousEffectDuration = oEffect.duration
-        if (nPreviousEffectDuration !== nDuration) {
+        if (nPreviousEffectDuration === nDuration) {
             return
         }
         const { target, source } = this.getEffectTargetSource(oEffect)
@@ -218,6 +218,7 @@ class EffectProcessor {
         } else {
             this.setEffectDuration(oEffect, 0)
         }
+        console.groupEnd()
     }
 
     processEffect (oEffect) {

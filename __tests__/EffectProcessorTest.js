@@ -181,7 +181,7 @@ describe('applyEffectGroup', function () {
 
         // removing effect
         expect(c1.getters.getEffects).toHaveLength(2)
-        ep.removeEffect(aeff2)
+        ep.removeEffect(aeff2, true)
         expect(c1.getters.getEffects).toHaveLength(0)
         expect(c1.getters.getEffectRegistry).not.toHaveProperty(aeff1.id)
         expect(c1.getters.getEffectRegistry).not.toHaveProperty(aeff2.id)

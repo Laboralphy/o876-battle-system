@@ -1,4 +1,5 @@
 {
+  "entityType": "ENTITY_TYPE_PARTIAL",
   "specie": "SPECIE_HUMANOID",
   "hd": 6,
   "ac": 0,

@@ -1,4 +1,5 @@
 {
+  "entityType": "ENTITY_TYPE_PARTIAL",
   "hd": 10,
   "proficiencies": [
     "PROFICIENCY_ARMOR_HEAVY",
@@ -8,5 +9,6 @@
     "PROFICIENCY_WEAPON_SIMPLE",
     "PROFICIENCY_SAVING_THROW_STRENGTH",
     "PROFICIENCY_SAVING_THROW_CONSTITUTION"
-  ]
+  ],
+  "classType": "CLASS_TYPE_FIGHTER"
 }

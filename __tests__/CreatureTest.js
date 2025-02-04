@@ -887,7 +887,7 @@ describe('getActions', function () {
             a1: {
                 id: 'a1',
                 limited: false,
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 cooldown: 0,
                 charges: 0,
                 recharging: false,
@@ -908,7 +908,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 1,
@@ -931,7 +931,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 5,
                 charges: 0,
@@ -954,7 +954,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 5,
                 charges: 0,
@@ -978,7 +978,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 5,
                 charges: 0,
@@ -1000,7 +1000,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 1,
@@ -1015,7 +1015,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 5,
                 charges: 0,
@@ -1030,7 +1030,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 4,
                 charges: 0,
@@ -1045,7 +1045,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 3,
                 charges: 0,
@@ -1060,7 +1060,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 2,
                 charges: 0,
@@ -1075,7 +1075,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 1,
                 charges: 0,
@@ -1090,7 +1090,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 1,
@@ -1105,7 +1105,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 1,
@@ -1127,7 +1127,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 5,
@@ -1150,7 +1150,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 4,
@@ -1165,7 +1165,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 3,
@@ -1180,7 +1180,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 2,
@@ -1195,7 +1195,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 1,
@@ -1210,7 +1210,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: Infinity,
                 charges: 0,
@@ -1232,7 +1232,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 5,
@@ -1259,7 +1259,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: Infinity,
                 charges: 0,
@@ -1274,7 +1274,7 @@ describe('getActions', function () {
         expect(oCreature.getters.getActions).toEqual({
             a1: {
                 id: 'a1',
-                attackType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 limited: true,
                 cooldown: 0,
                 charges: 5,

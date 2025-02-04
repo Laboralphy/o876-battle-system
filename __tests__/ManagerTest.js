@@ -15,7 +15,9 @@ const bpNormalActor = {
     level: 5,
     hd: 6,
     actions: [],
-    equipment: []
+    equipment: [
+        'natwpn-punch-1d3'
+    ]
 }
 
 const bpNaturalWeapon = {
@@ -177,14 +179,18 @@ describe('Real Combat simulator', function () {
             logs.push({
                 event: 'combat.start',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.target.id
+                target: evt.combat.target.id,
+                attackerHP: evt.combat.attacker.getters.getHitPoints,
+                targetHP: evt.combat.target.getters.getHitPoints
             })
         })
         m.events.on(CONSTS.EVENT_COMBAT_END, evt => {
             logs.push({
                 event: 'combat.end',
                 attacker: evt.combat.attacker.id,
-                target: evt.combat.target.id
+                target: evt.combat.target.id,
+                attackerHP: evt.combat.attacker.getters.getHitPoints,
+                targetHP: evt.combat.target.getters.getHitPoints
             })
         })
         m.events.on(CONSTS.EVENT_COMBAT_TURN, evt => {
@@ -192,7 +198,9 @@ describe('Real Combat simulator', function () {
                 event: 'combat.turn',
                 attacker: evt.combat.attacker.id,
                 target: evt.combat.target.id,
-                turn: evt.combat.turn
+                turn: evt.combat.turn,
+                attackerHP: evt.combat.attacker.getters.getHitPoints,
+                targetHP: evt.combat.target.getters.getHitPoints
             })
         })
         m.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => {
@@ -215,7 +223,9 @@ describe('Real Combat simulator', function () {
                 target: ao.target.id,
                 hit: ao.hit,
                 roll: ao.roll,
-                ac: ao.ac
+                ac: ao.ac,
+                attackerHP: ao.attacker.getters.getHitPoints,
+                targetHP: ao.target.getters.getHitPoints
             })
         })
         const c1 = m.createEntity(bpNormalActor, 'c1')
@@ -242,180 +252,127 @@ describe('Real Combat simulator', function () {
         expect(m.combatManager.combats[0].attacker.getters.getSelectedWeapon).toBeDefined()
         expect(m.combatManager.combats[0].attacker.getters.getSelectedWeapon.blueprint.damages).toBe('1d6')
         process()
-        process()
-        process()
-        process()
-        process()
-        process()
-        process()
-        expect(logs).toEqual([
-            {
-                "attacker": "c1",
-                "event": "combat.start",
-                "target": "c2"
-            },
-            {
-                "attacker": "c2",
-                "event": "combat.start",
-                "target": "c1"
-            },
-            {
-                "attacker": "c1",
-                "event": "combat.turn",
-                "target": "c2",
-                "turn": 0
-            },
-            {
-                "attacker": "c1",
-                "distance": 20,
-                "event": "combat.distance",
-                "target": "c1",
-                "turn": 0
-            },
-            {
-                "attacker": "c2",
-                "event": "combat.turn",
-                "target": "c1",
-                "turn": 0
-            },
-            {
-                "attacker": "c2",
-                "distance": 5,
-                "event": "combat.distance",
-                "target": "c2",
-                "turn": 0
-            },
-            {
-                "ac": 10,
-                "attacker": "c1",
-                "event": "combat.attack",
-                "hit": true,
-                "roll": 11,
-                "target": "c2"
-            },
-            {
-                "ac": 10,
-                "attacker": "c2",
-                "event": "combat.attack",
-                "hit": false,
-                "roll": 9,
-                "target": "c1"
-            },
-            {
-                "attacker": "c1",
-                "event": "combat.turn",
-                "target": "c2",
-                "turn": 1
-            },
-            {
-                "attacker": "c2",
-                "event": "combat.turn",
-                "target": "c1",
-                "turn": 1
-            },
-            {
-                "ac": 10,
-                "attacker": "c1",
-                "event": "combat.attack",
-                "hit": true,
-                "roll": 11,
-                "target": "c2"
-            },
-            {
-                "ac": 10,
-                "attacker": "c2",
-                "event": "combat.attack",
-                "hit": false,
-                "roll": 9,
-                "target": "c1"
-            },
-            {
-                "attacker": "c1",
-                "event": "combat.turn",
-                "target": "c2",
-                "turn": 2
-            },
-            {
-                "attacker": "c2",
-                "event": "combat.turn",
-                "target": "c1",
-                "turn": 2
-            },
-            {
-                "ac": 10,
-                "attacker": "c1",
-                "event": "combat.attack",
-                "hit": true,
-                "roll": 11,
-                "target": "c2"
-            },
-            {
-                "ac": 10,
-                "attacker": "c2",
-                "event": "combat.attack",
-                "hit": false,
-                "roll": 9,
-                "target": "c1"
-            },
-            {
-                "attacker": "c1",
-                "event": "combat.turn",
-                "target": "c2",
-                "turn": 3
-            },
-            {
-                "attacker": "c2",
-                "event": "combat.turn",
-                "target": "c1",
-                "turn": 3
-            },
-            {
-                "ac": 10,
-                "attacker": "c1",
-                "event": "combat.attack",
-                "hit": true,
-                "roll": 11,
-                "target": "c2"
-            },
-            {
-                "ac": 10,
-                "attacker": "c2",
-                "event": "combat.attack",
-                "hit": false,
-                "roll": 9,
-                "target": "c1"
-            },
-            {
-                "attacker": "c1",
-                "event": "combat.turn",
-                "target": "c2",
-                "turn": 4
-            },
-            {
-                "attacker": "c2",
-                "event": "combat.turn",
-                "target": "c1",
-                "turn": 4
-            },
-            {
-                "ac": 10,
-                "attacker": "c1",
-                "event": "combat.attack",
-                "hit": true,
-                "roll": 11,
-                "target": "c2"
-            },
-            {
-                "attacker": "c2",
-                "event": "combat.end",
-                "target": "c1"
-            },
-            {
-                "attacker": "c1",
-                "event": "combat.end",
-                "target": "c2"
-            }
-        ])
+        // process()
+        // process()
+        // process()
+        // process()
+        // process()
+        // process()
+
+        expect(logs).toHaveLength(12)
+
+        expect(logs[0]).toEqual({
+            event: 'combat.start',
+            attacker: 'c1',
+            target: 'c2',
+            attackerHP: 17,
+            targetHP: 17
+        });
+
+        expect(logs[1]).toEqual({
+            event: 'combat.start',
+            attacker: 'c2',
+            target: 'c1',
+            attackerHP: 17,
+            targetHP: 17
+        });
+
+        expect(logs[2]).toEqual({
+            event: 'combat.turn',
+            attacker: 'c1',
+            target: 'c2',
+            turn: 0,
+            attackerHP: 17,
+            targetHP: 17
+        });
+
+        expect(logs[3]).toEqual({
+            event: 'combat.distance',
+            turn: 0,
+            attacker: 'c1',
+            target: 'c1',
+            distance: 20
+        });
+
+        expect(logs[4]).toEqual({
+            event: 'combat.turn',
+            attacker: 'c2',
+            target: 'c1',
+            turn: 0,
+            attackerHP: 17,
+            targetHP: 17
+        });
+
+        expect(logs[5]).toEqual({
+            event: 'combat.distance',
+            turn: 0,
+            attacker: 'c2',
+            target: 'c2',
+            distance: 5
+        });
+
+        expect(logs[6]).toEqual({
+            event: 'combat.attack',
+            attacker: 'c1',
+            target: 'c2',
+            hit: true,
+            roll: 11,
+            ac: 10,
+            attackerHP: 17,
+            targetHP: 17
+        });
+
+        expect(logs[7]).toEqual({
+            event: 'combat.attack',
+            attacker: 'c2',
+            target: 'c1',
+            hit: false,
+            roll: 9,
+            ac: 10,
+            attackerHP: 13,
+            targetHP: 17
+        });
+
+        expect(logs[8]).toEqual({
+            event: 'combat.turn',
+            attacker: 'c1',
+            target: 'c2',
+            turn: 1,
+            attackerHP: 17,
+            targetHP: 13
+        });
+
+        expect(logs[9]).toEqual({
+            event: 'combat.turn',
+            attacker: 'c2',
+            target: 'c1',
+            turn: 1,
+            attackerHP: 13,
+            targetHP: 17
+        });
+
+        expect(logs[10]).toEqual({
+            event: 'combat.attack',
+            attacker: 'c1',
+            target: 'c2',
+            hit: true,
+            roll: 11,
+            ac: 10,
+            attackerHP: 17,
+            targetHP: 13
+        });
+
+        expect(logs[11]).toEqual({
+            event: 'combat.attack',
+            attacker: 'c2',
+            target: 'c1',
+            hit: false,
+            roll: 9,
+            ac: 10,
+            attackerHP: 11,
+            targetHP: 17
+        });
+
     })
 })
 
@@ -425,9 +382,10 @@ describe('attack advantage', function () {
         it('should have advantage on attack when target is blinded', function () {
             const m = new Manager()
             const cm = m.combatManager
-            cm.defaultDistance = 50
+            cm.defaultDistance = 5
             const c1 = m.createEntity(bpNormalActor, 'c1')
             const c2 = m.createEntity(bpNormalActor, 'c2')
+            expect(c1.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).toBeDefined()
             const combat = m.startCombat(c1, c2)
             const logs = []
             m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => {

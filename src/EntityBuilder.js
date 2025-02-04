@@ -208,6 +208,10 @@ class EntityBuilder {
                 return this.createCreatureFromResRef(idbp, id)
             }
 
+            case CONSTS.ENTITY_TYPE_PARTIAL: {
+                break
+            }
+
             default: {
                 throw new Error(`What the hell is this blueprint : ${idbp} / ${bp.entityType} ?`)
             }

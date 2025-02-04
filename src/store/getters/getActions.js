@@ -31,7 +31,7 @@ module.exports = state => Object.fromEntries(
         const oAction = {
                 id,
                 limited: action.limited,
-                attackType: action.attackType,
+                actionType: action.actionType,
                 cooldown,
                 charges,
                 recharging,

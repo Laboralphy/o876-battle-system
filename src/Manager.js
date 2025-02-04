@@ -38,6 +38,7 @@ class Manager {
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED, evt => this._effectApplied(evt))
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, evt => this._effectImmunity(evt))
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, evt => this._effectDisposed(evt))
+        this.loadModule('base')
     }
 
     get CONSTS () {
@@ -236,7 +237,7 @@ class Manager {
      * @param id {string}
      * @returns {Creature|RBSItem}
      */
-    createEntity (resref, id) {
+    createEntity (resref, id = '') {
         const oEntity = this._entityBuilder.createEntity(resref, id)
         if (oEntity instanceof Creature) {
             this._horde.linkCreature(oEntity)

@@ -1,5 +1,4 @@
 const Manager = require('../src/Manager')
-const CONSTS = require("../src/consts");
 
 describe('check all classic blueprints', function () {
     it ('should validate all classic blueprints', function () {
