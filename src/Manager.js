@@ -136,12 +136,14 @@ class Manager {
 
     /**
      * Do an attack between attacker and target
-     * @param attacker
-     * @param target
+     * @param attacker {Creature}
+     * @param target {Creature}
+     * @param opportunity {boolean}
      */
-    deliverAttack (attacker, target) {
+    deliverAttack (attacker, target, opportunity = false) {
         const oAttackOutcome = new AttackOutcome({ effectProcessor: this._effectProcessor })
         oAttackOutcome.attacker = attacker
+        oAttackOutcome.opportunity = opportunity
         oAttackOutcome.target = target
         oAttackOutcome.computeAttackParameters()
         oAttackOutcome.computeDefenseParameters()

@@ -1,6 +1,7 @@
 const Combat = require('./Combat')
 const Events = require('events')
 const CONSTS = require('../../consts')
+const {getWeaponRange} = require("../helpers");
 
 class CombatManager {
     constructor () {

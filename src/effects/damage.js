@@ -43,7 +43,7 @@ function rollDamageAmount ({ damageType, material, amp, target }) {
     if (sType in oMitigation) {
         const { factor, reduction } = oMitigation[sType]
         const nFinalFactor = bMaterialVulnerable ? Math.max(1, 2 * factor) : factor
-        const nModifiedAmount = Math.ceil(Math.max(0, (amp - reduction)) * nFinalFactor)
+        const nModifiedAmount = Math.floor(Math.max(0, (amp - reduction)) * nFinalFactor)
         const nResistedAmount = Math.max(0, amp - nModifiedAmount)
         return {
             amount: nModifiedAmount,

@@ -1,25 +1,5 @@
 const CONSTS = require("../../consts");
-
-/**
- * Returns the specified weapon range
- * @param weapon {RBSItem}
- * @param DATA {*}
- * @returns {number}
- */
-function getWeaponRange (weapon, DATA) {
-    if (!weapon) {
-        return -1
-    }
-    const wa = weapon.blueprint.attributes
-    const wr = DATA['WEAPON_RANGES']
-    if (wa.includes(CONSTS.WEAPON_ATTRIBUTE_REACH)) {
-        return wr['WEAPON_RANGE_REACH'].range
-    } else if (wa.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)) {
-        return wr['WEAPON_RANGE_RANGED'].range
-    } else {
-        return wr['WEAPON_RANGE_MELEE'].range
-    }
-}
+const { getWeaponRange } = require('../../libs/helpers')
 
 /**
  * Return, for each equipped weapon, its range (0 when ranged wepaon is not equipped)

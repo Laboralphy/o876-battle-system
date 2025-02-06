@@ -3,12 +3,11 @@
  * Target failing at saving throw will be struck by fear
  * @this {Manager}
  * @param manager {Manager}
- * @param CONSTS {*}
  * @param action {RBSAction}
  * @param combat {Combat}
  */
 function main ({ manager, action, combat }) {
-    const { duration = 3 } = action // getActionDuration
+    const { duration = combat.attacker.data.VARIABLES.DEFAULT_AILMENT_DURATION } = action // getActionDuration
     const oTarget = combat.target // getCombatTarget
     const { success } = oTarget.rollSavingThrow( // rollSavingThrow(creature, ability, dc)
         manager.CONSTS.ABILITY_WISDOM,

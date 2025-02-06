@@ -3,8 +3,8 @@
 // List of files in ./src/modules/classic/scripts
 
 module.exports = {
-  'at-elemental-breath': require('./actions/at-elemental-breath.js'),
+  'at-elemental-breath': require('./actions/at-elemental-aoe.js'),
   'at-frightful-glare': require('./actions/at-frightful-glare.js'),
-  'at-frightful-presence': require('./actions/at-frightful-presence.js'),
+  'at-frightful-presence': require('./actions/at-frightful-aoe.js'),
   'at-wing-buffet': require('./actions/at-wing-buffet.js')
 }
