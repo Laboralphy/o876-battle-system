@@ -1,4 +1,5 @@
 const CONSTS = require('../consts')
+const {aggregateModifiers} = require("../libs/aggregator");
 
 /**
  *
@@ -10,9 +11,9 @@ function mutate ({ effect: oEffect, target, source }) {
     const f = ({ amp }) => {
         nFactor *= amp
     }
-    target.aggregateModifiers([
-        CONSTS.ITEM_PROPERTY_HEALING_FACTOR
-    ], {
+    aggregateModifiers([
+        CONSTS.PROPERTY_HEALING_FACTOR
+    ], target.getters, {
         propForEach: f,
         effectForEach: f
     })

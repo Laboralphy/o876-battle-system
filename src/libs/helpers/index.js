@@ -10,7 +10,7 @@ const CONSTS = require('../../consts')
  * @param offensiveAbility {string}
  * @param defensiveAbility {string}
  *
- *
+ * @return {{ effect: RBSEffect, saved: boolean }}
  */
 function doDamage (oManager, oTarget, oSource, {
     amount,
@@ -27,8 +27,9 @@ function doDamage (oManager, oTarget, oSource, {
     const nFullDamage = oTarget.dice.roll(amount)
     const nDamage = bSaved ? Math.floor(nFullDamage / 2) : nFullDamage
     const eDam = oManager.createEffect(CONSTS.EFFECT_DAMAGE, nDamage, { damageType })
+    const effect = oManager.applyEffect(eDam, oTarget, 0, oSource)
     return {
-        effect: oManager.applyEffect(eDam, oTarget, 0, oSource),
+        effect,
         saved: bSaved
     }
 }

@@ -12,6 +12,20 @@ function apply ({ effect, target, reject }) {
     }
 }
 
+/**
+ * Effect will end if source creature is slain
+ * @param effect {RBSEffect}
+ * @param effectProcessor {EffectProcessor}
+ * @param target {Creature}
+ * @param source {Creature}
+ */
+function mutate ({ effect, effectProcessor, target, source }) {
+    if (source.getters.isDead) {
+        effectProcessor.removeEffect(effect)
+    }
+}
+
 module.exports = {
-    apply
+    apply,
+    mutate
 }

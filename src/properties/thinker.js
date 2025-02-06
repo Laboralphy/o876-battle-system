@@ -1,9 +1,9 @@
-function init ({ property, combatTurn = '', damaged = '', attack = '' }) {
-    if (!combatTurn && !damaged && !attack) {
+function init ({ property, combat = '', damaged = '', attack = '' }) {
+    if (!combat && !damaged && !attack) {
         throw new Error('No script defined in Special Behavior property')
     }
     property.data = {
-        combatTurn,
+        combat,
         damaged,
         attack
     }
@@ -19,7 +19,7 @@ function attack ({ property, manager, attackOutcome }) {
     const sScript = property.data.attack
     if (sScript) {
         manager.runScript(sScript, {
-            attackOutcome
+            attack: attackOutcome
         })
     }
 }
@@ -65,7 +65,7 @@ function damaged ({
  * @param combat {Combat}
  */
 function combatTurn ({ property, manager, creature, action, combat }) {
-    const sScript = property.data.combatTurn
+    const sScript = property.data.combat
     if (sScript) {
         manager.runScript(sScript, {
             manager,

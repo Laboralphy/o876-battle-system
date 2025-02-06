@@ -11,6 +11,7 @@ const path = require('path')
 const AttackOutcome = require('./AttackOutcome')
 const CONSTS = require('./consts')
 const { loadData } = require('./store')
+const {aggregateModifiers} = require("./libs/aggregator");
 
 class Manager {
     constructor () {
@@ -106,8 +107,12 @@ class Manager {
             action,
             combat
         } = evt
-        this.runPropEffectScript(combat.attacker, 'combatTurn', evt)
-        this._events.emit(CONSTS.EVENT_COMBAT_TURN, evt)
+        this.runPropEffectScript(combat.attacker, 'combatTurn', {
+            action,
+            combat,
+            manager: this
+        })
+        this._events.emit(CONSTS.EVENT_COMBAT_TURN, { action, combat, manager: this })
     }
 
     /**
@@ -139,16 +144,26 @@ class Manager {
      * @param attacker {Creature}
      * @param target {Creature}
      * @param opportunity {boolean}
+     * @param additionalWeaponDamage {number|string}
      */
-    deliverAttack (attacker, target, opportunity = false) {
+    deliverAttack (attacker, target, {
+        opportunity = false,
+        additionalWeaponDamage = 0
+    } = {}) {
         const oAttackOutcome = new AttackOutcome({ effectProcessor: this._effectProcessor })
         oAttackOutcome.attacker = attacker
         oAttackOutcome.opportunity = opportunity
         oAttackOutcome.target = target
         oAttackOutcome.computeAttackParameters()
         oAttackOutcome.computeDefenseParameters()
+        oAttackOutcome.rush = additionalWeaponDamage !== 0
         oAttackOutcome.attack()
         if (oAttackOutcome.hit) {
+            if (oAttackOutcome.rush) {
+                const sWeaponDamageType = oAttackOutcome.weapon.blueprint.damageType
+                const nAmount = attacker.dice.roll(additionalWeaponDamage) + attacker.getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH]
+                oAttackOutcome.rollDamages(nAmount, sWeaponDamageType)
+            }
             oAttackOutcome.createDamageEffects()
             this.runPropEffectScript(attacker, 'attack', {
                 attack: oAttackOutcome,
@@ -188,8 +203,28 @@ class Manager {
             count,
             opportunity
         } = evt
+        const oAttacker = combat.attacker
+        const oTarget = combat.target
+        const aOffenders = this
+            .combatManager
+            .getOffenders(oAttacker)
+            .filter(o => o !== oTarget)
+        const bCouldMultiAttack = oAttacker.getters.getPropertySet.has(CONSTS.PROPERTY_MULTI_ATTACK) && aOffenders.length > 0
         for (let i = 0; i < count; ++i) {
-            this.deliverAttack(combat.attacker, combat.target)
+            if (bCouldMultiAttack) {
+                const nMultiAttackCount = Math.min(
+                    aggregateModifiers([
+                        CONSTS.PROPERTY_MULTI_ATTACK
+                    ], oAttacker.getters).sum,
+                    aOffenders.length
+                )
+                let iRank = Math.floor(oAttacker.dice.random() * aOffenders.length)
+                for (let iMultiAttack = 0; iMultiAttack < nMultiAttackCount; ++iMultiAttack) {
+                    this.deliverAttack(oAttacker, aOffenders[iRank])
+                    iRank = (iRank + 1) % aOffenders.length
+                }
+            }
+            this.deliverAttack(oAttacker, oTarget)
         }
     }
 

@@ -42,14 +42,20 @@
     {
       "type": "PROPERTY_DARKVISION",
       "amp": 0
+    },
+    {
+      "type": "PROPERTY_THINKER",
+      "amp": 0,
+      "combat": "thinker-succubus"
     }
   ],
   "actions": [
     {
       "id": "act-charm",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-charm",
+      "script": "at-stunning-ray",
       "range": 30,
+      "cooldown": 6,
       "parameters": {}
     },
     {
@@ -57,7 +63,9 @@
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-draining-kiss",
       "range": 5,
-      "parameters": {}
+      "parameters": {
+        "amount": "5d10"
+      }
     }
   ],
   "specie": "SPECIE_FIEND",

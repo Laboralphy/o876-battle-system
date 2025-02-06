@@ -14,7 +14,7 @@ class CombatSimulator {
     pluginCombatEvents () {
         const e = this._manager.events
         e.on(CONSTS.EVENT_COMBAT_START, ({ combat }) => {
-            this.sendTextEvent(combat.attacker.id, 'attacks', combat.target.id, 'at distance', combat.distance)
+            this.sendTextEvent(combat.attacker.id, 'engages', combat.target.id, 'at distance', combat.distance)
         })
         e.on(CONSTS.EVENT_COMBAT_MOVE, ({ combat }) => {
             this.sendTextEvent(combat.attacker.id, 'moves towards', combat.target.id)
@@ -57,7 +57,8 @@ class CombatSimulator {
                 )
             } else {
                 this.sendTextEvent(
-                    attack.attacker.id, 'attacks', attack.target.id, bias,
+                    attack.attacker.id, 'attacks', attack.target.id, 'with', attack.weapon.blueprint.ref ?? 'a weapon',
+                    bias,
                     attack.roll, '+', attack.attackBonus, '=', attack.roll + attack.attackBonus, 'vs', attack.ac,
                     attack.hit ? '**HIT**' : '**MISS**',
                 )

@@ -40,17 +40,13 @@
     {
       "type": "PROPERTY_DARKVISION",
       "amp": 0
-    }
-  ],
-  "actions": [
+    },
     {
-      "id": "act-multi-attack",
-      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-multi-attack",
-      "range": 5,
-      "parameters": {}
+      "type": "PROPERTY_MULTI_ATTACK",
+      "amp": 4
     }
   ],
+  "actions": [],
   "specie": "SPECIE_MONSTROSITY",
   "ac": 4,
   "level": 15,

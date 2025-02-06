@@ -60,9 +60,9 @@
   ],
   "actions": [
     {
-      "id": "act-healing",
+      "id": "act-heal",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-healing",
+      "script": "at-heal",
       "range": 100,
       "parameters": {},
       "cooldown": 6

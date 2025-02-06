@@ -83,6 +83,13 @@ class AttackOutcome {
          */
         this._opportunity = false
 
+        /**
+         * If true, then this attack is a charge and deliver additional damage
+         * @type {boolean}
+         * @private
+         */
+        this._rush = false
+
 
         /// NON BOOLEANS INDICATORS ///
 
@@ -161,7 +168,6 @@ class AttackOutcome {
             types: {}, // amount of damage taken and resisted by type
             effects: []
         }
-
     }
 
     get ability() {
@@ -270,6 +276,14 @@ class AttackOutcome {
 
     get opportunity() {
         return this._opportunity
+    }
+
+    get rush () {
+        return this._rush
+    }
+
+    set rush (value) {
+        this._rush = value
     }
 
     get damages() {
@@ -388,6 +402,10 @@ class AttackOutcome {
      * Proceed to an attack against target, using melee or ranged weapon
      */
     attack () {
+        if (this.target.getters.isDead) {
+            this.fail(CONSTS.ATTACK_FAILURE_TARGET_DEAD)
+            return false
+        }
         if (!this._attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)) {
             // Cannot fight at the moment
             this.fail(CONSTS.ATTACK_FAILURE_CONDITION)
@@ -455,6 +473,9 @@ class AttackOutcome {
         if (bHit) {
             const sDamageType = this.getDamageType()
             this.rollDamages(this.getWeaponBaseDamageAmount(), sDamageType)
+            if (this._critical) {
+                this.rollDamages(this.getWeaponBaseDamageAmount(), sDamageType)
+            }
             if (this._rollBias.result > 0) {
                 this._sneak = aggregateModifiers([
                     CONSTS.PROPERTY_SNEAK_ATTACK

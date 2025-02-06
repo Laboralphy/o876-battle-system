@@ -99,6 +99,62 @@ const bpMonster2 = {
     ]
 }
 
+const bpHydra = {
+    "entityType": "ENTITY_TYPE_ACTOR",
+    "classType": "CLASS_TYPE_MONSTER",
+    "proficiencies": [
+        "PROFICIENCY_WEAPON_NATURAL",
+        "PROFICIENCY_WEAPON_SIMPLE",
+        "PROFICIENCY_WEAPON_MARTIAL",
+        "PROFICIENCY_ARMOR_LIGHT",
+        "PROFICIENCY_ARMOR_MEDIUM",
+        "PROFICIENCY_ARMOR_HEAVY"
+    ],
+    "abilities": {
+        "strength": 20,
+        "dexterity": 12,
+        "constitution": 20,
+        "intelligence": 2,
+        "wisdom": 10,
+        "charisma": 7
+    },
+    "equipment": [
+        {
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "tag": "natural-weapon-bite",
+            "proficiency": "PROFICIENCY_WEAPON_NATURAL",
+            "weight": 0,
+            "size": "WEAPON_SIZE_SMALL",
+            "attributes": [],
+            "damages": "1d10",
+            "damageType": "DAMAGE_TYPE_PIERCING",
+            "properties": [],
+            "equipmentSlots": [
+                "EQUIPMENT_SLOT_NATURAL_WEAPON_1",
+                "EQUIPMENT_SLOT_NATURAL_WEAPON_2",
+                "EQUIPMENT_SLOT_NATURAL_WEAPON_3"
+            ]
+        }
+    ],
+    "properties": [
+        {
+            "type": "PROPERTY_DARKVISION",
+            "amp": 0
+        },
+        {
+            "type": "PROPERTY_MULTI_ATTACK",
+            "amp": 4
+        }
+    ],
+    "actions": [],
+    "specie": "SPECIE_MONSTROSITY",
+    "ac": 4,
+    "level": 15,
+    "hd": 12,
+    "speed": 30
+}
+
 
 
 describe('createEntity / destroyEntity', function () {
@@ -448,7 +504,6 @@ describe('combat with monster with on-attack-hit property weapon', function () {
                 bpMonster2
             }
         })
-        cm.defaultDistance = 50
         const c1 = m.createEntity('bpNormalActor', 'player')
         const c2 = m.createEntity('bpMonster2', 'monster')
         c2.dice.cheat(0.6)
@@ -493,5 +548,142 @@ describe('combat with monster with on-attack-hit property weapon', function () {
             })
         }))
         expect(c1.getters.getConditionSet.has(CONSTS.CONDITION_POISONED)).toBeTruthy()
+    })
+})
+
+describe('deliverAttack', function () {
+    it('should deliver additional damage when specified', function () {
+        const m = new Manager()
+        m.combatManager.defaultDistance = 5
+        m.defineModule({
+            blueprints: {
+                bpNaturalWeapon,
+                bpClaws2d6,
+                bpFangs3d6,
+                bpSting1d6Poison,
+                bpNormalActor,
+                bpMonster1,
+                bpMonster2,
+                bpHydra
+            }
+        })
+        const p1 = m.createEntity('bpNormalActor', 'player1')
+        const p2 = m.createEntity('bpNormalActor', 'player2')
+        p1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1 })
+        p2.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1 })
+        const oP1Weapon = p1.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]
+        expect(oP1Weapon).toBeDefined()
+        expect(p1.getters.getSelectedWeapon).toEqual(oP1Weapon)
+        p1.dice.cheat(0.9)
+        p2.dice.cheat(0.1)
+        const logs = []
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
+            if (attack.attacker.id === 'player1') {
+                logs.push(attack)
+            }
+        })
+        m.startCombat(p1, p2)
+        m.deliverAttack(p1, p2, { additionalWeaponDamage: '6d10' })
+        expect(logs[0].damages.amount).toBe(63)
+        expect(logs[0].rush).toBeTruthy()
+    })
+})
+
+describe('Multiattack', function () {
+    it('should attack 5 offenders', function () {
+        const m = new Manager()
+        const cm = m.combatManager
+        cm.defaultDistance = 5
+        m.defineModule({
+            blueprints: {
+                bpNaturalWeapon,
+                bpClaws2d6,
+                bpFangs3d6,
+                bpSting1d6Poison,
+                bpNormalActor,
+                bpMonster1,
+                bpMonster2,
+                bpHydra
+            }
+        })
+        const c1 = m.createEntity('bpHydra', 'hydra')
+        const p1 = m.createEntity('bpNormalActor', 'player1')
+        const p2 = m.createEntity('bpNormalActor', 'player2')
+        const p3 = m.createEntity('bpNormalActor', 'player3')
+        const p4 = m.createEntity('bpNormalActor', 'player4')
+        const p5 = m.createEntity('bpNormalActor', 'player5')
+        c1.dice.cheat(0.5)
+        p1.dice.cheat(0.5)
+        p2.dice.cheat(0.5)
+        p3.dice.cheat(0.5)
+        p4.dice.cheat(0.5)
+        p5.dice.cheat(0.5)
+        const logs = []
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
+            if (attack.attacker.id === 'hydra') {
+                logs.push({
+                    attacker: attack.attacker.id,
+                    target: attack.target.id
+                })
+            }
+        })
+        m.startCombat(p1, c1)
+        m.startCombat(p2, c1)
+        m.startCombat(p3, c1)
+        m.startCombat(p4, c1)
+        m.startCombat(p5, c1)
+        m.processCombats()
+        m.processCombats()
+        m.processCombats()
+        m.processCombats()
+        m.processCombats()
+        m.processCombats()
+        expect(logs).toEqual([
+            { attacker: 'hydra', target: 'player4' },
+            { attacker: 'hydra', target: 'player5' },
+            { attacker: 'hydra', target: 'player2' },
+            { attacker: 'hydra', target: 'player3' },
+            { attacker: 'hydra', target: 'player1' }
+        ])
+    })
+    it('should do one attack per turn when only one offender is attacking', function () {
+        const m = new Manager()
+        const cm = m.combatManager
+        cm.defaultDistance = 5
+        m.defineModule({
+            blueprints: {
+                bpNaturalWeapon,
+                bpClaws2d6,
+                bpFangs3d6,
+                bpSting1d6Poison,
+                bpNormalActor,
+                bpMonster1,
+                bpMonster2,
+                bpHydra
+            }
+        })
+        const c1 = m.createEntity('bpHydra', 'hydra')
+        const p1 = m.createEntity('bpNormalActor', 'player1')
+        c1.dice.cheat(0.5)
+        p1.dice.cheat(0.5)
+        const logs = []
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
+            if (attack.attacker.id === 'hydra') {
+                logs.push({
+                    attacker: attack.attacker.id,
+                    target: attack.target.id
+                })
+            }
+        })
+        m.startCombat(p1, c1)
+        m.processCombats()
+        m.processCombats()
+        m.processCombats()
+        m.processCombats()
+        m.processCombats()
+        m.processCombats()
+        expect(logs).toEqual([
+            { attacker: 'hydra', target: 'player1' }
+        ])
     })
 })

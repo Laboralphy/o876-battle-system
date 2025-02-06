@@ -147,6 +147,10 @@ class Combat {
      * @param value {number}
      */
     set distance (value) {
+        if (isNaN(value)) {
+            const sGivenType = typeof value
+            throw new TypeError(`combat distance must be a number. ${sGivenType} given (${value}).`)
+        }
         const nOldDistance = this._distance
         if (nOldDistance !== value) {
             this._distance = Math.max(0, value)
@@ -177,13 +181,19 @@ class Combat {
      * @param value {string}
      */
     selectCurrentAction (value) {
-        if (value === this._currentAction) {
-            return
-        }
         if (value === '') {
             this._currentAction = ''
+            return true
         } else if (value in this._attackerState.actions) {
-            this._currentAction = value
+            const oAction = this._attackerState.actions[value]
+            if (oAction.ready && oAction.range >= this.distance) {
+                this._currentAction = value
+                return true
+            } else {
+                // Action not available
+                this._currentAction = ''
+                return false
+            }
         } else {
             throw new Error(`Action ${value} is unknown for this creature - allowed values are : ` + Object.keys(this._attackerState.actions).join(', '))
         }
@@ -335,24 +345,51 @@ class Combat {
      */
     getMostSuitableSlot () {
         const oAttacker = this.attacker
-        if (oAttacker.getters.isRangedWeaponLoaded) {
-            return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+        const distance = this.distance
+        const eq = oAttacker.getters.getEquipment
+        const aSlotRanges = Object
+            .entries(
+                oAttacker
+                    .getters
+                    .getWeaponRanges
+            )
+            .map(([slot, range]) => ({
+                range,
+                slot,
+                weaponAttr: eq[slot] ? new Set(eq[slot].blueprint.attributes) : new Set()
+            }))
+            .filter(({ range, weaponAttr }) => {
+                const nRangeMax = range
+                const nRangeMin = weaponAttr.has(CONSTS.WEAPON_ATTRIBUTE_RANGED)
+                    ? oAttacker.data.VARIABLES.WEAPON_RANGED_MINIMUM_RANGE
+                    : 0
+                // distance of target must be between nRangeMin and nRangeMax
+                // or else this weapon cannot be used
+                return nRangeMin <= distance && distance <= nRangeMax
+            })
+        if (aSlotRanges.length > 0) {
+            return aSlotRanges[Math.floor(this.attacker.dice.random() * aSlotRanges.length)].slot
+        } else {
+            return ''
         }
-
-        const bHasMeleeWeapon = oAttacker.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE] !== null
-        const aSuitableSlots = Object.entries(this
-            .getTargetInCreatureWeaponRange())
-            .filter(([slot, bInRange]) => bInRange && NATURAL_SLOTS.has(slot))
-            .map(([slot]) => slot)
-        // Only if equipped with melee weapon, or not having any natural weapons
-        if (aSuitableSlots.length === 0) {
-            if (bHasMeleeWeapon) {
-                aSuitableSlots.push(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
-            } else {
-                return ''
-            }
-        }
-        return aSuitableSlots[Math.floor(this.attacker.dice.random() * aSuitableSlots.length)]
+        // if (oAttacker.getters.isRangedWeaponLoaded) {
+        //     return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+        // }
+        //
+        // const bHasMeleeWeapon = oAttacker.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE] !== null
+        // const aSuitableSlots = Object.entries(this
+        //     .getTargetInCreatureWeaponRange())
+        //     .filter(([slot, bInRange]) => bInRange && NATURAL_SLOTS.has(slot))
+        //     .map(([slot]) => slot)
+        // // Only if equipped with melee weapon, or not having any natural weapons
+        // if (aSuitableSlots.length === 0) {
+        //     if (bHasMeleeWeapon) {
+        //         aSuitableSlots.push(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
+        //     } else {
+        //         return ''
+        //     }
+        // }
+        // return aSuitableSlots[Math.floor(this.attacker.dice.random() * aSuitableSlots.length)]
     }
 
     selectMostSuitableWeapon () {
@@ -374,9 +411,7 @@ class Combat {
         this.selectCurrentAction(sSelectAction)
         this._events.emit(CONSTS.EVENT_COMBAT_TURN, {
             ...this.eventDefaultPayload,
-            action: action => {
-                this.selectCurrentAction(action)
-            }
+            action: action => this.selectCurrentAction(action)
         })
         if (!this.currentAction) {
             this.selectMostSuitableWeapon()
@@ -385,15 +420,16 @@ class Combat {
 
     /**
      * This action is used when a creature has no ranged capabilities and is trying to move toward its target
+     * @param [nUseSpeed] {number} if undefined, the creature normal speed will apply
      */
-    approachTarget () {
+    approachTarget (nUseSpeed = undefined) {
         if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_MOVE) &&
             this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_SEE) &&
             this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)
         ) {
-            const nRunSpeed = this.attacker.getters.getSpeed
+            const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed
             const previousDistance = this.distance
-            const nMinRange = Math.max(this.getSelectedWeaponRange(), this.attacker.data.VARIABLES.WEAPON_RANGE_MINIMUM_VALUE)
+            const nMinRange = Math.max(this.getSelectedWeaponRange(), this.attacker.data.VARIABLES.WEAPON_MELEE_MINIMUM_RANGE)
             let nNewDistance = Math.max(nMinRange, this.distance - nRunSpeed)
             this._events.emit(CONSTS.EVENT_COMBAT_MOVE, {
                 ...this.eventDefaultPayload,

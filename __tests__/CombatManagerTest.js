@@ -530,6 +530,8 @@ describe('advancing combat', function () {
 
         cm.processCombats() // turn 0 : tick 0->1
         // Only c2 will move as it is out of range
+        expect(combat.attackerState.actions['a1'].ready).toBeTruthy()
+        expect(combat.attackerState.actions['a1'].range).toBeGreaterThan(combat.distance)
         expect(combat.currentAction.id).toBe('a1')
         expect(combat.distance).toBe(20)
         expect(combat.tick).toBe(1)
@@ -590,8 +592,7 @@ describe('advancing combat', function () {
         cm.processCombats() // turn 0 : tick 4->5
         combat.nextAction = 'a1'
         cm.processCombats() // turn 0->1 : tick 5->0
-        expect(combat.currentAction).not.toBeNull()
-        expect(combat.currentAction.id).toBe('a1')
+        expect(combat.currentAction).toBeNull() // action range is far to short than combat distance
 
         expect(logs).toHaveLength(0)
         cm.processCombats() // turn 1 : tick 0->1
