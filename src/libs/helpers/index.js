@@ -60,7 +60,64 @@ function getWeaponRange (weapon, DATA) {
     }
 }
 
+/**
+ * Returns the best damage type. The one who will do the most damage.
+ * @param aDamageTypes {string[]}
+ * @param oMitigation {{ [damageType: string]: { factor: number } }}
+ * @returns {string|undefined} DAMAGE_TYPE_*
+ */
+function getBestDamageTypeVsMitigation (aDamageTypes, oMitigation) {
+    if (aDamageTypes.length === 0) {
+        throw new Error('DamageType Array must have at least one item')
+    }
+    return aDamageTypes
+        .map(dt => {
+            if (dt in oMitigation) {
+                return { damageType: dt, factor: oMitigation[dt].factor }
+            } else {
+                return { damageType: dt, factor: 1 }
+            }
+        })
+        .sort(({ factor: a }, { factor: b }) => b - a)
+        .map(({ damageType }) => damageType)
+        .shift() ?? aDamageTypes[0]
+}
+
+/**
+ * Returns the damage type against to most efficient AC
+ * @param aDamageTypes {string[]}
+ * @param oArmorClasses {{ [damageType: string]: number }}
+ * @returns {string}
+ */
+function getWorstDamageTypeVsAC (aDamageTypes, oArmorClasses) {
+    if (aDamageTypes.length === 0) {
+        throw new Error('DamageType Array must have at least one item')
+    }
+    return aDamageTypes
+        .filter(dt => dt in oArmorClasses)
+        .map(dt => ({ damageType: dt, ac: oArmorClasses[dt] }))
+        .sort(({ ac: a }, { ac: b }) => b - a)
+        .map(({ damageType }) => damageType)
+        .shift() ?? aDamageTypes[0]
+}
+
+/**
+ * This function extract all damage types from a weapon
+ * @param weapon {RBSItem}
+ */
+function getWeaponDamageTypes (weapon) {
+    const aTypes = new Set(weapon.blueprint.damageType)
+    weapon.properties.forEach((prop) => {
+        if (prop.type === CONSTS.PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE) {
+            aTypes.add(prop.data.damageType)
+        }
+    })
+    return [...aTypes]
+}
+
 module.exports = {
     doDamage,
-    getWeaponRange
+    getWeaponRange,
+    getBestDamageTypeVsMitigation,
+    getWorstDamageTypeVsAC
 }
