@@ -7,6 +7,9 @@
 function main ({ action, combat, manager }) {
     // La succube va tester si sa cible est stun
     const oTarget = combat.target
+    if (oTarget.getters.getSpecie !== manager.CONSTS.SPECIE_HUMANOID) {
+        return
+    }
     if (oTarget.getters.getEffectSet.has(manager.CONSTS.EFFECT_STUN)) {
         action('act-draining-kiss')
     } else if (!oTarget.getters.getImmunitySet.has(manager.CONSTS.IMMUNITY_TYPE_STUN)) {

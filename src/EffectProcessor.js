@@ -77,10 +77,14 @@ class EffectProcessor {
         if (!(sEffect in this._effectPrograms)) {
             throw new Error('Effect ' + sEffect + ' is invalid')
         }
+        const {
+            subtype = CONSTS.EFFECT_SUBTYPE_MAGICAL,
+            ...effectData
+        } = data
         const oEffect = {
             id: getUniqueId(),
             type: sEffect,
-            subtype: CONSTS.EFFECT_SUBTYPE_MAGICAL,
+            subtype,
             amp,
             data: {},
             duration: 0,
@@ -89,7 +93,7 @@ class EffectProcessor {
             siblings: [],
             tag: ''
         }
-        this.invokeEffectMethod(oEffect, 'init', null, null, data)
+        this.invokeEffectMethod(oEffect, 'init', null, null, effectData)
         return oEffect
     }
 
