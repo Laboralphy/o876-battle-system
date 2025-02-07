@@ -4,10 +4,10 @@
 
 module.exports = {
   'at-charge': require('./actions/at-charge.js'),
-  'at-confusing-aoe': require('./actions/at-confusing-aoe.js'),
+  'at-confusing-aoe': require('./actions/at-confusing-chant.js'),
   'at-draining-kiss': require('./actions/at-draining-kiss.js'),
-  'at-elemental-aoe': require('./actions/at-elemental-aoe.js'),
-  'at-frightful-aoe': require('./actions/at-frightful-aoe.js'),
+  'at-elemental-aoe': require('./actions/at-elemental-breath.js'),
+  'at-frightful-aoe': require('./actions/at-frightful-presence.js'),
   'at-frightful-gaze': require('./actions/at-frightful-gaze.js'),
   'at-heal': require('./actions/at-heal.js'),
   'at-petrifying-gaze': require('./actions/at-petrifying-gaze.js'),

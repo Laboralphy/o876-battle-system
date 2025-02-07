@@ -41,6 +41,42 @@ describe('createEffect', function () {
         expect(eff1).toHaveProperty('source')
         expect(eff1).toHaveProperty('data', {})
     })
+    it('should create an effect with correct subtype and parameters when defining subtype and parameters', function () {
+        const h = new Horde()
+        const ep = new EffectProcessor({ horde: h })
+        const logs = []
+        ep.effectPrograms = {
+            EFFECT_TEST: {
+                init: function ({ effect, test1, test2 }) {
+                    effect.data.test1 = test1
+                    effect.data.test2 = test2
+                }
+            }
+        }
+        const eff1 = ep.createEffect('EFFECT_TEST', 1, {
+            test1: 't10',
+            test2: 't11'
+        })
+        const eff2 = ep.createEffect('EFFECT_TEST', 2, {
+            subtype: 'EFFECT_SUBTYPE_SUPERNATURAL',
+            test1: 't20',
+            test2: 't21'
+        })
+        expect(eff1.subtype).toBe('EFFECT_SUBTYPE_MAGICAL')
+        expect(eff1.data.test1).toBe('t10')
+        expect(eff1.data.test2).toBe('t11')
+        expect(eff1.data).toEqual({
+            test1: 't10',
+            test2: 't11'
+        })
+        expect(eff2.subtype).toBe('EFFECT_SUBTYPE_SUPERNATURAL')
+        expect(eff2.data.test1).toBe('t20')
+        expect(eff2.data.test2).toBe('t21')
+        expect(eff2.data).toEqual({
+            test1: 't20',
+            test2: 't21'
+        })
+    })
     it('should throw an error when effect is invalid', function () {
         const h = new Horde()
         const ep = new EffectProcessor({ horde: h })

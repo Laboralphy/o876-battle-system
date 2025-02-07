@@ -1,9 +1,9 @@
 /**
- * Confusion AOE
- * Offenders failing at saving throw will be struck by confusion
+ * Confusion Chant
+ * Offenders hearing this chant and failing at saving throw will be struck by confusion
+ * This is an extraordinary effect
  * @this {Manager}
  * @param manager {Manager}
- * @param CONSTS {*}
  * @param action {RBSAction}
  * @param combat {Combat}
  */
@@ -16,7 +16,7 @@ function main ({ manager, action, combat }) {
             combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA]
         )
         if (!success) {
-            const eFear = manager.createEffect(manager.CONSTS.EFFECT_CONFUSION)
+            const eFear = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_CONFUSION)
             manager.applyEffect(eFear, offender, duration, combat.attacker)
         }
     })

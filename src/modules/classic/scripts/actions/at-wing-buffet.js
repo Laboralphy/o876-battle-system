@@ -18,7 +18,8 @@ function main ({ manager, action, combat }) {
             amount: action.parameters.amount,
             damageType: manager.CONSTS.DAMAGE_TYPE_CRUSHING,
             offensiveAbility: manager.CONSTS.ABILITY_STRENGTH,
-            defensiveAbility: manager.CONSTS.ABILITY_STRENGTH
+            defensiveAbility: manager.CONSTS.ABILITY_STRENGTH,
+            extraordinary: true
         })
         if (!success) {
             const eStun = manager.createEffect(manager.CONSTS.EFFECT_STUN)

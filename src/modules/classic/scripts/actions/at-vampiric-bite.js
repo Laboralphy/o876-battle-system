@@ -11,25 +11,23 @@ function main ({ manager, action, combat }) {
     // affect only humanoids
     if (!oTarget.getters.getCapabilitySet.has(manager.CONSTS.CAPABILITY_ACT)) {
         const oAttacker = combat.attacker
-        // pre compute piercing damage amount
+        // compute piercing damage amount
         const nPiercingDamage = oAttacker.dice.roll('1d6') + oAttacker.getters.getAbilityModifiers[manager.CONSTS.ABILITY_STRENGTH]
-        // pre compute withering damage amount
+        // compute withering damage amount
         const nWitheringDamage = oAttacker.dice.roll('3d6')
         // create damage effect (piercing supernatural)
-        const ePiercingDamage = manager.createEffect(
+        const ePiercingDamage = manager.createExtraordinaryEffect(
             manager.CONSTS.EFFECT_DAMAGE,
             nPiercingDamage,
             {
-                subtype: manager.CONSTS.EFFECT_SUBTYPE_SUPERNATURAL,
                 damageType: manager.CONSTS.DAMAGE_TYPE_PIERCING
             }
         )
         // create damage effect (withering supernatural)
-        const eWitheringDamage = manager.createEffect(
+        const eWitheringDamage = manager.createSupernaturalEffect(
             manager.CONSTS.EFFECT_DAMAGE,
             nWitheringDamage,
             {
-                subtype: manager.CONSTS.EFFECT_SUBTYPE_SUPERNATURAL,
                 damageType: manager.CONSTS.DAMAGE_TYPE_WITHERING
             }
         )
@@ -47,9 +45,7 @@ function main ({ manager, action, combat }) {
             )
             if (!success) { // saving throw failed
                 // absorb experience level if saving throw fails
-                const eNegLevel = manager.createEffect(manager.CONSTS.EFFECT_NEGATIVE_LEVEL, 1, {
-                    subtype: manager.CONSTS.EFFECT_SUBTYPE_SUPERNATURAL
-                })
+                const eNegLevel = manager.createSupernaturalEffect(manager.CONSTS.EFFECT_NEGATIVE_LEVEL, 1)
                 manager.applyEffect(eNegLevel, oTarget, Infinity, oAttacker)
             }
         }

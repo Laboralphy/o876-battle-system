@@ -367,11 +367,40 @@ class Manager {
     /**
      * Creates an effect
      * @param sEffect {string}
-     * @param amp {number}
-     * @param data {{}}
+     * @param amp {number|string}
+     * @param data {{[key: string]: *}}
      */
     createEffect (sEffect, amp = 0, data = {}) {
         return this._effectProcessor.createEffect(sEffect, amp, data)
+    }
+
+    /**
+     * Create an effect with subtype preset to SUPERNATURAL
+     * This effect is not magical and not produced by natural means of creatures.
+     * It can't be removed by 'dispel magic'
+     * It must be removed by specific means like 'remove curse' or 'restoration'
+     * @param sEffect {string}
+     * @param amp {number|string}
+     * @param data {{[key: string]: *}}
+     * @return {RBSEffect}
+     */
+    createSupernaturalEffect (sEffect, amp = 0, data = {}) {
+        return this.createEffect(sEffect, amp, { ...data, subtype: CONSTS.EFFECT_SUBTYPE_SUPERNATURAL })
+    }
+
+    /**
+     * Create an effect with subtype preset to EXTRAORDINARY
+     * This effect is neither magical nor supernatural.
+     * This effect is typically produced by creature with some extraordinary natural abilities.
+     * As impressive as it may be, this effect is nevertheless natural, and cannot be dispelled by any mean.
+     * Just like supernatural effect, extraordinary effects can only be removed by specialized means.
+     * @param sEffect {string}
+     * @param amp {number|string}
+     * @param data {{[key: string]: *}}
+     * @return {RBSEffect}
+     */
+    createExtraordinaryEffect (sEffect, amp = 0, data = {}) {
+        return this.createEffect(sEffect, amp, { ...data, subtype: CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY })
     }
 
     /**

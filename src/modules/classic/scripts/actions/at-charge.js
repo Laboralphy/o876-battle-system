@@ -1,6 +1,7 @@
 /**
  * Charge
  * If target within range : reduce combat distance at mélée weapon range and do damage
+ * This is an ordinary attack
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

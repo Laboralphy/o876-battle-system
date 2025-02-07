@@ -1,6 +1,7 @@
 /**
  * Frightful presence
  * Offenders failing at saving throw will be struck by fear
+ * This is an extraordinary effect, often used by huge creature like dragons
  * @this {Manager}
  * @param manager {Manager}
  * @param CONSTS {*}
@@ -16,7 +17,7 @@ function main ({ manager, action, combat }) {
             combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA]
         )
         if (!success) {
-            const eFear = manager.createEffect(manager.CONSTS.EFFECT_FEAR)
+            const eFear = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_FEAR)
             manager.applyEffect(eFear, offender, duration, combat.attacker)
         }
     })

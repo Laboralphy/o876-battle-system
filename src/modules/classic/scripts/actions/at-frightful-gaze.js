@@ -14,7 +14,7 @@ function main ({ manager, action, combat }) {
         combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA] // getActionDifficultyClass(creature, ability)
     )
     if (!success) {
-        const eFear = manager.createEffect(manager.CONSTS.EFFECT_FEAR) // createEffect(effectType, amp, parameters)
+        const eFear = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_FEAR) // createEffect(effectType, amp, parameters)
         manager.applyEffect(eFear, oTarget, duration, combat.attacker) // applyEffect(effect, creature, duration, creature)
     }
 }

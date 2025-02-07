@@ -9,6 +9,7 @@ const CONSTS = require('../../consts')
  * @param damageType {string}
  * @param offensiveAbility {string}
  * @param defensiveAbility {string}
+ * @param extraordinary {boolean}
  *
  * @return {{ effect: RBSEffect, saved: boolean }}
  */
@@ -17,6 +18,7 @@ function doDamage (oManager, oTarget, oSource, {
     damageType,
     offensiveAbility = '',
     defensiveAbility = '',
+    extraordinary = false
 }) {
     let bSaved = false
     if (offensiveAbility) {
@@ -26,7 +28,10 @@ function doDamage (oManager, oTarget, oSource, {
     }
     const nFullDamage = oTarget.dice.roll(amount)
     const nDamage = bSaved ? Math.floor(nFullDamage / 2) : nFullDamage
-    const eDam = oManager.createEffect(CONSTS.EFFECT_DAMAGE, nDamage, { damageType })
+    const eDam = oManager.createEffect(CONSTS.EFFECT_DAMAGE, nDamage, {
+        damageType,
+        subtype: extraordinary ? oManager.CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY : oManager.CONSTS.EFFECT_SUBTYPE_MAGICAL
+    })
     const effect = oManager.applyEffect(eDam, oTarget, 0, oSource)
     return {
         effect,
