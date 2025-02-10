@@ -101,20 +101,6 @@ function getWorstDamageTypeVsAC (aDamageTypes, oArmorClasses) {
         .shift() ?? aDamageTypes[0]
 }
 
-/**
- * This function extract all damage types from a weapon
- * @param weapon {RBSItem}
- */
-function getWeaponDamageTypes (weapon) {
-    const aTypes = new Set(weapon.blueprint.damageType)
-    weapon.properties.forEach((prop) => {
-        if (prop.type === CONSTS.PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE) {
-            aTypes.add(prop.data.damageType)
-        }
-    })
-    return [...aTypes]
-}
-
 module.exports = {
     doDamage,
     getWeaponRange,

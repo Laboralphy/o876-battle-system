@@ -2,6 +2,7 @@ const CONSTS = require('./consts')
 const Events = require('events')
 const { aggregateModifiers } = require('./libs/aggregator')
 const { getAttackAdvantages } = require('./advantages/attack-roll')
+const {getWorstDamageTypeVsAC, getBestDamageTypeVsMitigation} = require("./libs/helpers");
 
 /**
  * @class
@@ -314,10 +315,18 @@ class AttackOutcome {
             : CONSTS.ATTACK_TYPE_MELEE
     }
 
-    getDamageType () {
-        return this._weapon
-            ? this._weapon.blueprint.damageType
-            : CONSTS.DAMAGE_TYPE_CRUSHING
+    getDamageTypes () {
+        const weapon = this._weapon
+        if (!weapon) {
+            return [CONSTS.DAMAGE_TYPE_CRUSHING]
+        }
+        const aTypes = new Set([weapon.blueprint.damageType])
+        weapon.properties.forEach((prop) => {
+            if (prop.type === CONSTS.PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE) {
+                aTypes.add(prop.data.damageType)
+            }
+        })
+        return [...aTypes]
     }
 
     getWeaponBaseDamageAmount () {
@@ -378,8 +387,8 @@ class AttackOutcome {
     computeDefenseParameters () {
         const oTarget = this._target
         const oArmorClasses = oTarget.getters.getArmorClass
-        this._ac = oArmorClasses[this.getAttackType()] +
-            oArmorClasses[this.getDamageType()]
+        const sDamageTypeVsAC = getWorstDamageTypeVsAC(this.getDamageTypes(), oArmorClasses)
+        this._ac = oArmorClasses[this.getAttackType()] + oArmorClasses[sDamageTypeVsAC]
     }
 
     fail (sReason) {
@@ -471,7 +480,8 @@ class AttackOutcome {
         this._hit = bHit
 
         if (bHit) {
-            const sDamageType = this.getDamageType()
+            const aWeaponDamageTypes = this.getDamageTypes()
+            const sDamageType = getBestDamageTypeVsMitigation(aWeaponDamageTypes, this.target.getters.getDamageMitigation)
             this.rollDamages(this.getWeaponBaseDamageAmount(), sDamageType)
             if (this._critical) {
                 this.rollDamages(this.getWeaponBaseDamageAmount(), sDamageType)

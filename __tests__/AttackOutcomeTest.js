@@ -175,7 +175,7 @@ describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
         ao.computeAttackParameters()
         ao.computeDefenseParameters()
         expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_MELEE)
-        expect(ao.getDamageType()).toBe(CONSTS.DAMAGE_TYPE_CRUSHING)
+        expect(ao.getDamageTypes()).toEqual([CONSTS.DAMAGE_TYPE_CRUSHING])
         expect(ao.getWeaponBaseDamageAmount()).toBe('1d3')
     })
     it('should return 1D4 melee piercing when equipping dagguer', function () {
@@ -192,7 +192,7 @@ describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
         ao.computeAttackParameters()
         ao.computeDefenseParameters()
         expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_MELEE)
-        expect(ao.getDamageType()).toBe(CONSTS.DAMAGE_TYPE_PIERCING)
+        expect(ao.getDamageTypes()).toEqual([CONSTS.DAMAGE_TYPE_PIERCING])
         expect(ao.getWeaponBaseDamageAmount()).toBe('1d4')
     })
     it('should return 1d6 piercing ranged when equipping bow with ammo', function () {
@@ -217,7 +217,7 @@ describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
         ao.computeAttackParameters()
         ao.computeDefenseParameters()
         expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_RANGED)
-        expect(ao.getDamageType()).toBe(CONSTS.DAMAGE_TYPE_PIERCING)
+        expect(ao.getDamageTypes()).toEqual([CONSTS.DAMAGE_TYPE_PIERCING])
         expect(ao.getWeaponBaseDamageAmount()).toBe('1d6')
     })
     it('should throw error when equipping bow without ammo', function () {
@@ -239,8 +239,8 @@ describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
         ao.computeAttackParameters()
         ao.computeDefenseParameters()
         expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_RANGED)
-        expect(() => ao.getDamageType()).not.toThrow()
-        expect(ao.getDamageType()).toBe(CONSTS.DAMAGE_TYPE_PIERCING)
+        expect(() => ao.getDamageTypes()).not.toThrow()
+        expect(ao.getDamageTypes()).toEqual([CONSTS.DAMAGE_TYPE_PIERCING])
         expect(ao.getWeaponBaseDamageAmount()).toBe('1d6')
     })
 })
@@ -314,6 +314,7 @@ describe('Sneak attack', function () {
             expect(ao.visibility).toBe(CONSTS.CREATURE_VISIBILITY_HIDDEN)
 
             ao.attack()
+            expect(ao.hit).toBeTruthy()
             expect(ao.sneak).toBe(3)
             expect(ao.damages.types.DAMAGE_TYPE_PIERCING.amount).toBe(16) // 4 base + 3*4 sneak attack
         })
@@ -324,10 +325,12 @@ describe('Sneak attack', function () {
             c1.dice.cheat(0.5)
             const sword1 = eb.createEntity(bpShortSword)
             c1.equipItem(sword1)
-            c1.mutations.addProperty({ property: {
+            c1.mutations.addProperty({
+                property: {
                     type: CONSTS.PROPERTY_SNEAK_ATTACK,
                     amp: 3
-                }})
+                }
+            })
 
             c1.mutations.addEffect({ effect: {
                     type: CONSTS.EFFECT_STEALTH,
