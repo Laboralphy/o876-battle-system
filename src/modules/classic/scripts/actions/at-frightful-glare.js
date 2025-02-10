@@ -7,7 +7,7 @@
  * @param combat {Combat}
  */
 function main ({ manager, action, combat }) {
-    const { duration = combat.attacker.data.VARIABLES.DEFAULT_AILMENT_DURATION } = action // getActionDuration
+    const { duration = combat.attacker.getters.getVariables['DEFAULT_AILMENT_DURATION'] } = action // getActionDuration
     const oTarget = combat.target // getCombatTarget
     const { success } = oTarget.rollSavingThrow( // rollSavingThrow(creature, ability, dc)
         manager.CONSTS.ABILITY_WISDOM,

@@ -1,4 +1,5 @@
 const EntityBuilder = require('../src/EntityBuilder')
+const PropertyBuilder = require('../src/PropertyBuilder')
 const SCHEMA = require('../src/schemas')
 const SchemaValidator = require('../src/SchemaValidator')
 const CONSTS = require('../src/consts')
@@ -11,6 +12,7 @@ oSchemaValidator.init()
 describe('defineBlueprint', function () {
     it('item builder "blueprints" property should have new property when using defineBlueprint', function () {
         const ib = new EntityBuilder()
+        ib.propertyBuilder = new PropertyBuilder()
         ib.schemaValidator = oSchemaValidator
         ib.defineBlueprint('shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -28,6 +30,7 @@ describe('defineBlueprint', function () {
     })
     it('should not keep original blueprint but copy blueprint with additional property when defining blueprint', function () {
         const ib = new EntityBuilder()
+        ib.propertyBuilder = new PropertyBuilder()
         ib.schemaValidator = oSchemaValidator
         const oOriginalBlueprint = {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -47,6 +50,7 @@ describe('defineBlueprint', function () {
     })
     it('should throw an error when weapon blueprint is missing some required property', function () {
         const ib = new EntityBuilder()
+        ib.propertyBuilder = new PropertyBuilder()
         ib.schemaValidator = oSchemaValidator
         expect(() => {
             ib.defineBlueprint('shortsword', {
@@ -63,6 +67,7 @@ describe('defineBlueprint', function () {
     })
     it('should throw an error when weapon blueprint has incorrect or mistyped property', function () {
         const ib = new EntityBuilder()
+        ib.propertyBuilder = new PropertyBuilder()
         ib.schemaValidator = oSchemaValidator
         expect(() => {
             ib.defineBlueprint('shortsword', {
@@ -94,6 +99,7 @@ describe('defineBlueprint', function () {
 
     it('should define wpn-shortsword as a complete blueprint when using "extends" of a previously defined blueprint', function () {
         const eb = new EntityBuilder()
+        eb.propertyBuilder = new PropertyBuilder()
         eb.schemaValidator = oSchemaValidator
         eb.defineBlueprint('weapon-type-shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -126,6 +132,7 @@ describe('defineBlueprint', function () {
     })
     it('should not throw when defining blueprint with itemType ITEM_TYPE_ARMOR', function () {
         const eb = new EntityBuilder()
+        eb.propertyBuilder = new PropertyBuilder()
         eb.schemaValidator = oSchemaValidator
         expect(() =>
             eb.defineBlueprint('light-armor', {
@@ -141,6 +148,7 @@ describe('defineBlueprint', function () {
     })
     it('should throw an error when redefining a blueprint with an id already defined', function () {
         const ib = new EntityBuilder()
+        ib.propertyBuilder = new PropertyBuilder()
         ib.schemaValidator = oSchemaValidator
         expect(() => ib.defineBlueprint('shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -171,6 +179,7 @@ describe('defineBlueprint', function () {
 describe('createEntity', function () {
     it('should create an item when blueprint entityType is ENTITY_TYPE_ITEM', function () {
         const eb = new EntityBuilder()
+        eb.propertyBuilder = new PropertyBuilder()
         eb.schemaValidator = oSchemaValidator
         eb.defineBlueprint('weapon-type-shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -190,6 +199,7 @@ describe('createEntity', function () {
     })
     it('create a sword from a blueprint without prior define it', function () {
         const eb = new EntityBuilder()
+        eb.propertyBuilder = new PropertyBuilder()
         eb.schemaValidator = oSchemaValidator
         const bp = {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -208,6 +218,7 @@ describe('createEntity', function () {
     })
     it('create a sword with a couple of blueprint', function () {
         const eb = new EntityBuilder()
+        eb.propertyBuilder = new PropertyBuilder()
         eb.schemaValidator = oSchemaValidator
         eb.defineBlueprint('weapon-type-shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -235,6 +246,7 @@ describe('createEntity', function () {
     })
     it('create a sword with a several ancestors blueprints', function () {
         const eb = new EntityBuilder()
+        eb.propertyBuilder = new PropertyBuilder()
         eb.schemaValidator = oSchemaValidator
         eb.defineBlueprint('weapon-type-shortsword', {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -330,6 +342,7 @@ describe('createEntity', function () {
             equipment: []
         }
         const eb = new EntityBuilder()
+        eb.propertyBuilder = new PropertyBuilder()
         eb.schemaValidator = oSchemaValidator
         eb.blueprints = {
             'the-elf': bpMyNPC,
@@ -342,6 +355,7 @@ describe('createEntity', function () {
     })
     it('should not create several blueprint when creating several entities from a blueprint objet instead of resref', function () {
         const ib = new EntityBuilder()
+        ib.propertyBuilder = new PropertyBuilder()
         ib.schemaValidator = oSchemaValidator
         const oShorSwordBP = {
             entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -426,6 +440,7 @@ describe('building a monster', function () {
             ]
         }
         const ib = new EntityBuilder()
+        ib.propertyBuilder = new PropertyBuilder()
         ib.schemaValidator = oSchemaValidator
         const snake = ib.createEntity(bpSnake)
         expect(snake).toBeDefined()
@@ -521,6 +536,7 @@ describe('create a complex monster', function () {
     }
     it('should not throw error when creating this monster', function () {
         const ib = new EntityBuilder()
+        ib.propertyBuilder = new PropertyBuilder()
         ib.schemaValidator = oSchemaValidator
         let monster
         expect(() => {
@@ -609,6 +625,7 @@ describe('extends again, see if base monster is properly extended', function () 
     }
     it ('should build a complete monster', function () {
         const eb = new EntityBuilder()
+        eb.propertyBuilder = new PropertyBuilder()
         eb.schemaValidator = oSchemaValidator
         eb.blueprints = {
             'c-base-skeleton': bpSkeletonBase,

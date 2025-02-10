@@ -687,3 +687,28 @@ describe('Multiattack', function () {
         ])
     })
 })
+
+describe('Weapon with extended types', function () {
+    it('should extends properties when designing a magic weapon that extends from polyvalent type', function () {
+        const m = new Manager()
+        m.loadModule('classic')
+        const h = m.createEntity('wpn-halberd-p2', 'x1')
+        expect(h.properties).toEqual([
+            {
+                type: 'PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE',
+                amp: 0,
+                data: { damageType: 'DAMAGE_TYPE_PIERCING' }
+            },
+            {
+                type: 'PROPERTY_ATTACK_MODIFIER',
+                amp: 2,
+                data: { attackType: 'ATTACK_TYPE_ANY' }
+            },
+            {
+                type: 'PROPERTY_DAMAGE_MODIFIER',
+                amp: 2,
+                data: { damageType: 'DAMAGE_TYPE_ANY' }
+            }
+        ])
+    })
+})

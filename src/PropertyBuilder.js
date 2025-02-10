@@ -1,9 +1,39 @@
 const PROPERTIES = require('./properties')
 
+const SYMBOL_ACTIVE_PROPERTY = Symbol('SYMBOL_ACTIVE_PROPERTY')
+
 class PropertyBuilder {
 
     constructor () {
-        this._propertyPrograms = PROPERTIES
+        this._propertyPrograms = null
+        this.propertyPrograms = PROPERTIES
+        this._aMutatingProperties = new Set()
+    }
+
+    static get SYMBOL_ACTIVE_PROPERTY () {
+        return SYMBOL_ACTIVE_PROPERTY
+    }
+
+    static isPropertyActive (oProperty) {
+        return oProperty.data[SYMBOL_ACTIVE_PROPERTY] ?? false
+    }
+
+    get propertyPrograms () {
+        return this._propertyPrograms
+    }
+
+    set propertyPrograms (value) {
+        this._propertyPrograms = Object.seal(value)
+        this._aMutatingProperties = new Set(
+            Object
+                .entries(this._propertyPrograms)
+                .filter(([sPropName, property]) => ('mutate' in property))
+                .map(([sPropName]) => sPropName)
+        )
+    }
+
+    get mutatingProperties () {
+        return this._aMutatingProperties
     }
 
     /**
@@ -37,6 +67,7 @@ class PropertyBuilder {
      * @property type {string} PROPERTY_*
      * @property amp {number|string}
      * @property data {object}
+     * @property active {boolean} if true then this property is running "mutate" function each turn
      *
      * @param sPropertyType {string} PROPERTY_*
      * @param amp {number|string}
@@ -48,6 +79,9 @@ class PropertyBuilder {
             type: sPropertyType,
             amp,
             data: {}
+        }
+        if (this._aMutatingProperties.has(sPropertyType)) {
+            oProperty.data[SYMBOL_ACTIVE_PROPERTY] = true
         }
         this.invokePropertyMethod(oProperty, 'init', null, null, oPropertyDefinition)
         return oProperty

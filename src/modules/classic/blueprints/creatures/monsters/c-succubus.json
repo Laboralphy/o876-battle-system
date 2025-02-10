@@ -47,6 +47,41 @@
       "type": "PROPERTY_THINKER",
       "amp": 0,
       "combat": "thinker-succubus"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_SLASHING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_CRUSHING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_PIERCING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_COLD"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_FIRE"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_ELECTRICITY"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_POISON"
     }
   ],
   "actions": [
@@ -55,8 +90,8 @@
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-stunning-ray",
       "range": 30,
-      "cooldown": 6,
-      "parameters": {}
+      "parameters": {},
+      "cooldown": 6
     },
     {
       "id": "act-draining-kiss",
@@ -65,7 +100,8 @@
       "range": 5,
       "parameters": {
         "amount": "5d10"
-      }
+      },
+      "cooldown": 3
     }
   ],
   "specie": "SPECIE_FIEND",

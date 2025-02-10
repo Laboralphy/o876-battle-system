@@ -3,6 +3,7 @@ const SCHEMA = require('../src/schemas')
 const SchemaValidator = require('../src/SchemaValidator')
 const CONSTS = require('../src/consts')
 const Creature = require('../src/Creature')
+const PropertyBuilder = require('../src/PropertyBuilder')
 
 const oSchemaValidator = new SchemaValidator()
 oSchemaValidator.schemaIndex = SCHEMA
@@ -123,6 +124,7 @@ let eb
 
 beforeEach(function () {
     eb = new EntityBuilder()
+    eb.propertyBuilder = new PropertyBuilder()
     eb.schemaValidator = oSchemaValidator
 })
 

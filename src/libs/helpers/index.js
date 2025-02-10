@@ -63,7 +63,7 @@ function getWeaponRange (weapon, DATA) {
 /**
  * Returns the best damage type. The one who will do the most damage.
  * @param aDamageTypes {string[]}
- * @param oMitigation {{ [damageType: string]: { factor: number } }}
+ * @param oMitigation {{ [damageType: string]: { factor: number, reduction: number } }}
  * @returns {string|undefined} DAMAGE_TYPE_*
  */
 function getBestDamageTypeVsMitigation (aDamageTypes, oMitigation) {
@@ -73,12 +73,18 @@ function getBestDamageTypeVsMitigation (aDamageTypes, oMitigation) {
     return aDamageTypes
         .map(dt => {
             if (dt in oMitigation) {
-                return { damageType: dt, factor: oMitigation[dt].factor }
+                return { damageType: dt, factor: oMitigation[dt].factor, reduction: oMitigation[dt].reduction }
             } else {
-                return { damageType: dt, factor: 1 }
+                return { damageType: dt, factor: 1, reduction: 0 }
             }
         })
-        .sort(({ factor: a }, { factor: b }) => b - a)
+        .sort((
+            { factor: fa, reduction: ra },
+            { factor: fb, reduction: rb }
+        ) => fb === fa
+            ? ra - rb
+            : fb - fa
+        )
         .map(({ damageType }) => damageType)
         .shift() ?? aDamageTypes[0]
 }

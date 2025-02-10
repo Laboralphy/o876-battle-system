@@ -6,12 +6,13 @@ const Events = require('events')
 const SCHEMAS = require('./schemas')
 const SchemaValidator = require('./SchemaValidator')
 const Creature = require('./Creature')
-const { deepMerge, deepClone } = require('@laboralphy/object-fusion')
 const path = require('path')
 const AttackOutcome = require('./AttackOutcome')
 const CONSTS = require('./consts')
 const { loadData } = require('./store')
 const {aggregateModifiers} = require("./libs/aggregator");
+const PropertyBuilder = require('./PropertyBuilder')
+const baseModule = require('./modules/base')
 
 class Manager {
     constructor () {
@@ -25,6 +26,8 @@ class Manager {
         const ep = new EffectProcessor({ horde: this._horde })
         const cm = new CombatManager()
         this._entityBuilder = eb
+        this._propertyBuilder = new PropertyBuilder()
+        eb.propertyBuilder = this._propertyBuilder
         this._effectProcessor = ep
         this._combatManager = cm
         this._scripts = {}
@@ -39,7 +42,7 @@ class Manager {
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED, evt => this._effectApplied(evt))
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, evt => this._effectImmunity(evt))
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, evt => this._effectDisposed(evt))
-        this.loadModule('base')
+        this.defineModule(baseModule)
     }
 
     get CONSTS () {
@@ -326,19 +329,7 @@ class Manager {
         ++this._time
     }
 
-    /**
-     * This function will run any script associated with current effects or properties
-     * @param oCreature {Creature}
-     * @param sScript {string}
-     * @param oParams {{}}
-     */
-    runPropEffectScript(oCreature, sScript, oParams) {
-        const ep = this._effectProcessor
-        const h = this._horde
-        for (const effect of oCreature.getters.getEffects) {
-            const source = h.creatures[effect.source]
-            ep.invokeEffectMethod(effect, sScript, oCreature, source, oParams)
-        }
+    runPropScript(oCreature, sScript, oParams) {
         const pb = this._entityBuilder.propertyBuilder
         const gsp = oCreature.getters.getSlotProperties
         const eq = oCreature.getters.getEquipment
@@ -352,6 +343,22 @@ class Manager {
         oCreature.getters.getInnateProperties.forEach(prop => {
             pb.invokePropertyMethod(prop, sScript, null, oCreature, oParams)
         })
+    }
+
+    /**
+     * This function will run any script associated with current effects or properties
+     * @param oCreature {Creature}
+     * @param sScript {string}
+     * @param oParams {{}}
+     */
+    runPropEffectScript(oCreature, sScript, oParams) {
+        const ep = this._effectProcessor
+        const h = this._horde
+        for (const effect of oCreature.getters.getEffects) {
+            const source = h.creatures[effect.source]
+            ep.invokeEffectMethod(effect, sScript, oCreature, source, oParams)
+        }
+        this.runPropScript(oCreature, sScript, oParams)
     }
 
     /**

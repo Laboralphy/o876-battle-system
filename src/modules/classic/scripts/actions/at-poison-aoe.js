@@ -13,7 +13,7 @@ const { checkConst } = require("../../../../libs/check-const");
 function main ({ manager, action, combat }) {
     const {
         range,
-        duration = combat.attacker.data.VARIABLES.DEFAULT_POISON_DURATION,
+        duration = combat.attacker.getters.getVariables['DEFAULT_POISON_DURATION'],
         parameters: {
             amount
         }
@@ -25,7 +25,7 @@ function main ({ manager, action, combat }) {
             combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY]
         )
         if (!success) {
-            const ePoison = manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, amount, {
+            const ePoison = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_DAMAGE, amount, {
                 damageType: manager.CONSTS.DAMAGE_TYPE_POISON
             })
             manager.applyEffect(ePoison, offender, duration, combat.attacker)

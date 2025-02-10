@@ -4,7 +4,6 @@ const { getUniqueId } = require('./libs/unique-id')
 const CONSTS = require('./consts')
 const Creature = require('./Creature')
 const { sortByDependency } = require('./libs/sort-by-dependency')
-const PropertyBuilder = require('./PropertyBuilder')
 
 /**
  * This class takes blueprints, and create real items out of them
@@ -13,7 +12,7 @@ class EntityBuilder {
     constructor () {
         this._blueprints = {}
         this._schemaValidator = null
-        this._propertyBuilder = new PropertyBuilder()
+        this._propertyBuilder = null
     }
 
     /**
@@ -22,6 +21,10 @@ class EntityBuilder {
      */
     get propertyBuilder () {
         return this._propertyBuilder
+    }
+
+    set propertyBuilder (propertyBuilder) {
+        this._propertyBuilder = propertyBuilder
     }
 
     set schemaValidator (value) {

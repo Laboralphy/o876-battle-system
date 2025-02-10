@@ -4,6 +4,7 @@
  * @property getAbilityBaseValues {Object<string, number>}
  * @property getAbilityModifiers {Object<string, number>}
  * @property getActions {{ [id: string]: RBSAction }}
+ * @property getActiveProperties {RBSProperty[]}
  * @property getArmorClass {Object<string, number>}
  * @property getAttackAbility {{[p: string]: string}}
  * @property getAttackBonus {{[slot: string]: number}}

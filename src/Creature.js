@@ -97,7 +97,45 @@ class Creature {
     }
 
     equipItem (oItem) {
-        return this.mutations.equipItem({ item: oItem })
+        const r = this.mutations.equipItem({ item: oItem })
+        const {
+            previousItem,
+            newItem,
+            slot,
+            cursed
+        } = r
+        if (cursed) {
+            this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM_FAILED, { item: oItem, slot })
+        } else {
+            if (previousItem) {
+                this._events.emit(CONSTS.EVENT_CREATURE_REMOVE_ITEM, { item: previousItem, slot })
+            }
+            this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, { item: newItem, slot })
+        }
+        return r
+    }
+
+    /**
+     * get the slot of an equipped item or '' if not equipped
+     * @param oItem {RBSItem}
+     */
+    getItemSlot (oItem) {
+        const idItem = oItem.id
+        const eq = this.getters.getEquipment
+        const aSlots = oItem.blueprint.equipmentSlots
+        const sSlot = aSlots.find(s => eq[s].id === idItem)
+        return sSlot ?? ''
+    }
+
+    /**
+     * Removes an equipped item from equipment
+     * @param oItem {RBSItem}
+     */
+    removeItem (oItem) {
+        const sSlot = this.getItemSlot(oItem)
+        if (sSlot) {
+            this.mutations.equipItem({ item: oItem, slot: sSlot })
+        }
     }
 
     /**
@@ -161,7 +199,7 @@ class Creature {
     revive () {
         if (this.getters.isDead) {
             this._events.emit(CONSTS.EVENT_CREATURE_REVIVE)
-            this.mutations.setHitPoints({ value: this.getters.getVariables.REVIVE_HIT_POINTS })
+            this.mutations.setHitPoints({ value: this.getters.getVariables['REVIVE_HIT_POINTS'] })
         }
     }
 

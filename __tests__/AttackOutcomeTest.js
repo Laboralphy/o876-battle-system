@@ -2,8 +2,8 @@ const EntityBuilder = require('../src/EntityBuilder')
 const SCHEMA = require('../src/schemas')
 const SchemaValidator = require('../src/SchemaValidator')
 const CONSTS = require('../src/consts')
-const Creature = require('../src/Creature')
 const AttackOutcome = require('../src/AttackOutcome')
+const PropertyBuilder = require('../src/PropertyBuilder')
 
 const oSchemaValidator = new SchemaValidator()
 oSchemaValidator.schemaIndex = SCHEMA
@@ -112,6 +112,7 @@ let eb
 
 beforeEach(function () {
     eb = new EntityBuilder()
+    eb.propertyBuilder = new PropertyBuilder()
     eb.schemaValidator = oSchemaValidator
 })
 
@@ -384,5 +385,157 @@ describe('Sneak attack', function () {
                 }
             ])
         })
+    })
+})
+
+describe('Polyvalent weapon', function () {
+    it('should return AC xxx when using polyvalent weapon with armor 16 vs piercing and 18 vs crushing', function () {
+        const c1 = eb.createEntity(bpNormalActor)
+        c1.mutations.setLevel({ value: 5 })
+        c1.dice.cheat(0.5)
+        const oMorgenstern = eb.createEntity({
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+            "damages": "1d8",
+            "damageType": "DAMAGE_TYPE_CRUSHING",
+            "weight": 6,
+            "size": "WEAPON_SIZE_MEDIUM",
+            "attributes": [],
+            "properties": [
+                {
+                    "type": "PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE",
+                    "amp": 0,
+                    "damageType": "DAMAGE_TYPE_PIERCING"
+                }
+            ],
+            "equipmentSlots": [
+                "EQUIPMENT_SLOT_WEAPON_MELEE"
+            ],
+            "tag": "wpn-type-morgenstern"
+        })
+        const oHalberd = eb.createEntity({
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+            "damages": "1d8",
+            "damageType": "DAMAGE_TYPE_SLASHING",
+            "weight": 12,
+            "size": "WEAPON_SIZE_LARGE",
+            "attributes": [],
+            "properties": [
+                {
+                    "type": "PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE",
+                    "amp": 0,
+                    "damageType": "DAMAGE_TYPE_PIERCING"
+                }
+            ],
+            "equipmentSlots": [
+                "EQUIPMENT_SLOT_WEAPON_MELEE"
+            ],
+            "tag": "wpn-type-halberd"
+        })
+        const oLongSword = eb.createEntity(bpLongSword)
+        const oDagger = eb.createEntity(bpDagger)
+        const oMace = eb.createEntity({
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_WEAPON",
+            "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
+            "damages": "1d6",
+            "damageType": "DAMAGE_TYPE_CRUSHING",
+            "weight": 4,
+            "size": "WEAPON_SIZE_SMALL",
+            "attributes": [],
+            "properties": [],
+            "equipmentSlots": [
+                "EQUIPMENT_SLOT_WEAPON_MELEE"
+            ],
+            "tag": "wpn-type-mace"
+        })
+
+        const c2 = eb.createEntity(bpNormalActor)
+        c2.mutations.setLevel({ value: 5 })
+        c2.dice.cheat(0.5)
+        const oArmor = eb.createEntity({
+            "entityType": "ENTITY_TYPE_ITEM",
+            "itemType": "ITEM_TYPE_ARMOR",
+            "proficiency": "PROFICIENCY_ARMOR_MEDIUM",
+            "ac": 5,
+            "weight": 40,
+            "properties": [
+                {
+                    "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
+                    "amp": 2,
+                    "damageType": "DAMAGE_TYPE_SLASHING"
+                },
+                {
+                    "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
+                    "amp": -1,
+                    "damageType": "DAMAGE_TYPE_PIERCING"
+                },
+                {
+                    "type": "PROPERTY_MAX_DEXTERITY_BONUS",
+                    "amp": 2
+                },
+                {
+                    "type": "PROPERTY_SKILL_MODIFIER",
+                    "amp": -4,
+                    "skill": "SKILL_STEALTH"
+                }
+            ],
+            "equipmentSlots": [
+                "EQUIPMENT_SLOT_CHEST"
+            ],
+            "tag": "arm-type-half-plate"
+        })
+        expect(c2.getters.getArmorClass[CONSTS.ATTACK_TYPE_MELEE]).toBe(10)
+        c2.equipItem(oArmor)
+        expect(c2.getters.getArmorClass[CONSTS.ATTACK_TYPE_MELEE]).toBe(15)
+
+        c1.equipItem(oMorgenstern)
+        const ao = new AttackOutcome()
+        ao.attacker = c1
+        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        ao.target = c2
+        ao.attack()
+        expect(ao.ac).toBe(15)
+
+        c1.equipItem(oLongSword)
+        const ao2 = new AttackOutcome()
+        ao2.attacker = c1
+        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        ao2.target = c2
+        ao2.attack()
+        // longsword is slashing only
+        expect(ao2.ac).toBe(17)
+
+        c1.equipItem(oMace)
+        const ao3 = new AttackOutcome()
+        ao3.attacker = c1
+        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        ao3.target = c2
+        ao3.attack()
+        // mace is crushing only
+        expect(ao3.ac).toBe(15)
+
+        c1.equipItem(oDagger)
+        const ao4 = new AttackOutcome()
+        ao4.attacker = c1
+        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        ao4.target = c2
+        ao4.attack()
+
+        // dagger = piercing ONLY
+        expect(ao4.ac).toBe(14)
+
+        c1.equipItem(oHalberd) // slashin + piercing
+        const ao5 = new AttackOutcome()
+        ao5.attacker = c1
+        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        ao5.target = c2
+        ao5.attack()
+        // dagger = piercing ONLY
+        expect(ao5.ac).toBe(17)
+
     })
 })

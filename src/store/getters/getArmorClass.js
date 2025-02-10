@@ -4,11 +4,17 @@ const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/
 
 /**
  *
- * @param x {{ sum: number }}
+ * @param x {{ sum: number }|undefined}
  * @returns {number}
  */
 function getSumOr0 (x) {
-    return x?.sum || 0
+    if (x === undefined) {
+        return 0
+    }
+    if (!('sum' in x)) {
+        throw new TypeError('parameter missing properties "sum"')
+    }
+    return x.sum
 }
 
 /**
@@ -19,7 +25,7 @@ function getSumOr0 (x) {
  * @returns {Object<string, number>}
  */
 module.exports = (state, getters, externals) => {
-    const eq = getters.getEquipment
+    const eq = state.equipment
     const capa = getters.getCapabilitySet
 
     // Defenses like shield and reflexes can only be used when creature is able to act and see
@@ -176,8 +182,8 @@ module.exports = (state, getters, externals) => {
         getSumOr0(oACArmorDamageTypeBonus[CONSTS.DAMAGE_TYPE_CRUSHING]) +
         getSumOr0(oACGearDamageTypeBonus[CONSTS.DAMAGE_TYPE_CRUSHING])
     const nPiercingDamageBonus =
-        getSumOr0(oACShieldDamageTypeBonus[CONSTS.DAMAGE_TYPE_PIERCING])
-        getSumOr0(oACArmorDamageTypeBonus[CONSTS.DAMAGE_TYPE_PIERCING])
+        getSumOr0(oACShieldDamageTypeBonus[CONSTS.DAMAGE_TYPE_PIERCING]) +
+        getSumOr0(oACArmorDamageTypeBonus[CONSTS.DAMAGE_TYPE_PIERCING]) +
         getSumOr0(oACGearDamageTypeBonus[CONSTS.DAMAGE_TYPE_PIERCING])
 
     return {

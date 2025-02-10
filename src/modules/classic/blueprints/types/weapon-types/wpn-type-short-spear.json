@@ -7,7 +7,8 @@
   "weight": 3,
   "size": "WEAPON_SIZE_MEDIUM",
   "attributes": [
-    "WEAPON_ATTRIBUTE_REACH"
+    "WEAPON_ATTRIBUTE_REACH",
+    "WEAPON_ATTRIBUTE_VERSATILE"
   ],
   "properties": [],
   "equipmentSlots": [

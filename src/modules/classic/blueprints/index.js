@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-02-07T17:14:54.365Z
+// Date : 2025-02-10T16:33:10.594Z
 // List of files in ./src/modules/classic/blueprints
 
 module.exports = {
@@ -38,6 +38,7 @@ module.exports = {
   'c-skeleton-warrior': require('./creatures/monsters/c-skeleton-warrior.json'),
   'c-skeleton': require('./creatures/monsters/c-skeleton.json'),
   'c-succubus': require('./creatures/monsters/c-succubus.json'),
+  'c-vampire': require('./creatures/monsters/c-vampire.json'),
   'ammo-arrow-fire': require('./items/ammo/ammo-arrow-fire.json'),
   'ammo-arrow-hq': require('./items/ammo/ammo-arrow-hq.json'),
   'ammo-arrow-p1': require('./items/ammo/ammo-arrow-p1.json'),
@@ -106,6 +107,10 @@ module.exports = {
   'wpn-great-axe-p1': require('./items/weapons/wpn-great-axe-p1.json'),
   'wpn-great-axe-p2': require('./items/weapons/wpn-great-axe-p2.json'),
   'wpn-great-axe': require('./items/weapons/wpn-great-axe.json'),
+  'wpn-halberd-hq': require('./items/weapons/wpn-halberd-hq.json'),
+  'wpn-halberd-p1': require('./items/weapons/wpn-halberd-p1.json'),
+  'wpn-halberd-p2': require('./items/weapons/wpn-halberd-p2.json'),
+  'wpn-halberd': require('./items/weapons/wpn-halberd.json'),
   'wpn-heavy-crossbow-hq': require('./items/weapons/wpn-heavy-crossbow-hq.json'),
   'wpn-heavy-crossbow-p1': require('./items/weapons/wpn-heavy-crossbow-p1.json'),
   'wpn-heavy-crossbow-p2': require('./items/weapons/wpn-heavy-crossbow-p2.json'),
@@ -127,6 +132,10 @@ module.exports = {
   'wpn-mace-p1': require('./items/weapons/wpn-mace-p1.json'),
   'wpn-mace-p2': require('./items/weapons/wpn-mace-p2.json'),
   'wpn-mace': require('./items/weapons/wpn-mace.json'),
+  'wpn-morgenstern-hq': require('./items/weapons/wpn-morgenstern-hq.json'),
+  'wpn-morgenstern-p1': require('./items/weapons/wpn-morgenstern-p1.json'),
+  'wpn-morgenstern-p2': require('./items/weapons/wpn-morgenstern-p2.json'),
+  'wpn-morgenstern': require('./items/weapons/wpn-morgenstern.json'),
   'wpn-quarterstaff-hq': require('./items/weapons/wpn-quarterstaff-hq.json'),
   'wpn-quarterstaff-p1': require('./items/weapons/wpn-quarterstaff-p1.json'),
   'wpn-quarterstaff-p2': require('./items/weapons/wpn-quarterstaff-p2.json'),
@@ -172,11 +181,13 @@ module.exports = {
   'wpn-type-battle-axe': require('./types/weapon-types/wpn-type-battle-axe.json'),
   'wpn-type-dagger': require('./types/weapon-types/wpn-type-dagger.json'),
   'wpn-type-great-axe': require('./types/weapon-types/wpn-type-great-axe.json'),
+  'wpn-type-halberd': require('./types/weapon-types/wpn-type-halberd.json'),
   'wpn-type-heavy-crossbow': require('./types/weapon-types/wpn-type-heavy-crossbow.json'),
   'wpn-type-light-crossbow': require('./types/weapon-types/wpn-type-light-crossbow.json'),
   'wpn-type-long-bow': require('./types/weapon-types/wpn-type-long-bow.json'),
   'wpn-type-long-sword': require('./types/weapon-types/wpn-type-long-sword.json'),
   'wpn-type-mace': require('./types/weapon-types/wpn-type-mace.json'),
+  'wpn-type-morgenstern': require('./types/weapon-types/wpn-type-morgenstern.json'),
   'wpn-type-quarterstaff': require('./types/weapon-types/wpn-type-quarterstaff.json'),
   'wpn-type-short-bow': require('./types/weapon-types/wpn-type-short-bow.json'),
   'wpn-type-short-spear': require('./types/weapon-types/wpn-type-short-spear.json'),

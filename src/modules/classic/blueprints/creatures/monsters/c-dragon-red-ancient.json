@@ -97,7 +97,7 @@
     {
       "id": "act-elemental-breath",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-elemental-aoe",
+      "script": "at-elemental-breath",
       "range": 90,
       "parameters": {
         "damageType": "DAMAGE_TYPE_FIRE",
@@ -108,7 +108,7 @@
     {
       "id": "act-frightful-roar",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-frightful-aoe",
+      "script": "at-frightful-presence",
       "range": 60,
       "parameters": {},
       "cooldown": 6

@@ -1,0 +1,21 @@
+{
+  "entityType": "ENTITY_TYPE_ITEM",
+  "itemType": "ITEM_TYPE_WEAPON",
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damages": "1d8",
+  "damageType": "DAMAGE_TYPE_CRUSHING",
+  "weight": 6,
+  "size": "WEAPON_SIZE_MEDIUM",
+  "attributes": [],
+  "properties": [
+    {
+      "type": "PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_PIERCING"
+    }
+  ],
+  "equipmentSlots": [
+    "EQUIPMENT_SLOT_WEAPON_MELEE"
+  ],
+  "tag": "wpn-type-morgenstern"
+}

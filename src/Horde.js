@@ -42,7 +42,8 @@ class Horde {
      */
     isCreatureActive (oCreature) {
         return oCreature.getters.getEffects.length > 0 ||
-            Object.values(oCreature.getters.getActions).some(action => action.cooldown > 0);
+            Object.values(oCreature.getters.getActions).some(action => action.cooldown > 0) ||
+            oCreature.getters.getActiveProperties.length > 0
     }
 
     /**

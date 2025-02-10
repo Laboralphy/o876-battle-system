@@ -1,23 +1,23 @@
 {
   "entityType": "ENTITY_TYPE_ITEM",
   "itemType": "ITEM_TYPE_WEAPON",
-  "proficiency": "PROFICIENCY_WEAPON_SIMPLE",
-  "damages": "1d4",
-  "damageType": "DAMAGE_TYPE_PIERCING",
-  "weight": 1,
-  "size": "WEAPON_SIZE_SMALL",
+  "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
+  "damages": "1d10",
+  "damageType": "DAMAGE_TYPE_SLASHING",
+  "weight": 12,
+  "size": "WEAPON_SIZE_LARGE",
   "attributes": [
-    "WEAPON_ATTRIBUTE_FINESSE"
+    "WEAPON_ATTRIBUTE_REACH"
   ],
   "properties": [
     {
       "type": "PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE",
       "amp": 0,
-      "damageType": "DAMAGE_TYPE_SLASHING"
+      "damageType": "DAMAGE_TYPE_PIERCING"
     }
   ],
   "equipmentSlots": [
     "EQUIPMENT_SLOT_WEAPON_MELEE"
   ],
-  "tag": "wpn-type-dagger"
+  "tag": "wpn-type-halberd"
 }

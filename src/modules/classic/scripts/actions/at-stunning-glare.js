@@ -1,5 +1,5 @@
 /**
- * Stunning ray
+ * Stunning glare
  * Target failing at saving throw will be struck by fear
  * @this {Manager}
  * @param manager {Manager}
@@ -7,7 +7,7 @@
  * @param combat {Combat}
  */
 function main ({ manager, action, combat }) {
-    const { duration = combat.attacker.data.VARIABLES.DEFAULT_AILMENT_DURATION } = action
+    const { duration = combat.attacker.getters.getVariables['DEFAULT_AILMENT_DURATION'] } = action
     const oTarget = combat.target
     const { success } = oTarget.rollSavingThrow(
         manager.CONSTS.ABILITY_WISDOM,
