@@ -1,3 +1,4 @@
+const PropertyBuilder = require('../../PropertyBuilder')
 /**
  * Adds a new property
  * @param state {RBSStoreState}

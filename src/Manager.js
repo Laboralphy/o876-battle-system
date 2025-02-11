@@ -49,10 +49,15 @@ class Manager {
         return CONSTS
     }
 
+    get propertyBuilder () {
+        return this._propertyBuilder
+    }
+
     /**
      * @returns {EffectProcessor}
      */
     get effectProcessor () {
+        if(!this._effectProcessor) throw new Error('EffectProcessor not found')
         return this._effectProcessor
     }
 
@@ -182,16 +187,6 @@ class Manager {
         })
         if (oAttackOutcome.hit) {
             oAttackOutcome.applyDamages()
-            Object.entries(oAttackOutcome.damages.types).forEach(([damageType, { amount, resisted }]) => {
-                this.runPropEffectScript(target, 'damaged', {
-                    damageType,
-                    amount,
-                    resisted,
-                    manager: this,
-                    creature: oAttackOutcome.target,
-                    source: oAttackOutcome.attacker
-                })
-            })
         }
     }
 
@@ -284,7 +279,23 @@ class Manager {
             oEntity.events.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => this._events.emit(CONSTS.EVENT_CREATURE_SELECT_WEAPON, { creature: oEntity, ...evt }))
             oEntity.events.on(CONSTS.EVENT_CREATURE_REVIVE, evt => this._events.emit(CONSTS.EVENT_CREATURE_REVIVE, { creature: oEntity, ...evt }))
             oEntity.events.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, { creature: oEntity, ...evt }))
-            oEntity.events.on(CONSTS.EVENT_CREATURE_DAMAGED, evt => this._events.emit(CONSTS.EVENT_CREATURE_DAMAGED, { creature: oEntity, ...evt }))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_DAMAGED, evt => {
+                const {
+                    source,
+                    amount,
+                    resisted,
+                    damageType
+                } = evt
+                this._events.emit(CONSTS.EVENT_CREATURE_DAMAGED, { creature: oEntity, ...evt })
+                this.runPropEffectScript(oEntity, 'damaged', {
+                    damageType,
+                    amount,
+                    resisted,
+                    manager: this,
+                    creature: oEntity,
+                    source
+                })
+            })
             oEntity.events.on(CONSTS.EVENT_CREATURE_DEATH, evt => this._events.emit(CONSTS.EVENT_CREATURE_DEATH, { creature: oEntity, ...evt }))
             oEntity.events.on(CONSTS.EVENT_CREATURE_EQUIP_ITEM, evt => {
                 this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, { creature: oEntity, ...evt })
@@ -347,15 +358,16 @@ class Manager {
         const pb = this._entityBuilder.propertyBuilder
         const gsp = oCreature.getters.getSlotProperties
         const eq = oCreature.getters.getEquipment
+        const oParamThis = { ...oParams, manager: this }
         for (const [slot, aProps] of Object.entries(gsp)) {
             const aProps = gsp[slot]
             const oItem = eq[slot]
             aProps.forEach(prop => {
-                pb.invokePropertyMethod(prop, sScript, oItem, oCreature, oParams)
+                pb.invokePropertyMethod(prop, sScript, oItem, oCreature, oParamThis)
             })
         }
         oCreature.getters.getInnateProperties.forEach(prop => {
-            pb.invokePropertyMethod(prop, sScript, null, oCreature, oParams)
+            pb.invokePropertyMethod(prop, sScript, null, oCreature, oParamThis)
         })
     }
 

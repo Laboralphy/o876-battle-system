@@ -73,7 +73,10 @@
     },
     {
       "type": "PROPERTY_REGENERATION",
-      "amp": "1d6"
+      "amp": 20,
+      "damageTypeVulnerabilities": [
+        "DAMAGE_TYPE_RADIANT"
+      ]
     }
   ],
   "actions": [

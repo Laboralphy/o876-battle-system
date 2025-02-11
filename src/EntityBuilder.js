@@ -195,6 +195,7 @@ class EntityBuilder {
                 })
             return oCreature
         } catch (e) {
+            console.error(e)
             throw new Error(`Could not build creature ${resref} : ${e.message}`, { cause: e })
         }
     }

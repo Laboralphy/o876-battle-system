@@ -7,7 +7,7 @@ class PropertyBuilder {
     constructor () {
         this._propertyPrograms = null
         this.propertyPrograms = PROPERTIES
-        this._aMutatingProperties = new Set()
+        this._aMutatingProperties = null
     }
 
     static get SYMBOL_ACTIVE_PROPERTY () {
@@ -23,16 +23,18 @@ class PropertyBuilder {
     }
 
     set propertyPrograms (value) {
-        this._propertyPrograms = Object.seal(value)
-        this._aMutatingProperties = new Set(
-            Object
-                .entries(this._propertyPrograms)
-                .filter(([sPropName, property]) => ('mutate' in property))
-                .map(([sPropName]) => sPropName)
-        )
+        this._propertyPrograms = { ...value }
     }
 
     get mutatingProperties () {
+        if (!this._aMutatingProperties) {
+            this._aMutatingProperties = new Set(
+                Object
+                    .entries(this._propertyPrograms)
+                    .filter(([sPropName, property]) => ('mutate' in property))
+                    .map(([sPropName]) => sPropName)
+            )
+        }
         return this._aMutatingProperties
     }
 
@@ -56,7 +58,6 @@ class PropertyBuilder {
                 property: oProperty,
                 item: oItem,
                 creature: oCreature,
-                manager: this,
                 ...oParams
             })
         }
@@ -81,7 +82,7 @@ class PropertyBuilder {
             amp,
             data: {}
         }
-        if (this._aMutatingProperties.has(sPropertyType)) {
+        if (this.mutatingProperties.has(sPropertyType)) {
             oProperty.data[SYMBOL_ACTIVE_PROPERTY] = true
         }
         this.invokePropertyMethod(oProperty, 'init', null, null, oPropertyDefinition)

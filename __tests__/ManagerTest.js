@@ -1,5 +1,6 @@
 const Manager = require('../src/Manager')
 const CONSTS = require("../src/consts");
+const PropertyBuilder = require('../src/PropertyBuilder');
 
 const bpNormalActor = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -711,5 +712,107 @@ describe('Weapon with extended types', function () {
 })
 
 describe('active properties', function () {
-    it('should heal one point of damage each combat turn')
+    it('should heal one point of damage each combat turn', function () {
+        const m = new Manager()
+        m.loadModule('classic')
+        const c1 = m.createEntity(bpNormalActor)
+        expect(CONSTS.PROPERTY_REGENERATION in m.propertyBuilder.propertyPrograms).toBeTruthy()
+
+        expect([...m.propertyBuilder.mutatingProperties]).toEqual([CONSTS.PROPERTY_REGENERATION])
+        c1.mutations.setLevel({ value: 10 })
+        expect(c1.getters.getAbilities[CONSTS.ABILITY_CONSTITUTION]).toBe(10)
+        expect(c1.hitPoints).toBe(17)
+        expect(c1.getters.getMaxHitPoints).toBe(35)
+        for (let i = 0; i < 100; ++i) {
+            m.process()
+        }
+        expect(c1.getters.getMaxHitPoints).toBe(35)
+        const pRegen = m.propertyBuilder.buildProperty({
+            type: CONSTS.PROPERTY_REGENERATION,
+            amp: 1
+        })
+        c1.mutations.addProperty({ property: pRegen })
+
+        m.horde.setCreatureActive(c1)
+        m.process()
+        expect(PropertyBuilder.isPropertyActive(pRegen)).toBeTruthy()
+        expect(c1.getters.getProperties.length).toBe(1)
+        expect(PropertyBuilder.isPropertyActive(c1.getters.getProperties[0])).toBeTruthy()
+        expect(c1.getters.getActiveProperties.length).toBe(1)
+        expect(m.horde.isCreatureActive(c1)).toBe(true)
+
+        for (let i = 0; i < 18; ++i) { // about 3 turn -> +3 hp
+            m.process()
+        }
+        expect(c1.hitPoints).toBe(20)
+    })
+
+    it('should add vampire as an active creature', function () {
+        const m = new Manager()
+        m.loadModule('classic')
+        const c1 = m.createEntity('c-vampire')
+        expect(m.horde.activeCreatures.length).toBe(1)
+        m.process()
+        m.process()
+        m.process()
+        m.process()
+        m.process()
+        m.process()
+        m.process()
+        m.process()
+        m.process()
+        expect(m.horde.activeCreatures.length).toBe(1)
+        m.destroyEntity(c1)
+        expect(m.horde.activeCreatures.length).toBe(0)
+    })
+})
+
+describe('focus on regeneration', function () {
+    it('should prevent regen with struck with radiant damage', function () {
+        const m = new Manager()
+        m.loadModule('classic')
+        const c1 = m.createEntity('c-vampire')
+        c1.hitPoints = 10
+        const process = () => {
+            m.process()
+            m.process()
+            m.process()
+            m.process()
+            m.process()
+            m.process()
+        }
+        process()
+        expect(c1.hitPoints).toBe(30)
+        expect(c1.getters.getMaxHitPoints).toBe(76)
+
+        process()
+        expect(c1.hitPoints).toBe(50)
+
+        process()
+        expect(c1.hitPoints).toBe(70)
+
+        process()
+        expect(c1.hitPoints).toBe(76)
+
+        process()
+        expect(c1.hitPoints).toBe(76)
+
+        c1.hitPoints = 10
+        process()
+        expect(c1.hitPoints).toBe(30)
+
+        const eDamage = m.createEffect(CONSTS.EFFECT_DAMAGE, 10, { damageType: CONSTS.DAMAGE_TYPE_RADIANT })
+        m.applyEffect(eDamage, c1)
+
+        expect(c1.hitPoints).toBe(10) // don't forget : vulnerable to RADIANT damages = +100% damage
+
+        process()
+        expect(c1.hitPoints).toBe(10) // +20 regen - 10 radiant damage of previous damage
+
+        process()
+        expect(c1.hitPoints).toBe(30) // +20 regen - 10 radiant damage of previous damage
+
+        process()
+        expect(c1.hitPoints).toBe(50) // +20 regen - 10 radiant damage of previous damage
+    })
 })
