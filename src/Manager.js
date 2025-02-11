@@ -286,6 +286,17 @@ class Manager {
             oEntity.events.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, { creature: oEntity, ...evt }))
             oEntity.events.on(CONSTS.EVENT_CREATURE_DAMAGED, evt => this._events.emit(CONSTS.EVENT_CREATURE_DAMAGED, { creature: oEntity, ...evt }))
             oEntity.events.on(CONSTS.EVENT_CREATURE_DEATH, evt => this._events.emit(CONSTS.EVENT_CREATURE_DEATH, { creature: oEntity, ...evt }))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_EQUIP_ITEM, evt => {
+                this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, { creature: oEntity, ...evt })
+                if (this._horde.isCreatureActive(oEntity)) {
+                    this._horde.setCreatureActive(oEntity)
+                }
+            })
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, { creature: oEntity, ...evt }))
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM_FAILED, { creature: oEntity, ...evt }))
+            if (this._horde.isCreatureActive(oEntity)) {
+                this._horde.setCreatureActive(oEntity)
+            }
         }
         return oEntity
     }
@@ -307,6 +318,9 @@ class Manager {
             .activeCreatures
             .map(creature => {
                 creature.mutations.rechargeActions()
+                creature.getters.getActiveProperties.forEach(property => {
+                    this.runPropertyScript(creature, 'mutate', {})
+                })
                 return creature.getters.getEffects
             })
             .flat()
@@ -329,7 +343,7 @@ class Manager {
         ++this._time
     }
 
-    runPropScript(oCreature, sScript, oParams) {
+    runPropertyScript(oCreature, sScript, oParams) {
         const pb = this._entityBuilder.propertyBuilder
         const gsp = oCreature.getters.getSlotProperties
         const eq = oCreature.getters.getEquipment
@@ -358,7 +372,7 @@ class Manager {
             const source = h.creatures[effect.source]
             ep.invokeEffectMethod(effect, sScript, oCreature, source, oParams)
         }
-        this.runPropScript(oCreature, sScript, oParams)
+        this.runPropertyScript(oCreature, sScript, oParams)
     }
 
     /**

@@ -105,12 +105,22 @@ class Creature {
             cursed
         } = r
         if (cursed) {
-            this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM_FAILED, { item: oItem, slot })
+            this._events.emit(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, {
+                item: oItem,
+                cursedItem: previousItem,
+                slot
+            })
         } else {
             if (previousItem) {
-                this._events.emit(CONSTS.EVENT_CREATURE_REMOVE_ITEM, { item: previousItem, slot })
+                this._events.emit(CONSTS.EVENT_CREATURE_REMOVE_ITEM, {
+                    item: previousItem,
+                    slot
+                })
             }
-            this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, { item: newItem, slot })
+            this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
+                item: newItem,
+                slot
+            })
         }
         return r
     }

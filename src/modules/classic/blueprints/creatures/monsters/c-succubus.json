@@ -88,7 +88,7 @@
     {
       "id": "act-charm",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-stunning-ray",
+      "script": "at-stunning-glare",
       "range": 30,
       "parameters": {},
       "cooldown": 6

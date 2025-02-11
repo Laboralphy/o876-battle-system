@@ -41,12 +41,46 @@
       ]
     }
   ],
-  "properties": [],
+  "properties": [
+    {
+      "type": "PROPERTY_DARKVISION",
+      "amp": 0
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_SLASHING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_CRUSHING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_PIERCING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_WITHERING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_VULNERABILITY",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_RADIANT"
+    },
+    {
+      "type": "PROPERTY_REGENERATION",
+      "amp": "1d6"
+    }
+  ],
   "actions": [
     {
       "id": "act-charm",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-stunning-ray",
+      "script": "at-stunning-glare",
       "range": 30,
       "parameters": {},
       "cooldown": 6

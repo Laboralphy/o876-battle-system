@@ -1,8 +1,5 @@
 const Manager = require('../src/Manager')
 const CONSTS = require("../src/consts");
-const CombatManager = require("../src/libs/combat/CombatManager");
-const Creature = require("../src/Creature");
-const EntityBuilder = require("../src/EntityBuilder");
 
 const bpNormalActor = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -711,4 +708,8 @@ describe('Weapon with extended types', function () {
             }
         ])
     })
+})
+
+describe('active properties', function () {
+    it('should heal one point of damage each combat turn')
 })

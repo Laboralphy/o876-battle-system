@@ -56,6 +56,7 @@ class PropertyBuilder {
                 property: oProperty,
                 item: oItem,
                 creature: oCreature,
+                manager: this,
                 ...oParams
             })
         }
