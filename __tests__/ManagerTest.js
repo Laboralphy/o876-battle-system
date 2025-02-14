@@ -816,3 +816,19 @@ describe('focus on regeneration', function () {
         expect(c1.hitPoints).toBe(50) // +20 regen - 10 radiant damage of previous damage
     })
 })
+
+describe('testing vampyre effect', function () {
+    it('should heal attacker when dealing damage with attacks', function () {
+        const m = new Manager()
+        m.loadModule('classic')
+        const c1 = m.createEntity('c-wight', 'c1')
+        c1.hitPoints = 4
+        const c2 = m.createEntity('c-goblin', 'c2')
+        c1.dice.cheat(0.9)
+        c2.dice.cheat(0.1)
+        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
+        expect(c1.getters.getSelectedWeapon.blueprint.ref).toBe('wpn-long-sword-wight')
+        m.deliverAttack(c1, c2)
+        expect(c1.hitPoints).toBeGreaterThan(4)
+    })
+})

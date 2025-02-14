@@ -28,12 +28,7 @@
       "attributes": [],
       "damages": "2d10",
       "damageType": "DAMAGE_TYPE_CRUSHING",
-      "properties": [
-        {
-          "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
-          "amp": 1
-        }
-      ],
+      "properties": [],
       "equipmentSlots": [
         "EQUIPMENT_SLOT_NATURAL_WEAPON_1",
         "EQUIPMENT_SLOT_NATURAL_WEAPON_2",

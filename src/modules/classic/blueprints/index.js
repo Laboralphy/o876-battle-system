@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-02-10T16:33:10.594Z
+// Date : 2025-02-14T09:43:11.531Z
 // List of files in ./src/modules/classic/blueprints
 
 module.exports = {
@@ -38,7 +38,11 @@ module.exports = {
   'c-skeleton-warrior': require('./creatures/monsters/c-skeleton-warrior.json'),
   'c-skeleton': require('./creatures/monsters/c-skeleton.json'),
   'c-succubus': require('./creatures/monsters/c-succubus.json'),
+  'c-troll': require('./creatures/monsters/c-troll.json'),
   'c-vampire': require('./creatures/monsters/c-vampire.json'),
+  'c-wight': require('./creatures/monsters/c-wight.json'),
+  'c-wyvern': require('./creatures/monsters/c-wyvern.json'),
+  'c-zombie': require('./creatures/monsters/c-zombie.json'),
   'ammo-arrow-fire': require('./items/ammo/ammo-arrow-fire.json'),
   'ammo-arrow-hq': require('./items/ammo/ammo-arrow-hq.json'),
   'ammo-arrow-p1': require('./items/ammo/ammo-arrow-p1.json'),
@@ -126,6 +130,7 @@ module.exports = {
   'wpn-long-sword-hq': require('./items/weapons/wpn-long-sword-hq.json'),
   'wpn-long-sword-p1': require('./items/weapons/wpn-long-sword-p1.json'),
   'wpn-long-sword-p2': require('./items/weapons/wpn-long-sword-p2.json'),
+  'wpn-long-sword-wight': require('./items/weapons/wpn-long-sword-wight.json'),
   'wpn-long-sword': require('./items/weapons/wpn-long-sword.json'),
   'wpn-mace-deva': require('./items/weapons/wpn-mace-deva.json'),
   'wpn-mace-hq': require('./items/weapons/wpn-mace-hq.json'),

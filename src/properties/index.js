@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-02-10T16:33:11.096Z
+// Date : 2025-02-14T09:43:12.146Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -34,5 +34,6 @@ module.exports = {
   'PROPERTY_SPIKE_DAMAGE': require('./spike-damage.js'),
   'PROPERTY_THINKER': require('./thinker.js'),
   'PROPERTY_UNIDENTIFIED': require('./unidentified.js'),
+  'PROPERTY_VAMPYRE': require('./vampyre.js'),
   'PROPERTY_WEIGHT_FACTOR': require('./weight-factor.js')
 }

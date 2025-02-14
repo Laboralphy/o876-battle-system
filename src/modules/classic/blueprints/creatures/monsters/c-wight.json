@@ -1,0 +1,71 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "classType": "CLASS_TYPE_MONSTER",
+  "proficiencies": [
+    "PROFICIENCY_WEAPON_NATURAL",
+    "PROFICIENCY_WEAPON_SIMPLE",
+    "PROFICIENCY_WEAPON_MARTIAL",
+    "PROFICIENCY_ARMOR_LIGHT",
+    "PROFICIENCY_ARMOR_MEDIUM",
+    "PROFICIENCY_ARMOR_HEAVY"
+  ],
+  "abilities": {
+    "strength": 15,
+    "dexterity": 14,
+    "constitution": 16,
+    "intelligence": 10,
+    "wisdom": 13,
+    "charisma": 15
+  },
+  "equipment": [
+    "wpn-long-sword-wight",
+    "wpn-long-bow",
+    "arm-studded-leather"
+  ],
+  "properties": [
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_SLASHING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_CRUSHING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_PIERCING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_WITHERING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_POISON"
+    },
+    {
+      "type": "PROPERTY_IMMUNITY",
+      "amp": 0,
+      "immunityType": "IMMUNITY_TYPE_POISON"
+    },
+    {
+      "type": "PROPERTY_DARKVISION",
+      "amp": 0
+    },
+    {
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 1
+    }
+  ],
+  "actions": [],
+  "specie": "SPECIE_UNDEAD",
+  "ac": 0,
+  "level": 6,
+  "hd": 8,
+  "speed": 30
+}

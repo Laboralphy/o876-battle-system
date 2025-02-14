@@ -358,16 +358,16 @@ class Manager {
         const pb = this._entityBuilder.propertyBuilder
         const gsp = oCreature.getters.getSlotProperties
         const eq = oCreature.getters.getEquipment
-        const oParamThis = { ...oParams, manager: this }
+        const oParamAndManager = { ...oParams, manager: this }
         for (const [slot, aProps] of Object.entries(gsp)) {
             const aProps = gsp[slot]
             const oItem = eq[slot]
             aProps.forEach(prop => {
-                pb.invokePropertyMethod(prop, sScript, oItem, oCreature, oParamThis)
+                pb.invokePropertyMethod(prop, sScript, oItem, oCreature, oParamAndManager)
             })
         }
         oCreature.getters.getInnateProperties.forEach(prop => {
-            pb.invokePropertyMethod(prop, sScript, null, oCreature, oParamThis)
+            pb.invokePropertyMethod(prop, sScript, null, oCreature, oParamAndManager)
         })
     }
 
