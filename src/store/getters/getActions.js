@@ -34,6 +34,7 @@ module.exports = state => Object.fromEntries(
                 actionType: action.actionType,
                 cooldown,
                 charges,
+                maxCharges: action.dailyCharges,
                 recharging,
                 range: action.range,
                 script: action.script,

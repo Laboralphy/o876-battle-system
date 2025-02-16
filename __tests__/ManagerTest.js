@@ -691,7 +691,7 @@ describe('Weapon with extended types', function () {
         const m = new Manager()
         m.loadModule('classic')
         const h = m.createEntity('wpn-halberd-p2', 'x1')
-        expect(h.properties).toEqual([
+        expect(h.properties).toMatchObject([
             {
                 type: 'PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE',
                 amp: 0,

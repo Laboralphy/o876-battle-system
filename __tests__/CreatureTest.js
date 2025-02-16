@@ -655,7 +655,7 @@ describe('getSlotProperties', function () {
         oCreature.equipItem(oArmor)
         expect(oCreature.getters.getSlotProperties).toEqual({})
         oCreature.equipItem(oMagicArmor)
-        expect(oCreature.getters.getSlotProperties).toEqual({
+        expect(oCreature.getters.getSlotProperties).toMatchObject({
             [CONSTS.EQUIPMENT_SLOT_CHEST]: [{
                 type: CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
                 amp: 1,
@@ -690,7 +690,7 @@ describe('getSlotProperties', function () {
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT, CONSTS.EQUIPMENT_SLOT_FINGER_LEFT]
         })
         oCreature.equipItem(oRingOfFireProtection)
-        expect(oCreature.getters.getSlotProperties).toEqual({
+        expect(oCreature.getters.getSlotProperties).toMatchObject({
             [CONSTS.EQUIPMENT_SLOT_CHEST]: [{
                 type: CONSTS.PROPERTY_DAMAGE_RESISTANCE,
                 amp: 0,
@@ -740,7 +740,7 @@ describe('getSlotProperties', function () {
         })
         oCreature.equipItem(oMagicArmor)
         oCreature.equipItem(oRingOfFireProtection)
-        expect(oCreature.getters.getSlotProperties).toEqual({
+        expect(oCreature.getters.getSlotProperties).toMatchObject({
             [CONSTS.EQUIPMENT_SLOT_CHEST]: [{
                 type: CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
                 amp: 1,

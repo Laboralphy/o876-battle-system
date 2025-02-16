@@ -7,6 +7,7 @@
  * @property equipItem {function({ item: RBSItem, slot: string, bypassCurse: boolean }): *}
  * @property rechargeActions {function({  })}
  * @property removeEffect {function({ effect: RBSEffect })}
+ * @property removeProperty {function({ property: RBSProperty })}
  * @property restoreAction {function({ idAction: string })}
  * @property selectOffensiveSlot {function({ value: string })}
  * @property setAbilityValue {function({ ability: string, value: number })}

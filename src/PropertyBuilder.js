@@ -1,4 +1,5 @@
 const PROPERTIES = require('./properties')
+const {getUniqueId} = require("./libs/unique-id");
 
 const SYMBOL_ACTIVE_PROPERTY = Symbol('SYMBOL_ACTIVE_PROPERTY')
 
@@ -66,6 +67,7 @@ class PropertyBuilder {
 
     /**
      * @typedef RBSProperty
+     * @property id {string}
      * @property type {string} PROPERTY_*
      * @property amp {number|string}
      * @property data {object}
@@ -78,6 +80,7 @@ class PropertyBuilder {
      */
     buildProperty ({ type: sPropertyType, amp = 0, ...oPropertyDefinition }) {
         const oProperty = {
+            id: getUniqueId(),
             type: sPropertyType,
             amp,
             data: {}

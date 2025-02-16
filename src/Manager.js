@@ -14,6 +14,8 @@ const {aggregateModifiers} = require("./libs/aggregator");
 const PropertyBuilder = require('./PropertyBuilder')
 const baseModule = require('./modules/base')
 
+const CombatStartEvent = require('./events/CombatStartEvent')
+
 class Manager {
     constructor () {
         this._events = new Events()
@@ -33,9 +35,19 @@ class Manager {
         this._scripts = {}
         this._time = 0
         cm.events.on(CONSTS.EVENT_COMBAT_TURN, evt => this._combatManagerTurn(evt))
-        cm.events.on(CONSTS.EVENT_COMBAT_START, evt => this._events.emit(CONSTS.EVENT_COMBAT_START, evt))
+        cm.events.on(CONSTS.EVENT_COMBAT_START, evt =>
+            this._events.emit(CONSTS.EVENT_COMBAT_START, new CombatStartEvent({ system: this, ...evt }))
+        )
         cm.events.on(CONSTS.EVENT_COMBAT_END, evt => this._events.emit(CONSTS.EVENT_COMBAT_END, evt))
-        cm.events.on(CONSTS.EVENT_COMBAT_MOVE, evt => this._events.emit(CONSTS.EVENT_COMBAT_MOVE, evt))
+        cm.events.on(CONSTS.EVENT_COMBAT_MOVE, evt =>
+            this._events.emit(CONSTS.EVENT_COMBAT_MOVE, {
+                system: this,
+                combat: evt.combat,
+                speed: evt.speed,
+                previousDistance: evt.previousDistance,
+                distance: evt.distance
+            })
+        )
         cm.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, evt))
         cm.events.on(CONSTS.EVENT_COMBAT_ACTION, evt => this._combatManagerAction(evt))
         cm.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => this._combatManagerAttack(evt))

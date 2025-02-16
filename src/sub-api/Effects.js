@@ -1,40 +1,16 @@
-const Abstract = require('./Abstract')
+const Abstract = require('./ServiceAbstract')
+const BoxedEffect = require('./classes/BoxedEffect')
+const SYMBOL_ORIGINAL_EFFECT = BoxedEffect.SYMBOL_BOXED_OBJECT
 
-const SYMBOL_ORIGINAL_EFFECT = Symbol('SYMBOL_ORIGINAL_EFFECT')
 const TAG_SPELL_GROUP = 'SPELL_GROUP::'
 
-class Effect {
-    constructor (oRBSEffect) {
-        const {
-            id,
-            type: sType,
-            duration,
-            source,
-            subtype
-        } = oRBSEffect
-        this.id = id
-        this.type = sType
-        this.duration = duration
-        this.source = source
-        this.subtype = subtype
-        Object.defineProperty(this, SYMBOL_ORIGINAL_EFFECT, {
-            value: oRBSEffect,
-            enumerable: false,
-            writable: false,
-            configurable: false
-        })
-    }
-}
+
 
 class Effects extends Abstract {
-    constructor(services) {
-        super(services)
-    }
-
     /**
      * Returns a list of effect applied on the specified creature
      * @param idCreature {string} creature identifier
-     * @returns {Effect[]}
+     * @returns {BoxedEffect[]}
      */
     getEffects (idCreature) {
         return this
@@ -43,7 +19,52 @@ class Effects extends Abstract {
             .getCreature(idCreature)
             .getters
             .getEffects
-            .map(effect => new Effect(effect))
+            .map(effect => new BoxedEffect(effect))
+    }
+
+    /**
+     * Get effect duration
+     * @param oEffect {BoxedEffect}
+     * @returns {number}
+     */
+    getEffectDuration (oEffect) {
+        return oEffect.duration
+    }
+
+    /**
+     * Get effect type
+     * @param oEffect {BoxedEffect}
+     * @returns {string} EFFECT_*
+     */
+    getEffectType (oEffect) {
+        return oEffect.type
+    }
+
+    /**
+     * Returns true if effect is extraordinary
+     * @param oEffect {BoxedEffect}
+     * @returns {boolean}
+     */
+    isEffectExtraordinary (oEffect) {
+        return oEffect.isExtraordinary
+    }
+
+    /**
+     * Returns true if effect is supernatural
+     * @param oEffect {BoxedEffect}
+     * @returns {boolean}
+     */
+    isEffectSupernatural (oEffect) {
+        return oEffect.isSupernatural
+    }
+
+    /**
+     * Returns the creature identifier who created this effect
+     * @param oEffect {BoxedEffect}
+     * @returns {string}
+     */
+    getEffectCreator (oEffect) {
+        return oEffect.source
     }
 
     /**
@@ -51,10 +72,10 @@ class Effects extends Abstract {
      * @param sEffect {string} EFFECT_*
      * @param amp {string|number} amplitude can be either a number or a Die expression (1d6, 2d8+5, ...)
      * @param data {object} Effect parameters
-     * @return {Effect} Can be safely serialized, but should not be modified
+     * @return {BoxedEffect} Can be safely serialized, but should not be modified
      */
     createEffect (sEffect, amp = 0, data = {}) {
-        return new Effect(this._services.core.manager.createEffect(sEffect, amp, data))
+        return new BoxedEffect(this._services.core.manager.createEffect(sEffect, amp, data))
     }
 
     /**
@@ -65,7 +86,7 @@ class Effects extends Abstract {
      * @return {RBSEffect}
      */
     createExtraordinaryEffect (sEffect, amp = 0, data = {}) {
-        return new Effect(this._services.core.manager.createExtraordinaryEffect(sEffect, amp, data))
+        return new BoxedEffect(this._services.core.manager.createExtraordinaryEffect(sEffect, amp, data))
     }
 
     /**
@@ -76,7 +97,7 @@ class Effects extends Abstract {
      * @return {RBSEffect}
      */
     createSupernaturalEffect (sEffect, amp = 0, data = {}) {
-        return new Effect(this._services.core.manager.createSupernaturalEffect(sEffect, amp, data))
+        return new BoxedEffect(this._services.core.manager.createSupernaturalEffect(sEffect, amp, data))
     }
 
     /**
@@ -85,7 +106,7 @@ class Effects extends Abstract {
      * @param target {string} identifier of target creature
      * @param duration {number} duration of all effects
      * @param source {string} identifier of source creature
-     * @param aEffects {Effect[]} list of all effects
+     * @param aEffects {BoxedEffect[]} list of all effects
      */
     applySpellEffectGroup (idSpell, aEffects, target, duration = 0, source = undefined) {
         const oTarget = this._services.creatures.getCreature(target)
@@ -106,7 +127,7 @@ class Effects extends Abstract {
 
     /**
      * Applies an effect to the target creature
-     * @param oEffect {Effect} Effect created by createEffect
+     * @param oEffect {BoxedEffect} Effect created by createEffect
      * @param idTargetCreature {string} creature whose effect is applied
      * @param nDuration {number} duration of effect
      * @param [idSourceCreature] {string} if undefined, will be set to idTargetCreature
@@ -120,7 +141,7 @@ class Effects extends Abstract {
 
     /**
      * Removes an effect
-     * @param effect {Effect}
+     * @param effect {BoxedEffect}
      */
     removeEffect (effect) {
         const oRealEffect = effect[SYMBOL_ORIGINAL_EFFECT]

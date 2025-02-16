@@ -280,7 +280,7 @@ describe('createEntity', function () {
         })
         const oSword = eb.createEntity('weapon-cursed-sword-of-fire', 'x1')
         expect(oSword.blueprint.damages).toBe('1d6-1')
-        expect(oSword.properties).toEqual([
+        expect(oSword.properties).toMatchObject([
             {
                 type: 'PROPERTY_ATTACK_MODIFIER',
                 amp: -1,
@@ -445,7 +445,7 @@ describe('building a monster', function () {
         const snake = ib.createEntity(bpSnake)
         expect(snake).toBeDefined()
         expect(snake).toBeInstanceOf(Creature)
-        expect(snake.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE].properties[0]).toEqual({
+        expect(snake.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE].properties[0]).toMatchObject({
             type: CONSTS.PROPERTY_DAMAGE_MODIFIER,
             amp: '1d4',
             data: {

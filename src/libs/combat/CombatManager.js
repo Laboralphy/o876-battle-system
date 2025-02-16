@@ -46,6 +46,10 @@ class CombatManager {
         return Object.values(this._fighters)
     }
 
+    get combatRegistry () {
+        return this._fighters
+    }
+
     /**
      * Adds this instance to given object. Returns a new version of object with this instance insert in property 'combatManager'
      * @param oObject {*}
