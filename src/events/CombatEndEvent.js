@@ -1,12 +1,12 @@
 const CONSTS = require('../consts')
 
-class CombatStartEvent {
+class CombatEndEvent {
     constructor ({ system, combat }) {
-        this.type = CONSTS.EVENT_COMBAT_START
+        this.type = CONSTS.EVENT_COMBAT_END
         this.system = system
         this.attacker = combat.attacker.id
         this.target = combat.target.id
     }
 }
 
-module.exports = CombatStartEvent
+module.exports = CombatEndEvent

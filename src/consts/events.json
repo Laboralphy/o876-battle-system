@@ -3,7 +3,7 @@
   "EVENT_CREATURE_SAVING_THROW": "creature.saving-throw",
   "EVENT_CREATURE_REVIVE": "creature.revive",
   "EVENT_CREATURE_EFFECT_APPLIED": "creature.effect-applied",
-  "EVENT_CREATURE_EFFECT_DISPOSED": "creature.effect-disposed",
+  "EVENT_CREATURE_EFFECT_EXPIRED": "creature.effect-expired",
   "EVENT_CREATURE_EFFECT_IMMUNITY": "creature.effect-immunity",
   "EVENT_CREATURE_DEATH": "creature.death",
   "EVENT_CREATURE_HEAL": "creature.heal",

@@ -1,14 +1,12 @@
 const CONSTS = require('../consts')
 
 class CombatTurnEvent {
-    constructor ({ system, combat, speed, previousDistance, distance }) {
-        this.type = CONSTS.EVENT_COMBAT_START
+    constructor ({ system, combat }) {
+        this.type = CONSTS.EVENT_COMBAT_TURN
         this.system = system
-        this.speed = speed
         this.attacker = combat.attacker.id
         this.target = combat.target.id
-        this.distance = distance
-        this.previousDistance = previousDistance
+        this.turn = combat.turn
     }
 }
 

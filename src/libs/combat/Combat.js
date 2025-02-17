@@ -443,6 +443,11 @@ class Combat {
         }
     }
 
+    retreatFromTarget (nUseSpeed = undefined) {
+        const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed
+        this.approachTarget(-nRunSpeed)
+    }
+
     /**
      * @param value {String}
      */
