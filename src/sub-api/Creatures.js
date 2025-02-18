@@ -1,73 +1,61 @@
 const Abstract = require('./ServiceAbstract')
 const Creature = require("../Creature");
 const BoxedAction = require('./classes/BoxedAction');
+const BoxedCreature = require('./classes/BoxedCreature');
 
 class Creatures extends Abstract {
     /**
      * Returns true if the specified entity id refers to a creature, not an item
-     * @param idEntity
+     * @param oEntity
      * @returns {boolean}
      */
-    isCreature (idEntity) {
-        return this.services.core.getEntity(idEntity) instanceof Creature
-    }
-
-    /**
-     * Returns a Creature. Not an item
-     * @param id {string} creature id
-     * @return {Creature}
-     */
-    getCreature (id) {
-        const oEntity = this.getEntity(id)
-        if (oEntity instanceof Creature) {
-            return oEntity
-        } else {
-            throw new TypeError(`entity ${id} is not a creature`)
-        }
+    isCreature (oEntity) {
+        return oEntity instanceof BoxedCreature
     }
 
     /**
      * Returns a creature ability modifier
-     * @param idCreature {string}
+     * @param oCreature {BoxedCreature}
      * @param sAbility {string} ABILITY_*
      * @returns {number}
      */
-    getAbilityModifier (idCreature, sAbility) {
-        const oCreature = this.getCreature(idCreature)
-        return oCreature.getters.getAbilityModifiers[this.services.core.checkConst(sAbility, this.services.core.PREFIXES.ABILITY)]
+    getAbilityModifier (oCreature, sAbility) {
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
+            .getters
+            .getAbilityModifiers[this.services.core.checkConst(sAbility, this.services.core.PREFIXES.ABILITY)]
     }
 
     /**
      * Returns a creature ability score
-     * @param idCreature {string}
+     * @param oCreature {BoxedCreature}
      * @param sAbility {string} ABILITY_*
      * @returns {number}
      */
-    getAbilityScore (idCreature, sAbility) {
-        const oCreature = this.getCreature(idCreature)
-        return oCreature.getters.getAbilities[this.services.core.checkConst(sAbility, this.services.core.PREFIXES.ABILITY)]
+    getAbilityScore (oCreature, sAbility) {
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
+            .getters
+            .getAbilities[this.services.core.checkConst(sAbility, this.services.core.PREFIXES.ABILITY)]
     }
 
     /**
      * Get a list of action identifier
-     * @param idCreature {string}
+     * @param oCreature {string}
      * @return {{[id: string]: BoxedAction}}
      */
-    getActions (idCreature) {
+    getActions (oCreature) {
         return Object.fromEntries(Object
-            .entries(this.getCreature(idCreature).getters.getActions)
+            .entries(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getActions)
             .map(([sAction, oAction]) => [sAction, new BoxedAction(oAction)]))
     }
 
     /**
      * Returns true if creature has the specified basic capability
-     * @param idCreature {string} creature identifier
+     * @param oCreature {BoxedCreature} creature identifier
      * @param sCapability {string} CAPABILITY_*
      * @returns {boolean}
      */
-    hasCapability (idCreature, sCapability) {
-        return this
-            .getCreature(idCreature)
+    hasCapability (oCreature, sCapability) {
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
             .getters
             .getCapabilitySet
             .has(this.services.core.checkConst(sCapability, this.services.core.PREFIXES.CAPABILITY))
@@ -75,13 +63,12 @@ class Creatures extends Abstract {
 
     /**
      * Returns true if creature has the specified condition
-     * @param idCreature {string} creature identifier
+     * @param oCreature {BoxedCreature} creature identifier
      * @param sCondition {string} CONDITION_*
      * @returns {boolean}
      */
-    hasConditions (idCreature, sCondition) {
-        return this
-            .getCreature(idCreature)
+    hasConditions (oCreature, sCondition) {
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
             .getters
             .getConditionSet
             .has(this.services.core.checkConst(sCondition, this.services.core.PREFIXES.CONDITION))
@@ -89,39 +76,38 @@ class Creatures extends Abstract {
 
     /**
      * Returns a list of conditions that affect creature
-     * @param idCreature {string} creature identifier
+     * @param oCreature {BoxedCreature} creature identifier
      * @returns {string[]} CONDITION_* []
      */
-    getConditions (idCreature) {
-        return [...this.getCreature(idCreature).getters.getConditionSet]
+    getConditions (oCreature) {
+        return [...oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getConditionSet]
     }
 
     /**
      * returns the current weight of all carried items
-     * @param idCreature {string} creature identifier
+     * @param oCreature {BoxedCreature} creature identifier
      * @returns {number}
      */
-    getCarriedWeight (idCreature) {
-        return this.getCreature(idCreature).getters.getEncumbrance.value
+    getCarriedWeight (oCreature) {
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getEncumbrance.value
     }
 
     /**
      * returns the maximum weight a creature can carry
-     * @param idCreature {string} creature identifier
+     * @param oCreature {BoxedCreature} creature identifier
      * @returns {number}
      */
-    getMaxCarryWeight (idCreature) {
-        return this.getCreature(idCreature).getters.getEncumbrance.capacity
+    getMaxCarryWeight (oCreature) {
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getEncumbrance.capacity
     }
 
     /**
      * Retrieve equipment list
-     * @param idCreature
+     * @param oCreature {BoxedCreature}
      * @returns {{slot: *, item: *}[]}
      */
-    getEquipment (idCreature) {
-        return Object.entries(this
-            .getCreature(idCreature)
+    getEquipment (oCreature) {
+        return Object.entries(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
             .getters
             .getEquipment
         ).map(([slot, item]) => {

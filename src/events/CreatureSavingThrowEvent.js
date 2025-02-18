@@ -2,7 +2,7 @@ const CONSTS = require('../consts')
 
 class CreatureSavingThrowEvent {
     constructor ({ system, creature, roll, dc, success, bonus, ability }) {
-        this.type = CONSTS.EVENT_CREATURE_REVIVE
+        this.type = CONSTS.EVENT_CREATURE_SAVING_THROW
         this.system = system
         this.creature = creature.id
         this.roll = roll

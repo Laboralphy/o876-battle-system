@@ -1,4 +1,5 @@
 const CONSTS = require('../consts')
+const BoxedCreature = require('../sub-api/classes/BoxedCreature')
 
 class CombatActionEvent {
     constructor ({ system, combat }) {

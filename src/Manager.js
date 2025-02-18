@@ -48,6 +48,7 @@ class Manager {
         this._combatManager = cm
         this._scripts = {}
         this._time = 0
+        this._systemInstance = this
         cm.events.on(CONSTS.EVENT_COMBAT_TURN, evt => this._combatManagerEventTurn(evt))
         cm.events.on(CONSTS.EVENT_COMBAT_START, evt => this._combatManagerEventStart(evt))
         cm.events.on(CONSTS.EVENT_COMBAT_END, evt => this._combatManagerEventEnd(evt))
@@ -88,6 +89,14 @@ class Manager {
         return this._events
     }
 
+    get systemInstance () {
+        return this._systemInstance
+    }
+
+    set systemInstance (value) {
+        return this._systemInstance = value
+    }
+
     /**
      * return instance of combat manager
      * @returns {CombatManager}
@@ -103,7 +112,7 @@ class Manager {
      * @param source {Creature}
      */
     _effectApplied({effect, target, source}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, new CreatureEffectAppliedEvent({ system: this, effect }))
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, new CreatureEffectAppliedEvent({ system: this._systemInstance, effect }))
     }
 
     /**
@@ -113,7 +122,7 @@ class Manager {
      * @private
      */
     _effectImmunity({effect, target}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_IMMUNITY, new CreatureEffectImmunityEvent({ system: this, effect }))
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_IMMUNITY, new CreatureEffectImmunityEvent({ system: this._systemInstance, effect }))
     }
 
     /**
@@ -123,7 +132,7 @@ class Manager {
      * @param source {Creature}
      */
     _effectDisposed({effect, target, source}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, new CreatureEffectExpiredEvent({ system: this, effect }))
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, new CreatureEffectExpiredEvent({ system: this._systemInstance, effect }))
     }
 
     _combatManagerEventTurn (evt) {
@@ -137,28 +146,28 @@ class Manager {
             manager: this
         })
         this._events.emit(CONSTS.EVENT_COMBAT_TURN, new CombatTurnEvent({
-            system: this,
+            system: this._systemInstance,
             combat: evt.combat
         }))
     }
 
     _combatManagerEventStart (evt) {
         this._events.emit(CONSTS.EVENT_COMBAT_START, new CombatStartEvent({
-            system: this,
+            system: this._systemInstance,
             combat: evt.combat
         }))
     }
 
     _combatManagerEventEnd (evt) {
         this._events.emit(CONSTS.EVENT_COMBAT_END, new CombatEndEvent({
-            system: this,
+            system: this._systemInstance,
             combat: evt.combat
         }))
     }
 
     _combatManagerEventMove (evt) {
         this._events.emit(CONSTS.EVENT_COMBAT_MOVE, new CombatMoveEvent({
-            system: this,
+            system: this._systemInstance,
             combat: evt.combat,
             speed: evt.speed
         }))
@@ -166,7 +175,7 @@ class Manager {
 
     _combatManagerEventDistance (evt) {
         this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, new CombatDistanceEvent({
-            system: this,
+            system: this._systemInstance,
             combat: evt.combat,
             distance: evt.combat.distance
         }))
@@ -182,7 +191,7 @@ class Manager {
         const combat = evt.combat
         const attacker = combat.attacker
         const oActionEvent = new CombatActionEvent({
-            system: this,
+            system: this._systemInstance,
             combat,
             action: evt.action.id
         })
@@ -271,7 +280,7 @@ class Manager {
             })
         }
         this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, new CombatAttackEvent({
-            system: this,
+            system: this._systemInstance,
             attack: oAttackOutcome
         }))
         if (oAttackOutcome.hit) {
@@ -331,19 +340,19 @@ class Manager {
             this._horde.linkCreature(oEntity)
             oEntity.events.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => {
                 this._events.emit(CONSTS.EVENT_CREATURE_SELECT_WEAPON, new CreatureSelectWeaponEvent({
-                    system: this,
+                    system: this._systemInstance,
                     creature: oEntity
                 }))
             })
             oEntity.events.on(CONSTS.EVENT_CREATURE_REVIVE, evt => {
                 this._events.emit(CONSTS.EVENT_CREATURE_REVIVE, new CreatureReviveEvent({
-                    system: this,
+                    system: this._systemInstance,
                     creature: oEntity
                 }))
             })
             oEntity.events.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => {
                 this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, new CreatureSavingThrowEvent({
-                    system: this,
+                    system: this._systemInstance,
                     creature: oEntity,
                     roll: evt.roll,
                     dc: evt.dc,
@@ -360,7 +369,7 @@ class Manager {
                     damageType
                 } = evt
                 this._events.emit(CONSTS.EVENT_CREATURE_DAMAGED, new CreatureDamagedEvent({
-                    system: this,
+                    system: this._systemInstance,
                     creature: oEntity,
                     source,
                     amount,
@@ -378,7 +387,7 @@ class Manager {
             })
             oEntity.events.on(CONSTS.EVENT_CREATURE_DEATH, evt => {
                 this._events.emit(CONSTS.EVENT_CREATURE_DEATH, new CreatureDeathEvent({
-                    system: this,
+                    system: this._systemInstance,
                     creature: oEntity,
                     killer: evt.killer
                 }))

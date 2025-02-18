@@ -1,4 +1,5 @@
 const ServiceAbstract = require('./ServiceAbstract')
+const BoxedCreature = require('./classes/BoxedCreature')
 
 class Combats extends ServiceAbstract {
     constructor () {
@@ -12,54 +13,61 @@ class Combats extends ServiceAbstract {
         }
     }
 
-    getCreatureCombat (idCreature) {
-        const oCreature = this.services.creatures.getCreature(idCreature)
-        const cm = this.services.core.manager.combatManager
-        if (cm.isCreatureFighting(oCreature)) {
-            return cm.getCombat(oCreature)
-        } else {
-            return null
-        }
+    getCreatureCombat (oCreature) {
+        return this
+            .services
+            .core
+            .manager
+            .combatManager
+            .getCombat(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT])
     }
 
-    getCreatureOffenders (idCreature, nRange = Infinity) {
-        const oCreature = this.services.creatures.getCreature(idCreature)
-        const cm = this.services.core.manager.combatManager
-        return cm.getOffenders(oCreature, nRange).map((c) => c.id)
+    getCreatureOffenders (oCreature, nRange = Infinity) {
+        return this
+            .services
+            .core
+            .manager
+            .combatManager
+            .getOffenders(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT], nRange)
+            .map((c) => new BoxedCreature(c))
     }
 
-    approachTarget (idCreature, nSpeed = undefined) {
-        const oCombat = this.getCreatureCombat(idCreature)
+    approachTarget (oCreature, nSpeed = undefined) {
+        const oCombat = this.getCreatureCombat(oCreature)
         if (oCombat) {
             oCombat.approachTarget(nSpeed)
         }
     }
 
-    retreatFromTarget (idCreature, nSpeed = undefined) {
-        const oCombat = this.getCreatureCombat(idCreature)
+    retreatFromTarget (oCreature, nSpeed = undefined) {
+        const oCombat = this.getCreatureCombat(oCreature)
         if (oCombat) {
             oCombat.retreatFromTarget(nSpeed)
         }
     }
 
-    selectAction (idCreature, idAction) {
-        const oCombat = this.getCreatureCombat(idCreature)
+    selectAction (oCreature, idAction) {
+        const oCombat = this.getCreatureCombat(oCreature)
         if (oCombat) {
             oCombat.selectCurrentAction(idAction)
         }
     }
 
-    startCombat  (idAttacker, idTarget) {
-        const cm = this.services.core.manager.combatManager
-        const oAttacker = this.services.creatures.getCreature(idAttacker)
-        const oTarget = this.services.creatures.getCreature(idTarget)
-        cm.startCombat(oAttacker, oTarget)
+    startCombat (oCreature, oTarget) {
+        this
+            .services
+            .core
+            .manager
+            .combatManager
+            .startCombat(
+                oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT],
+                oTarget[BoxedCreature.SYMBOL_BOXED_OBJECT]
+            )
     }
 
-    endCombat  (idAttacker, idTarget, bBothSide = false) {
+    endCombat  (oAttacker, bBothSide = false) {
         const cm = this.services.core.manager.combatManager
-        const oAttacker = this.services.creatures.getCreature(idAttacker)
-        cm.endCombat(oAttacker, bBothSide)
+        cm.endCombat(oAttacker[BoxedCreature.SYMBOL_BOXED_OBJECT], bBothSide)
     }
 }
 

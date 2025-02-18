@@ -1,4 +1,7 @@
 const ServiceAbstract = require('./ServiceAbstract')
+const Creature = require('../Creature')
+const BoxedCreature = require('./classes/BoxedCreature')
+const BoxedItem = require('./classes/BoxedItem')
 
 class Entities extends ServiceAbstract {
     constructor() {
@@ -32,7 +35,7 @@ class Entities extends ServiceAbstract {
      * Creates an entity
      * @param resref {string} resource reference
      * @param id {string} identifier
-     * @returns {Creature|RBSItem}
+     * @returns {BoxedCreature|RBSItem}
      */
     createEntity (resref, id) {
         if (this.isEntityExists(id)) {
@@ -40,30 +43,30 @@ class Entities extends ServiceAbstract {
         }
         const oEntity = this.manager.createEntity(resref, id)
         this._entities[id] = oEntity
-        return oEntity.id
+        return oEntity instanceof Creature ? new BoxedCreature(oEntity) : new BoxedItem(oEntity)
     }
 
     /**
      * Destroys an entity previously created by createEntity()
-     * @param id {string} entity identifier
+     * @param oEntity {BoxedCreature|BoxedItem} entity identifier
      */
-    destroyEntity (id) {
-        this._services.core.manager.destroyEntity(this.getEntity(id))
-        delete this._entities[id]
+    destroyEntity (oEntity) {
+        this._services.core.manager.destroyEntity(oEntity.id)
+        delete this._entities[oEntity.id]
     }
 
     /**
      * Call one of the specfied callback according to specified entity type
-     * @param idEntity {string} entity identifier
+     * @param oEntity {BoxedCreature|BoxedItem} entity identifier
      * @param creature {function(Creature)} function to run if entity type is creature
      * @param item {function(RBSItem)} function to run if entity type is item
      * @returns {*}
      */
-    switchEntityType (idEntity, { creature, item }) {
-        if (creature && this.services.creatures.isCreature(idEntity)) {
-            return creature(this.services.creatures.getCreature(idEntity))
-        } else if (this.services.items.isItem(idEntity)) {
-            return item(this.services.core.getEntity(idEntity))
+    switchEntityType (oEntity, { creature, item }) {
+        if (creature && oEntity.isCreature) {
+            return creature(oEntity[BoxedCreature.SYMBOL_BOXED_OBJECT])
+        } else if (item && oEntity.isItem) {
+            return item(oEntity[BoxedCreature.SYMBOL_BOXED_OBJECT])
         }
     }
 }

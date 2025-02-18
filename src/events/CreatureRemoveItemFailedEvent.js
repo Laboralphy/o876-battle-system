@@ -1,8 +1,8 @@
 const CONSTS = require('../consts')
 
-class CreatureEquipItemFailedEvent {
+class CreatureRemoveItemFailedEvent {
     constructor ({ system, creature, item, slot, cursedItem }) {
-        this.type = CONSTS.EVENT_CREATURE_SELECT_WEAPON
+        this.type = CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED
         this.system = system
         this.creature = creature.id
         this.item = item.id
@@ -11,4 +11,4 @@ class CreatureEquipItemFailedEvent {
     }
 }
 
-module.exports = CreatureEquipItemFailedEvent
+module.exports = CreatureRemoveItemFailedEvent

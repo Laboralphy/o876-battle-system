@@ -3,6 +3,7 @@ const CONSTS = require('../consts')
 const { checkConst } = require('../libs/check-const')
 const Manager = require('../Manager')
 
+
 const PREFIXES = {
     ABILITY: 'ABILITY_',
     CAPABILITY: 'CAPABILITY_',
@@ -13,12 +14,18 @@ class Core extends Abstract {
     constructor (services) {
         super(services)
         this._manager = new Manager()
+        this._manager.systemInstance = this
+        this._events = this._manager.events
         this._manager.combatManager.defaultDistance = 50
         /**
          * @type {{[id: string]: RBSItem | Creature}}
          * @private
          */
         this._entities = {}
+    }
+
+    get events () {
+        return this._events
     }
 
     get PREFIXES () {
