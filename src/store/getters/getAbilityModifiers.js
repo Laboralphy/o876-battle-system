@@ -1,4 +1,4 @@
-const { shallowMap } = require("@laboralphy/object-fusion");
+const { shallowMap } = require('@laboralphy/object-fusion');
 
 /**
  * List of all ability modifiers
@@ -8,5 +8,5 @@ const { shallowMap } = require("@laboralphy/object-fusion");
  * @returns {Object<string, number>}
  */
 module.exports = (state, getters, externals) => {
-    return shallowMap(getters.getAbilities, value => Math.floor((value - 10) / 2))
-}
+    return shallowMap(getters.getAbilities, value => Math.floor((value - 10) / 2));
+};

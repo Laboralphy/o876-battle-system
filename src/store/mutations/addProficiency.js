@@ -1,4 +1,4 @@
-const { checkConst } = require('../../libs/check-const')
+const { checkConst } = require('../../libs/check-const');
 
 /**
  *
@@ -6,8 +6,8 @@ const { checkConst } = require('../../libs/check-const')
  * @param value {string}
  */
 module.exports = ({ state }, { value }) => {
-    checkConst(value)
+    checkConst(value);
     if (!state.proficiencies.includes(value)) {
-        state.proficiencies.push(value)
+        state.proficiencies.push(value);
     }
-}
+};

@@ -9,15 +9,15 @@
  * @param combat {Combat}
  */
 function main ({ manager, action, combat }) {
-    const oTarget = combat.target
+    const oTarget = combat.target;
     const { success } = oTarget.rollSavingThrow(
         manager.CONSTS.ABILITY_CONSTITUTION,
         combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY]
-    )
+    );
     if (!success) {
-        const eStone = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_PETRIFICATION)
-        manager.applyEffect(eStone, oTarget, Infinity, combat.attacker)
+        const eStone = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_PETRIFICATION);
+        manager.applyEffect(eStone, oTarget, Infinity, combat.attacker);
     }
 }
 
-module.exports = main
+module.exports = main;

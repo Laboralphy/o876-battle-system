@@ -1,4 +1,4 @@
-const CONSTS = require("../consts");
+const CONSTS = require('../consts');
 
 
 /**
@@ -9,10 +9,10 @@ const CONSTS = require("../consts");
  */
 function apply ({ effect, target, reject }) {
     if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_BLINDNESS)) {
-        reject()
+        reject();
     }
 }
 
 module.exports = {
     apply
-}
+};

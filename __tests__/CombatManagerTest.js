@@ -1,13 +1,13 @@
-const CombatManager = require('../src/libs/combat/CombatManager')
-const Creature = require('../src/Creature')
-const CONSTS = require('../src/consts')
-const PropertyBuilder = require('../src/PropertyBuilder')
-const EntityBuilder = require('../src/EntityBuilder')
-const SCHEMA = require('../src/schemas')
-const SchemaValidator = require('../src/SchemaValidator')
-const oSchemaValidator = new SchemaValidator()
-oSchemaValidator.schemaIndex = SCHEMA
-oSchemaValidator.init()
+const CombatManager = require('../src/libs/combat/CombatManager');
+const Creature = require('../src/Creature');
+const CONSTS = require('../src/consts');
+const PropertyBuilder = require('../src/PropertyBuilder');
+const EntityBuilder = require('../src/EntityBuilder');
+const SCHEMA = require('../src/schemas');
+const SchemaValidator = require('../src/SchemaValidator');
+const oSchemaValidator = new SchemaValidator();
+oSchemaValidator.schemaIndex = SCHEMA;
+oSchemaValidator.init();
 
 const bpNormalActor = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -21,14 +21,14 @@ const bpNormalActor = {
     hd: 6,
     actions: [],
     equipment: []
-}
+};
 
 const bpNaturalWeapon = {
     size: CONSTS.WEAPON_SIZE_SMALL,
     weight: 0,
     proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
     equipmentSlots: [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]
-}
+};
 
 const bpClaws2d6 = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -39,7 +39,7 @@ const bpClaws2d6 = {
     size: CONSTS.WEAPON_SIZE_SMALL,
     properties: [],
     attributes: []
-}
+};
 
 const bpFangs3d6 = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -50,7 +50,7 @@ const bpFangs3d6 = {
     size: CONSTS.WEAPON_SIZE_SMALL,
     properties: [],
     attributes: []
-}
+};
 
 const bpSting1d6Poison = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -67,7 +67,7 @@ const bpSting1d6Poison = {
         duration: 11
     }],
     attributes: []
-}
+};
 
 const bpMonster1 = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -84,7 +84,7 @@ const bpMonster1 = {
         'bpClaws2d6',
         'bpFangs3d6'
     ]
-}
+};
 
 const bpMonster2 = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -100,7 +100,7 @@ const bpMonster2 = {
     equipment: [
         'bpSting1d6Poison'
     ]
-}
+};
 
 const bpShortbow = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -114,7 +114,7 @@ const bpShortbow = {
     ammoType: 'AMMO_TYPE_ARROW',
     attributes: [CONSTS.WEAPON_ATTRIBUTE_RANGED, CONSTS.WEAPON_ATTRIBUTE_AMMUNITION],
     equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]
-}
+};
 
 const bpArrow = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -123,7 +123,7 @@ const bpArrow = {
     properties: [],
     ammoType: 'AMMO_TYPE_ARROW',
     equipmentSlots: [CONSTS.EQUIPMENT_SLOT_AMMO]
-}
+};
 
 const bpFist1d3 = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -136,188 +136,188 @@ const bpFist1d3 = {
     size: CONSTS.WEAPON_SIZE_SMALL,
     properties: [],
     attributes: []
-}
+};
 
-const ebArmCreature = new EntityBuilder()
-ebArmCreature.schemaValidator = oSchemaValidator
+const ebArmCreature = new EntityBuilder();
+ebArmCreature.schemaValidator = oSchemaValidator;
 ebArmCreature.blueprints = {
     bpFist1d3
-}
+};
 
 
 function armCreature (oCreature) {
-    oCreature.equipItem(ebArmCreature.createEntity('bpFist1d3'))
+    oCreature.equipItem(ebArmCreature.createEntity('bpFist1d3'));
 }
 
 
 describe('isCreatureFighting', function () {
     it('should return false when testing a non fighting creature', function () {
-        const cm = new CombatManager()
-        const c1 = new Creature({ blueprint: bpNormalActor })
-        const c2 = new Creature({ blueprint: bpNormalActor })
-        expect(cm.isCreatureFighting(c1)).toBeFalsy()
-        expect(cm.isCreatureFighting(c2)).toBeFalsy()
-        expect(cm.isCreatureFighting(c1, c2)).toBeFalsy()
-        expect(cm.isCreatureFighting(c2, c1)).toBeFalsy()
-    })
+        const cm = new CombatManager();
+        const c1 = new Creature({ blueprint: bpNormalActor });
+        const c2 = new Creature({ blueprint: bpNormalActor });
+        expect(cm.isCreatureFighting(c1)).toBeFalsy();
+        expect(cm.isCreatureFighting(c2)).toBeFalsy();
+        expect(cm.isCreatureFighting(c1, c2)).toBeFalsy();
+        expect(cm.isCreatureFighting(c2, c1)).toBeFalsy();
+    });
     it('should return true when testing a fighting creature', function () {
-        const cm = new CombatManager()
-        const c1 = new Creature({ blueprint: bpNormalActor })
-        const c2 = new Creature({ blueprint: bpNormalActor })
-        const c3 = new Creature({ blueprint: bpNormalActor })
-        cm.startCombat(c1, c2)
-        expect(cm.isCreatureFighting(c1)).toBeTruthy()
-        expect(cm.isCreatureFighting(c2)).toBeTruthy()
-        expect(cm.isCreatureFighting(c1, c2)).toBeTruthy()
-        expect(cm.isCreatureFighting(c2, c1)).toBeTruthy()
-        expect(cm.isCreatureFighting(c1, c1)).toBeFalsy()
-        expect(cm.isCreatureFighting(c2, c2)).toBeFalsy()
-        expect(cm.isCreatureFighting(c1, c3)).toBeFalsy()
-        expect(cm.isCreatureFighting(c2, c3)).toBeFalsy()
-    })
-})
+        const cm = new CombatManager();
+        const c1 = new Creature({ blueprint: bpNormalActor });
+        const c2 = new Creature({ blueprint: bpNormalActor });
+        const c3 = new Creature({ blueprint: bpNormalActor });
+        cm.startCombat(c1, c2);
+        expect(cm.isCreatureFighting(c1)).toBeTruthy();
+        expect(cm.isCreatureFighting(c2)).toBeTruthy();
+        expect(cm.isCreatureFighting(c1, c2)).toBeTruthy();
+        expect(cm.isCreatureFighting(c2, c1)).toBeTruthy();
+        expect(cm.isCreatureFighting(c1, c1)).toBeFalsy();
+        expect(cm.isCreatureFighting(c2, c2)).toBeFalsy();
+        expect(cm.isCreatureFighting(c1, c3)).toBeFalsy();
+        expect(cm.isCreatureFighting(c2, c3)).toBeFalsy();
+    });
+});
 
 describe('getCombat', function () {
     it('should create 2 combat when starting one combat', function () {
-        const cm = new CombatManager()
-        const c1 = new Creature({ blueprint: bpNormalActor })
-        const c2 = new Creature({ blueprint: bpNormalActor })
-        expect(cm.combats).toHaveLength(0)
-        const combat = cm.startCombat(c1, c2)
-        expect(cm.getCombat(c1) === combat).toBeTruthy()
-        const combat2 = cm.getCombat(c2)
-        expect(cm.getCombat(c2) === combat2).toBeTruthy()
-        expect(cm.combats).toHaveLength(2)
-    })
-})
+        const cm = new CombatManager();
+        const c1 = new Creature({ blueprint: bpNormalActor });
+        const c2 = new Creature({ blueprint: bpNormalActor });
+        expect(cm.combats).toHaveLength(0);
+        const combat = cm.startCombat(c1, c2);
+        expect(cm.getCombat(c1) === combat).toBeTruthy();
+        const combat2 = cm.getCombat(c2);
+        expect(cm.getCombat(c2) === combat2).toBeTruthy();
+        expect(cm.combats).toHaveLength(2);
+    });
+});
 
 describe('endCombat', function () {
     it('should destroy a combat when fighter is leaving', function () {
-        const cm = new CombatManager()
-        const c1 = new Creature({ blueprint: bpNormalActor })
-        const c2 = new Creature({ blueprint: bpNormalActor })
-        cm.startCombat(c1, c2)
-        expect(cm.combats).toHaveLength(2)
-        cm.endCombat(c1, true)
-        expect(cm.combats).toHaveLength(0)
-    })
-})
+        const cm = new CombatManager();
+        const c1 = new Creature({ blueprint: bpNormalActor });
+        const c2 = new Creature({ blueprint: bpNormalActor });
+        cm.startCombat(c1, c2);
+        expect(cm.combats).toHaveLength(2);
+        cm.endCombat(c1, true);
+        expect(cm.combats).toHaveLength(0);
+    });
+});
 
 describe('fleeCombat', function () {
     it('should do a parting strike before fleeing combat', function () {
-        const eb = new EntityBuilder()
-        eb.schemaValidator = oSchemaValidator
+        const eb = new EntityBuilder();
+        eb.schemaValidator = oSchemaValidator;
         eb.blueprints = {
             bpNaturalWeapon,
             bpClaws2d6,
             bpFangs3d6,
             bpNormalActor,
             bpMonster1
-        }
-        const cm = new CombatManager()
-        cm.defaultDistance = 5
-        const c1 = eb.createEntity('bpMonster1')
-        const c2 = eb.createEntity('bpMonster1')
-        const combat = cm.startCombat(c1, c2)
-        const logs = []
+        };
+        const cm = new CombatManager();
+        cm.defaultDistance = 5;
+        const c1 = eb.createEntity('bpMonster1');
+        const c2 = eb.createEntity('bpMonster1');
+        const combat = cm.startCombat(c1, c2);
+        const logs = [];
         cm.events.on('combat.attack', evt => {
-            logs.push(evt)
-        })
-        expect(cm.isCreatureFighting(c1)).toBeTruthy()
-        expect(cm.isCreatureFighting(c2)).toBeTruthy()
-        cm.fleeCombat(c2)
-        expect(cm.isCreatureFighting(c1)).toBeFalsy()
-        expect(cm.isCreatureFighting(c2)).toBeFalsy()
-        expect(logs.length).toBe(1)
-        expect(logs[0].combat === combat).toBeTruthy()
-        expect(logs[0].combat.attacker).toBe(c1)
-        expect(logs[0].combat.target).toBe(c2)
-        expect(logs[0].count).toBe(1)
-        expect(logs[0].opportunity).toBeTruthy()
-    })
-})
+            logs.push(evt);
+        });
+        expect(cm.isCreatureFighting(c1)).toBeTruthy();
+        expect(cm.isCreatureFighting(c2)).toBeTruthy();
+        cm.fleeCombat(c2);
+        expect(cm.isCreatureFighting(c1)).toBeFalsy();
+        expect(cm.isCreatureFighting(c2)).toBeFalsy();
+        expect(logs.length).toBe(1);
+        expect(logs[0].combat === combat).toBeTruthy();
+        expect(logs[0].combat.attacker).toBe(c1);
+        expect(logs[0].combat.target).toBe(c2);
+        expect(logs[0].count).toBe(1);
+        expect(logs[0].opportunity).toBeTruthy();
+    });
+});
 
 describe('advancing combat', function () {
-    const eb = new EntityBuilder()
-    eb.schemaValidator = oSchemaValidator
-    const pb = new PropertyBuilder()
+    const eb = new EntityBuilder();
+    eb.schemaValidator = oSchemaValidator;
+    const pb = new PropertyBuilder();
     it('should produce two events (one per combat) when processing combat 6 times', function () {
-        const cm = new CombatManager()
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
-        armCreature(c1)
-        armCreature(c2)
-        cm.startCombat(c1, c2)
-        const logs = []
+        const cm = new CombatManager();
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
+        armCreature(c1);
+        armCreature(c2);
+        cm.startCombat(c1, c2);
+        const logs = [];
         cm.events.on('combat.attack', evt => {
             logs.push({
                 attacker: evt.combat.attacker.id,
                 target: evt.combat.target.id,
                 turn: evt.combat.turn,
                 tick: evt.combat.tick
-            })
-        })
-        cm.processCombats() // tick 0
-        cm.processCombats() // tick 1
-        cm.processCombats() // tick 2
-        cm.processCombats() // tick 3
-        cm.processCombats() // tick 4
-        expect(logs).toEqual([])
-        cm.processCombats() // tick 5 --- event !
+            });
+        });
+        cm.processCombats(); // tick 0
+        cm.processCombats(); // tick 1
+        cm.processCombats(); // tick 2
+        cm.processCombats(); // tick 3
+        cm.processCombats(); // tick 4
+        expect(logs).toEqual([]);
+        cm.processCombats(); // tick 5 --- event !
         expect(logs).toEqual([
             { attacker: 'c1', target: 'c2', turn: 0, tick: 5 },
             { attacker: 'c2', target: 'c1', turn: 0, tick: 5 }
-        ])
-    })
+        ]);
+    });
     it('should produce more events when having extra attack bonus', function () {
-        const cm = new CombatManager()
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
-        armCreature(c1)
-        armCreature(c2)
+        const cm = new CombatManager();
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
+        armCreature(c1);
+        armCreature(c2);
         c1.mutations.addProperty({ property: pb.buildProperty({
             type: CONSTS.PROPERTY_ATTACK_COUNT_MODIFIER,
             amp: 1
-        })})
-        const combat = cm.startCombat(c1, c2)
-        const logs = []
+        })});
+        const combat = cm.startCombat(c1, c2);
+        const logs = [];
         cm.events.on('combat.attack', evt => {
             logs.push({
                 attacker: evt.combat.attacker.id,
                 target: evt.combat.target.id,
                 turn: evt.combat.turn,
                 tick: evt.combat.tick
-            })
-        })
-        cm.processCombats() // tick 0
-        cm.processCombats() // tick 1
-        cm.processCombats() // tick 2
-        cm.processCombats() // tick 3 --- event
-        expect(combat.attacker.getters.getProperties).toHaveLength(1)
-        expect(combat.attackerState.getRangedExtraAttackCount()).toBe(1)
-        expect(combat.attackerState.getMeleeExtraAttackCount()).toBe(1)
-        expect(combat.attackerState.attackCount).toBe(2)
-        expect(combat.attackerState.plan).toEqual([0, 0, 1, 0, 0, 1])
+            });
+        });
+        cm.processCombats(); // tick 0
+        cm.processCombats(); // tick 1
+        cm.processCombats(); // tick 2
+        cm.processCombats(); // tick 3 --- event
+        expect(combat.attacker.getters.getProperties).toHaveLength(1);
+        expect(combat.attackerState.getRangedExtraAttackCount()).toBe(1);
+        expect(combat.attackerState.getMeleeExtraAttackCount()).toBe(1);
+        expect(combat.attackerState.attackCount).toBe(2);
+        expect(combat.attackerState.plan).toEqual([0, 0, 1, 0, 0, 1]);
         expect(logs).toEqual([
             { attacker: 'c1', target: 'c2', turn: 0, tick: 2 }
-        ])
-        cm.processCombats() // tick 4
-        cm.processCombats() // tick 5 --- event !
+        ]);
+        cm.processCombats(); // tick 4
+        cm.processCombats(); // tick 5 --- event !
         expect(logs).toEqual([
             { attacker: 'c1', target: 'c2', turn: 0, tick: 2 },
             { attacker: 'c1', target: 'c2', turn: 0, tick: 5 },
             { attacker: 'c2', target: 'c1', turn: 0, tick: 5 }
-        ])
-    })
+        ]);
+    });
     it('both creatures should rush toward each other when combat start at distance 50 and having no weapon but natural weapon', function () {
-        const cm = new CombatManager()
-        expect(cm.defaultDistance).toBe(0)
-        cm.defaultDistance = 50
-        expect(cm.defaultDistance).toBe(50)
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
-        cm.startCombat(c1, c2)
-        const logs = []
+        const cm = new CombatManager();
+        expect(cm.defaultDistance).toBe(0);
+        cm.defaultDistance = 50;
+        expect(cm.defaultDistance).toBe(50);
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
+        cm.startCombat(c1, c2);
+        const logs = [];
         cm.events.on('combat.attack', evt => {
             logs.push({
                 type: 'combat.attack',
@@ -325,8 +325,8 @@ describe('advancing combat', function () {
                 target: evt.combat.target.id,
                 turn: evt.combat.turn,
                 tick: evt.combat.tick
-            })
-        })
+            });
+        });
         cm.events.on('combat.distance', evt => {
             logs.push({
                 type: 'combat.distance',
@@ -336,9 +336,9 @@ describe('advancing combat', function () {
                 tick: evt.combat.tick,
                 previousDistance: evt.previousDistance,
                 distance: evt.distance
-            })
-        })
-        cm.processCombats() // tick 0
+            });
+        });
+        cm.processCombats(); // tick 0
         expect(logs).toEqual([
             {
                 type: 'combat.distance',
@@ -358,19 +358,19 @@ describe('advancing combat', function () {
                 previousDistance: 20,
                 distance: 5
             }
-        ])
-    })
+        ]);
+    });
     it('c1 should attack c2 with ranged weapon and c2 should rush toward c1 when c1 has bow and c2 has no ranged weapon', function () {
-        const cm = new CombatManager()
-        expect(cm.defaultDistance).toBe(0)
-        cm.defaultDistance = 50
-        expect(cm.defaultDistance).toBe(50)
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
-        c1.equipItem(eb.createEntity(bpShortbow))
-        c1.equipItem(eb.createEntity(bpArrow))
-        const combat = cm.startCombat(c1, c2)
-        const logs = []
+        const cm = new CombatManager();
+        expect(cm.defaultDistance).toBe(0);
+        cm.defaultDistance = 50;
+        expect(cm.defaultDistance).toBe(50);
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
+        c1.equipItem(eb.createEntity(bpShortbow));
+        c1.equipItem(eb.createEntity(bpArrow));
+        const combat = cm.startCombat(c1, c2);
+        const logs = [];
         cm.events.on('combat.attack', evt => {
             logs.push({
                 type: 'combat.attack',
@@ -378,8 +378,8 @@ describe('advancing combat', function () {
                 target: evt.combat.target.id,
                 turn: evt.combat.turn,
                 tick: evt.combat.tick
-            })
-        })
+            });
+        });
         cm.events.on('combat.distance', evt => {
             logs.push({
                 type: 'combat.distance',
@@ -389,9 +389,9 @@ describe('advancing combat', function () {
                 tick: evt.combat.tick,
                 previousDistance: evt.previousDistance,
                 distance: evt.distance
-            })
-        })
-        cm.processCombats() // tick 0
+            });
+        });
+        cm.processCombats(); // tick 0
         expect(logs).toEqual([{ // c2 rushes toward c1
             type: 'combat.distance',
             attacker: 'c2',
@@ -400,11 +400,11 @@ describe('advancing combat', function () {
             tick: 0,
             previousDistance: 50,
             distance: 20
-        }])
-        cm.processCombats() // tick 1
-        cm.processCombats() // tick 2
-        cm.processCombats() // tick 3
-        cm.processCombats() // tick 4
+        }]);
+        cm.processCombats(); // tick 1
+        cm.processCombats(); // tick 2
+        cm.processCombats(); // tick 3
+        cm.processCombats(); // tick 4
 
         expect(logs).toEqual([{
             type: 'combat.distance',
@@ -414,9 +414,9 @@ describe('advancing combat', function () {
             tick: 0,
             previousDistance: 50,
             distance: 20
-        }])
+        }]);
 
-        cm.processCombats() // tick 5
+        cm.processCombats(); // tick 5
 
         expect(logs).toEqual([
             {
@@ -429,24 +429,24 @@ describe('advancing combat', function () {
                 distance: 20
             },
             {
-                attacker: "c1",
-                target: "c2",
+                attacker: 'c1',
+                target: 'c2',
                 tick: 5,
                 turn: 0,
-                type: "combat.attack"
+                type: 'combat.attack'
             }
-        ])
+        ]);
 
-        expect(combat.distance).toBe(20)
+        expect(combat.distance).toBe(20);
 
-    })
+    });
     it('should not cast an action when not calling nextAction', function () {
-        const cm = new CombatManager()
-        cm.defaultDistance = 50
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
-        cm.startCombat(c1, c2)
-        const logs = []
+        const cm = new CombatManager();
+        cm.defaultDistance = 50;
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
+        cm.startCombat(c1, c2);
+        const logs = [];
         cm.events.on('combat.action', evt => {
             logs.push({
                 type: 'combat.attack',
@@ -454,56 +454,56 @@ describe('advancing combat', function () {
                 target: evt.combat.target.id,
                 turn: evt.combat.turn,
                 tick: evt.combat.tick
-            })
-        })
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        expect(logs).toHaveLength(0)
-    })
+            });
+        });
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        expect(logs).toHaveLength(0);
+    });
     it('should cast an action when calling next action', function () {
-        const cm = new CombatManager()
-        cm.defaultDistance = 50
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
-        const combat = cm.startCombat(c1, c2)
-        expect(combat.distance).toBe(50)
+        const cm = new CombatManager();
+        cm.defaultDistance = 50;
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
+        const combat = cm.startCombat(c1, c2);
+        expect(combat.distance).toBe(50);
         combat.attacker.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
             script: 'script1'
-        })
-        const logs = []
-        const distancelogs = []
+        });
+        const logs = [];
+        const distancelogs = [];
         cm.events.on('combat.action', evt => {
             logs.push({
                 type: 'combat.attack',
@@ -512,8 +512,8 @@ describe('advancing combat', function () {
                 turn: evt.combat.turn,
                 tick: evt.combat.tick,
                 action: evt.action
-            })
-        })
+            });
+        });
         cm.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => {
             distancelogs.push({
                 type: 'combat.distance',
@@ -523,125 +523,125 @@ describe('advancing combat', function () {
                 tick: evt.combat.tick,
                 prevDistance: evt.previousDistance,
                 distance: evt.distance
-            })
-        })
-        expect(combat.distance).toBe(50)
-        expect(cm.combats).toHaveLength(2)
+            });
+        });
+        expect(combat.distance).toBe(50);
+        expect(cm.combats).toHaveLength(2);
 
-        cm.processCombats() // turn 0 : tick 0->1
+        cm.processCombats(); // turn 0 : tick 0->1
         // Only c2 will move as it is out of range
-        expect(combat.attackerState.actions['a1'].ready).toBeTruthy()
-        expect(combat.attackerState.actions['a1'].range).toBeGreaterThan(combat.distance)
-        expect(combat.currentAction.id).toBe('a1')
-        expect(combat.distance).toBe(20)
-        expect(combat.tick).toBe(1)
-        expect(logs).toHaveLength(0)
+        expect(combat.attackerState.actions['a1'].ready).toBeTruthy();
+        expect(combat.attackerState.actions['a1'].range).toBeGreaterThan(combat.distance);
+        expect(combat.currentAction.id).toBe('a1');
+        expect(combat.distance).toBe(20);
+        expect(combat.tick).toBe(1);
+        expect(logs).toHaveLength(0);
 
-        cm.processCombats() // turn 0 : tick 1->2
+        cm.processCombats(); // turn 0 : tick 1->2
 
-        cm.processCombats() // turn 0 : tick 2->3
-        combat.nextAction = 'a1'
-        expect(logs).toHaveLength(0)
-        expect(combat.tick).toBe(3)
+        cm.processCombats(); // turn 0 : tick 2->3
+        combat.nextAction = 'a1';
+        expect(logs).toHaveLength(0);
+        expect(combat.tick).toBe(3);
 
-        cm.processCombats() // turn 0 : tick 3->4
-        expect(logs).toHaveLength(0)
+        cm.processCombats(); // turn 0 : tick 3->4
+        expect(logs).toHaveLength(0);
 
-        cm.processCombats() // turn 0 : tick 4->5
-        expect(logs).toHaveLength(0)
-        expect(combat.nextAction).toBe('a1')
-        expect(combat.distance).toBe(20)
-        expect(combat.getSelectedWeaponRange()).toBe(-1) // Absolutely no weapon (natural or other)
-        expect(combat.isTargetInRange()).toBeTruthy()
+        cm.processCombats(); // turn 0 : tick 4->5
+        expect(logs).toHaveLength(0);
+        expect(combat.nextAction).toBe('a1');
+        expect(combat.distance).toBe(20);
+        expect(combat.getSelectedWeaponRange()).toBe(-1); // Absolutely no weapon (natural or other)
+        expect(combat.isTargetInRange()).toBeTruthy();
 
-        cm.processCombats() // turn 0->1 : tick 5->0 !! new turn, selecting new action
-        expect(combat.nextAction).toBe('')
-        expect(combat.currentAction).not.toBeNull()
-        expect(combat.currentAction.range).toBe(Infinity)
+        cm.processCombats(); // turn 0->1 : tick 5->0 !! new turn, selecting new action
+        expect(combat.nextAction).toBe('');
+        expect(combat.currentAction).not.toBeNull();
+        expect(combat.currentAction.range).toBe(Infinity);
 
-        cm.processCombats() // // turn 1 : tick 0->1 !! beginning of tick 0 : taking action
-        expect(logs).toHaveLength(1)
-        const l0 = logs[0].action
-        expect(l0.id).toBe('a1')
-    })
+        cm.processCombats(); // // turn 1 : tick 0->1 !! beginning of tick 0 : taking action
+        expect(logs).toHaveLength(1);
+        const l0 = logs[0].action;
+        expect(l0.id).toBe('a1');
+    });
     it('should not select and use action when target is too far for action range', function () {
-        const cm = new CombatManager()
-        cm.defaultDistance = 1000
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
-        const combat = cm.startCombat(c1, c2)
+        const cm = new CombatManager();
+        cm.defaultDistance = 1000;
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
+        const combat = cm.startCombat(c1, c2);
         combat.attacker.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
             script: 'script1',
             range: 5
-        })
-        const logs = []
+        });
+        const logs = [];
         cm.events.on('combat.action', ev => logs.push({
             type: 'action',
             action: ev.action.id
-        }))
-        expect(combat.distance).toBe(1000)
+        }));
+        expect(combat.distance).toBe(1000);
 
-        cm.processCombats() // turn 0 : tick 0->1
-        expect(combat.distance).toBe(940)
+        cm.processCombats(); // turn 0 : tick 0->1
+        expect(combat.distance).toBe(940);
 
-        cm.processCombats() // turn 0 : tick 1->2
-        cm.processCombats() // turn 0 : tick 2->3
-        cm.processCombats() // turn 0 : tick 3->4
-        cm.processCombats() // turn 0 : tick 4->5
-        combat.nextAction = 'a1'
-        cm.processCombats() // turn 0->1 : tick 5->0
-        expect(combat.currentAction).toBeNull() // action range is far to short than combat distance
+        cm.processCombats(); // turn 0 : tick 1->2
+        cm.processCombats(); // turn 0 : tick 2->3
+        cm.processCombats(); // turn 0 : tick 3->4
+        cm.processCombats(); // turn 0 : tick 4->5
+        combat.nextAction = 'a1';
+        cm.processCombats(); // turn 0->1 : tick 5->0
+        expect(combat.currentAction).toBeNull(); // action range is far to short than combat distance
 
-        expect(logs).toHaveLength(0)
-        cm.processCombats() // turn 1 : tick 0->1
-        expect(combat.currentAction).toBeNull()
-        expect(combat.distance).toBe(880)
-        expect(combat.currentAction).toBeNull()
-        expect(logs).toHaveLength(0)
-        cm.processCombats() // turn 1 : tick 1->2
-        cm.processCombats() // turn 1 : tick 2->3
-        cm.processCombats() // turn 1 : tick 3->4
-        cm.processCombats() // turn 1 : tick 4->5
-        expect(combat.currentAction).toBeNull()
-        cm.processCombats() // turn 1->2 : tick 5->0
-        expect(combat.currentAction).toBeNull()
-        cm.processCombats() // turn 2 : tick 0->1
-        expect(combat.currentAction).toBeNull()
-        expect(combat.distance).toBe(820)
-        combat.nextAction = 'a1'
-        combat.distance = 5 // now action a1 can be used
-        cm.processCombats() // turn 2 : tick 1->2
-        cm.processCombats() // turn 2 : tick 2->3
-        cm.processCombats() // turn 2 : tick 3->4
-        cm.processCombats() // turn 2 : tick 4->5
-        cm.processCombats() // turn 2->3 : tick 5->0
-        expect(combat.currentAction).not.toBeNull()
-        expect(combat.currentAction.id).toBe('a1')
-    })
-})
+        expect(logs).toHaveLength(0);
+        cm.processCombats(); // turn 1 : tick 0->1
+        expect(combat.currentAction).toBeNull();
+        expect(combat.distance).toBe(880);
+        expect(combat.currentAction).toBeNull();
+        expect(logs).toHaveLength(0);
+        cm.processCombats(); // turn 1 : tick 1->2
+        cm.processCombats(); // turn 1 : tick 2->3
+        cm.processCombats(); // turn 1 : tick 3->4
+        cm.processCombats(); // turn 1 : tick 4->5
+        expect(combat.currentAction).toBeNull();
+        cm.processCombats(); // turn 1->2 : tick 5->0
+        expect(combat.currentAction).toBeNull();
+        cm.processCombats(); // turn 2 : tick 0->1
+        expect(combat.currentAction).toBeNull();
+        expect(combat.distance).toBe(820);
+        combat.nextAction = 'a1';
+        combat.distance = 5; // now action a1 can be used
+        cm.processCombats(); // turn 2 : tick 1->2
+        cm.processCombats(); // turn 2 : tick 2->3
+        cm.processCombats(); // turn 2 : tick 3->4
+        cm.processCombats(); // turn 2 : tick 4->5
+        cm.processCombats(); // turn 2->3 : tick 5->0
+        expect(combat.currentAction).not.toBeNull();
+        expect(combat.currentAction.id).toBe('a1');
+    });
+});
 
 describe('Try real combat', function () {
     it('should work in real combat', function () {
-        const cm = new CombatManager()
-        cm.defaultDistance = 50
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' })
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' })
-        const combat = cm.startCombat(c1, c2)
+        const cm = new CombatManager();
+        cm.defaultDistance = 50;
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
+        const combat = cm.startCombat(c1, c2);
         c1.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
             script: 'script1',
             range: 5
-        })
+        });
         c2.mutations.defineAction({
             id: 'a2',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
             script: 'script2',
             range: 5
-        })
-        const logs = []
+        });
+        const logs = [];
         cm.events.on('combat.move', ({
             previousDistance,
             speed,
@@ -651,62 +651,62 @@ describe('Try real combat', function () {
                 type: 'move',
                 previousDistance,
                 speed
-            })
-        })
-        cm.processCombats()
-        expect(logs).toHaveLength(2)
-    })
-})
+            });
+        });
+        cm.processCombats();
+        expect(logs).toHaveLength(2);
+    });
+});
 
 describe('combat vs monster with claws and fangs', function () {
     it('should not select weapon when target is out of range and not having ranged weapon', function () {
-        const eb = new EntityBuilder()
-        eb.schemaValidator = oSchemaValidator
+        const eb = new EntityBuilder();
+        eb.schemaValidator = oSchemaValidator;
         eb.blueprints = {
             bpNaturalWeapon,
             bpClaws2d6,
             bpFangs3d6,
             bpNormalActor,
             bpMonster1
-        }
-        const cm = new CombatManager()
-        cm.defaultDistance = 50
-        const c1 = eb.createEntity('bpNormalActor', 'c1')
-        const c2 = eb.createEntity('bpMonster1', 'c2')
-        c2.dice.cheat(0.01)
-        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).not.toBeNull()
-        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]).not.toBeNull()
-        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]).toBeNull()
+        };
+        const cm = new CombatManager();
+        cm.defaultDistance = 50;
+        const c1 = eb.createEntity('bpNormalActor', 'c1');
+        const c2 = eb.createEntity('bpMonster1', 'c2');
+        c2.dice.cheat(0.01);
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).not.toBeNull();
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]).not.toBeNull();
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]).toBeNull();
 
-        const oCombat = cm.startCombat(c2, c1)
-        expect(oCombat.distance).toBe(50)
-        expect(oCombat.getMostSuitableSlot()).toBe('')
-    })
+        const oCombat = cm.startCombat(c2, c1);
+        expect(oCombat.distance).toBe(50);
+        expect(oCombat.getMostSuitableSlot()).toBe('');
+    });
     it('should select a natural weapon when attacking', function () {
-        const eb = new EntityBuilder()
-        eb.schemaValidator = oSchemaValidator
+        const eb = new EntityBuilder();
+        eb.schemaValidator = oSchemaValidator;
         eb.blueprints = {
             bpNaturalWeapon,
             bpClaws2d6,
             bpFangs3d6,
             bpNormalActor,
             bpMonster1
-        }
-        const cm = new CombatManager()
-        cm.defaultDistance = 50
-        const c1 = eb.createEntity('bpNormalActor', 'c1')
-        const c2 = eb.createEntity('bpMonster1', 'c2')
-        c2.dice.cheat(0.01)
-        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).not.toBeNull()
-        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]).not.toBeNull()
-        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]).toBeNull()
+        };
+        const cm = new CombatManager();
+        cm.defaultDistance = 50;
+        const c1 = eb.createEntity('bpNormalActor', 'c1');
+        const c2 = eb.createEntity('bpMonster1', 'c2');
+        c2.dice.cheat(0.01);
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).not.toBeNull();
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]).not.toBeNull();
+        expect(c2.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]).toBeNull();
 
-        const oCombat = cm.startCombat(c2, c1)
-        oCombat.distance = 5
-        expect(oCombat.distance).toBe(5)
-        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1)
+        const oCombat = cm.startCombat(c2, c1);
+        oCombat.distance = 5;
+        expect(oCombat.distance).toBe(5);
+        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1);
 
-        c2.dice.cheat(0.99)
-        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2)
-    })
-})
+        c2.dice.cheat(0.99);
+        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2);
+    });
+});

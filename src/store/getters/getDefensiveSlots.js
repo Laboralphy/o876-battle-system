@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 /**
  * Returns a list of defensive equipment slots (only those with equipped weapon/ammo)
  * @param state {RBSStoreState}
@@ -16,11 +16,11 @@ module.exports = (state, getters) => {
         CONSTS.EQUIPMENT_SLOT_FINGER_RIGHT,
         CONSTS.EQUIPMENT_SLOT_WAIST,
         CONSTS.EQUIPMENT_SLOT_FEET
-    ]
+    ];
     if (!getters.isWieldingTwoHandedWeapon) {
-        aSlots.push(CONSTS.EQUIPMENT_SLOT_SHIELD)
+        aSlots.push(CONSTS.EQUIPMENT_SLOT_SHIELD);
     }
-    const eq = state.equipment
+    const eq = state.equipment;
     return aSlots
-        .filter(slot => eq[slot] !== null)
-}
+        .filter(slot => eq[slot] !== null);
+};

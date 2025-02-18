@@ -5,4 +5,4 @@
  * @returns {Object<string, RBSEffect>}
  */
 module.exports = (state, getters) =>
-    Object.fromEntries(getters.getEffects.map(effect => [effect.id, effect]))
+    Object.fromEntries(getters.getEffects.map(effect => [effect.id, effect]));

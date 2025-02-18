@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 /**
  * Return a Set with all conditions
  * @param state {RBSStoreState}
@@ -6,7 +6,7 @@ const CONSTS = require('../../consts')
  * @returns {Set<string>}
  */
 module.exports = (state, getters) => {
-    const aEffectSet = getters.getEffectSet
+    const aEffectSet = getters.getEffectSet;
     const aConditions = {
         [CONSTS.CONDITION_BLINDED]: aEffectSet.has(CONSTS.EFFECT_BLINDNESS),
         [CONSTS.CONDITION_CONFUSED]: aEffectSet.has(CONSTS.EFFECT_CONFUSION),
@@ -18,9 +18,9 @@ module.exports = (state, getters) => {
             getters.getEffects.some(eff => eff.type === CONSTS.EFFECT_DAMAGE && eff.data.damageType === CONSTS.DAMAGE_TYPE_POISON),
         [CONSTS.CONDITION_RESTRAINED]: getters.getSpeed === 0,
         [CONSTS.CONDITION_STUNNED]: aEffectSet.has(CONSTS.EFFECT_STUN)
-    }
+    };
     return Object
         .entries(aConditions)
         .filter(([, value]) => value)
-        .reduce((prev, [sCondition]) => prev.add(sCondition), new Set())
-}
+        .reduce((prev, [sCondition]) => prev.add(sCondition), new Set());
+};

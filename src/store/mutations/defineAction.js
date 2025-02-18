@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
 /**
  * @typedef RBSStoreStateAction {object}
@@ -30,31 +30,31 @@ module.exports = ({ state }, {
     script,
     parameters = {}
 }) => {
-    const bHasCooldown = cooldown > 0
-    const bHasCharges = charges > 0
-    const s = (bHasCooldown ? 10 : 0) + (bHasCharges ? 1 : 0)
-    let limited = false
+    const bHasCooldown = cooldown > 0;
+    const bHasCharges = charges > 0;
+    const s = (bHasCooldown ? 10 : 0) + (bHasCharges ? 1 : 0);
+    let limited = false;
     switch (s) {
-        case 1: {
-            // has no cooldown but has charges, this is typically an action with a number of uses per day
-            cooldown = Infinity
-            limited = true
-            break
-        }
-        case 10: {
-            // has cooldown but no charge : set charges to 1
-            charges = 1
-            limited = true
-            break
-        }
-        case 11: {
-            // has coolddown and charges
-            limited = true
-            break
-        }
+    case 1: {
+        // has no cooldown but has charges, this is typically an action with a number of uses per day
+        cooldown = Infinity;
+        limited = true;
+        break;
+    }
+    case 10: {
+        // has cooldown but no charge : set charges to 1
+        charges = 1;
+        limited = true;
+        break;
+    }
+    case 11: {
+        // has coolddown and charges
+        limited = true;
+        break;
+    }
     }
     if (!id) {
-        throw new Error('This action has no ID')
+        throw new Error('This action has no ID');
     }
     state.actions[id] = {
         id,
@@ -66,5 +66,5 @@ module.exports = ({ state }, {
         range,
         script,
         parameters
-    }
-}
+    };
+};

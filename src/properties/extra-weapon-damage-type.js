@@ -8,9 +8,9 @@ const { checkConst } = require('../libs/check-const');
  * @param damageType {string} DAMAGE_TYPE_*
  */
 function init ({ property, damageType }) {
-    property.data.damageType = checkConst(damageType)
+    property.data.damageType = checkConst(damageType);
 }
 
 module.exports = {
     init
-}
+};

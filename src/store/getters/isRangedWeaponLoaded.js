@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
 /**
  * Returns true if ranged weapon is equipped and is loaded with the correct ammo type
@@ -8,15 +8,15 @@ const CONSTS = require('../../consts')
  * @returns {boolean}
  */
 module.exports = (state) => {
-    const weapon = state.equipment[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]
+    const weapon = state.equipment[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED];
     if (!weapon) {
-        return false
+        return false;
     }
     if (weapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_AMMUNITION)) {
-        const sAmmoType = weapon.ammoType
-        const oAmmo = state.equipment[CONSTS.EQUIPMENT_SLOT_AMMO]
-        return !!oAmmo && (oAmmo.ammoType === sAmmoType)
+        const sAmmoType = weapon.ammoType;
+        const oAmmo = state.equipment[CONSTS.EQUIPMENT_SLOT_AMMO];
+        return !!oAmmo && (oAmmo.ammoType === sAmmoType);
     } else {
-        return true
+        return true;
     }
-}
+};

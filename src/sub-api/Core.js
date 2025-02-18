@@ -1,46 +1,48 @@
-const Abstract = require('./ServiceAbstract')
-const CONSTS = require('../consts')
-const { checkConst } = require('../libs/check-const')
-const Manager = require('../Manager')
+const Abstract = require('./ServiceAbstract');
+const CONSTS = require('../consts');
+const { checkConst } = require('../libs/check-const');
+const Manager = require('../Manager');
+const GenericEvent = require('../events/GenericEvent');
 
 
 const PREFIXES = {
     ABILITY: 'ABILITY_',
     CAPABILITY: 'CAPABILITY_',
     CONDITION: 'CONDITION_',
-}
+};
 
 class Core extends Abstract {
     constructor (services) {
-        super(services)
-        this._manager = new Manager()
-        this._manager.systemInstance = this
-        this._events = this._manager.events
-        this._manager.combatManager.defaultDistance = 50
+        super(services);
+        this._manager = new Manager();
+        this._manager.systemInstance = this;
+        GenericEvent.useBoxedObjects = true;
+        this._events = this._manager.events;
+        this._manager.combatManager.defaultDistance = 50;
         /**
          * @type {{[id: string]: RBSItem | Creature}}
          * @private
          */
-        this._entities = {}
+        this._entities = {};
     }
 
     get events () {
-        return this._events
+        return this._events;
     }
 
     get PREFIXES () {
-        return PREFIXES
+        return PREFIXES;
     }
 
     get CONSTS () {
-        return CONSTS
+        return CONSTS;
     }
 
     /**
      * @returns {Manager}
      */
     get manager () {
-        return this._manager
+        return this._manager;
     }
 
     /**
@@ -51,10 +53,10 @@ class Core extends Abstract {
      */
     checkConst (sConstName, sPrefix = '') {
         if (sPrefix !== '' && !sConstName.startsWith(sPrefix)) {
-            throw new Error(`invalid value ${sConstName}. must start with ${sPrefix}`)
+            throw new Error(`invalid value ${sConstName}. must start with ${sPrefix}`);
         }
-        return checkConst(sConstName)
+        return checkConst(sConstName);
     }
 }
 
-module.exports = Core
+module.exports = Core;

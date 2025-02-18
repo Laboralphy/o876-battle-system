@@ -1,9 +1,9 @@
-const PropertyBuilder = require('../../PropertyBuilder')
+const PropertyBuilder = require('../../PropertyBuilder');
 /**
  * Adds a new property
  * @param state {RBSStoreState}
  * @param property {RBSProperty}
  */
 module.exports = ({ state }, { property }) => {
-    state.properties.push(property)
-}
+    state.properties.push(property);
+};

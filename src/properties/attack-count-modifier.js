@@ -1,4 +1,4 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
 
 /**
  * This property change the number of attacks one can deliver each turn
@@ -8,11 +8,11 @@ const CONSTS = require('../consts')
  */
 function init ({ property, attackType = CONSTS.ATTACK_TYPE_ANY }) {
     if (!CONSTS[attackType]) {
-        throw new ReferenceError('unknown attack type ' + attackType)
+        throw new ReferenceError('unknown attack type ' + attackType);
     }
-    property.data.attackType = attackType
+    property.data.attackType = attackType;
 }
 
 module.exports = {
     init
-}
+};

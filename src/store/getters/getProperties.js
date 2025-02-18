@@ -7,4 +7,4 @@
 module.exports = (state, getters) => [
     ...getters.getInnateProperties,
     ...getters.getEquipmentProperties
-]
+];

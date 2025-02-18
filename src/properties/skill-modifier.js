@@ -4,9 +4,9 @@
  * @param skill {string}
  */
 function init ({ property, skill }) {
-    property.data.skill = skill
+    property.data.skill = skill;
 }
 
 module.exports = {
     init
-}
+};

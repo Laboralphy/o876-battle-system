@@ -1,8 +1,8 @@
 function clamp (value, min, max) {
     if (min > max) {
-        return clamp(value, max, min)
+        return clamp(value, max, min);
     }
-    return Math.max(min, Math.min(max, value))
+    return Math.max(min, Math.min(max, value));
 }
 
-module.exports = { clamp }
+module.exports = { clamp };

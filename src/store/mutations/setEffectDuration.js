@@ -6,11 +6,11 @@
  * @param duration {number}
  */
 module.exports = ({ state, getters }, { effect, duration }) => {
-    const oEffect = getters.getEffectRegistry[effect.id]
+    const oEffect = getters.getEffectRegistry[effect.id];
     if (oEffect) {
-        oEffect.duration = duration
+        oEffect.duration = duration;
     } else {
-        const sEffectList = Object.keys(getters.getEffectRegistry).join(', ')
-        throw new Error(`effect ${effect.id} not found. ${sEffectList}`)
+        const sEffectList = Object.keys(getters.getEffectRegistry).join(', ');
+        throw new Error(`effect ${effect.id} not found. ${sEffectList}`);
     }
-}
+};

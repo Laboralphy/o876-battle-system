@@ -1,4 +1,4 @@
-const PropertyBuilder = require('../../PropertyBuilder')
+const PropertyBuilder = require('../../PropertyBuilder');
 /**
  * Return an array with active properties
  * @param state {RBSStoreState}
@@ -6,5 +6,5 @@ const PropertyBuilder = require('../../PropertyBuilder')
  * @returns {RBSProperty[]}
  */
 module.exports = (state, getters) => {
-    return getters.getProperties.filter(property => PropertyBuilder.isPropertyActive(property))
-}
+    return getters.getProperties.filter(property => PropertyBuilder.isPropertyActive(property));
+};

@@ -6,8 +6,8 @@
  */
 module.exports = ({ state }, { environment, value }) => {
     if (environment in state.environment) {
-        state.environment[environment] = value
+        state.environment[environment] = value;
     } else {
-        throw new Error('Unknown environment ' + environment + ' - valid environments are : ' + Object.keys(state.environment))
+        throw new Error('Unknown environment ' + environment + ' - valid environments are : ' + Object.keys(state.environment));
     }
-}
+};

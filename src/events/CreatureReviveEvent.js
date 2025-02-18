@@ -1,11 +1,11 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
+const GenericEvent = require('./GenericEvent');
 
-class CreatureReviveEvent {
+class CreatureReviveEvent extends GenericEvent {
     constructor ({ system, creature }) {
-        this.type = CONSTS.EVENT_CREATURE_REVIVE
-        this.system = system
-        this.creature = creature.id
+        super(CONSTS.EVENT_CREATURE_REVIVE, system);
+        this.creature = this.boxCreature(creature);
     }
 }
 
-module.exports = CreatureReviveEvent
+module.exports = CreatureReviveEvent;

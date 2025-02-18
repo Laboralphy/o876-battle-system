@@ -30,7 +30,7 @@ function aggregateModifiers (aPropAndEffectTypes, getters, {
         Array.isArray(aPropAndEffectTypes)
             ? aPropAndEffectTypes
             : [aPropAndEffectTypes]
-    )
+    );
     const aFilteredEffects = getters
         .getEffects
         .filter(eff =>
@@ -40,26 +40,26 @@ function aggregateModifiers (aPropAndEffectTypes, getters, {
         .map(eff => ({
             ...eff,
             amp: effectAmpMapper ? effectAmpMapper(eff) : eff.amp
-        }))
+        }));
     if (effectForEach) {
-        aFilteredEffects.forEach(effectForEach)
+        aFilteredEffects.forEach(effectForEach);
     }
-    const aStartingProperties = []
+    const aStartingProperties = [];
     if (Array.isArray(restrictSlots) && restrictSlots.length > 0) {
         if (!excludeInnate) {
-            aStartingProperties.push(...getters.getInnateProperties)
+            aStartingProperties.push(...getters.getInnateProperties);
         }
-        const oSlotProperties = getters.getSlotProperties
+        const oSlotProperties = getters.getSlotProperties;
         restrictSlots.forEach(s => {
             if (oSlotProperties[s]) {
-                aStartingProperties.push(...oSlotProperties[s])
+                aStartingProperties.push(...oSlotProperties[s]);
             }
-        })
+        });
     } else {
         if (!excludeInnate) {
-            aStartingProperties.push(...getters.getInnateProperties)
+            aStartingProperties.push(...getters.getInnateProperties);
         }
-        aStartingProperties.push(...getters.getEquipmentProperties)
+        aStartingProperties.push(...getters.getEquipmentProperties);
     }
     const aFilteredProperties = aStartingProperties
         .filter(ip =>
@@ -69,67 +69,67 @@ function aggregateModifiers (aPropAndEffectTypes, getters, {
         .map(prop => ({
             ...prop,
             amp: propAmpMapper ? propAmpMapper(prop) : prop.amp
-        }))
+        }));
     if (propForEach) {
-        aFilteredProperties.forEach(propForEach)
+        aFilteredProperties.forEach(propForEach);
     }
-    const oSorter = {}
+    const oSorter = {};
     const rdisc = sDisc => {
         if (typeof sDisc !== 'string') {
-            throw new Error('invalid sorting key for aggregateModifiers prop/effect sorter "' + sDisc + '"')
+            throw new Error('invalid sorting key for aggregateModifiers prop/effect sorter "' + sDisc + '"');
         }
         if (!(sDisc in oSorter)) {
             oSorter[sDisc] = {
                 sum: 0,
                 max: 0,
                 count: 0
-            }
+            };
         }
-        return oSorter[sDisc]
-    }
+        return oSorter[sDisc];
+    };
     if (effectSorter) {
         aFilteredEffects.forEach(f => {
-            const sDisc = effectSorter(f)
-            const sd = rdisc(sDisc)
+            const sDisc = effectSorter(f);
+            const sd = rdisc(sDisc);
             if (isNaN(f.amp)) {
-                throw TypeError('Effect amp has not been properly evaluated')
+                throw TypeError('Effect amp has not been properly evaluated');
             }
-            const amp = f.amp | 0
-            sd.max = Math.max(sd.max, amp)
-            sd.sum += amp
-            ++sd.count
-        })
+            const amp = f.amp | 0;
+            sd.max = Math.max(sd.max, amp);
+            sd.sum += amp;
+            ++sd.count;
+        });
     }
     if (propSorter) {
         aFilteredProperties.forEach(f => {
-            const sDisc = propSorter(f)
+            const sDisc = propSorter(f);
             if (sDisc === undefined) {
-                console.error(f)
-                console.error(propSorter.toString())
-                throw new Error('property sorted returned undefined')
+                console.error(f);
+                console.error(propSorter.toString());
+                throw new Error('property sorted returned undefined');
             }
-            const sd = rdisc(sDisc)
+            const sd = rdisc(sDisc);
             if (isNaN(f.amp)) {
-                throw TypeError('Item property amp has not been properly evaluated')
+                throw TypeError('Item property amp has not been properly evaluated');
             }
-            const amp = f.amp | 0
-            sd.max = Math.max(sd.max, amp)
-            sd.sum += amp
-            ++sd.count
-        })
+            const amp = f.amp | 0;
+            sd.max = Math.max(sd.max, amp);
+            sd.sum += amp;
+            ++sd.count;
+        });
     }
 
-    let nIPAcc = 0, nEffAcc = 0, nMin = Infinity, nMax = -Infinity
+    let nIPAcc = 0, nEffAcc = 0, nMin = Infinity, nMax = -Infinity;
     aFilteredEffects.forEach(({ amp }) => {
-        nEffAcc += amp
-        nMax = Math.max(nMax, amp)
-        nMin = Math.min(nMin, amp)
-    })
+        nEffAcc += amp;
+        nMax = Math.max(nMax, amp);
+        nMin = Math.min(nMin, amp);
+    });
     aFilteredProperties.forEach(({ amp }) => {
-        nIPAcc += amp
-        nMax = Math.max(nMax, amp)
-        nMin = Math.min(nMin, amp)
-    })
+        nIPAcc += amp;
+        nMax = Math.max(nMax, amp);
+        nMin = Math.min(nMin, amp);
+    });
     return {
         sum: nEffAcc + nIPAcc,
         effects: nEffAcc,
@@ -138,9 +138,9 @@ function aggregateModifiers (aPropAndEffectTypes, getters, {
         min: nMin,
         count: aFilteredEffects.length + aFilteredProperties.length,
         sorter: oSorter
-    }
+    };
 }
 
 module.exports = {
     aggregateModifiers
-}
+};

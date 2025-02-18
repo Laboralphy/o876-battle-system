@@ -1,12 +1,12 @@
 function init ({ property, combat = '', damaged = '', attack = '' }) {
     if (!combat && !damaged && !attack) {
-        throw new Error('No script defined in Special Behavior property')
+        throw new Error('No script defined in Special Behavior property');
     }
     property.data = {
         combat,
         damaged,
         attack
-    }
+    };
 }
 
 /**
@@ -16,11 +16,11 @@ function init ({ property, combat = '', damaged = '', attack = '' }) {
  * @param attackOutcome {AttackOutcome} the attack outcome
  */
 function attack ({ property, manager, attackOutcome }) {
-    const sScript = property.data.attack
+    const sScript = property.data.attack;
     if (sScript) {
         manager.runScript(sScript, {
             attack: attackOutcome
-        })
+        });
     }
 }
 
@@ -43,7 +43,7 @@ function damaged ({
     amount,
     resisted
 }) {
-    const sScript = property.data.damaged
+    const sScript = property.data.damaged;
     if (sScript) {
         manager.runScript(sScript, {
             manager,
@@ -52,7 +52,7 @@ function damaged ({
             damageType,
             amount,
             resisted
-        })
+        });
     }
 }
 
@@ -65,14 +65,14 @@ function damaged ({
  * @param combat {Combat}
  */
 function combatTurn ({ property, manager, creature, action, combat }) {
-    const sScript = property.data.combat
+    const sScript = property.data.combat;
     if (sScript) {
         manager.runScript(sScript, {
             manager,
             creature,
             action,
             combat
-        })
+        });
     }
 }
 
@@ -81,4 +81,4 @@ module.exports = {
     combatTurn,
     damaged,
     attack
-}
+};

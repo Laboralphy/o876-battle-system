@@ -1,8 +1,8 @@
-const {checkConst} = require("../libs/check-const");
-const CONSTS = require('../consts')
+const {checkConst} = require('../libs/check-const');
+const CONSTS = require('../consts');
 
 function init ({ effect,  damageType: sDamageType }) {
-    effect.data.damageType = checkConst(sDamageType)
+    effect.data.damageType = checkConst(sDamageType);
 }
 
 
@@ -14,11 +14,11 @@ function init ({ effect,  damageType: sDamageType }) {
  */
 function apply ({ effect, target, reject }) {
     if (effect.amp < 0 && target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_DAMAGE_DECREASE)) {
-        reject()
+        reject();
     }
 }
 
 module.exports = {
     init,
     apply
-}
+};

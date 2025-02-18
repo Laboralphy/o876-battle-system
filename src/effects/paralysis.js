@@ -1,7 +1,7 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
 
 function init ({ effect, dc = 0 }) {
-    effect.data.dc = dc
+    effect.data.dc = dc;
 }
 
 /**
@@ -13,7 +13,7 @@ function init ({ effect, dc = 0 }) {
 function mutate ({ effect, effectProcessor, target }) {
     if (effect.data.dc > 0) {
         if (target.rollSavingThrow(CONSTS.ABILITY_STRENGTH, effect.data.dc).success) {
-            effectProcessor.removeEffect(effect)
+            effectProcessor.removeEffect(effect);
         }
     }
 }
@@ -26,7 +26,7 @@ function mutate ({ effect, effectProcessor, target }) {
  */
 function apply ({ effect, target, reject }) {
     if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_PARALYSIS)) {
-        reject()
+        reject();
     }
 }
 
@@ -34,4 +34,4 @@ module.exports = {
     apply,
     mutate,
     init
-}
+};

@@ -4,5 +4,5 @@
  * @param value {number}
  */
 module.exports = ({ state }, { value }) => {
-    state.naturalArmorClass = value
-}
+    state.naturalArmorClass = value;
+};

@@ -1,59 +1,59 @@
-const Events = require('events')
-const { getUniqueId } = require('../unique-id')
-const CombatFighterState = require('./CombatFighterState')
-const CONSTS = require('../../consts')
+const Events = require('events');
+const { getUniqueId } = require('../unique-id');
+const CombatFighterState = require('./CombatFighterState');
+const CONSTS = require('../../consts');
 
 const NATURAL_SLOTS = new Set([
     CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1,
     CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2,
     CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3
-])
+]);
 
 class Combat {
     constructor ({ distance = 0, tickCount }) {
-        this._id = getUniqueId()
+        this._id = getUniqueId();
         /**
          * The state of attacking creature
          * @type {CombatFighterState}
          * @private
          */
-        this._attackerState = null
+        this._attackerState = null;
         /**
          * Instance of the targetted creature
          * @type {Creature}
          * @private
          */
-        this._target = null
+        this._target = null;
         /**
          * Number of elapsed combat turn
          * @type {number}
          * @private
          */
-        this._turn = 0
+        this._turn = 0;
         /**
          * Index of the tick
          * @type {number}
          * @private
          */
-        this._tick = 0
-        this._tickCount = tickCount
+        this._tick = 0;
+        this._tickCount = tickCount;
         /**
          *
          * @type {module:events.EventEmitter | module:events.EventEmitter<DefaultEventMap>}
          * @private
          */
-        this._events = new Events()
-        this._distance = distance
+        this._events = new Events();
+        this._distance = distance;
         /**
          * @type {string}
          * @private
          */
-        this._nextAction = ''
-        this._currentAction = ''
+        this._nextAction = '';
+        this._currentAction = '';
     }
 
     get id () {
-        return this._id
+        return this._id;
     }
 
     /**
@@ -61,7 +61,7 @@ class Combat {
      * @returns {number}
      */
     get turn () {
-        return this._turn
+        return this._turn;
     }
 
     /**
@@ -69,7 +69,7 @@ class Combat {
      * @param value {number}
      */
     set turn (value) {
-        this._turn = value
+        this._turn = value;
     }
 
     /**
@@ -77,7 +77,7 @@ class Combat {
      * @returns {number}
      */
     get tick () {
-        return this._tick
+        return this._tick;
     }
 
     /**
@@ -85,7 +85,7 @@ class Combat {
      * @param value {number}
      */
     set tick (value) {
-        this._tick = value
+        this._tick = value;
     }
 
     /**
@@ -93,7 +93,7 @@ class Combat {
      * @return {number}
      */
     get tickCount () {
-        return this._tickCount
+        return this._tickCount;
     }
 
     /**
@@ -101,11 +101,11 @@ class Combat {
      * @param value {number}
      */
     set tickCount (value) {
-        this._tickCount = Math.max(1, value)
+        this._tickCount = Math.max(1, value);
     }
 
     get events () {
-        return this._events
+        return this._events;
     }
 
     /**
@@ -113,7 +113,7 @@ class Combat {
      * @returns {CombatFighterState}
      */
     get attackerState () {
-        return this._attackerState
+        return this._attackerState;
     }
 
     /**
@@ -121,7 +121,7 @@ class Combat {
      * @return {Creature}
      */
     get attacker () {
-        return this._attackerState.creature
+        return this._attackerState.creature;
     }
 
     /**
@@ -129,7 +129,7 @@ class Combat {
      * @returns {Creature}
      */
     get target () {
-        return this._target
+        return this._target;
     }
 
     /**
@@ -139,7 +139,7 @@ class Combat {
     get eventDefaultPayload () {
         return {
             combat: this
-        }
+        };
     }
 
     /**
@@ -148,17 +148,17 @@ class Combat {
      */
     set distance (value) {
         if (isNaN(value)) {
-            const sGivenType = typeof value
-            throw new TypeError(`combat distance must be a number. ${sGivenType} given (${value}).`)
+            const sGivenType = typeof value;
+            throw new TypeError(`combat distance must be a number. ${sGivenType} given (${value}).`);
         }
-        const nOldDistance = this._distance
+        const nOldDistance = this._distance;
         if (nOldDistance !== value) {
-            this._distance = Math.max(0, value)
+            this._distance = Math.max(0, value);
             this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, {
                 ...this.eventDefaultPayload,
                 distance: this._distance,
                 previousDistance: nOldDistance
-            })
+            });
         }
     }
 
@@ -167,13 +167,13 @@ class Combat {
      */
     get currentAction () {
         if (this._currentAction === '') {
-            return null
+            return null;
         }
         if (this._currentAction in this._attackerState.actions) {
-            return this._attackerState.actions[this._currentAction]
+            return this._attackerState.actions[this._currentAction];
         }
-        const aActionList = Object.keys(this._attackerState.actions).join(', ')
-        throw new Error(`this action ${this._currentAction} does not exists in action list ${aActionList}`)
+        const aActionList = Object.keys(this._attackerState.actions).join(', ');
+        throw new Error(`this action ${this._currentAction} does not exists in action list ${aActionList}`);
     }
 
     /**
@@ -182,25 +182,25 @@ class Combat {
      */
     selectCurrentAction (value) {
         if (value === '') {
-            this._currentAction = ''
-            return true
+            this._currentAction = '';
+            return true;
         } else if (value in this._attackerState.actions) {
-            const oAction = this._attackerState.actions[value]
+            const oAction = this._attackerState.actions[value];
             if (oAction.ready && oAction.range >= this.distance) {
-                this._currentAction = value
-                return true
+                this._currentAction = value;
+                return true;
             } else {
                 // Action not available
-                this._currentAction = ''
-                return false
+                this._currentAction = '';
+                return false;
             }
         } else {
-            throw new Error(`Action ${value} is unknown for this creature - allowed values are : ` + Object.keys(this._attackerState.actions).join(', '))
+            throw new Error(`Action ${value} is unknown for this creature - allowed values are : ` + Object.keys(this._attackerState.actions).join(', '));
         }
     }
 
     notifyTargetApproach (distance) {
-        this._distance = distance
+        this._distance = distance;
     }
 
     /**
@@ -208,7 +208,7 @@ class Combat {
      * @returns {number}
      */
     get distance () {
-        return this._distance
+        return this._distance;
     }
 
     /**
@@ -218,20 +218,20 @@ class Combat {
      */
     setFighters (attacker, target) {
         // TODO compute initiative here
-        this._attackerState = new CombatFighterState()
-        this._attackerState.creature = attacker
-        this._target = target
+        this._attackerState = new CombatFighterState();
+        this._attackerState.creature = attacker;
+        this._target = target;
     }
 
     /**
      * Advance one tick
      */
     nextTick () {
-        ++this._tick
-        const ttc = this._tickCount
+        ++this._tick;
+        const ttc = this._tickCount;
         if (this._tick >= ttc) {
-            this._tick = 0
-            ++this._turn
+            this._tick = 0;
+            ++this._turn;
         }
     }
 
@@ -241,55 +241,55 @@ class Combat {
      * @param bPartingShot {boolean} si true alors attaque d'opportunité
      */
     playFighterAction (bPartingShot = false) {
-        const attackerState = this._attackerState
+        const attackerState = this._attackerState;
         // If no current action then we are attacking during this turn
-        const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick)
+        const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick);
         if (bPartingShot || nAttackCount > 0) {
-            const action = this.currentAction
+            const action = this.currentAction;
             if (action) {
                 if (action.ready) {
                     this._events.emit(CONSTS.EVENT_COMBAT_ACTION, {
                         ...this.eventDefaultPayload,
                         action: action
-                    })
-                    attackerState.useAction(action.id)
-                    this.selectCurrentAction('')
+                    });
+                    attackerState.useAction(action.id);
+                    this.selectCurrentAction('');
                 }
             } else if (this.attacker.getters.getSelectedWeapon) {
                 this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
                     ...this.eventDefaultPayload,
                     count: nAttackCount,
                     opportunity: bPartingShot // if true, then no retaliation (start combat back)
-                })
+                });
             }
         }
     }
 
     advance () {
-        let bHasMoved = false
+        let bHasMoved = false;
         if (this._tick === 0) {
-            this.selectMostSuitableAction() // this will select current action for this turn
+            this.selectMostSuitableAction(); // this will select current action for this turn
             // can be attack with weapon, or casting spell, or using spell like ability
             // Start of turn
             // attack-types planning
-            this._attackerState.computePlan(this._tickCount, true)
+            this._attackerState.computePlan(this._tickCount, true);
             // if target is in weapon range
             if (!this.isTargetInRange()) {
-                this.approachTarget()
-                bHasMoved = true
+                this.approachTarget();
+                bHasMoved = true;
             }
         }
         if (!bHasMoved && this.isTargetInRange()) {
-            this.playFighterAction()
+            this.playFighterAction();
         }
         this._events.emit(CONSTS.EVENT_COMBAT_TICK_END, {
             ...this.eventDefaultPayload
-        })
-        this.nextTick()
+        });
+        this.nextTick();
         if (this._tick === 0) {
             // start of next turn
-            this.selectCurrentAction(this._nextAction)
-            this.nextAction = ''
+            this.selectCurrentAction(this._nextAction);
+            this.nextAction = '';
         }
     }
 
@@ -298,15 +298,15 @@ class Combat {
      * @returns {{[slot: string]: boolean}}
      */
     getTargetInCreatureWeaponRange () {
-        const d = this._distance
-        const gwr = this.attacker.getters.getWeaponRanges
+        const d = this._distance;
+        const gwr = this.attacker.getters.getWeaponRanges;
         return {
             [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]: d <= gwr[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE],
             [CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED]: d <= gwr[CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED],
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]: d <= gwr[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1],
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2]: d <= gwr[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2],
             [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]: d <= gwr[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]
-        }
+        };
     }
 
     /**
@@ -314,9 +314,9 @@ class Combat {
      * @returns {number}
      */
     getSelectedWeaponRange () {
-        const g = this.attacker.getters
-        const m = g.getSelectedOffensiveSlot
-        return g.getWeaponRanges[m]
+        const g = this.attacker.getters;
+        const m = g.getSelectedOffensiveSlot;
+        return g.getWeaponRanges[m];
     }
 
     /**
@@ -324,7 +324,7 @@ class Combat {
      * @returns {boolean}
      */
     isTargetInSelectedWeaponRange () {
-        return this._distance <= this.getSelectedWeaponRange()
+        return this._distance <= this.getSelectedWeaponRange();
     }
 
     /**
@@ -333,9 +333,9 @@ class Combat {
      */
     isTargetInRange () {
         if (this.currentAction) {
-            return this._distance <= this.currentAction.range
+            return this._distance <= this.currentAction.range;
         } else {
-            return this.isTargetInSelectedWeaponRange()
+            return this.isTargetInSelectedWeaponRange();
         }
     }
 
@@ -344,9 +344,9 @@ class Combat {
      * @return {string}
      */
     getMostSuitableSlot () {
-        const oAttacker = this.attacker
-        const distance = this.distance
-        const eq = oAttacker.getters.getEquipment
+        const oAttacker = this.attacker;
+        const distance = this.distance;
+        const eq = oAttacker.getters.getEquipment;
         const aSlotRanges = Object
             .entries(
                 oAttacker
@@ -359,18 +359,18 @@ class Combat {
                 weaponAttr: eq[slot] ? new Set(eq[slot].blueprint.attributes) : new Set()
             }))
             .filter(({ range, weaponAttr }) => {
-                const nRangeMax = range
+                const nRangeMax = range;
                 const nRangeMin = weaponAttr.has(CONSTS.WEAPON_ATTRIBUTE_RANGED)
                     ? oAttacker.getters.getVariables['WEAPON_RANGED_MINIMUM_RANGE']
-                    : 0
+                    : 0;
                 // distance of target must be between nRangeMin and nRangeMax
                 // or else this weapon cannot be used
-                return nRangeMin <= distance && distance <= nRangeMax
-            })
+                return nRangeMin <= distance && distance <= nRangeMax;
+            });
         if (aSlotRanges.length > 0) {
-            return aSlotRanges[Math.floor(this.attacker.dice.random() * aSlotRanges.length)].slot
+            return aSlotRanges[Math.floor(this.attacker.dice.random() * aSlotRanges.length)].slot;
         } else {
-            return ''
+            return '';
         }
         // if (oAttacker.getters.isRangedWeaponLoaded) {
         //     return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
@@ -393,28 +393,28 @@ class Combat {
     }
 
     selectMostSuitableWeapon () {
-        const slot = this.getMostSuitableSlot()
+        const slot = this.getMostSuitableSlot();
         if (slot) {
-            this.attacker.selectOffensiveSlot(this.getMostSuitableSlot())
+            this.attacker.selectOffensiveSlot(this.getMostSuitableSlot());
         }
     }
 
     selectMostSuitableAction () {
-        const attacker = this.attacker
-        const distance = this.distance
+        const attacker = this.attacker;
+        const distance = this.distance;
         const aAvailableActions = Object
             .values(attacker.getters.getActions)
-            .filter(action => action.ready && action.range >= distance)
+            .filter(action => action.ready && action.range >= distance);
         const sSelectAction = aAvailableActions.length > 0
             ? aAvailableActions[Math.floor(attacker.dice.random() * aAvailableActions.length)].id
-            : ''
-        this.selectCurrentAction(sSelectAction)
+            : '';
+        this.selectCurrentAction(sSelectAction);
         this._events.emit(CONSTS.EVENT_COMBAT_TURN, {
             ...this.eventDefaultPayload,
             action: action => this.selectCurrentAction(action)
-        })
+        });
         if (!this.currentAction) {
-            this.selectMostSuitableWeapon()
+            this.selectMostSuitableWeapon();
         }
     }
 
@@ -427,25 +427,25 @@ class Combat {
             this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_SEE) &&
             this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)
         ) {
-            const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed
-            const previousDistance = this.distance
-            const nMinRange = Math.max(this.getSelectedWeaponRange(), this.attacker.getters.getVariables['WEAPON_MELEE_MINIMUM_RANGE'])
-            let nNewDistance = Math.max(nMinRange, this.distance - nRunSpeed)
+            const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed;
+            const previousDistance = this.distance;
+            const nMinRange = Math.max(this.getSelectedWeaponRange(), this.attacker.getters.getVariables['WEAPON_MELEE_MINIMUM_RANGE']);
+            let nNewDistance = Math.max(nMinRange, this.distance - nRunSpeed);
             this._events.emit(CONSTS.EVENT_COMBAT_MOVE, {
                 ...this.eventDefaultPayload,
                 speed: nRunSpeed,
                 previousDistance,
                 distance: d => {
-                    nNewDistance = parseFloat(d) || 0
+                    nNewDistance = parseFloat(d) || 0;
                 }
-            })
-            this.distance = nNewDistance
+            });
+            this.distance = nNewDistance;
         }
     }
 
     retreatFromTarget (nUseSpeed = undefined) {
-        const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed
-        this.approachTarget(-nRunSpeed)
+        const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed;
+        this.approachTarget(-nRunSpeed);
     }
 
     /**
@@ -453,9 +453,9 @@ class Combat {
      */
     set nextAction (value) {
         if ((value === '') || (value in this._attackerState.actions)) {
-            this._nextAction = value
+            this._nextAction = value;
         } else {
-            throw new Error(`Unknown action ${value}`)
+            throw new Error(`Unknown action ${value}`);
         }
     }
 
@@ -463,8 +463,8 @@ class Combat {
      * @returns {string}
      */
     get nextAction () {
-        return this._nextAction
+        return this._nextAction;
     }
 }
 
-module.exports = Combat
+module.exports = Combat;

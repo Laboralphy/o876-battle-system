@@ -1,12 +1,12 @@
-const CONSTS = require('../consts')
-const { checkConst } = require('../libs/check-const')
+const CONSTS = require('../consts');
+const { checkConst } = require('../libs/check-const');
 
 function init ({ effect, ability = '' }) {
     if (ability) {
-        effect.data.ability = checkConst(ability)
-        effect.data.universal = false
+        effect.data.ability = checkConst(ability);
+        effect.data.universal = false;
     } else {
-        effect.data.universal = true
+        effect.data.universal = true;
     }
 }
 
@@ -18,11 +18,11 @@ function init ({ effect, ability = '' }) {
  */
 function apply ({ effect, target, reject }) {
     if (effect.amp < 0 && target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_SAVING_THROW_DECREASE)) {
-        reject()
+        reject();
     }
 }
 
 module.exports = {
     init,
     apply
-}
+};

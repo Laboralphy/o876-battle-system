@@ -4,4 +4,4 @@
  * @param getters {RBSStoreGetters}
  * @return {Set<string>}
  */
-module.exports = (state, getters) => getters.getEffects.reduce((prev, curr) => prev.add(curr.tag), new Set())
+module.exports = (state, getters) => getters.getEffects.reduce((prev, curr) => prev.add(curr.tag), new Set());

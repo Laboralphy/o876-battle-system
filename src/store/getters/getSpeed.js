@@ -1,5 +1,5 @@
-const CONSTS = require('../../consts')
-const { aggregateModifiers } = require('../../libs/aggregator')
+const CONSTS = require('../../consts');
+const { aggregateModifiers } = require('../../libs/aggregator');
 
 /**
  * returns the creature speed
@@ -9,18 +9,18 @@ const { aggregateModifiers } = require('../../libs/aggregator')
  * @returns {number}
  */
 module.exports = (state, getters, externals) => {
-    let nModifier = 1
+    let nModifier = 1;
     const f = ({ amp }) => {
-        nModifier *= amp
-    }
+        nModifier *= amp;
+    };
     aggregateModifiers([
-            CONSTS.EFFECT_SPEED_FACTOR,
-            CONSTS.PROPERTY_SPEED_FACTOR
-        ], getters, {
-            propForEach: f,
-            effectForEach: f
-        }
-    )
-    const encumbrance = getters.getEncumbrance
-    return Math.max(0, state.speed * nModifier * encumbrance.factor)
-}
+        CONSTS.EFFECT_SPEED_FACTOR,
+        CONSTS.PROPERTY_SPEED_FACTOR
+    ], getters, {
+        propForEach: f,
+        effectForEach: f
+    }
+    );
+    const encumbrance = getters.getEncumbrance;
+    return Math.max(0, state.speed * nModifier * encumbrance.factor);
+};

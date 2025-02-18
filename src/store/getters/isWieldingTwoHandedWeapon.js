@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
 /**
  * Returns true if current weapon is two handed
@@ -7,5 +7,5 @@ const CONSTS = require('../../consts')
  * @returns {boolean}
  */
 module.exports = (state, getters) => {
-    return getters.getSelectedWeaponAttributeSet.has(CONSTS.WEAPON_ATTRIBUTE_TWO_HANDED)
-}
+    return getters.getSelectedWeaponAttributeSet.has(CONSTS.WEAPON_ATTRIBUTE_TWO_HANDED);
+};

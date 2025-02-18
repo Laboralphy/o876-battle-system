@@ -1,5 +1,5 @@
-const CONSTS = require('../../consts')
-const {checkConst} = require("../../libs/check-const");
+const CONSTS = require('../../consts');
+const {checkConst} = require('../../libs/check-const');
 /**
  * @param state {RBSStoreState}
  * @param externals {{}}
@@ -10,20 +10,20 @@ const {checkConst} = require("../../libs/check-const");
  */
 module.exports = ({ state }, { item, slot = '', bypassCurse = false }) => {
     if (slot) {
-        checkConst(slot)
+        checkConst(slot);
     }
-    const aAllowedSlots = item.blueprint.equipmentSlots
-    let sUseSlot = aAllowedSlots.includes(slot) ? slot : ''
+    const aAllowedSlots = item.blueprint.equipmentSlots;
+    let sUseSlot = aAllowedSlots.includes(slot) ? slot : '';
     for (const s of aAllowedSlots) {
         if (!state.equipment[s]) {
-            sUseSlot = s
-            break
+            sUseSlot = s;
+            break;
         }
     }
     if (!sUseSlot) {
-        sUseSlot = aAllowedSlots[0]
+        sUseSlot = aAllowedSlots[0];
     }
-    const oPrevItem = state.equipment[sUseSlot]
+    const oPrevItem = state.equipment[sUseSlot];
     if (oPrevItem) {
         // Verifier si l'objet est maudit
         if (!bypassCurse && !!oPrevItem.properties.find(ip => ip.type === CONSTS.PROPERTY_CURSED)) {
@@ -32,14 +32,14 @@ module.exports = ({ state }, { item, slot = '', bypassCurse = false }) => {
                 newItem: item,
                 slot: sUseSlot,
                 cursed: true
-            }
+            };
         }
     }
-    state.equipment[sUseSlot] = item
+    state.equipment[sUseSlot] = item;
     return {
         previousItem: oPrevItem,
         newItem: item,
         slot: sUseSlot,
         cursed: false
-    }
-}
+    };
+};

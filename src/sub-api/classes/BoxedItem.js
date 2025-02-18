@@ -1,23 +1,23 @@
-const CONSTS = require('../../consts')
-const Creature = require('../../Creature')
-const BoxedObject = require('./BoxedObject')
+const CONSTS = require('../../consts');
+const Creature = require('../../Creature');
+const BoxedObject = require('./BoxedObject');
 
 class BoxedItem extends BoxedObject{
     constructor (item) {
-        super(item)
+        super(item);
         if (!(item?.blueprint?.entityType === CONSTS.ENTITY_TYPE_ITEM instanceof Creature)) {
-            throw new TypeError('Expected Creature instance')
+            throw new TypeError('Expected Creature instance');
         }
-        this.id = item.id
+        this.id = item.id;
     }
 
     get properties () {
-        return this[BoxedObject.SYMBOL_BOXED_OBJECT].properties
+        return this[BoxedObject.SYMBOL_BOXED_OBJECT].properties;
     }
 
     get isItem () {
-        return this[BoxedObject.SYMBOL_BOXED_OBJECT]?.blueprint?.entityType === CONSTS.ENTITY_TYPE_ITEM
+        return this[BoxedObject.SYMBOL_BOXED_OBJECT]?.blueprint?.entityType === CONSTS.ENTITY_TYPE_ITEM;
     }
 }
 
-module.exports = BoxedItem
+module.exports = BoxedItem;

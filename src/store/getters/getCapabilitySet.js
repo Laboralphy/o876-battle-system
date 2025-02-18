@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
 /**
  * Returs a registry of thing that can do a creature
@@ -8,14 +8,14 @@ const CONSTS = require('../../consts')
  * @return {Set<string>}
  */
 module.exports = (state, getters, externals) => {
-    const aConditionSet = getters.getConditionSet
-    const aCapabilitySet = new Set(Object.keys(CONSTS).filter(s => s.startsWith('CAPABILITY_')))
-    const oConditionData = externals.CONDITIONS
+    const aConditionSet = getters.getConditionSet;
+    const aCapabilitySet = new Set(Object.keys(CONSTS).filter(s => s.startsWith('CAPABILITY_')));
+    const oConditionData = externals.CONDITIONS;
     aConditionSet.forEach(sCondition => {
-        const { prevents } = oConditionData[sCondition]
+        const { prevents } = oConditionData[sCondition];
         prevents.forEach(p => {
-            aCapabilitySet.delete(p)
-        })
-    })
-    return aCapabilitySet
-}
+            aCapabilitySet.delete(p);
+        });
+    });
+    return aCapabilitySet;
+};

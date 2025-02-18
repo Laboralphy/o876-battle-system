@@ -9,27 +9,27 @@ const CONSTS = require('../../consts');
  */
 function onAttacked (effectProcessor, attackOutcome, amp, data) {
     if (!attackOutcome.hit || attackOutcome.damages.amount <= 0 || attackOutcome.distance > data.maxDistance) {
-        return
+        return;
     }
     const {
         attacker,
         target,
         ability
-    } = attackOutcome
+    } = attackOutcome;
     // check saving throw
     if (
         data.savingThrow &&
         attacker.rollSavingThrow(CONSTS.ABILITY_DEXTERITY, attacker.getters.getSpellDifficultyClass[ability]).success
     ) {
-        return
+        return;
     }
     // The attacker will take damage
     const eDamage = effectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, amp, {
         damageType: data.damageType
-    })
-    effectProcessor.applyEffect(eDamage, attacker, 0, target)
+    });
+    effectProcessor.applyEffect(eDamage, attacker, 0, target);
 }
 
 module.exports = {
     onAttacked
-}
+};

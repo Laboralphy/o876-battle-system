@@ -1,30 +1,30 @@
 class Horde {
     constructor () {
-        this._creatures = {}
+        this._creatures = {};
         // list of creatures that have running effect or action cooling down
-        this._activeCreatures = new Set()
+        this._activeCreatures = new Set();
     }
 
     get creatures () {
-        return this._creatures
+        return this._creatures;
     }
 
     get count () {
-        return Object.values(this._creatures).length
+        return Object.values(this._creatures).length;
     }
 
     forEach (f) {
-        const aCreatures = Object.values(this._creatures)
-        aCreatures.forEach(((creature, index) => f(creature, index, aCreatures)))
+        const aCreatures = Object.values(this._creatures);
+        aCreatures.forEach(((creature, index) => f(creature, index, aCreatures)));
     }
 
     linkCreature (oCreature) {
-        this._creatures[oCreature.id] = oCreature
+        this._creatures[oCreature.id] = oCreature;
     }
 
     unlinkCreature (oCreature) {
-        this._activeCreatures.delete(oCreature)
-        delete this._creatures[oCreature.id]
+        this._activeCreatures.delete(oCreature);
+        delete this._creatures[oCreature.id];
     }
 
     /**
@@ -32,7 +32,7 @@ class Horde {
      * @param oCreature {Creature}
      */
     setCreatureActive (oCreature) {
-        this._activeCreatures.add(oCreature)
+        this._activeCreatures.add(oCreature);
     }
 
     /**
@@ -43,7 +43,7 @@ class Horde {
     isCreatureActive (oCreature) {
         return oCreature.getters.getEffects.length > 0 ||
             Object.values(oCreature.getters.getActions).some(action => action.cooldown > 0) ||
-            oCreature.getters.getActiveProperties.length > 0
+            oCreature.getters.getActiveProperties.length > 0;
     }
 
     /**
@@ -51,15 +51,15 @@ class Horde {
      * Removes inactive creatures from active creature registry
      */
     shrinkActiveCreatureRegistry () {
-        const tac = this._activeCreatures
+        const tac = this._activeCreatures;
         if (tac.size === 0) {
-            return
+            return;
         }
         this.activeCreatures.forEach(creature => {
             if (!this.isCreatureActive(creature)) {
-                tac.delete(creature)
+                tac.delete(creature);
             }
-        })
+        });
     }
 
     /**
@@ -67,8 +67,8 @@ class Horde {
      * @returns {any[]}
      */
     get activeCreatures () {
-        return Array.from(this._activeCreatures)
+        return Array.from(this._activeCreatures);
     }
 }
 
-module.exports = Horde
+module.exports = Horde;

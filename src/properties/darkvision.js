@@ -3,4 +3,4 @@
  * @type {{}}
  */
 module.exports = {
-}
+};

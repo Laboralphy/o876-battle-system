@@ -5,10 +5,10 @@
  * @param value {string|number}
  */
 function init ({ effect, flag, value }) {
-    effect.data.flag = flag
-    effect.data.value = value
+    effect.data.flag = flag;
+    effect.data.value = value;
 }
 
 module.exports = {
     init
-}
+};

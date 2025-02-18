@@ -4,10 +4,10 @@
  * @returns {Set<string>}
  */
 module.exports = (state, getters) => {
-    const w = getters.getSelectedWeapon
+    const w = getters.getSelectedWeapon;
     if (w) {
-        return new Set(w.blueprint.attributes)
+        return new Set(w.blueprint.attributes);
     } else {
-        return new Set()
+        return new Set();
     }
-}
+};

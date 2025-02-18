@@ -1,5 +1,5 @@
-const CONSTS = require('../../consts')
-const { aggregateModifiers } = require('../../libs/aggregator')
+const CONSTS = require('../../consts');
+const { aggregateModifiers } = require('../../libs/aggregator');
 /**
  * Return the creature level
  *
@@ -9,4 +9,4 @@ const { aggregateModifiers } = require('../../libs/aggregator')
  */
 module.exports = (state, getters) => Math.max(1, state.level - aggregateModifiers([
     CONSTS.EFFECT_NEGATIVE_LEVEL
-], getters).sum)
+], getters).sum);

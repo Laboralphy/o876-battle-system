@@ -1,6 +1,7 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
+const GenericEvent = require('./GenericEvent');
 
-class CreatureDamagedEvent {
+class CreatureDamagedEvent extends GenericEvent {
     /**
      *
      * @param system {*}
@@ -11,14 +12,13 @@ class CreatureDamagedEvent {
      * @param damageType {string}
      */
     constructor ({ system, creature, source, amount, resisted, damageType }) {
-        this.type = CONSTS.EVENT_CREATURE_DAMAGED
-        this.system = system
-        this.creature = creature.id
-        this.source = source.id
-        this.amount = amount
-        this.resisted = resisted
-        this.damageType = damageType
+        super(CONSTS.EVENT_CREATURE_DAMAGED, system);
+        this.creature = this.boxCreature(creature);
+        this.source = this.boxCreature(source);
+        this.amount = amount;
+        this.resisted = resisted;
+        this.damageType = damageType;
     }
 }
 
-module.exports = CreatureDamagedEvent
+module.exports = CreatureDamagedEvent;

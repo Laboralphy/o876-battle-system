@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
 /**
  * filters ATTACK_TYPE_MELEE or ATTACK_TYPE_ANY to get the bonus
@@ -7,7 +7,7 @@ const CONSTS = require('../../consts')
  */
 function filterMeleeAttackTypes (effectOrProp) {
     return effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_MELEE ||
-        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY
+        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY;
 }
 
 /**
@@ -17,7 +17,7 @@ function filterMeleeAttackTypes (effectOrProp) {
  */
 function filterRangedAttackTypes (effectOrProp) {
     return effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_RANGED ||
-        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY
+        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY;
 }
 
 /**
@@ -27,7 +27,7 @@ function filterRangedAttackTypes (effectOrProp) {
  */
 function filterMeleeTouchAttackTypes (effectOrProp) {
     return effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_MELEE_TOUCH ||
-        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY
+        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY;
 }
 
 /**
@@ -37,7 +37,7 @@ function filterMeleeTouchAttackTypes (effectOrProp) {
  */
 function filterRangedTouchAttackTypes (effectOrProp) {
     return effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_RANGED_TOUCH ||
-        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY
+        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY;
 }
 
 /**
@@ -47,7 +47,7 @@ function filterRangedTouchAttackTypes (effectOrProp) {
  */
 function filterSlashingDamageTypes (effectOrProp) {
     return effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_SLASHING ||
-        effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_ANY
+        effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_ANY;
 }
 
 /**
@@ -57,7 +57,7 @@ function filterSlashingDamageTypes (effectOrProp) {
  */
 function filterCrushingDamageTypes (effectOrProp) {
     return effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_CRUSHING ||
-        effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_ANY
+        effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_ANY;
 }
 
 /**
@@ -67,7 +67,7 @@ function filterCrushingDamageTypes (effectOrProp) {
  */
 function filterPiercingDamageTypes (effectOrProp) {
     return effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_PIERCING ||
-        effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_ANY
+        effectOrProp.data.damageType === CONSTS.DAMAGE_TYPE_ANY;
 }
 
 /**
@@ -76,7 +76,7 @@ function filterPiercingDamageTypes (effectOrProp) {
  * @return {string}
  */
 function filterAbility (effectOrProp) {
-    return effectOrProp.data.ability
+    return effectOrProp.data.ability;
 }
 
 module.exports = {
@@ -88,4 +88,4 @@ module.exports = {
     filterCrushingDamageTypes,
     filterPiercingDamageTypes,
     filterAbility
-}
+};

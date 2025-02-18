@@ -1,7 +1,7 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
-const { aggregateModifiers } = require("../../libs/aggregator");
-const {filterAbility} = require("../../libs/props-effects-filters");
+const { aggregateModifiers } = require('../../libs/aggregator');
+const {filterAbility} = require('../../libs/props-effects-filters');
 
 /**
  *
@@ -17,8 +17,8 @@ module.exports = (state, getters, externals) => {
     ], getters, {
         propSorter: filterAbility,
         effectSorter: filterAbility
-    })
-    const result = getters.getAbilityModifiers
+    });
+    const result = getters.getAbilityModifiers;
     return Object.fromEntries(
         Object
             .entries(result)
@@ -26,5 +26,5 @@ module.exports = (state, getters, externals) => {
                 sAbility,
                 getters.getProficiencyBonus + nAbilityModifier + externals.VARIABLES.BASE_SPELL_DIFFICULTY_CLASS + (spellPower[sAbility]?.sum || 0)
             ])
-    )
-}
+    );
+};

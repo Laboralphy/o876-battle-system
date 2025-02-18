@@ -1,6 +1,6 @@
-const CONSTS = require('../../consts')
-const { aggregateModifiers } = require('../../libs/aggregator')
-const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/props-effects-filters')
+const CONSTS = require('../../consts');
+const { aggregateModifiers } = require('../../libs/aggregator');
+const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/props-effects-filters');
 
 /**
  *
@@ -9,12 +9,12 @@ const { filterMeleeAttackTypes, filterRangedAttackTypes } = require('../../libs/
  */
 function getSumOr0 (x) {
     if (x === undefined) {
-        return 0
+        return 0;
     }
     if (!('sum' in x)) {
-        throw new TypeError('parameter missing properties "sum"')
+        throw new TypeError('parameter missing properties "sum"');
     }
-    return x.sum
+    return x.sum;
 }
 
 /**
@@ -25,18 +25,18 @@ function getSumOr0 (x) {
  * @returns {Object<string, number>}
  */
 module.exports = (state, getters, externals) => {
-    const eq = state.equipment
-    const capa = getters.getCapabilitySet
+    const eq = state.equipment;
+    const capa = getters.getCapabilitySet;
 
     // Defenses like shield and reflexes can only be used when creature is able to act and see
-    const bCanActAndSee = capa.has(CONSTS.CAPABILITY_ACT) && capa.has(CONSTS.CAPABILITY_SEE)
+    const bCanActAndSee = capa.has(CONSTS.CAPABILITY_ACT) && capa.has(CONSTS.CAPABILITY_SEE);
 
     // **** Natural armor **** Natural armor **** Natural armor **** Natural armor **** Natural armor ****
     // **** Natural armor **** Natural armor **** Natural armor **** Natural armor **** Natural armor ****
     // **** Natural armor **** Natural armor **** Natural armor **** Natural armor **** Natural armor ****
     // **** Natural armor **** Natural armor **** Natural armor **** Natural armor **** Natural armor ****
 
-    const nACNaturalArmorClass = state.naturalArmorClass
+    const nACNaturalArmorClass = state.naturalArmorClass;
 
     // **** Shield **** Shield **** Shield **** Shield **** Shield **** Shield **** Shield ****
     // **** Shield **** Shield **** Shield **** Shield **** Shield **** Shield **** Shield ****
@@ -45,8 +45,8 @@ module.exports = (state, getters, externals) => {
 
     const oShield = getters.isWieldingTwoHandedWeapon
         ? null
-        : eq[CONSTS.EQUIPMENT_SLOT_SHIELD]
-    const nACShieldBaseBonus = oShield ? oShield.blueprint.ac : 0
+        : eq[CONSTS.EQUIPMENT_SLOT_SHIELD];
+    const nACShieldBaseBonus = oShield ? oShield.blueprint.ac : 0;
 
     const { sum: nACShieldPropRangedBonus} = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
@@ -54,7 +54,7 @@ module.exports = (state, getters, externals) => {
         propFilter: filterRangedAttackTypes,
         restrictSlots: [CONSTS.EQUIPMENT_SLOT_SHIELD],
         excludeInnate: true
-    })
+    });
 
     const { sum: nACShieldPropMeleeBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
@@ -62,7 +62,7 @@ module.exports = (state, getters, externals) => {
         propFilter: filterMeleeAttackTypes,
         restrictSlots: [CONSTS.EQUIPMENT_SLOT_SHIELD],
         excludeInnate: true
-    })
+    });
 
     const { sorter: oACShieldDamageTypeBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
@@ -71,20 +71,20 @@ module.exports = (state, getters, externals) => {
         propSorter: prop => prop.data.damageType,
         restrictSlots: [CONSTS.EQUIPMENT_SLOT_SHIELD],
         excludeInnate: true
-    })
+    });
 
     // **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor ****
     // **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor ****
     // **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor ****
     // **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor **** Armor ****
 
-    const oArmor = eq[CONSTS.EQUIPMENT_SLOT_CHEST]
+    const oArmor = eq[CONSTS.EQUIPMENT_SLOT_CHEST];
     const nMaxDexterityBonus = getters.getPropertySet.has(CONSTS.PROPERTY_MAX_DEXTERITY_BONUS)
         ? aggregateModifiers([
             CONSTS.PROPERTY_MAX_DEXTERITY_BONUS
         ], getters).min
-        : Infinity
-    const nACArmorBaseBonus = oArmor ? oArmor.blueprint.ac : 0
+        : Infinity;
+    const nACArmorBaseBonus = oArmor ? oArmor.blueprint.ac : 0;
 
     const { sum: nACArmorPropRangedBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
@@ -92,7 +92,7 @@ module.exports = (state, getters, externals) => {
         propFilter: filterRangedAttackTypes,
         restrictSlots: [CONSTS.EQUIPMENT_SLOT_CHEST],
         excludeInnate: true
-    })
+    });
 
     const { sum: nACArmorPropMeleeBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
@@ -100,7 +100,7 @@ module.exports = (state, getters, externals) => {
         propFilter: filterMeleeAttackTypes,
         restrictSlots: [CONSTS.EQUIPMENT_SLOT_CHEST],
         excludeInnate: true
-    })
+    });
 
     const { sorter: oACArmorDamageTypeBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
@@ -109,7 +109,7 @@ module.exports = (state, getters, externals) => {
         propSorter: prop => prop.data.damageType,
         restrictSlots: [CONSTS.EQUIPMENT_SLOT_CHEST],
         excludeInnate: true
-    })
+    });
 
     // **** Dexterity **** Dexterity **** Dexterity **** Dexterity **** Dexterity **** Dexterity ****
     // **** Dexterity **** Dexterity **** Dexterity **** Dexterity **** Dexterity **** Dexterity ****
@@ -118,7 +118,7 @@ module.exports = (state, getters, externals) => {
 
     const nACDexBonus = bCanActAndSee
         ? Math.min(nMaxDexterityBonus, getters.getAbilityModifiers[CONSTS.ABILITY_DEXTERITY])
-        : 0
+        : 0;
 
     // **** Gears & Weapon *** Gears & Weapon *** Gears & Weapon *** Gears & Weapon *** Gears & Weapon ***
     // **** Gears & Weapon *** Gears & Weapon *** Gears & Weapon *** Gears & Weapon *** Gears & Weapon ***
@@ -135,7 +135,7 @@ module.exports = (state, getters, externals) => {
         CONSTS.EQUIPMENT_SLOT_WAIST,
         CONSTS.EQUIPMENT_SLOT_FEET,
         ...getters.getOffensiveSlots
-    ]
+    ];
 
     const { sum: nACGearMeleeBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
@@ -144,7 +144,7 @@ module.exports = (state, getters, externals) => {
         effectFilter: filterMeleeAttackTypes,
         propFilter: filterMeleeAttackTypes,
         restrictSlots: aGearSlots
-    })
+    });
 
     const { sum: nACGearRangedBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER,
@@ -153,7 +153,7 @@ module.exports = (state, getters, externals) => {
         effectFilter: filterRangedAttackTypes,
         propFilter: filterRangedAttackTypes,
         restrictSlots: aGearSlots
-    })
+    });
 
     const { sorter: oACGearDamageTypeBonus } = aggregateModifiers([
         CONSTS.PROPERTY_ARMOR_CLASS_MODIFIER
@@ -161,30 +161,30 @@ module.exports = (state, getters, externals) => {
         propFilter: prop => prop.data.damageType !== undefined,
         propSorter: prop => prop.data.damageType,
         restrictSlots: aGearSlots
-    })
+    });
 
     // **** Results **** Results **** Results **** Results **** Results **** Results **** Results ****
     // **** Results **** Results **** Results **** Results **** Results **** Results **** Results ****
     // **** Results **** Results **** Results **** Results **** Results **** Results **** Results ****
     // **** Results **** Results **** Results **** Results **** Results **** Results **** Results ****
 
-    const nBaseArmorClass = externals.VARIABLES.BASE_ARMOR_CLASS + nACDexBonus
-    const nACArmorMeleeBonus = nACArmorBaseBonus + nACArmorPropMeleeBonus
-    const nACArmorRangedBonus = nACArmorBaseBonus + nACArmorPropRangedBonus
-    const nACShieldMeleeBonus = nACShieldBaseBonus + nACShieldPropMeleeBonus
-    const nACShieldRangedBonus = nACShieldBaseBonus + nACShieldPropRangedBonus
+    const nBaseArmorClass = externals.VARIABLES.BASE_ARMOR_CLASS + nACDexBonus;
+    const nACArmorMeleeBonus = nACArmorBaseBonus + nACArmorPropMeleeBonus;
+    const nACArmorRangedBonus = nACArmorBaseBonus + nACArmorPropRangedBonus;
+    const nACShieldMeleeBonus = nACShieldBaseBonus + nACShieldPropMeleeBonus;
+    const nACShieldRangedBonus = nACShieldBaseBonus + nACShieldPropRangedBonus;
     const nSlashingDamageBonus =
         getSumOr0(oACShieldDamageTypeBonus[CONSTS.DAMAGE_TYPE_SLASHING]) +
         getSumOr0(oACArmorDamageTypeBonus[CONSTS.DAMAGE_TYPE_SLASHING]) +
-        getSumOr0(oACGearDamageTypeBonus[CONSTS.DAMAGE_TYPE_SLASHING])
+        getSumOr0(oACGearDamageTypeBonus[CONSTS.DAMAGE_TYPE_SLASHING]);
     const nCrushingDamageBonus =
         getSumOr0(oACShieldDamageTypeBonus[CONSTS.DAMAGE_TYPE_CRUSHING]) +
         getSumOr0(oACArmorDamageTypeBonus[CONSTS.DAMAGE_TYPE_CRUSHING]) +
-        getSumOr0(oACGearDamageTypeBonus[CONSTS.DAMAGE_TYPE_CRUSHING])
+        getSumOr0(oACGearDamageTypeBonus[CONSTS.DAMAGE_TYPE_CRUSHING]);
     const nPiercingDamageBonus =
         getSumOr0(oACShieldDamageTypeBonus[CONSTS.DAMAGE_TYPE_PIERCING]) +
         getSumOr0(oACArmorDamageTypeBonus[CONSTS.DAMAGE_TYPE_PIERCING]) +
-        getSumOr0(oACGearDamageTypeBonus[CONSTS.DAMAGE_TYPE_PIERCING])
+        getSumOr0(oACGearDamageTypeBonus[CONSTS.DAMAGE_TYPE_PIERCING]);
 
     return {
         [CONSTS.ATTACK_TYPE_MELEE]: nBaseArmorClass + nACNaturalArmorClass + nACArmorMeleeBonus + nACShieldMeleeBonus,
@@ -194,5 +194,5 @@ module.exports = (state, getters, externals) => {
         [CONSTS.DAMAGE_TYPE_SLASHING]: nSlashingDamageBonus,
         [CONSTS.DAMAGE_TYPE_CRUSHING]: nCrushingDamageBonus,
         [CONSTS.DAMAGE_TYPE_PIERCING]: nPiercingDamageBonus
-    }
-}
+    };
+};

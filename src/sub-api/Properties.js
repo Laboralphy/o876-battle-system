@@ -1,4 +1,5 @@
-const ServiceAbstract = require('./ServiceAbstract')
+const ServiceAbstract = require('./ServiceAbstract');
+const BoxedObject = require('./classes/BoxedObject');
 
 class Properties extends ServiceAbstract {
     /**
@@ -8,9 +9,9 @@ class Properties extends ServiceAbstract {
      */
     getProperties (oEntity) {
         if (oEntity instanceof BoxedObject) {
-            return oEntity.properties
+            return oEntity.properties;
         } else {
-            throw new TypeError('parameter must be BoxedObject')
+            throw new TypeError('parameter must be BoxedObject');
         }
     }
 
@@ -20,38 +21,38 @@ class Properties extends ServiceAbstract {
      * @param property {RBSProperty}
      */
     addProperty (oEntity, property) {
-        const pb = this.services.core.manager.propertyBuilder
-        const p = pb.buildProperty(property)
+        const pb = this.services.core.manager.propertyBuilder;
+        const p = pb.buildProperty(property);
         this.services.entities.switchEntityType(
             oEntity,
             {
                 creature: (oCreature) => {
-                    oCreature.mutations.addProperty({ property: p })
+                    oCreature.mutations.addProperty({ property: p });
                 },
                 item: (oItem) => oItem.properties.push(p)
             }
-        )
+        );
     }
 
     /**
      * Removes a property from an item or a creature
-     * @param idEntity
-     * @param property
+     * @param oEntity {BoxedCreature|BoxedItem}
+     * @param property {RBSProperty}
      */
-    removeProperty (idEntity, property) {
+    removeProperty (oEntity, property) {
         this.services.entities.switchEntityType(
-            idEntity,
+            oEntity,
             {
                 creature: (oCreature) => oCreature.mutations.removeProperty({ property }),
                 item: (oItem) => {
-                    const iProp = oItem.properties.findIndex(p => p.id === property.id)
+                    const iProp = oItem.properties.findIndex(p => p.id === property.id);
                     if (iProp >= 0) {
-                        oItem.properties.splice(iProp, 1)
+                        oItem.properties.splice(iProp, 1);
                     }
                 }
             }
-        )
+        );
     }
 }
 
-module.exports = Properties
+module.exports = Properties;

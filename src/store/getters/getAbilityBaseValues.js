@@ -5,5 +5,5 @@
  * @returns {Object<string, number>}
  */
 module.exports = (state, getters) => {
-    return state.abilities
-}
+    return state.abilities;
+};

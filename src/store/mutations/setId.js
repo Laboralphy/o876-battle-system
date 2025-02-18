@@ -4,5 +4,5 @@
  * @param id {string}
  */
 module.exports = ({ state }, { value }) => {
-    state.id = value
-}
+    state.id = value;
+};

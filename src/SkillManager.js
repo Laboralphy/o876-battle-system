@@ -5,15 +5,15 @@
  */
 class SkillManager {
     constructor () {
-        this._time = 0
+        this._time = 0;
     }
 
     set time (value) {
-        this._time = value
+        this._time = value;
     }
 
     get time () {
-        return this._time
+        return this._time;
     }
 
 

@@ -8,6 +8,6 @@ module.exports = (state, getters) =>
     getters
         .getProperties
         .reduce((prev, curr) => {
-            prev.add(curr.type)
-            return prev
-        }, new Set())
+            prev.add(curr.type);
+            return prev;
+        }, new Set());

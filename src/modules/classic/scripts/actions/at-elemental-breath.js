@@ -1,5 +1,5 @@
-const { doDamage } = require('../../../../libs/helpers')
-const { checkConst } = require("../../../../libs/check-const");
+const { doDamage } = require('../../../../libs/helpers');
+const { checkConst } = require('../../../../libs/check-const');
 
 /**
  * Elemental breath
@@ -12,8 +12,8 @@ const { checkConst } = require("../../../../libs/check-const");
  * @param combat {Combat}
  */
 function main ({ manager, action, combat }) {
-    const { range } = action
-    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range)
+    const { range } = action;
+    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range);
     aOffenders.forEach(offender => {
         doDamage(manager, offender, combat.attacker, {
             amount: action.parameters.amount,
@@ -21,8 +21,8 @@ function main ({ manager, action, combat }) {
             offensiveAbility: manager.CONSTS.ABILITY_DEXTERITY,
             defensiveAbility: manager.CONSTS.ABILITY_DEXTERITY,
             extraordinary: true
-        })
-    })
+        });
+    });
 }
 
-module.exports = main
+module.exports = main;

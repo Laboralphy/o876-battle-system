@@ -1,12 +1,12 @@
-const CONSTS = require('../consts')
-const { aggregateModifiers } = require('../libs/aggregator')
+const CONSTS = require('../consts');
+const { aggregateModifiers } = require('../libs/aggregator');
 
 const oAdvantages = {
     [CONSTS.ADV_ATTACK_PROPERTY_EFFECT]: attackOutcome => {
-        const oAttacker = attackOutcome.attacker
-        const sAttackType = attackOutcome.attackType
+        const oAttacker = attackOutcome.attacker;
+        const sAttackType = attackOutcome.attackType;
 
-        const f = propOrEffect => propOrEffect.data.attackType === sAttackType || propOrEffect.data.attackType === CONSTS.ATTACK_TYPE_ANY
+        const f = propOrEffect => propOrEffect.data.attackType === sAttackType || propOrEffect.data.attackType === CONSTS.ATTACK_TYPE_ANY;
 
         return aggregateModifiers([
             CONSTS.PROPERTY_ADVANTAGE_ATTACK,
@@ -14,7 +14,7 @@ const oAdvantages = {
         ], oAttacker.getters, {
             propFilter: f,
             effectFilter: f
-        }).count > 0
+        }).count > 0;
     },
 
     [CONSTS.ADV_ATTACK_TARGET_DISABLED]: attackOutcome =>
@@ -22,14 +22,14 @@ const oAdvantages = {
 
     [CONSTS.ADV_ATTACK_UNDETECTED_BY_TARGET]: attackOutcome =>
         attackOutcome.target.getCreatureVisibility(attackOutcome.attacker) !== CONSTS.CREATURE_VISIBILITY_VISIBLE
-}
+};
 
 const oDisadvantages = {
     [CONSTS.DIS_ATTACK_PROPERTY_EFFECT]: attackOutcome => {
-        const oAttacker = attackOutcome.attacker
-        const sAttackType = attackOutcome.attackType
+        const oAttacker = attackOutcome.attacker;
+        const sAttackType = attackOutcome.attackType;
 
-        const f = propOrEffect => propOrEffect.data.attackType === sAttackType || propOrEffect.data.attackType === CONSTS.ATTACK_TYPE_ANY
+        const f = propOrEffect => propOrEffect.data.attackType === sAttackType || propOrEffect.data.attackType === CONSTS.ATTACK_TYPE_ANY;
 
         return aggregateModifiers([
             CONSTS.PROPERTY_DISADVANTAGE_ATTACK,
@@ -37,7 +37,7 @@ const oDisadvantages = {
         ], oAttacker.getters, {
             propFilter: f,
             effectFilter: f
-        }).count > 0
+        }).count > 0;
     },
 
     [CONSTS.DIS_ATTACK_TARGET_UNDETECTED]: attackOutcome =>
@@ -53,8 +53,8 @@ const oDisadvantages = {
         attackOutcome.attacker.getters.getConditionSet.has(CONSTS.CONDITION_CONFUSED),
 
     [CONSTS.DIS_ATTACK_BAD_EQUIPMENT]: attackOutcome => {
-        const eqp = attackOutcome.attacker.getters.isEquipmentProficient
-        return !(eqp[CONSTS.EQUIPMENT_SLOT_CHEST] && eqp[CONSTS.EQUIPMENT_SLOT_SHIELD])
+        const eqp = attackOutcome.attacker.getters.isEquipmentProficient;
+        return !(eqp[CONSTS.EQUIPMENT_SLOT_CHEST] && eqp[CONSTS.EQUIPMENT_SLOT_SHIELD]);
     },
 
     [CONSTS.DIS_ATTACK_WINDY_ENVIRONMENT]: attackOutcome =>
@@ -63,7 +63,7 @@ const oDisadvantages = {
             attackOutcome.attackType === CONSTS.ATTACK_TYPE_RANGED ||
             attackOutcome.attackType === CONSTS.ATTACK_TYPE_RANGED_TOUCH
         )
-}
+};
 
 /**
  * Evaluates an object : produces an objet { result: boolean, values: Set<string> }
@@ -77,11 +77,11 @@ function evaluateObject (object, ...params) {
         .entries(object)
         .reduce((prev, [sEntry, f]) => {
             if (f(...params)) {
-                prev.result = true
-                prev.values.add(sEntry)
+                prev.result = true;
+                prev.values.add(sEntry);
             }
-            return prev
-        }, { result: false, values: new Set()})
+            return prev;
+        }, { result: false, values: new Set()});
 }
 
 /**
@@ -90,16 +90,16 @@ function evaluateObject (object, ...params) {
  * @returns {{result: number, advantages: Set<string>, disadvantages: Set<string>}}
  */
 function getAttackAdvantages (...params) {
-    const a = evaluateObject(oAdvantages, ...params)
-    const d = evaluateObject(oDisadvantages, ...params)
-    const  result = (a.result ? 1 : 0) + (d.result ? -1 : 0)
+    const a = evaluateObject(oAdvantages, ...params);
+    const d = evaluateObject(oDisadvantages, ...params);
+    const  result = (a.result ? 1 : 0) + (d.result ? -1 : 0);
     return {
         advantages: a.values,
         disadvantages: d.values,
         result
-    }
+    };
 }
 
 module.exports = {
     getAttackAdvantages
-}
+};

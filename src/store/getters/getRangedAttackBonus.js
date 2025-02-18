@@ -1,6 +1,6 @@
 const { aggregateModifiers } = require('../../libs/aggregator');
 const CONSTS = require('../../consts');
-const { filterRangedAttackTypes } = require('../../libs/props-effects-filters')
+const { filterRangedAttackTypes } = require('../../libs/props-effects-filters');
 
 /**
  * Returns true if weapon needs ammunition and correct ammo type is equipped
@@ -9,22 +9,22 @@ const { filterRangedAttackTypes } = require('../../libs/props-effects-filters')
  * @return {boolean}
  */
 function shouldAmmoBeConsidered (getters) {
-    const SLOT_RANGED = CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
+    const SLOT_RANGED = CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED;
 
-    const eq = getters.getEquipment
+    const eq = getters.getEquipment;
     // get the corresponding weapon
-    const oWeapon = eq[SLOT_RANGED]
+    const oWeapon = eq[SLOT_RANGED];
     if (!oWeapon) {
         // no weapon : exit
-        return false
+        return false;
     }
-    const aWeaponAttributes = new Set(oWeapon.blueprint.attributes)
+    const aWeaponAttributes = new Set(oWeapon.blueprint.attributes);
     if (!aWeaponAttributes.has(CONSTS.WEAPON_ATTRIBUTE_AMMUNITION)) {
         // no need ammunition : do not include ammo slot
-        return false
+        return false;
     }
-    const oAmmo = eq[CONSTS.EQUIPMENT_SLOT_AMMO]
-    return oWeapon.blueprint.ammoType === oAmmo?.blueprint.ammoType
+    const oAmmo = eq[CONSTS.EQUIPMENT_SLOT_AMMO];
+    return oWeapon.blueprint.ammoType === oAmmo?.blueprint.ammoType;
 }
 
 /**
@@ -34,33 +34,33 @@ function shouldAmmoBeConsidered (getters) {
  * @returns {number}
  */
 module.exports = (state, getters) => {
-    const SLOT_RANGED = CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
-    const sAbility = getters.getAttackAbility[SLOT_RANGED]
+    const SLOT_RANGED = CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED;
+    const sAbility = getters.getAttackAbility[SLOT_RANGED];
 
     // Weapon proficiency bonus
     const nProficiencyBonus = getters.isEquipmentProficient[SLOT_RANGED]
         ? getters.getProficiencyBonus
-        : 0
+        : 0;
 
     // Weapon properties, and creature effects
     // Include defensive slots + ranged weapon slot
     const aSlots = [
         ...getters.getDefensiveSlots,
         SLOT_RANGED
-    ]
+    ];
     if (shouldAmmoBeConsidered(getters)) {
-        aSlots.push(CONSTS.EQUIPMENT_SLOT_AMMO)
+        aSlots.push(CONSTS.EQUIPMENT_SLOT_AMMO);
     }
     const nWeaponAttackBonus = aggregateModifiers([
-            CONSTS.PROPERTY_ATTACK_MODIFIER,
-            CONSTS.EFFECT_ATTACK_MODIFIER
-        ],
-        getters,
-        {
-            effectFilter: filterRangedAttackTypes,
-            propFilter: filterRangedAttackTypes,
-            restrictSlots: aSlots
-        }).sum
-    const nAbilityBonus = getters.getAbilityModifiers[sAbility]
-    return nAbilityBonus + nProficiencyBonus + nWeaponAttackBonus
-}
+        CONSTS.PROPERTY_ATTACK_MODIFIER,
+        CONSTS.EFFECT_ATTACK_MODIFIER
+    ],
+    getters,
+    {
+        effectFilter: filterRangedAttackTypes,
+        propFilter: filterRangedAttackTypes,
+        restrictSlots: aSlots
+    }).sum;
+    const nAbilityBonus = getters.getAbilityModifiers[sAbility];
+    return nAbilityBonus + nProficiencyBonus + nWeaponAttackBonus;
+};

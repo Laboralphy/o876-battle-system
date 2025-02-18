@@ -1,6 +1,6 @@
-const fs = require('fs')
-const path = require('path')
-const { parse } = require('csv-parse/sync')
+const fs = require('fs');
+const path = require('path');
+const { parse } = require('csv-parse/sync');
 
 function loadCSV (sFile) {
     return parse(fs
@@ -9,7 +9,7 @@ function loadCSV (sFile) {
         delimiter: ',',
         columns: false,
         skip_empty_lines: true
-    })
+    });
 }
 
-module.exports = { loadCSV }
+module.exports = { loadCSV };

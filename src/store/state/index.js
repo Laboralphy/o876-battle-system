@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
 /**
  * @typedef RBSStoreStateCombatAction {object}
@@ -88,4 +88,4 @@ module.exports = () => ({
     },
     selectedOffensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
     actions: {}
-})
+});

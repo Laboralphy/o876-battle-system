@@ -1,4 +1,4 @@
-const { doDamage } = require('../../../../libs/helpers')
+const { doDamage } = require('../../../../libs/helpers');
 
 /**
  * Wing buffet
@@ -11,8 +11,8 @@ const { doDamage } = require('../../../../libs/helpers')
  * @param combat {Combat}
  */
 function main ({ manager, action, combat }) {
-    const { range } = action
-    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range)
+    const { range } = action;
+    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range);
     aOffenders.forEach(offender => {
         const { savingThrow: success } = doDamage(manager, offender, combat.attacker, {
             amount: action.parameters.amount,
@@ -20,13 +20,13 @@ function main ({ manager, action, combat }) {
             offensiveAbility: manager.CONSTS.ABILITY_STRENGTH,
             defensiveAbility: manager.CONSTS.ABILITY_STRENGTH,
             extraordinary: true
-        })
+        });
         if (!success) {
-            const eStun = manager.createEffect(manager.CONSTS.EFFECT_STUN)
-            manager.applyEffect(eStun, offender, 1, combat.attacker)
+            const eStun = manager.createEffect(manager.CONSTS.EFFECT_STUN);
+            manager.applyEffect(eStun, offender, 1, combat.attacker);
         }
-    })
+    });
 }
 
 
-module.exports = main
+module.exports = main;

@@ -1,4 +1,4 @@
-const { clamp } = require('../../libs/clamp')
+const { clamp } = require('../../libs/clamp');
 
 /**
  * Return the proficiency bonus according to creature level
@@ -9,6 +9,6 @@ const { clamp } = require('../../libs/clamp')
  * @returns {number}
  */
 module.exports = (state, getters, externals) => {
-    const pb = externals['PROFICIENCY_BONUS']
-    return pb[clamp(getters.getLevel - 1, 0, pb.length - 1)]
-}
+    const pb = externals['PROFICIENCY_BONUS'];
+    return pb[clamp(getters.getLevel - 1, 0, pb.length - 1)];
+};

@@ -1,18 +1,18 @@
-const crypto = require('crypto')
-const { deepMerge, deepFreeze } = require('@laboralphy/object-fusion')
-const { getUniqueId } = require('./libs/unique-id')
-const CONSTS = require('./consts')
-const Creature = require('./Creature')
-const { sortByDependency } = require('./libs/sort-by-dependency')
+const crypto = require('crypto');
+const { deepMerge, deepFreeze } = require('@laboralphy/object-fusion');
+const { getUniqueId } = require('./libs/unique-id');
+const CONSTS = require('./consts');
+const Creature = require('./Creature');
+const { sortByDependency } = require('./libs/sort-by-dependency');
 
 /**
  * This class takes blueprints, and create real items out of them
  */
 class EntityBuilder {
     constructor () {
-        this._blueprints = {}
-        this._schemaValidator = null
-        this._propertyBuilder = null
+        this._blueprints = {};
+        this._schemaValidator = null;
+        this._propertyBuilder = null;
     }
 
     /**
@@ -20,26 +20,26 @@ class EntityBuilder {
      * @returns {PropertyBuilder}
      */
     get propertyBuilder () {
-        return this._propertyBuilder
+        return this._propertyBuilder;
     }
 
     set propertyBuilder (propertyBuilder) {
-        this._propertyBuilder = propertyBuilder
+        this._propertyBuilder = propertyBuilder;
     }
 
     set schemaValidator (value) {
-        this._schemaValidator = value
+        this._schemaValidator = value;
     }
 
     get schemaValidator () {
         if (!this._schemaValidator) {
-            throw new ReferenceError('no schema validator has been defined for this instance')
+            throw new ReferenceError('no schema validator has been defined for this instance');
         }
-        return this._schemaValidator
+        return this._schemaValidator;
     }
 
     get blueprints () {
-        return this._blueprints
+        return this._blueprints;
     }
 
     set blueprints (value) {
@@ -48,11 +48,11 @@ class EntityBuilder {
             .map(([key, bp]) => ({
                 ref: key,
                 ...bp
-            }))
-        const aSortedBlueprints = sortByDependency(aIdentifiedBlueprints, 'ref', 'extends')
+            }));
+        const aSortedBlueprints = sortByDependency(aIdentifiedBlueprints, 'ref', 'extends');
         aSortedBlueprints.forEach(blueprint => {
-            this.defineBlueprint(blueprint.ref, blueprint)
-        })
+            this.defineBlueprint(blueprint.ref, blueprint);
+        });
     }
 
     /**
@@ -78,53 +78,53 @@ class EntityBuilder {
      */
     defineBlueprint (id, blueprint) {
         if (id in this._blueprints) {
-            throw new Error(`blueprint ${id} is already defined`)
+            throw new Error(`blueprint ${id} is already defined`);
         }
-        const oBuiltBlueprint = {}
+        const oBuiltBlueprint = {};
         if ('extends' in blueprint) {
-            const aExtends = Array.isArray(blueprint.extends) ? blueprint.extends : [blueprint.extends]
+            const aExtends = Array.isArray(blueprint.extends) ? blueprint.extends : [blueprint.extends];
             aExtends.forEach(x => {
                 if (x in this._blueprints) {
-                    deepMerge(oBuiltBlueprint, this._blueprints[x])
+                    deepMerge(oBuiltBlueprint, this._blueprints[x]);
                 } else {
-                    throw new Error(`blueprint ${id} extends from an non-existant blueprint ${x}`)
+                    throw new Error(`blueprint ${id} extends from an non-existant blueprint ${x}`);
                 }
-            })
+            });
         }
-        deepMerge(oBuiltBlueprint, blueprint)
-        delete oBuiltBlueprint.extends
-        oBuiltBlueprint.ref = id
+        deepMerge(oBuiltBlueprint, blueprint);
+        delete oBuiltBlueprint.extends;
+        oBuiltBlueprint.ref = id;
         if (!('properties' in oBuiltBlueprint)) {
-            oBuiltBlueprint.properties = []
+            oBuiltBlueprint.properties = [];
         }
         try {
             switch (oBuiltBlueprint.entityType) {
-                case CONSTS.ENTITY_TYPE_ITEM: {
-                    this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-item')
-                    break
-                }
+            case CONSTS.ENTITY_TYPE_ITEM: {
+                this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-item');
+                break;
+            }
 
-                case CONSTS.ENTITY_TYPE_ACTOR: {
-                    this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-actor')
-                    break
-                }
+            case CONSTS.ENTITY_TYPE_ACTOR: {
+                this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-actor');
+                break;
+            }
             }
         } catch (e) {
-            throw new Error(`Schema validation error on blueprint : ${id}`, { cause: e })
+            throw new Error(`Schema validation error on blueprint : ${id}`, { cause: e });
         }
-        return this._blueprints[id] = deepFreeze(oBuiltBlueprint)
+        return this._blueprints[id] = deepFreeze(oBuiltBlueprint);
     }
 
     _hashObject (oObject) {
-        const sObject = JSON.stringify(oObject)
-        return crypto.createHash('md5').update(sObject).digest('hex')
+        const sObject = JSON.stringify(oObject);
+        return crypto.createHash('md5').update(sObject).digest('hex');
     }
 
     _checkResRef (resref) {
         if (!(resref in this._blueprints)) {
-            throw new Error(`resref ${resref} does not lead to a defined blueprint`)
+            throw new Error(`resref ${resref} does not lead to a defined blueprint`);
         }
-        return this._blueprints[resref]
+        return this._blueprints[resref];
     }
 
     /**
@@ -135,21 +135,21 @@ class EntityBuilder {
     _registerUnidentifiedBlueprint (blueprint) {
         if (typeof blueprint === 'string') {
             if (blueprint in this._blueprints) {
-                return this._blueprints[blueprint]
+                return this._blueprints[blueprint];
             } else {
-                throw new ReferenceError(`This blueprint does not exist ${blueprint}`)
+                throw new ReferenceError(`This blueprint does not exist ${blueprint}`);
             }
         }
-        const sHash = this._hashObject(blueprint)
+        const sHash = this._hashObject(blueprint);
         if (sHash in this._blueprints) {
-            return this._blueprints[sHash]
+            return this._blueprints[sHash];
         } else {
-            return this.defineBlueprint(sHash, blueprint)
+            return this.defineBlueprint(sHash, blueprint);
         }
     }
 
     _buildProperties (aProperties) {
-        return aProperties.map(p => this._propertyBuilder.buildProperty(p))
+        return aProperties.map(p => this._propertyBuilder.buildProperty(p));
     }
 
     /**
@@ -165,62 +165,62 @@ class EntityBuilder {
      * @returns {*|Date|Set<unknown>|Set<any>|{}}
      */
     createItemFromResRef (resref, id) {
-        const oBlueprint = this._checkResRef(resref)
+        const oBlueprint = this._checkResRef(resref);
         return {
             id: id || getUniqueId(),
             blueprint: oBlueprint,
             remainingCharges: oBlueprint.charges || 0,
             tag: 'tag' in oBlueprint ? oBlueprint.tag : '',
             properties: this._buildProperties(oBlueprint.properties)
-        }
+        };
     }
 
     createCreatureFromResRef (resref, id = undefined) {
         try {
-            const oBlueprint = this._checkResRef(resref)
-            const oCreature = new Creature({ blueprint: oBlueprint, id })
+            const oBlueprint = this._checkResRef(resref);
+            const oCreature = new Creature({ blueprint: oBlueprint, id });
             this
                 ._buildProperties(oBlueprint.properties)
-                .forEach(property => oCreature.mutations.addProperty({ property }))
+                .forEach(property => oCreature.mutations.addProperty({ property }));
             Object
                 .values(oBlueprint.equipment)
                 .forEach(item => {
-                    const oItem = this.createEntity(item)
-                    oCreature.equipItem(oItem)
-                })
+                    const oItem = this.createEntity(item);
+                    oCreature.equipItem(oItem);
+                });
             Object
                 .values(oBlueprint.actions)
                 .forEach(action => {
-                    oCreature.mutations.defineAction(action)
-                })
-            return oCreature
+                    oCreature.mutations.defineAction(action);
+                });
+            return oCreature;
         } catch (e) {
-            console.error(e)
-            throw new Error(`Could not build creature ${resref} : ${e.message}`, { cause: e })
+            console.error(e);
+            throw new Error(`Could not build creature ${resref} : ${e.message}`, { cause: e });
         }
     }
 
     createEntity (blueprint, id) {
-        const bp = this._registerUnidentifiedBlueprint(blueprint)
-        const idbp = bp.ref
+        const bp = this._registerUnidentifiedBlueprint(blueprint);
+        const idbp = bp.ref;
         switch (bp.entityType) {
-            case CONSTS.ENTITY_TYPE_ITEM: {
-                return this.createItemFromResRef(idbp, id)
-            }
+        case CONSTS.ENTITY_TYPE_ITEM: {
+            return this.createItemFromResRef(idbp, id);
+        }
 
-            case CONSTS.ENTITY_TYPE_ACTOR: {
-                return this.createCreatureFromResRef(idbp, id)
-            }
+        case CONSTS.ENTITY_TYPE_ACTOR: {
+            return this.createCreatureFromResRef(idbp, id);
+        }
 
-            case CONSTS.ENTITY_TYPE_PARTIAL: {
-                break
-            }
+        case CONSTS.ENTITY_TYPE_PARTIAL: {
+            break;
+        }
 
-            default: {
-                throw new Error(`What the hell is this blueprint : ${idbp} / ${bp.entityType} ?`)
-            }
+        default: {
+            throw new Error(`What the hell is this blueprint : ${idbp} / ${bp.entityType} ?`);
+        }
         }
     }
 }
 
-module.exports = EntityBuilder
+module.exports = EntityBuilder;

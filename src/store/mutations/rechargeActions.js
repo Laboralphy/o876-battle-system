@@ -3,11 +3,11 @@
  */
 function cooldownAction (action) {
     if (action.cooldown > 0 && action.cooldown !== Infinity) {
-        const acdt = action.cooldownTimer
+        const acdt = action.cooldownTimer;
         for (let i = acdt.length - 1; i >= 0; --i) {
-            --acdt[i]
+            --acdt[i];
             if (acdt[i] <= 0) {
-                acdt.splice(i, 1)
+                acdt.splice(i, 1);
             }
         }
     }
@@ -18,7 +18,7 @@ function cooldownAction (action) {
  * @param state {RBSStoreState}
  */
 module.exports = ({ state }) => {
-    for (let sAction in state.actions) {
-        cooldownAction(state.actions[sAction])
+    for (const sAction in state.actions) {
+        cooldownAction(state.actions[sAction]);
     }
-}
+};

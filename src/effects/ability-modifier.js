@@ -1,5 +1,5 @@
-const { checkConst } = require('../libs/check-const')
-const CONSTS = require("../consts");
+const { checkConst } = require('../libs/check-const');
+const CONSTS = require('../consts');
 
 /**
  * This effect modifies an ability, adding a bonus (if amp > 0) or a penalty (if amp < 0)
@@ -7,7 +7,7 @@ const CONSTS = require("../consts");
  * @param ability {string} ABILITY_*
  */
 function init ({ effect, ability }) {
-    effect.data.ability = checkConst(ability)
+    effect.data.ability = checkConst(ability);
 }
 
 /**
@@ -18,11 +18,11 @@ function init ({ effect, ability }) {
  */
 function apply ({ effect, target, reject }) {
     if (effect.amp < 0 && target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_ABILITY_DECREASE)) {
-        reject()
+        reject();
     }
 }
 
 module.exports = {
     init,
     apply
-}
+};

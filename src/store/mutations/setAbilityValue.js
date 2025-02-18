@@ -4,12 +4,12 @@
  * @param ability {string}
  * @param value {number}
  */
-const {checkConst} = require("../../libs/check-const");
+const {checkConst} = require('../../libs/check-const');
 module.exports = ({ state }, { ability, value }) => {
-    checkConst(ability)
+    checkConst(ability);
     if (ability in state.abilities) {
-        state.abilities[ability] = value
+        state.abilities[ability] = value;
     } else {
-        throw new ReferenceError(`This ability does not exist ${ability}`)
+        throw new ReferenceError(`This ability does not exist ${ability}`);
     }
-}
+};

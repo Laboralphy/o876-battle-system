@@ -1,7 +1,7 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
 
 function init ({ effect }) {
-    this.data.lastCheck = 0
+    this.data.lastCheck = 0;
 }
 
 /**
@@ -11,12 +11,12 @@ function init ({ effect }) {
  * @param attackOutcome {AttackOutcome}
  */
 function attack ({ effect, effectProcessor, attackOutcome }) {
-    effectProcessor.removeEffect(effect)
+    effectProcessor.removeEffect(effect);
 }
 
 function apply ({ target, reject }) {
     if (target.getters.getters.getEffectSet.has(CONSTS.EFFECT_STEALTH)) {
-        reject()
+        reject();
     }
 }
 
@@ -24,4 +24,4 @@ module.exports = {
     init,
     attack,
     apply
-}
+};

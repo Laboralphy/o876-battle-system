@@ -8,18 +8,18 @@ module.exports = (state, getters) => {
     const aSlots = [
         ...getters.getDefensiveSlots,
         ...getters.getOffensiveSlots
-    ]
-    const oProperties = {}
-    const eq = state.equipment
+    ];
+    const oProperties = {};
+    const eq = state.equipment;
     aSlots
         .forEach(slot => {
-            const oItem = eq[slot]
+            const oItem = eq[slot];
             if (!!oItem && oItem.properties.length > 0) {
                 if (!(slot in oProperties)) {
-                    oProperties[slot] = []
+                    oProperties[slot] = [];
                 }
-                oProperties[slot].push(...oItem.properties)
+                oProperties[slot].push(...oItem.properties);
             }
-        })
-    return oProperties
-}
+        });
+    return oProperties;
+};

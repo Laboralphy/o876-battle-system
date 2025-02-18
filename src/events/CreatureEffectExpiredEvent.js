@@ -1,13 +1,13 @@
-const CONSTS = require('../consts')
-const BoxedEffect = require("../sub-api/classes/BoxedEffect");
+const CONSTS = require('../consts');
+const GenericEvent = require('./GenericEvent');
+const BoxedEffect = require('../sub-api/classes/BoxedEffect');
 
-class CreatureEffectExpiredEvent {
+class CreatureEffectExpiredEvent extends GenericEvent {
     constructor ({ system, effect }) {
-        this.type = CONSTS.EVENT_CREATURE_EFFECT_EXPIRED
-        this.system = system
-        this.creature = effect.target
-        this.effect = new BoxedEffect(effect)
+        super(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, system);
+        this.creature = this.boxCreature(effect.target);
+        this.effect = this.boxEffect(effect);
     }
 }
 
-module.exports = CreatureEffectExpiredEvent
+module.exports = CreatureEffectExpiredEvent;

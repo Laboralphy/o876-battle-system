@@ -5,4 +5,4 @@
  * @param externals {{VARIABLES: {[variable: string]: number|string}}}
  * @returns {{[variable: string]: number|string}}
  */
-module.exports = (state, getters, externals) => externals.VARIABLES
+module.exports = (state, getters, externals) => externals.VARIABLES;

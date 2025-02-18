@@ -1,5 +1,5 @@
-const Manager = require('../src/Manager')
-const CONSTS = require("../src/consts");
+const Manager = require('../src/Manager');
+const CONSTS = require('../src/consts');
 const PropertyBuilder = require('../src/PropertyBuilder');
 
 const bpNormalActor = {
@@ -16,14 +16,14 @@ const bpNormalActor = {
     equipment: [
         'natwpn-punch-1d3'
     ]
-}
+};
 
 const bpNaturalWeapon = {
     size: CONSTS.WEAPON_SIZE_SMALL,
     weight: 0,
     proficiency: CONSTS.PROFICIENCY_WEAPON_SIMPLE,
     equipmentSlots: [CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2, CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3]
-}
+};
 
 const bpClaws2d6 = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -34,7 +34,7 @@ const bpClaws2d6 = {
     size: CONSTS.WEAPON_SIZE_SMALL,
     properties: [],
     attributes: []
-}
+};
 
 const bpFangs3d6 = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -45,7 +45,7 @@ const bpFangs3d6 = {
     size: CONSTS.WEAPON_SIZE_SMALL,
     properties: [],
     attributes: []
-}
+};
 
 const bpSting1d6Poison = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
@@ -62,7 +62,7 @@ const bpSting1d6Poison = {
         duration: 11
     }],
     attributes: []
-}
+};
 
 const bpMonster1 = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -79,7 +79,7 @@ const bpMonster1 = {
         'bpClaws2d6',
         'bpFangs3d6'
     ]
-}
+};
 
 const bpMonster2 = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -95,140 +95,140 @@ const bpMonster2 = {
     equipment: [
         'bpSting1d6Poison'
     ]
-}
+};
 
 const bpHydra = {
-    "entityType": "ENTITY_TYPE_ACTOR",
-    "classType": "CLASS_TYPE_MONSTER",
-    "proficiencies": [
-        "PROFICIENCY_WEAPON_NATURAL",
-        "PROFICIENCY_WEAPON_SIMPLE",
-        "PROFICIENCY_WEAPON_MARTIAL",
-        "PROFICIENCY_ARMOR_LIGHT",
-        "PROFICIENCY_ARMOR_MEDIUM",
-        "PROFICIENCY_ARMOR_HEAVY"
+    'entityType': 'ENTITY_TYPE_ACTOR',
+    'classType': 'CLASS_TYPE_MONSTER',
+    'proficiencies': [
+        'PROFICIENCY_WEAPON_NATURAL',
+        'PROFICIENCY_WEAPON_SIMPLE',
+        'PROFICIENCY_WEAPON_MARTIAL',
+        'PROFICIENCY_ARMOR_LIGHT',
+        'PROFICIENCY_ARMOR_MEDIUM',
+        'PROFICIENCY_ARMOR_HEAVY'
     ],
-    "abilities": {
-        "strength": 20,
-        "dexterity": 12,
-        "constitution": 20,
-        "intelligence": 2,
-        "wisdom": 10,
-        "charisma": 7
+    'abilities': {
+        'strength': 20,
+        'dexterity': 12,
+        'constitution': 20,
+        'intelligence': 2,
+        'wisdom': 10,
+        'charisma': 7
     },
-    "equipment": [
+    'equipment': [
         {
-            "entityType": "ENTITY_TYPE_ITEM",
-            "itemType": "ITEM_TYPE_WEAPON",
-            "tag": "natural-weapon-bite",
-            "proficiency": "PROFICIENCY_WEAPON_NATURAL",
-            "weight": 0,
-            "size": "WEAPON_SIZE_SMALL",
-            "attributes": [],
-            "damages": "1d10",
-            "damageType": "DAMAGE_TYPE_PIERCING",
-            "properties": [],
-            "equipmentSlots": [
-                "EQUIPMENT_SLOT_NATURAL_WEAPON_1",
-                "EQUIPMENT_SLOT_NATURAL_WEAPON_2",
-                "EQUIPMENT_SLOT_NATURAL_WEAPON_3"
+            'entityType': 'ENTITY_TYPE_ITEM',
+            'itemType': 'ITEM_TYPE_WEAPON',
+            'tag': 'natural-weapon-bite',
+            'proficiency': 'PROFICIENCY_WEAPON_NATURAL',
+            'weight': 0,
+            'size': 'WEAPON_SIZE_SMALL',
+            'attributes': [],
+            'damages': '1d10',
+            'damageType': 'DAMAGE_TYPE_PIERCING',
+            'properties': [],
+            'equipmentSlots': [
+                'EQUIPMENT_SLOT_NATURAL_WEAPON_1',
+                'EQUIPMENT_SLOT_NATURAL_WEAPON_2',
+                'EQUIPMENT_SLOT_NATURAL_WEAPON_3'
             ]
         }
     ],
-    "properties": [
+    'properties': [
         {
-            "type": "PROPERTY_DARKVISION",
-            "amp": 0
+            'type': 'PROPERTY_DARKVISION',
+            'amp': 0
         },
         {
-            "type": "PROPERTY_MULTI_ATTACK",
-            "amp": 4
+            'type': 'PROPERTY_MULTI_ATTACK',
+            'amp': 4
         }
     ],
-    "actions": [],
-    "specie": "SPECIE_MONSTROSITY",
-    "ac": 4,
-    "level": 15,
-    "hd": 12,
-    "speed": 30
-}
+    'actions': [],
+    'specie': 'SPECIE_MONSTROSITY',
+    'ac': 4,
+    'level': 15,
+    'hd': 12,
+    'speed': 30
+};
 
 
 
 describe('createEntity / destroyEntity', function () {
     it('should add creature to horde when creating creature', function () {
-        const m = new Manager()
-        const c1 = m.createEntity(bpNormalActor, 'c1')
-        expect(Object.values(m.horde.creatures)).toHaveLength(1)
-        expect(m.horde.creatures['c1']).toBeDefined()
-        expect(m.horde.creatures['c1']).toBe(c1)
-    })
+        const m = new Manager();
+        const c1 = m.createEntity(bpNormalActor, 'c1');
+        expect(Object.values(m.horde.creatures)).toHaveLength(1);
+        expect(m.horde.creatures['c1']).toBeDefined();
+        expect(m.horde.creatures['c1']).toBe(c1);
+    });
     it('should remove creature to horde when destroying creature', function () {
-        const m = new Manager()
-        const c1 = m.createEntity(bpNormalActor, 'c1')
-        expect(Object.values(m.horde.creatures)).toHaveLength(1)
-        m.destroyEntity(c1)
-        expect(m.horde.creatures['c1']).toBeUndefined()
-    })
-})
+        const m = new Manager();
+        const c1 = m.createEntity(bpNormalActor, 'c1');
+        expect(Object.values(m.horde.creatures)).toHaveLength(1);
+        m.destroyEntity(c1);
+        expect(m.horde.creatures['c1']).toBeUndefined();
+    });
+});
 
 describe('processEntities', function () {
     it('should work fine when no creature is instanciated', function () {
-        const m = new Manager()
-        expect(() => m.processEntities()).not.toThrow()
-    })
+        const m = new Manager();
+        expect(() => m.processEntities()).not.toThrow();
+    });
     it('should fire effect applied event', function () {
-        const m = new Manager()
-        const logs = []
+        const m = new Manager();
+        const logs = [];
         m.events.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, evt => logs.push({
             type: 'creature.effect.applied',
             evt
-        }))
-        const c1 = m.createEntity(bpNormalActor, 'c1')
-        const eLight = m.effectProcessor.createEffect(CONSTS.EFFECT_LIGHT)
-        expect(logs).toHaveLength(0)
-        m.effectProcessor.applyEffect(eLight, c1, 10)
-        expect(logs).toHaveLength(1)
-        expect(logs[0].evt.effect.type).toBe(CONSTS.EFFECT_LIGHT)
-    })
+        }));
+        const c1 = m.createEntity(bpNormalActor, 'c1');
+        const eLight = m.effectProcessor.createEffect(CONSTS.EFFECT_LIGHT);
+        expect(logs).toHaveLength(0);
+        m.effectProcessor.applyEffect(eLight, c1, 10);
+        expect(logs).toHaveLength(1);
+        expect(logs[0].evt.effect.type).toBe(CONSTS.EFFECT_LIGHT);
+    });
     it('creature should be active when having a long duration effect', function () {
-        const m = new Manager()
-        const c1 = m.createEntity(bpNormalActor, 'c1')
-        const eLight = m.effectProcessor.createEffect(CONSTS.EFFECT_LIGHT)
-        expect(m.horde.isCreatureActive(c1)).toBeFalsy()
-        const eApplied = m.effectProcessor.applyEffect(eLight, c1, 10)
-        expect(eApplied).not.toBeNull()
-        expect(eApplied.duration).toBe(10)
+        const m = new Manager();
+        const c1 = m.createEntity(bpNormalActor, 'c1');
+        const eLight = m.effectProcessor.createEffect(CONSTS.EFFECT_LIGHT);
+        expect(m.horde.isCreatureActive(c1)).toBeFalsy();
+        const eApplied = m.effectProcessor.applyEffect(eLight, c1, 10);
+        expect(eApplied).not.toBeNull();
+        expect(eApplied.duration).toBe(10);
         const aEffects = Object
             .values(c1._store._state.effects)
-            .filter(effect => effect.duration > 0)
-        expect(aEffects).toHaveLength(1)
-        expect(c1.getters.getEffects).toHaveLength(1)
-        expect(m.horde.isCreatureActive(c1)).toBeTruthy()
-    })
-})
+            .filter(effect => effect.duration > 0);
+        expect(aEffects).toHaveLength(1);
+        expect(c1.getters.getEffects).toHaveLength(1);
+        expect(m.horde.isCreatureActive(c1)).toBeTruthy();
+    });
+});
 
 describe('Real Combat simulator', function () {
     const bpShortSword = {
-        "entityType": "ENTITY_TYPE_ITEM",
-        "itemType": "ITEM_TYPE_WEAPON",
-        "proficiency": "PROFICIENCY_WEAPON_MARTIAL",
-        "damages": "1d6",
-        "damageType": "DAMAGE_TYPE_PIERCING",
-        "weight": 2,
-        "size": "WEAPON_SIZE_SMALL",
-        "attributes": [
-            "WEAPON_ATTRIBUTE_FINESSE"
+        'entityType': 'ENTITY_TYPE_ITEM',
+        'itemType': 'ITEM_TYPE_WEAPON',
+        'proficiency': 'PROFICIENCY_WEAPON_MARTIAL',
+        'damages': '1d6',
+        'damageType': 'DAMAGE_TYPE_PIERCING',
+        'weight': 2,
+        'size': 'WEAPON_SIZE_SMALL',
+        'attributes': [
+            'WEAPON_ATTRIBUTE_FINESSE'
         ],
-        "properties": [],
-        "equipmentSlots": [
-            "EQUIPMENT_SLOT_WEAPON_MELEE"
+        'properties': [],
+        'equipmentSlots': [
+            'EQUIPMENT_SLOT_WEAPON_MELEE'
         ]
-    }
+    };
     it('should work as a real combat', function () {
-        const m = new Manager()
-        m.combatManager.defaultDistance = 50
-        const logs = []
+        const m = new Manager();
+        m.combatManager.defaultDistance = 50;
+        const logs = [];
         m.events.on(CONSTS.EVENT_COMBAT_START, evt => {
             logs.push({
                 event: 'combat.start',
@@ -236,8 +236,8 @@ describe('Real Combat simulator', function () {
                 target: evt.combat.target.id,
                 attackerHP: evt.combat.attacker.getters.getHitPoints,
                 targetHP: evt.combat.target.getters.getHitPoints
-            })
-        })
+            });
+        });
         m.events.on(CONSTS.EVENT_COMBAT_END, evt => {
             logs.push({
                 event: 'combat.end',
@@ -245,8 +245,8 @@ describe('Real Combat simulator', function () {
                 target: evt.combat.target.id,
                 attackerHP: evt.combat.attacker.getters.getHitPoints,
                 targetHP: evt.combat.target.getters.getHitPoints
-            })
-        })
+            });
+        });
         m.events.on(CONSTS.EVENT_COMBAT_TURN, evt => {
             logs.push({
                 event: 'combat.turn',
@@ -255,8 +255,8 @@ describe('Real Combat simulator', function () {
                 turn: evt.combat.turn,
                 attackerHP: evt.combat.attacker.getters.getHitPoints,
                 targetHP: evt.combat.target.getters.getHitPoints
-            })
-        })
+            });
+        });
         m.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => {
             logs.push({
                 event: 'combat.distance',
@@ -264,13 +264,13 @@ describe('Real Combat simulator', function () {
                 attacker: evt.combat.attacker.id,
                 target: evt.combat.attacker.id,
                 distance: evt.distance
-            })
-        })
+            });
+        });
         m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => {
             /**
              * @type {AttackOutcome}
              */
-            const ao = evt.attack
+            const ao = evt.attack;
             logs.push({
                 event: 'combat.attack',
                 attacker: ao.attacker.id,
@@ -280,32 +280,32 @@ describe('Real Combat simulator', function () {
                 ac: ao.ac,
                 attackerHP: ao.attacker.getters.getHitPoints,
                 targetHP: ao.target.getters.getHitPoints
-            })
-        })
-        const c1 = m.createEntity(bpNormalActor, 'c1')
-        const c2 = m.createEntity(bpNormalActor, 'c2')
-        const sw1 = m.createEntity(bpShortSword)
-        const sw2 = m.createEntity(bpShortSword)
-        c1.equipItem(sw1)
-        c2.equipItem(sw2)
-        c1.dice.cheat(0.5)
-        c2.dice.cheat(0.4)
-        m.startCombat(c1, c2)
+            });
+        });
+        const c1 = m.createEntity(bpNormalActor, 'c1');
+        const c2 = m.createEntity(bpNormalActor, 'c2');
+        const sw1 = m.createEntity(bpShortSword);
+        const sw2 = m.createEntity(bpShortSword);
+        c1.equipItem(sw1);
+        c2.equipItem(sw2);
+        c1.dice.cheat(0.5);
+        c2.dice.cheat(0.4);
+        m.startCombat(c1, c2);
         const process = () => {
-            m.processEntities()
+            m.processEntities();
             for (let i = 0; i < m.combatManager.defaultTickCount; ++i) {
-                m.processCombats()
+                m.processCombats();
             }
-        }
-        expect(m.combatManager.combats).toHaveLength(2)
-        expect(m.combatManager.combats[0].distance).toBe(50)
-        expect(m.combatManager.combats[1].distance).toBe(50)
-        process()
-        expect(m.combatManager.combats[0].distance).toBe(5)
-        expect(m.combatManager.combats[1].distance).toBe(5)
-        expect(m.combatManager.combats[0].attacker.getters.getSelectedWeapon).toBeDefined()
-        expect(m.combatManager.combats[0].attacker.getters.getSelectedWeapon.blueprint.damages).toBe('1d6')
-        process()
+        };
+        expect(m.combatManager.combats).toHaveLength(2);
+        expect(m.combatManager.combats[0].distance).toBe(50);
+        expect(m.combatManager.combats[1].distance).toBe(50);
+        process();
+        expect(m.combatManager.combats[0].distance).toBe(5);
+        expect(m.combatManager.combats[1].distance).toBe(5);
+        expect(m.combatManager.combats[0].attacker.getters.getSelectedWeapon).toBeDefined();
+        expect(m.combatManager.combats[0].attacker.getters.getSelectedWeapon.blueprint.damages).toBe('1d6');
+        process();
         // process()
         // process()
         // process()
@@ -313,7 +313,7 @@ describe('Real Combat simulator', function () {
         // process()
         // process()
 
-        expect(logs).toHaveLength(12)
+        expect(logs).toHaveLength(12);
 
         expect(logs[0]).toEqual({
             event: 'combat.start',
@@ -427,70 +427,70 @@ describe('Real Combat simulator', function () {
             targetHP: 17
         });
 
-    })
-})
+    });
+});
 
 
 describe('attack advantage', function () {
     describe('when target cannot see attacker', function () {
         it('should have advantage on attack when target is blinded', function () {
-            const m = new Manager()
-            const cm = m.combatManager
-            cm.defaultDistance = 5
-            const c1 = m.createEntity(bpNormalActor, 'c1')
-            const c2 = m.createEntity(bpNormalActor, 'c2')
-            expect(c1.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).toBeDefined()
-            const combat = m.startCombat(c1, c2)
-            const logs = []
+            const m = new Manager();
+            const cm = m.combatManager;
+            cm.defaultDistance = 5;
+            const c1 = m.createEntity(bpNormalActor, 'c1');
+            const c2 = m.createEntity(bpNormalActor, 'c2');
+            expect(c1.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).toBeDefined();
+            const combat = m.startCombat(c1, c2);
+            const logs = [];
             m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => {
-                const a = evt.attack
+                const a = evt.attack;
                 logs.push({
                     attacker: a.attacker.id,
                     rollBias: a.rollBias
-                })
-            })
-            m.processEntities()
-            m.processCombats()
-            m.processCombats()
-            m.processCombats()
-            m.processCombats()
-            m.processCombats()
-            m.processCombats()
+                });
+            });
+            m.processEntities();
+            m.processCombats();
+            m.processCombats();
+            m.processCombats();
+            m.processCombats();
+            m.processCombats();
+            m.processCombats();
 
-            expect(logs[0].rollBias.result).toBe(0)
-            expect(logs[1].rollBias.result).toBe(0)
+            expect(logs[0].rollBias.result).toBe(0);
+            expect(logs[1].rollBias.result).toBe(0);
 
-            const eBlind = m.createEffect(CONSTS.EFFECT_BLINDNESS)
-            m.applyEffect(eBlind, c2, 10)
+            const eBlind = m.createEffect(CONSTS.EFFECT_BLINDNESS);
+            m.applyEffect(eBlind, c2, 10);
 
-            m.processEntities()
-            m.processCombats()
-            m.processCombats()
-            m.processCombats()
-            m.processCombats()
-            m.processCombats()
-            m.processCombats()
+            m.processEntities();
+            m.processCombats();
+            m.processCombats();
+            m.processCombats();
+            m.processCombats();
+            m.processCombats();
+            m.processCombats();
 
             // target can't detect attacker
             // attack should be advantaged
-            expect(logs[2].attacker).toBe(c1.id)
-            expect(logs[2].rollBias.result).toBe(1)
-            expect(logs[2].rollBias.advantages.size).toBe(1)
-            expect(logs[2].rollBias.advantages.has(CONSTS.ADV_ATTACK_UNDETECTED_BY_TARGET)).toBeTruthy()
+            expect(logs[2].attacker).toBe(c1.id);
+            expect(logs[2].rollBias.result).toBe(1);
+            expect(logs[2].rollBias.advantages.size).toBe(1);
+            expect(logs[2].rollBias.advantages.has(CONSTS.ADV_ATTACK_UNDETECTED_BY_TARGET)).toBeTruthy();
 
-            expect(logs[3].attacker).toBe(c2.id)
-            expect(logs[3].rollBias.result).toBe(-1)
-            expect(logs[3].rollBias.disadvantages.size).toBe(1)
-            expect(logs[3].rollBias.disadvantages.has(CONSTS.DIS_ATTACK_TARGET_UNDETECTED)).toBeTruthy()
-        })
-    })
-})
+            expect(logs[3].attacker).toBe(c2.id);
+            expect(logs[3].rollBias.result).toBe(-1);
+            expect(logs[3].rollBias.disadvantages.size).toBe(1);
+            expect(logs[3].rollBias.disadvantages.has(CONSTS.DIS_ATTACK_TARGET_UNDETECTED)).toBeTruthy();
+        });
+    });
+});
 
 describe('combat with monster with on-attack-hit property weapon', function () {
     it('should apply poison when attack hit', function () {
-        const m = new Manager()
-        const cm = m.combatManager
-        cm.defaultDistance = 50
+        const m = new Manager();
+        const cm = m.combatManager;
+        cm.defaultDistance = 50;
         m.defineModule({
             blueprints: {
                 bpNaturalWeapon,
@@ -501,30 +501,30 @@ describe('combat with monster with on-attack-hit property weapon', function () {
                 bpMonster1,
                 bpMonster2
             }
-        })
-        const c1 = m.createEntity('bpNormalActor', 'player')
-        const c2 = m.createEntity('bpMonster2', 'monster')
-        c2.dice.cheat(0.6)
-        c1.dice.cheat(0.5)
-        const oCombat = m.startCombat(c2, c1)
-        oCombat.distance = 5
-        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1)
-        const logs = []
+        });
+        const c1 = m.createEntity('bpNormalActor', 'player');
+        const c2 = m.createEntity('bpMonster2', 'monster');
+        c2.dice.cheat(0.6);
+        c1.dice.cheat(0.5);
+        const oCombat = m.startCombat(c2, c1);
+        oCombat.distance = 5;
+        expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1);
+        const logs = [];
         m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => logs.push({
             what: 'attack',
             who: evt.attack.attacker.id
-        }))
+        }));
         m.events.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, evt => logs.push({
             what: 'effect applied',
             who: evt.creature.id,
             effect: evt.effect
-        }))
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
-        cm.processCombats()
+        }));
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
+        cm.processCombats();
         expect(logs[0]).toEqual(expect.objectContaining({
             what: 'effect applied',
             who: 'player',
@@ -544,15 +544,15 @@ describe('combat with monster with on-attack-hit property weapon', function () {
                 siblings: [],
                 tag: ''
             })
-        }))
-        expect(c1.getters.getConditionSet.has(CONSTS.CONDITION_POISONED)).toBeTruthy()
-    })
-})
+        }));
+        expect(c1.getters.getConditionSet.has(CONSTS.CONDITION_POISONED)).toBeTruthy();
+    });
+});
 
 describe('deliverAttack', function () {
     it('should deliver additional damage when specified', function () {
-        const m = new Manager()
-        m.combatManager.defaultDistance = 5
+        const m = new Manager();
+        m.combatManager.defaultDistance = 5;
         m.defineModule({
             blueprints: {
                 bpNaturalWeapon,
@@ -564,34 +564,34 @@ describe('deliverAttack', function () {
                 bpMonster2,
                 bpHydra
             }
-        })
-        const p1 = m.createEntity('bpNormalActor', 'player1')
-        const p2 = m.createEntity('bpNormalActor', 'player2')
-        p1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1 })
-        p2.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1 })
-        const oP1Weapon = p1.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]
-        expect(oP1Weapon).toBeDefined()
-        expect(p1.getters.getSelectedWeapon).toEqual(oP1Weapon)
-        p1.dice.cheat(0.9)
-        p2.dice.cheat(0.1)
-        const logs = []
+        });
+        const p1 = m.createEntity('bpNormalActor', 'player1');
+        const p2 = m.createEntity('bpNormalActor', 'player2');
+        p1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1 });
+        p2.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1 });
+        const oP1Weapon = p1.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1];
+        expect(oP1Weapon).toBeDefined();
+        expect(p1.getters.getSelectedWeapon).toEqual(oP1Weapon);
+        p1.dice.cheat(0.9);
+        p2.dice.cheat(0.1);
+        const logs = [];
         m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
             if (attack.attacker.id === 'player1') {
-                logs.push(attack)
+                logs.push(attack);
             }
-        })
-        m.startCombat(p1, p2)
-        m.deliverAttack(p1, p2, { additionalWeaponDamage: '6d10' })
-        expect(logs[0].damages.amount).toBe(63)
-        expect(logs[0].rush).toBeTruthy()
-    })
-})
+        });
+        m.startCombat(p1, p2);
+        m.deliverAttack(p1, p2, { additionalWeaponDamage: '6d10' });
+        expect(logs[0].damages.amount).toBe(63);
+        expect(logs[0].rush).toBeTruthy();
+    });
+});
 
 describe('Multiattack', function () {
     it('should attack 5 offenders', function () {
-        const m = new Manager()
-        const cm = m.combatManager
-        cm.defaultDistance = 5
+        const m = new Manager();
+        const cm = m.combatManager;
+        cm.defaultDistance = 5;
         m.defineModule({
             blueprints: {
                 bpNaturalWeapon,
@@ -603,51 +603,51 @@ describe('Multiattack', function () {
                 bpMonster2,
                 bpHydra
             }
-        })
-        const c1 = m.createEntity('bpHydra', 'hydra')
-        const p1 = m.createEntity('bpNormalActor', 'player1')
-        const p2 = m.createEntity('bpNormalActor', 'player2')
-        const p3 = m.createEntity('bpNormalActor', 'player3')
-        const p4 = m.createEntity('bpNormalActor', 'player4')
-        const p5 = m.createEntity('bpNormalActor', 'player5')
-        c1.dice.cheat(0.5)
-        p1.dice.cheat(0.5)
-        p2.dice.cheat(0.5)
-        p3.dice.cheat(0.5)
-        p4.dice.cheat(0.5)
-        p5.dice.cheat(0.5)
-        const logs = []
+        });
+        const c1 = m.createEntity('bpHydra', 'hydra');
+        const p1 = m.createEntity('bpNormalActor', 'player1');
+        const p2 = m.createEntity('bpNormalActor', 'player2');
+        const p3 = m.createEntity('bpNormalActor', 'player3');
+        const p4 = m.createEntity('bpNormalActor', 'player4');
+        const p5 = m.createEntity('bpNormalActor', 'player5');
+        c1.dice.cheat(0.5);
+        p1.dice.cheat(0.5);
+        p2.dice.cheat(0.5);
+        p3.dice.cheat(0.5);
+        p4.dice.cheat(0.5);
+        p5.dice.cheat(0.5);
+        const logs = [];
         m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
             if (attack.attacker.id === 'hydra') {
                 logs.push({
                     attacker: attack.attacker.id,
                     target: attack.target.id
-                })
+                });
             }
-        })
-        m.startCombat(p1, c1)
-        m.startCombat(p2, c1)
-        m.startCombat(p3, c1)
-        m.startCombat(p4, c1)
-        m.startCombat(p5, c1)
-        m.processCombats()
-        m.processCombats()
-        m.processCombats()
-        m.processCombats()
-        m.processCombats()
-        m.processCombats()
+        });
+        m.startCombat(p1, c1);
+        m.startCombat(p2, c1);
+        m.startCombat(p3, c1);
+        m.startCombat(p4, c1);
+        m.startCombat(p5, c1);
+        m.processCombats();
+        m.processCombats();
+        m.processCombats();
+        m.processCombats();
+        m.processCombats();
+        m.processCombats();
         expect(logs).toEqual([
             { attacker: 'hydra', target: 'player4' },
             { attacker: 'hydra', target: 'player5' },
             { attacker: 'hydra', target: 'player2' },
             { attacker: 'hydra', target: 'player3' },
             { attacker: 'hydra', target: 'player1' }
-        ])
-    })
+        ]);
+    });
     it('should do one attack per turn when only one offender is attacking', function () {
-        const m = new Manager()
-        const cm = m.combatManager
-        cm.defaultDistance = 5
+        const m = new Manager();
+        const cm = m.combatManager;
+        cm.defaultDistance = 5;
         m.defineModule({
             blueprints: {
                 bpNaturalWeapon,
@@ -659,38 +659,38 @@ describe('Multiattack', function () {
                 bpMonster2,
                 bpHydra
             }
-        })
-        const c1 = m.createEntity('bpHydra', 'hydra')
-        const p1 = m.createEntity('bpNormalActor', 'player1')
-        c1.dice.cheat(0.5)
-        p1.dice.cheat(0.5)
-        const logs = []
+        });
+        const c1 = m.createEntity('bpHydra', 'hydra');
+        const p1 = m.createEntity('bpNormalActor', 'player1');
+        c1.dice.cheat(0.5);
+        p1.dice.cheat(0.5);
+        const logs = [];
         m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
             if (attack.attacker.id === 'hydra') {
                 logs.push({
                     attacker: attack.attacker.id,
                     target: attack.target.id
-                })
+                });
             }
-        })
-        m.startCombat(p1, c1)
-        m.processCombats()
-        m.processCombats()
-        m.processCombats()
-        m.processCombats()
-        m.processCombats()
-        m.processCombats()
+        });
+        m.startCombat(p1, c1);
+        m.processCombats();
+        m.processCombats();
+        m.processCombats();
+        m.processCombats();
+        m.processCombats();
+        m.processCombats();
         expect(logs).toEqual([
             { attacker: 'hydra', target: 'player1' }
-        ])
-    })
-})
+        ]);
+    });
+});
 
 describe('Weapon with extended types', function () {
     it('should extends properties when designing a magic weapon that extends from polyvalent type', function () {
-        const m = new Manager()
-        m.loadModule('classic')
-        const h = m.createEntity('wpn-halberd-p2', 'x1')
+        const m = new Manager();
+        m.loadModule('classic');
+        const h = m.createEntity('wpn-halberd-p2', 'x1');
         expect(h.properties).toMatchObject([
             {
                 type: 'PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE',
@@ -707,128 +707,128 @@ describe('Weapon with extended types', function () {
                 amp: 2,
                 data: { damageType: 'DAMAGE_TYPE_ANY' }
             }
-        ])
-    })
-})
+        ]);
+    });
+});
 
 describe('active properties', function () {
     it('should heal one point of damage each combat turn', function () {
-        const m = new Manager()
-        m.loadModule('classic')
-        const c1 = m.createEntity(bpNormalActor)
-        expect(CONSTS.PROPERTY_REGENERATION in m.propertyBuilder.propertyPrograms).toBeTruthy()
+        const m = new Manager();
+        m.loadModule('classic');
+        const c1 = m.createEntity(bpNormalActor);
+        expect(CONSTS.PROPERTY_REGENERATION in m.propertyBuilder.propertyPrograms).toBeTruthy();
 
-        expect([...m.propertyBuilder.mutatingProperties]).toEqual([CONSTS.PROPERTY_REGENERATION])
-        c1.mutations.setLevel({ value: 10 })
-        expect(c1.getters.getAbilities[CONSTS.ABILITY_CONSTITUTION]).toBe(10)
-        expect(c1.hitPoints).toBe(17)
-        expect(c1.getters.getMaxHitPoints).toBe(35)
+        expect([...m.propertyBuilder.mutatingProperties]).toEqual([CONSTS.PROPERTY_REGENERATION]);
+        c1.mutations.setLevel({ value: 10 });
+        expect(c1.getters.getAbilities[CONSTS.ABILITY_CONSTITUTION]).toBe(10);
+        expect(c1.hitPoints).toBe(17);
+        expect(c1.getters.getMaxHitPoints).toBe(35);
         for (let i = 0; i < 100; ++i) {
-            m.process()
+            m.process();
         }
-        expect(c1.getters.getMaxHitPoints).toBe(35)
+        expect(c1.getters.getMaxHitPoints).toBe(35);
         const pRegen = m.propertyBuilder.buildProperty({
             type: CONSTS.PROPERTY_REGENERATION,
             amp: 1
-        })
-        c1.mutations.addProperty({ property: pRegen })
+        });
+        c1.mutations.addProperty({ property: pRegen });
 
-        m.horde.setCreatureActive(c1)
-        m.process()
-        expect(PropertyBuilder.isPropertyActive(pRegen)).toBeTruthy()
-        expect(c1.getters.getProperties.length).toBe(1)
-        expect(PropertyBuilder.isPropertyActive(c1.getters.getProperties[0])).toBeTruthy()
-        expect(c1.getters.getActiveProperties.length).toBe(1)
-        expect(m.horde.isCreatureActive(c1)).toBe(true)
+        m.horde.setCreatureActive(c1);
+        m.process();
+        expect(PropertyBuilder.isPropertyActive(pRegen)).toBeTruthy();
+        expect(c1.getters.getProperties.length).toBe(1);
+        expect(PropertyBuilder.isPropertyActive(c1.getters.getProperties[0])).toBeTruthy();
+        expect(c1.getters.getActiveProperties.length).toBe(1);
+        expect(m.horde.isCreatureActive(c1)).toBe(true);
 
         for (let i = 0; i < 18; ++i) { // about 3 turn -> +3 hp
-            m.process()
+            m.process();
         }
-        expect(c1.hitPoints).toBe(20)
-    })
+        expect(c1.hitPoints).toBe(20);
+    });
 
     it('should add vampire as an active creature', function () {
-        const m = new Manager()
-        m.loadModule('classic')
-        const c1 = m.createEntity('c-vampire')
-        expect(m.horde.activeCreatures.length).toBe(1)
-        m.process()
-        m.process()
-        m.process()
-        m.process()
-        m.process()
-        m.process()
-        m.process()
-        m.process()
-        m.process()
-        expect(m.horde.activeCreatures.length).toBe(1)
-        m.destroyEntity(c1)
-        expect(m.horde.activeCreatures.length).toBe(0)
-    })
-})
+        const m = new Manager();
+        m.loadModule('classic');
+        const c1 = m.createEntity('c-vampire');
+        expect(m.horde.activeCreatures.length).toBe(1);
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        expect(m.horde.activeCreatures.length).toBe(1);
+        m.destroyEntity(c1);
+        expect(m.horde.activeCreatures.length).toBe(0);
+    });
+});
 
 describe('focus on regeneration', function () {
     it('should prevent regen with struck with radiant damage', function () {
-        const m = new Manager()
-        m.loadModule('classic')
-        const c1 = m.createEntity('c-vampire')
-        c1.hitPoints = 10
+        const m = new Manager();
+        m.loadModule('classic');
+        const c1 = m.createEntity('c-vampire');
+        c1.hitPoints = 10;
         const process = () => {
-            m.process()
-            m.process()
-            m.process()
-            m.process()
-            m.process()
-            m.process()
-        }
-        process()
-        expect(c1.hitPoints).toBe(30)
-        expect(c1.getters.getMaxHitPoints).toBe(76)
+            m.process();
+            m.process();
+            m.process();
+            m.process();
+            m.process();
+            m.process();
+        };
+        process();
+        expect(c1.hitPoints).toBe(30);
+        expect(c1.getters.getMaxHitPoints).toBe(76);
 
-        process()
-        expect(c1.hitPoints).toBe(50)
+        process();
+        expect(c1.hitPoints).toBe(50);
 
-        process()
-        expect(c1.hitPoints).toBe(70)
+        process();
+        expect(c1.hitPoints).toBe(70);
 
-        process()
-        expect(c1.hitPoints).toBe(76)
+        process();
+        expect(c1.hitPoints).toBe(76);
 
-        process()
-        expect(c1.hitPoints).toBe(76)
+        process();
+        expect(c1.hitPoints).toBe(76);
 
-        c1.hitPoints = 10
-        process()
-        expect(c1.hitPoints).toBe(30)
+        c1.hitPoints = 10;
+        process();
+        expect(c1.hitPoints).toBe(30);
 
-        const eDamage = m.createEffect(CONSTS.EFFECT_DAMAGE, 10, { damageType: CONSTS.DAMAGE_TYPE_RADIANT })
-        m.applyEffect(eDamage, c1)
+        const eDamage = m.createEffect(CONSTS.EFFECT_DAMAGE, 10, { damageType: CONSTS.DAMAGE_TYPE_RADIANT });
+        m.applyEffect(eDamage, c1);
 
-        expect(c1.hitPoints).toBe(10) // don't forget : vulnerable to RADIANT damages = +100% damage
+        expect(c1.hitPoints).toBe(10); // don't forget : vulnerable to RADIANT damages = +100% damage
 
-        process()
-        expect(c1.hitPoints).toBe(10) // +20 regen - 10 radiant damage of previous damage
+        process();
+        expect(c1.hitPoints).toBe(10); // +20 regen - 10 radiant damage of previous damage
 
-        process()
-        expect(c1.hitPoints).toBe(30) // +20 regen - 10 radiant damage of previous damage
+        process();
+        expect(c1.hitPoints).toBe(30); // +20 regen - 10 radiant damage of previous damage
 
-        process()
-        expect(c1.hitPoints).toBe(50) // +20 regen - 10 radiant damage of previous damage
-    })
-})
+        process();
+        expect(c1.hitPoints).toBe(50); // +20 regen - 10 radiant damage of previous damage
+    });
+});
 
 describe('testing vampyre effect', function () {
     it('should heal attacker when dealing damage with attacks', function () {
-        const m = new Manager()
-        m.loadModule('classic')
-        const c1 = m.createEntity('c-wight', 'c1')
-        c1.hitPoints = 4
-        const c2 = m.createEntity('c-goblin', 'c2')
-        c1.dice.cheat(0.9)
-        c2.dice.cheat(0.1)
-        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE })
-        expect(c1.getters.getSelectedWeapon.blueprint.ref).toBe('wpn-long-sword-wight')
-        m.deliverAttack(c1, c2)
-        expect(c1.hitPoints).toBeGreaterThan(4)
-    })
-})
+        const m = new Manager();
+        m.loadModule('classic');
+        const c1 = m.createEntity('c-wight', 'c1');
+        c1.hitPoints = 4;
+        const c2 = m.createEntity('c-goblin', 'c2');
+        c1.dice.cheat(0.9);
+        c2.dice.cheat(0.1);
+        c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE });
+        expect(c1.getters.getSelectedWeapon.blueprint.ref).toBe('wpn-long-sword-wight');
+        m.deliverAttack(c1, c2);
+        expect(c1.hitPoints).toBeGreaterThan(4);
+    });
+});

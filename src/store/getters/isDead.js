@@ -3,4 +3,4 @@
  * @param state {RBSStoreState}
  * @returns {boolean}
  */
-module.exports = state => state.pools.hitPoints <= 0
+module.exports = state => state.pools.hitPoints <= 0;

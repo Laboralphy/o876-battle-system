@@ -1,10 +1,10 @@
-const vm = require('node:vm')
+const vm = require('node:vm');
 const {parse} = require('csv-parse/sync');
 const fs = require('fs');
 
 class SmartData {
     constructor ({ data = {} } = {}) {
-        this._data = data
+        this._data = data;
     }
 
     loadCSV (sFile) {
@@ -14,7 +14,7 @@ class SmartData {
             delimiter: ',',
             columns: false,
             skip_empty_lines: true
-        })
+        });
     }
 
     /**
@@ -23,7 +23,7 @@ class SmartData {
      * @returns {string} output string as snake case
      */
     toSNAKECASE (s) {
-        return s.replace(/-/g, '_').toUpperCase()
+        return s.replace(/-/g, '_').toUpperCase();
     }
 
     /**
@@ -33,40 +33,40 @@ class SmartData {
      * @returns {*|string|string|number}
      */
     searchConst (sSearch, sRadix = '') {
-        const CONSTS = this._data
+        const CONSTS = this._data;
         if (sSearch.toString().toUpperCase() === 'TRUE') {
-            return true
+            return true;
         }
         if (sSearch.toString().toUpperCase() === 'FALSE') {
-            return false
+            return false;
         }
         if (typeof sSearch === 'number') {
-            return sSearch
+            return sSearch;
         }
         if (Array.isArray(sSearch)) {
-            return sSearch.map(s => this.searchConst(s, sRadix))
+            return sSearch.map(s => this.searchConst(s, sRadix));
         }
-        let sSearchUpper = this.toSNAKECASE(sSearch)
+        let sSearchUpper = this.toSNAKECASE(sSearch);
 
         const fSearch = s => {
             if (sRadix !== '' && !s.startsWith(sRadix.toUpperCase())) {
-                return false
+                return false;
             }
-            return s.endsWith(sSearchUpper)
-        }
+            return s.endsWith(sSearchUpper);
+        };
 
         const ff = a => a
             .filter(fSearch)
             .sort((a, b) => a.toString().length - b.toString().length)
-            .find(fSearch)
+            .find(fSearch);
 
-        let sFound = ff(Object.values(CONSTS))
+        let sFound = ff(Object.values(CONSTS));
         if (sFound) {
-            return sFound
+            return sFound;
         }
-        sSearchUpper = '_' + this.toSNAKECASE(sSearch)
-        sFound = ff(Object.values(CONSTS))
-        return sFound === undefined ? sSearch : sFound
+        sSearchUpper = '_' + this.toSNAKECASE(sSearch);
+        sFound = ff(Object.values(CONSTS));
+        return sFound === undefined ? sSearch : sFound;
     }
 
     /**
@@ -75,11 +75,11 @@ class SmartData {
      * @return {vm.Script[]}
      */
     compile (oCodes) {
-        const aCompiled = []
+        const aCompiled = [];
         for (const [idCode, sCode] of Object.entries(oCodes)) {
-            aCompiled.push(new vm.Script(sCode))
+            aCompiled.push(new vm.Script(sCode));
         }
-        return aCompiled
+        return aCompiled;
     }
 
     createContext () {
@@ -89,7 +89,7 @@ class SmartData {
             value: '',
             leftValue: '',
             _output: {},
-        }
+        };
 
         /**
          * Set property name and value.
@@ -99,13 +99,13 @@ class SmartData {
          */
         function kv (obj) {
             if (typeof oContext.value === 'number') {
-                obj[oContext.leftValue] = oContext.value
-                return
+                obj[oContext.leftValue] = oContext.value;
+                return;
             }
-            const sTrimmedValue = oContext.value.trim()
-            const c0 = sTrimmedValue.charAt(0)
-            const sSigns = '[{"\''
-            obj[oContext.leftValue] = sSigns.includes(c0) ? JSON.parse(sTrimmedValue) : sTrimmedValue
+            const sTrimmedValue = oContext.value.trim();
+            const c0 = sTrimmedValue.charAt(0);
+            const sSigns = '[{"\'';
+            obj[oContext.leftValue] = sSigns.includes(c0) ? JSON.parse(sTrimmedValue) : sTrimmedValue;
         }
 
         /**
@@ -114,7 +114,7 @@ class SmartData {
          * @returns {any}
          */
         function last (arr) {
-            return arr.length > 0 ? arr[arr.length - 1] : undefined
+            return arr.length > 0 ? arr[arr.length - 1] : undefined;
         }
 
         /**
@@ -122,68 +122,68 @@ class SmartData {
          */
         function output () {
             if (oContext.c) {
-                oContext._output[oContext._id] = oContext.c
+                oContext._output[oContext._id] = oContext.c;
             }
-            oContext.c = {}
+            oContext.c = {};
         }
 
         function id (s) {
-            oContext._id = s
+            oContext._id = s;
         }
 
-        oContext.ref = (s, r) => this.searchConst(s, r)
-        oContext.kv = kv
-        oContext.output = output
-        oContext.last = last
-        oContext.id = id
-        oContext.c = {}
+        oContext.ref = (s, r) => this.searchConst(s, r);
+        oContext.kv = kv;
+        oContext.output = output;
+        oContext.last = last;
+        oContext.id = id;
+        oContext.c = {};
 
-        return vm.createContext(oContext)
+        return vm.createContext(oContext);
     }
 
     runRow (aRow, aScripts, oContext) {
         if (!Array.isArray(aRow)) {
-            console.error(aRow)
-            throw new TypeError('ERR_ARRAY_EXPECTED')
+            console.error(aRow);
+            throw new TypeError('ERR_ARRAY_EXPECTED');
         }
         aRow.forEach((value, i) => {
             if (value !== '') {
-                value = isNaN(+value) ? value : parseFloat(value)
-                oContext.value = value
+                value = isNaN(+value) ? value : parseFloat(value);
+                oContext.value = value;
 
                 try {
                     if (aScripts[i]) {
-                        aScripts[i].runInContext(oContext)
+                        aScripts[i].runInContext(oContext);
                     }
                 } catch (e) {
-                    console.error(e)
-                    console.error(aRow)
-                    console.error('COLUMN ' + i + ' : ' + value)
-                    throw e
+                    console.error(e);
+                    console.error(aRow);
+                    console.error('COLUMN ' + i + ' : ' + value);
+                    throw e;
                 } finally {
-                    oContext.leftValue = value
+                    oContext.leftValue = value;
                 }
             }
-        })
+        });
     }
 
     run (aRows) {
-        const [aHeader, aScripts, ...aData] = aRows
+        const [aHeader, aScripts, ...aData] = aRows;
         if (!aHeader) {
-            throw new Error('no header defined')
+            throw new Error('no header defined');
         }
         const oScripts = aHeader.reduce((prev, curr, i) => {
-            prev[curr] = aScripts[i]
-            return prev
-        }, {})
-        const aCompiledScripts = this.compile(oScripts)
-        const oContext = this.createContext()
+            prev[curr] = aScripts[i];
+            return prev;
+        }, {});
+        const aCompiledScripts = this.compile(oScripts);
+        const oContext = this.createContext();
         aData.forEach((row, i) => {
-            this.runRow(row, aCompiledScripts, oContext)
-        })
-        oContext.output()
-        return oContext._output
+            this.runRow(row, aCompiledScripts, oContext);
+        });
+        oContext.output();
+        return oContext._output;
     }
 }
 
-module.exports = SmartData
+module.exports = SmartData;

@@ -1,8 +1,8 @@
-const Creatures = require('./sub-api/Creatures')
+const Creatures = require('./sub-api/Creatures');
 const Effects = require('./sub-api/Effects');
-const Core = require("./sub-api/Core");
-const Properties = require("./sub-api/Properties");
-const Items = require("./sub-api/Items");
+const Core = require('./sub-api/Core');
+const Properties = require('./sub-api/Properties');
+const Items = require('./sub-api/Items');
 
 class API {
     constructor () {
@@ -12,16 +12,16 @@ class API {
             effects: new Effects(),
             items: new Items(),
             properties: new Properties(),
-        }
+        };
         Object
             .keys(services)
-            .forEach(service => service.injectServices(services))
-        this._services = services
+            .forEach(service => service.injectServices(services));
+        this._services = services;
     }
 
     get services () {
-        return this._services
+        return this._services;
     }
 }
 
-module.exports = API
+module.exports = API;

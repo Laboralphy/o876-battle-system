@@ -3,4 +3,4 @@
  * @param state {*}
  * @returns {string}
  */
-module.exports = state => state.id
+module.exports = state => state.id;

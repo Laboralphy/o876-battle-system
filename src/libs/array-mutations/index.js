@@ -6,8 +6,8 @@
  * @return {[]}
  */
 function setItem (a, i, value) {
-    a.splice(i, 1, value)
-    return a
+    a.splice(i, 1, value);
+    return a;
 }
 
 /**
@@ -16,8 +16,8 @@ function setItem (a, i, value) {
  * @return {[]}
  */
 function truncate (a) {
-    a.splice(0, a.length)
-    return a
+    a.splice(0, a.length);
+    return a;
 }
 
 /**
@@ -26,7 +26,7 @@ function truncate (a) {
  * @param i {number}
  */
 function getItem (a, i) {
-    return a.at(i)
+    return a.at(i);
 }
 
 /**
@@ -35,8 +35,8 @@ function getItem (a, i) {
  * @param i {number} indice de l'élément à supprimer
  */
 function removeItem (a, i) {
-    a.splice(i, 1)
-    return a
+    a.splice(i, 1);
+    return a;
 }
 
 /**
@@ -45,7 +45,7 @@ function removeItem (a, i) {
  * @return {[]}
  */
 function clone (a) {
-    return a.slice(0)
+    return a.slice(0);
 }
 
 /**
@@ -55,8 +55,8 @@ function clone (a) {
  * @param f {function}
  */
 function mutateItem (a, i, f) {
-    setItem(a, i, f(getItem(a, i)))
-    return a
+    setItem(a, i, f(getItem(a, i)));
+    return a;
 }
 
 /**
@@ -66,22 +66,22 @@ function mutateItem (a, i, f) {
  * @param fmut
  */
 function mutateItems (a, fsearch, fmut) {
-    const amut = []
+    const amut = [];
     for (let i = 0, l = a.length; i < l; ++i) {
-        const ai = a[i]
+        const ai = a[i];
         if (fsearch(ai, i, a)) {
-            amut.push(i)
+            amut.push(i);
         }
     }
-    amut.forEach(index => mutateItem(a, index, fmut))
+    amut.forEach(index => mutateItem(a, index, fmut));
 }
 
 function refreshItem (a, item) {
-    const i = a.indexOf(item)
+    const i = a.indexOf(item);
     if (i < 0) {
-        throw new Error('Item not in array')
+        throw new Error('Item not in array');
     }
-    setItem(a, i, item)
+    setItem(a, i, item);
 }
 
 /**
@@ -91,8 +91,8 @@ function refreshItem (a, item) {
  * @return {[]}
  */
 function update (a, a2) {
-    a.splice(0, a.length, ...a2)
-    return a
+    a.splice(0, a.length, ...a2);
+    return a;
 }
 
 module.exports = {
@@ -105,4 +105,4 @@ module.exports = {
     mutateItems,
     update,
     refreshItem
-}
+};

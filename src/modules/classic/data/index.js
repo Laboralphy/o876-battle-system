@@ -3,5 +3,5 @@
 // List of files in ./src/modules/classic/data
 
 module.exports = {
-  'skills': require('./skills.json')
-}
+    'skills': require('./skills.json')
+};

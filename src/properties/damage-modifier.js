@@ -1,4 +1,4 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
 
 /**
  * This property will add bonus or penalty to a weapon damage
@@ -7,11 +7,11 @@ const CONSTS = require('../consts')
  */
 function init ({ property, damageType: sDamageType = CONSTS.DAMAGE_TYPE_ANY }) {
     if (!CONSTS[sDamageType]) {
-        throw new ReferenceError('unknown damage type ' + sDamageType)
+        throw new ReferenceError('unknown damage type ' + sDamageType);
     }
-    property.data.damageType = sDamageType
+    property.data.damageType = sDamageType;
 }
 
 module.exports = {
     init
-}
+};

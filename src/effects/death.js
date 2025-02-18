@@ -1,4 +1,4 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
 
 /**
  *
@@ -7,11 +7,11 @@ const CONSTS = require('../consts')
  */
 function mutate ({ target, source }) {
     // will drop hp to 0
-    target.hitPoints = 0
+    target.hitPoints = 0;
     target.events.emit(CONSTS.EVENT_CREATURE_DEATH, {
         creature: target,
         killer: source
-    })
+    });
 }
 
 /**
@@ -22,11 +22,11 @@ function mutate ({ target, source }) {
  */
 function apply ({ effect, target, reject }) {
     if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_DEATH)) {
-        reject()
+        reject();
     }
 }
 
 module.exports = {
     mutate,
     apply
-}
+};

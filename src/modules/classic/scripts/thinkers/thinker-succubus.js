@@ -6,17 +6,17 @@
  */
 function main ({ action, combat, manager }) {
     // La succube va tester si sa cible est stun
-    const oTarget = combat.target
+    const oTarget = combat.target;
     if (oTarget.getters.getSpecie !== manager.CONSTS.SPECIE_HUMANOID) {
-        return
+        return;
     }
     if (oTarget.getters.getEffectSet.has(manager.CONSTS.EFFECT_STUN)) {
-        action('act-draining-kiss')
+        action('act-draining-kiss');
     } else if (!oTarget.getters.getImmunitySet.has(manager.CONSTS.IMMUNITY_TYPE_STUN)) {
         // la cible n'est pas stun : choisir l'action de stun
         // Sauf si la cible est immunisée
-        action('act-charm')
+        action('act-charm');
     }
 }
 
-module.exports = main
+module.exports = main;

@@ -1,4 +1,4 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
 
 /**
  * Effect is rejected if target is immune to level drain
@@ -8,10 +8,10 @@ const CONSTS = require('../consts')
  */
 function apply ({ effect, target, reject }) {
     if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_NEGATIVE_LEVEL)) {
-        reject()
+        reject();
     }
 }
 
 module.exports = {
     apply
-}
+};

@@ -1,30 +1,30 @@
-const PROPERTIES = require('./properties')
-const {getUniqueId} = require("./libs/unique-id");
+const PROPERTIES = require('./properties');
+const {getUniqueId} = require('./libs/unique-id');
 
-const SYMBOL_ACTIVE_PROPERTY = Symbol('SYMBOL_ACTIVE_PROPERTY')
+const SYMBOL_ACTIVE_PROPERTY = Symbol('SYMBOL_ACTIVE_PROPERTY');
 
 class PropertyBuilder {
 
     constructor () {
-        this._propertyPrograms = null
-        this.propertyPrograms = PROPERTIES
-        this._aMutatingProperties = null
+        this._propertyPrograms = null;
+        this.propertyPrograms = PROPERTIES;
+        this._aMutatingProperties = null;
     }
 
     static get SYMBOL_ACTIVE_PROPERTY () {
-        return SYMBOL_ACTIVE_PROPERTY
+        return SYMBOL_ACTIVE_PROPERTY;
     }
 
     static isPropertyActive (oProperty) {
-        return oProperty.data[SYMBOL_ACTIVE_PROPERTY] ?? false
+        return oProperty.data[SYMBOL_ACTIVE_PROPERTY] ?? false;
     }
 
     get propertyPrograms () {
-        return this._propertyPrograms
+        return this._propertyPrograms;
     }
 
     set propertyPrograms (value) {
-        this._propertyPrograms = { ...value }
+        this._propertyPrograms = { ...value };
     }
 
     get mutatingProperties () {
@@ -34,9 +34,9 @@ class PropertyBuilder {
                     .entries(this._propertyPrograms)
                     .filter(([sPropName, property]) => ('mutate' in property))
                     .map(([sPropName]) => sPropName)
-            )
+            );
         }
-        return this._aMutatingProperties
+        return this._aMutatingProperties;
     }
 
     /**
@@ -49,10 +49,10 @@ class PropertyBuilder {
      * @returns {undefined|*}
      */
     invokePropertyMethod (oProperty, sMethod, oItem, oCreature, oParams = {}) {
-        const pe = this._propertyPrograms[oProperty.type]
+        const pe = this._propertyPrograms[oProperty.type];
         if (!pe) {
-            console.error(oProperty)
-            throw new ReferenceError(`Property ${oProperty.type} program has not been defined`)
+            console.error(oProperty);
+            throw new ReferenceError(`Property ${oProperty.type} program has not been defined`);
         }
         if (sMethod in pe) {
             return pe[sMethod]({
@@ -60,9 +60,9 @@ class PropertyBuilder {
                 item: oItem,
                 creature: oCreature,
                 ...oParams
-            })
+            });
         }
-        return undefined
+        return undefined;
     }
 
     /**
@@ -84,13 +84,13 @@ class PropertyBuilder {
             type: sPropertyType,
             amp,
             data: {}
-        }
+        };
         if (this.mutatingProperties.has(sPropertyType)) {
-            oProperty.data[SYMBOL_ACTIVE_PROPERTY] = true
+            oProperty.data[SYMBOL_ACTIVE_PROPERTY] = true;
         }
-        this.invokePropertyMethod(oProperty, 'init', null, null, oPropertyDefinition)
-        return oProperty
+        this.invokePropertyMethod(oProperty, 'init', null, null, oPropertyDefinition);
+        return oProperty;
     }
 }
 
-module.exports = PropertyBuilder
+module.exports = PropertyBuilder;

@@ -1,4 +1,4 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
 
 /**
  * Effect is rejected if amp is in ]0..1[ and target is immune to slow
@@ -8,15 +8,15 @@ const CONSTS = require('../consts')
  * @param reject {function}
  */
 function apply ({ effect, target, reject }) {
-    const aImmSet = target.getters.getImmunitySet
+    const aImmSet = target.getters.getImmunitySet;
     if (effect.amp > 0 && effect.amp < 1 && aImmSet.has(CONSTS.IMMUNITY_TYPE_SLOW)) {
-        reject()
+        reject();
     }
     if (effect.amp === 0 && aImmSet.has(CONSTS.IMMUNITY_TYPE_ROOT)) {
-        reject()
+        reject();
     }
 }
 
 module.exports = {
     apply
-}
+};

@@ -5,4 +5,4 @@
  * @returns {Set<string>}
  */
 module.exports = (state, getters) =>
-    getters.getEffects.reduce((prev, curr) => prev.add(curr.type), new Set())
+    getters.getEffects.reduce((prev, curr) => prev.add(curr.type), new Set());

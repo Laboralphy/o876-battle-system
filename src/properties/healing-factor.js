@@ -3,4 +3,4 @@
  * incoming heals
  * @type {{}}
  */
-module.exports = {}
+module.exports = {};

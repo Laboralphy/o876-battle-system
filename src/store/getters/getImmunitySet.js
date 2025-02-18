@@ -1,5 +1,5 @@
-const CONSTS = require('../../consts')
-const { aggregateModifiers } = require('../../libs/aggregator')
+const CONSTS = require('../../consts');
+const { aggregateModifiers } = require('../../libs/aggregator');
 
 /**
  * Returns a Set containing all immunities
@@ -15,6 +15,6 @@ module.exports = (state, getters) => {
     ], getters, {
         effectSorter: effect => effect.data.immunityType,
         propSorter: prop => prop.data.immunityType
-    })
-    return new Set(Object.keys(oImmunities))
-}
+    });
+    return new Set(Object.keys(oImmunities));
+};

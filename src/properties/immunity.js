@@ -1,4 +1,4 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
 
 /**
  * Grants immunity to one of immunity types
@@ -7,11 +7,11 @@ const CONSTS = require('../consts')
  */
 function init ({ property, immunityType }) {
     if (!CONSTS[immunityType]) {
-        throw new ReferenceError('unknown immunity type ' + immunityType)
+        throw new ReferenceError('unknown immunity type ' + immunityType);
     }
-    property.data.immunityType = immunityType
+    property.data.immunityType = immunityType;
 }
 
 module.exports = {
     init
-}
+};

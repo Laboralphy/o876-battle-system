@@ -1,23 +1,23 @@
-const path = require('node:path')
-const fs = require('node:fs')
-const TreeSync = require('../src/libs/o876-xtree/sync')
+const path = require('node:path');
+const fs = require('node:fs');
+const TreeSync = require('../src/libs/o876-xtree/sync');
 
 function getLastReturnTagOfFile (sFile) {
-    const regType = /@returns? +(.*)$/
+    const regType = /@returns? +(.*)$/;
     return fs
         .readFileSync(sFile, { encoding: 'utf-8'})
         .split('\n')
         .filter(l => l.includes('@return'))
         .map(l => {
-            const a = l.trim().match(regType)
+            const a = l.trim().match(regType);
             if (a) {
-                return a[1]
+                return a[1];
             } else {
-                return ''
+                return '';
             }
         })
         .filter(l => l !== '')
-        .pop()
+        .pop();
 }
 
 function generateGetterReturnType (aPaths) {
@@ -26,19 +26,19 @@ function generateGetterReturnType (aPaths) {
             .filter(f => f.name !== 'index.js')
             .map(f => path.basename(f.name, '.js'))
             .map(f => {
-                const sFile = path.join(sPath, f) + '.js'
-                const sType = getLastReturnTagOfFile(sFile)
+                const sFile = path.join(sPath, f) + '.js';
+                const sType = getLastReturnTagOfFile(sFile);
                 if (!sType) {
-                    console.error('This file has no valid @return tag : ' + sFile)
+                    console.error('This file has no valid @return tag : ' + sFile);
                 }
-                return ' * @property ' + f + ' ' + sType
-            })
-    }).flat()
-    aProperties.unshift( ' * @typedef RBSStoreGetters {object}')
-    aProperties.unshift( '/**')
-    aProperties.push(' */', '', 'module.exports = {}')
+                return ' * @property ' + f + ' ' + sType;
+            });
+    }).flat();
+    aProperties.unshift( ' * @typedef RBSStoreGetters {object}');
+    aProperties.unshift( '/**');
+    aProperties.push(' */', '', 'module.exports = {}');
 
-    return aProperties.join('\n')
+    return aProperties.join('\n');
 }
 
-console.log(generateGetterReturnType(process.argv.slice(2)))
+console.log(generateGetterReturnType(process.argv.slice(2)));

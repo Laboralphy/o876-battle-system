@@ -1,5 +1,5 @@
-const Abstract = require('./ServiceAbstract')
-const Creature = require("../Creature");
+const Abstract = require('./ServiceAbstract');
+const Creature = require('../Creature');
 const BoxedAction = require('./classes/BoxedAction');
 const BoxedCreature = require('./classes/BoxedCreature');
 
@@ -10,7 +10,7 @@ class Creatures extends Abstract {
      * @returns {boolean}
      */
     isCreature (oEntity) {
-        return oEntity instanceof BoxedCreature
+        return oEntity instanceof BoxedCreature;
     }
 
     /**
@@ -22,7 +22,7 @@ class Creatures extends Abstract {
     getAbilityModifier (oCreature, sAbility) {
         return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
             .getters
-            .getAbilityModifiers[this.services.core.checkConst(sAbility, this.services.core.PREFIXES.ABILITY)]
+            .getAbilityModifiers[this.services.core.checkConst(sAbility, this.services.core.PREFIXES.ABILITY)];
     }
 
     /**
@@ -34,7 +34,7 @@ class Creatures extends Abstract {
     getAbilityScore (oCreature, sAbility) {
         return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
             .getters
-            .getAbilities[this.services.core.checkConst(sAbility, this.services.core.PREFIXES.ABILITY)]
+            .getAbilities[this.services.core.checkConst(sAbility, this.services.core.PREFIXES.ABILITY)];
     }
 
     /**
@@ -45,7 +45,7 @@ class Creatures extends Abstract {
     getActions (oCreature) {
         return Object.fromEntries(Object
             .entries(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getActions)
-            .map(([sAction, oAction]) => [sAction, new BoxedAction(oAction)]))
+            .map(([sAction, oAction]) => [sAction, new BoxedAction(oAction)]));
     }
 
     /**
@@ -58,7 +58,7 @@ class Creatures extends Abstract {
         return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
             .getters
             .getCapabilitySet
-            .has(this.services.core.checkConst(sCapability, this.services.core.PREFIXES.CAPABILITY))
+            .has(this.services.core.checkConst(sCapability, this.services.core.PREFIXES.CAPABILITY));
     }
 
     /**
@@ -71,7 +71,7 @@ class Creatures extends Abstract {
         return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
             .getters
             .getConditionSet
-            .has(this.services.core.checkConst(sCondition, this.services.core.PREFIXES.CONDITION))
+            .has(this.services.core.checkConst(sCondition, this.services.core.PREFIXES.CONDITION));
     }
 
     /**
@@ -80,7 +80,7 @@ class Creatures extends Abstract {
      * @returns {string[]} CONDITION_* []
      */
     getConditions (oCreature) {
-        return [...oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getConditionSet]
+        return [...oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getConditionSet];
     }
 
     /**
@@ -89,7 +89,7 @@ class Creatures extends Abstract {
      * @returns {number}
      */
     getCarriedWeight (oCreature) {
-        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getEncumbrance.value
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getEncumbrance.value;
     }
 
     /**
@@ -98,7 +98,7 @@ class Creatures extends Abstract {
      * @returns {number}
      */
     getMaxCarryWeight (oCreature) {
-        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getEncumbrance.capacity
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getEncumbrance.capacity;
     }
 
     /**
@@ -114,9 +114,9 @@ class Creatures extends Abstract {
             return {
                 slot,
                 item: item.id
-            }
-        })
+            };
+        });
     }
 }
 
-module.exports = Creatures
+module.exports = Creatures;

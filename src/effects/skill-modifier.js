@@ -4,9 +4,9 @@
  * @param skill {string}
  */
 function init ({ effect, skill }) {
-    effect.data.skill = skill
+    effect.data.skill = skill;
 }
 
 module.exports = {
     init
-}
+};

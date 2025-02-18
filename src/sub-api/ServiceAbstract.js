@@ -1,15 +1,15 @@
 class ServiceAbstract {
     constructor () {
-        this._services = null
+        this._services = null;
     }
 
     get services () {
-        return this._services
+        return this._services;
     }
 
     injectServices (services) {
-        this._services = services
+        this._services = services;
     }
 }
 
-module.exports = ServiceAbstract
+module.exports = ServiceAbstract;

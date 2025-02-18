@@ -1,12 +1,12 @@
-const ServiceAbstract = require('./ServiceAbstract')
-const Creature = require('../Creature')
-const BoxedCreature = require('./classes/BoxedCreature')
-const BoxedItem = require('./classes/BoxedItem')
+const ServiceAbstract = require('./ServiceAbstract');
+const Creature = require('../Creature');
+const BoxedCreature = require('./classes/BoxedCreature');
+const BoxedItem = require('./classes/BoxedItem');
 
 class Entities extends ServiceAbstract {
     constructor() {
-        super()
-        this._entities = {}
+        super();
+        this._entities = {};
     }
 
     /**
@@ -16,9 +16,9 @@ class Entities extends ServiceAbstract {
      */
     getEntity (id) {
         if (this.isEntityExists(id)) {
-            return this._entities[id]
+            return this._entities[id];
         } else {
-            throw new Error(`entity ${id} not found`)
+            throw new Error(`entity ${id} not found`);
         }
     }
 
@@ -28,7 +28,7 @@ class Entities extends ServiceAbstract {
      * @returns {boolean}
      */
     isEntityExists (id) {
-        return id in this._entities
+        return id in this._entities;
     }
 
     /**
@@ -39,11 +39,11 @@ class Entities extends ServiceAbstract {
      */
     createEntity (resref, id) {
         if (this.isEntityExists(id)) {
-            throw new Error(`duplicating entity id ${id}`)
+            throw new Error(`duplicating entity id ${id}`);
         }
-        const oEntity = this.manager.createEntity(resref, id)
-        this._entities[id] = oEntity
-        return oEntity instanceof Creature ? new BoxedCreature(oEntity) : new BoxedItem(oEntity)
+        const oEntity = this.manager.createEntity(resref, id);
+        this._entities[id] = oEntity;
+        return oEntity instanceof Creature ? new BoxedCreature(oEntity) : new BoxedItem(oEntity);
     }
 
     /**
@@ -51,8 +51,8 @@ class Entities extends ServiceAbstract {
      * @param oEntity {BoxedCreature|BoxedItem} entity identifier
      */
     destroyEntity (oEntity) {
-        this._services.core.manager.destroyEntity(oEntity.id)
-        delete this._entities[oEntity.id]
+        this._services.core.manager.destroyEntity(oEntity.id);
+        delete this._entities[oEntity.id];
     }
 
     /**
@@ -64,11 +64,11 @@ class Entities extends ServiceAbstract {
      */
     switchEntityType (oEntity, { creature, item }) {
         if (creature && oEntity.isCreature) {
-            return creature(oEntity[BoxedCreature.SYMBOL_BOXED_OBJECT])
+            return creature(oEntity[BoxedCreature.SYMBOL_BOXED_OBJECT]);
         } else if (item && oEntity.isItem) {
-            return item(oEntity[BoxedCreature.SYMBOL_BOXED_OBJECT])
+            return item(oEntity[BoxedCreature.SYMBOL_BOXED_OBJECT]);
         }
     }
 }
 
-module.exports = Entities
+module.exports = Entities;

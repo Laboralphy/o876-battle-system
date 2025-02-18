@@ -6,9 +6,9 @@
  * @param attackOutcome
  */
 function attack ({ effect, effectProcessor, target, attackOutcome }) {
-    effectProcessor.removeEffect(effect)
+    effectProcessor.removeEffect(effect);
 }
 
 module.exports = {
     attack
-}
+};

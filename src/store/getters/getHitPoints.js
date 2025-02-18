@@ -3,4 +3,4 @@
  * @param state {*}
  * @returns {number}
  */
-module.exports = state => state.pools.hitPoints
+module.exports = state => state.pools.hitPoints;

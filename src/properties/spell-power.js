@@ -1,4 +1,4 @@
-const CONSTS = require("../consts");
+const CONSTS = require('../consts');
 
 /**
  * This property will add a bonus or penalty to spell DC tied to an ability
@@ -8,11 +8,11 @@ const CONSTS = require("../consts");
  */
 function init ({ property, ability }) {
     if (!CONSTS[ability]) {
-        throw new ReferenceError('unknown ability ' + ability)
+        throw new ReferenceError('unknown ability ' + ability);
     }
-    property.data.ability = ability
+    property.data.ability = ability;
 }
 
 module.exports = {
     init
-}
+};

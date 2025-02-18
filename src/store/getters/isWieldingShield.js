@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
 /**
  * returns true if creature is currently using shield
@@ -8,7 +8,7 @@ const CONSTS = require('../../consts')
  */
 module.exports = (state, getters) => {
     if (getters.isWieldingTwoHandedWeapon) {
-        return false
+        return false;
     }
-    return !!state.equipment[CONSTS.EQUIPMENT_SLOT_SHIELD]
-}
+    return !!state.equipment[CONSTS.EQUIPMENT_SLOT_SHIELD];
+};

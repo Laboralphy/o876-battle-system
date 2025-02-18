@@ -1,14 +1,14 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
+const GenericEvent = require('./GenericEvent');
 
-class CreatureRemoveItemFailedEvent {
+class CreatureRemoveItemFailedEvent extends GenericEvent {
     constructor ({ system, creature, item, slot, cursedItem }) {
-        this.type = CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED
-        this.system = system
-        this.creature = creature.id
-        this.item = item.id
-        this.slot = slot
-        this.cursedItem = cursedItem
+        super(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, system);
+        this.creature = this.boxCreature(creature);
+        this.item = this.boxItem(item);
+        this.slot = slot;
+        this.cursedItem = cursedItem;
     }
 }
 
-module.exports = CreatureRemoveItemFailedEvent
+module.exports = CreatureRemoveItemFailedEvent;

@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
 /**
  * Check of const is present, or throw error
@@ -8,20 +8,20 @@ const CONSTS = require('../../consts')
 function checkConst (value, bAllowUndefined = false) {
     if (value === undefined) {
         if (bAllowUndefined) {
-            return value
+            return value;
         } else {
-            throw new TypeError('This parameter of mutation, effect, or property should be defined')
+            throw new TypeError('This parameter of mutation, effect, or property should be defined');
         }
     }
     if (typeof value !== 'string') {
-        throw new TypeError(`This parameter of mutation, effect, or property should be of type string`)
+        throw new TypeError('This parameter of mutation, effect, or property should be of type string');
     }
     if (!CONSTS[value]) {
-        throw new ReferenceError(`Parameter value "${value}" in invalid`)
+        throw new ReferenceError(`Parameter value "${value}" in invalid`);
     }
-    return value
+    return value;
 }
 
 module.exports = {
     checkConst
-}
+};

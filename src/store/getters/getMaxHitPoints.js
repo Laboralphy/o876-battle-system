@@ -1,5 +1,5 @@
-const CONSTS = require('../../consts')
-const { aggregateModifiers } = require('../../libs/aggregator')
+const CONSTS = require('../../consts');
+const { aggregateModifiers } = require('../../libs/aggregator');
 
 /**
  * returns the amount of maximum hit points a character may have
@@ -9,10 +9,10 @@ const { aggregateModifiers } = require('../../libs/aggregator')
  * @returns {number}
  */
 module.exports = (state, getters, externals) => {
-    const hd = (state.hitDie / 2) + 0.5
+    const hd = (state.hitDie / 2) + 0.5;
     const nExtraHitPoints = aggregateModifiers([
         CONSTS.PROPERTY_EXTRA_HITPOINTS
-    ], getters).sum
-    const nLevel = getters.getLevel
-    return Math.max(1, Math.floor(nLevel * hd) + nExtraHitPoints)
-}
+    ], getters).sum;
+    const nLevel = getters.getLevel;
+    return Math.max(1, Math.floor(nLevel * hd) + nExtraHitPoints);
+};

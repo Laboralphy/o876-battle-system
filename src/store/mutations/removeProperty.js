@@ -4,8 +4,8 @@
  * @param property {RBSProperty}
  */
 module.exports = ({ state }, { property }) => {
-    const iProp = state.properties.findIndex(p => p.id = property.id)
+    const iProp = state.properties.findIndex(p => p.id = property.id);
     if (iProp >= 0) {
-        state.property.splice(iProp, 1)
+        state.property.splice(iProp, 1);
     }
-}
+};

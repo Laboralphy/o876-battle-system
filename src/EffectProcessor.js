@@ -1,8 +1,8 @@
-const Events = require('node:events')
-const { getUniqueId } = require('./libs/unique-id')
-const CONSTS = require('./consts')
-const EFFECTS = require('./effects')
-const Horde = require('./Horde')
+const Events = require('node:events');
+const { getUniqueId } = require('./libs/unique-id');
+const CONSTS = require('./consts');
+const EFFECTS = require('./effects');
+const Horde = require('./Horde');
 
 /**
  * @typedef RBSEffect {object}
@@ -20,27 +20,27 @@ const Horde = require('./Horde')
 
 class EffectProcessor {
     constructor ({ horde }) {
-        this._events = new Events()
-        this._effectPrograms = EFFECTS
+        this._events = new Events();
+        this._effectPrograms = EFFECTS;
         if (!(horde instanceof Horde)) {
-            throw new TypeError('horde parameter : type mismatch')
+            throw new TypeError('horde parameter : type mismatch');
         }
-        this._horde = horde
+        this._horde = horde;
     }
 
     /**
      * @returns {module:events.EventEmitter | module:events.EventEmitter<DefaultEventMap>}
      */
     get events () {
-        return this._events
+        return this._events;
     }
 
     get effectPrograms () {
-        return this._effectPrograms
+        return this._effectPrograms;
     }
 
     set effectPrograms (value) {
-        this._effectPrograms = value
+        this._effectPrograms = value;
     }
 
     /**
@@ -53,7 +53,7 @@ class EffectProcessor {
      * @returns {undefined|*}
      */
     invokeEffectMethod (oEffect, sMethod, target, source, oParams = {}) {
-        const ee = this._effectPrograms[oEffect.type]
+        const ee = this._effectPrograms[oEffect.type];
         if (sMethod in ee) {
             return ee[sMethod]({
                 effect: oEffect,
@@ -61,9 +61,9 @@ class EffectProcessor {
                 target,
                 source,
                 ...oParams
-            })
+            });
         }
-        return undefined
+        return undefined;
     }
 
     /**
@@ -75,12 +75,12 @@ class EffectProcessor {
      */
     createEffect (sEffect, amp = 0, data = {}) {
         if (!(sEffect in this._effectPrograms)) {
-            throw new Error('Effect ' + sEffect + ' is invalid')
+            throw new Error('Effect ' + sEffect + ' is invalid');
         }
         const {
             subtype = CONSTS.EFFECT_SUBTYPE_MAGICAL,
             ...effectData
-        } = data
+        } = data;
         const oEffect = {
             id: getUniqueId(),
             type: sEffect,
@@ -92,9 +92,9 @@ class EffectProcessor {
             source: '',
             siblings: [],
             tag: ''
-        }
-        this.invokeEffectMethod(oEffect, 'init', null, null, effectData)
-        return oEffect
+        };
+        this.invokeEffectMethod(oEffect, 'init', null, null, effectData);
+        return oEffect;
     }
 
     /**
@@ -106,31 +106,31 @@ class EffectProcessor {
      */
     applyEffect (oEffect, target, duration = 0, source = null) {
         if (!source) {
-            source = target
+            source = target;
         }
-        oEffect.duration = duration
-        oEffect.target = target.id
-        oEffect.source = source.id
-        let bRejected = false
+        oEffect.duration = duration;
+        oEffect.target = target.id;
+        oEffect.source = source.id;
+        let bRejected = false;
         const reject = () => {
-            bRejected = true
-        }
-        this.invokeEffectMethod(oEffect, 'apply', target, source, { reject })
+            bRejected = true;
+        };
+        this.invokeEffectMethod(oEffect, 'apply', target, source, { reject });
         if (bRejected) {
-            this._events.emit(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, { effect: oEffect, target })
-            return null
+            this._events.emit(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, { effect: oEffect, target });
+            return null;
         }
         if (duration > 0) {
-            target.mutations.addEffect({ effect: oEffect })
-            this._horde.setCreatureActive(target)
+            target.mutations.addEffect({ effect: oEffect });
+            this._horde.setCreatureActive(target);
         }
-        this.invokeEffectMethod(oEffect, 'mutate', target, source)
+        this.invokeEffectMethod(oEffect, 'mutate', target, source);
         this._events.emit(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED, {
             effect: oEffect,
             target,
             source
-        })
-        return oEffect
+        });
+        return oEffect;
     }
 
     /**
@@ -139,14 +139,14 @@ class EffectProcessor {
      * @param tag {string}
      */
     groupEffects (aEffects, tag = '') {
-        const aSiblings = aEffects.map(({ id }) => id)
+        const aSiblings = aEffects.map(({ id }) => id);
         aEffects.forEach(effect => {
-            effect.siblings = aSiblings
+            effect.siblings = aSiblings;
             if (tag !== '') {
-                effect.tag = tag
+                effect.tag = tag;
             }
-        })
-        return aEffects
+        });
+        return aEffects;
     }
 
     /**
@@ -159,7 +159,7 @@ class EffectProcessor {
      */
     applyEffectGroup (aEffects, tag, target, duration = 0, source = null) {
         return this.groupEffects(aEffects, tag)
-            .map(effect => this.applyEffect(effect, target, duration, source))
+            .map(effect => this.applyEffect(effect, target, duration, source));
     }
 
     /**
@@ -168,14 +168,14 @@ class EffectProcessor {
      * @returns {{ source: Creature, target: Creature }}
      */
     getEffectTargetSource (oEffect) {
-        const idTarget = oEffect.target
-        const idSource = oEffect.source
-        const target = this._horde.creatures[idTarget]
-        const source = this._horde.creatures[idSource]
+        const idTarget = oEffect.target;
+        const idSource = oEffect.source;
+        const target = this._horde.creatures[idTarget];
+        const source = this._horde.creatures[idSource];
         return {
             target,
             source
-        }
+        };
     }
 
     /**
@@ -184,19 +184,19 @@ class EffectProcessor {
      * @param nDuration {number} new duration
      */
     setEffectDuration (oEffect, nDuration) {
-        const nPreviousEffectDuration = oEffect.duration
+        const nPreviousEffectDuration = oEffect.duration;
         if (nPreviousEffectDuration === nDuration) {
-            return
+            return;
         }
-        const { target, source } = this.getEffectTargetSource(oEffect)
-        target.mutations.setEffectDuration({ effect: oEffect, duration: Math.max(0, nDuration) })
+        const { target, source } = this.getEffectTargetSource(oEffect);
+        target.mutations.setEffectDuration({ effect: oEffect, duration: Math.max(0, nDuration) });
         if (nDuration <= 0) {
-            this.invokeEffectMethod(oEffect, 'dispose', target, source)
+            this.invokeEffectMethod(oEffect, 'dispose', target, source);
             this._events.emit(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, {
                 effect: oEffect,
                 target,
                 source
-            })
+            });
         }
     }
 
@@ -206,9 +206,9 @@ class EffectProcessor {
      * @param oEffect
      */
     removeEffect (oEffect) {
-        const { target, source } = this.getEffectTargetSource(oEffect)
+        const { target, source } = this.getEffectTargetSource(oEffect);
         if (oEffect.siblings.length > 0) {
-            const oEffectRegistry = target.getters.getEffectRegistry
+            const oEffectRegistry = target.getters.getEffectRegistry;
             oEffect
                 .siblings
                 .map(effId => effId in oEffectRegistry
@@ -217,25 +217,25 @@ class EffectProcessor {
                 )
                 .filter(eff => eff !== null)
                 .forEach(eff => {
-                    this.setEffectDuration(eff, 0)
-                })
+                    this.setEffectDuration(eff, 0);
+                });
         } else {
-            this.setEffectDuration(oEffect, 0)
+            this.setEffectDuration(oEffect, 0);
         }
-        console.groupEnd()
+        console.groupEnd();
     }
 
     processEffect (oEffect) {
-        const oTarget = this._horde.creatures[oEffect.target]
+        const oTarget = this._horde.creatures[oEffect.target];
         if (!oTarget) {
             // Target creature is no longer online
-            throw new Error('An effect is processed, but the target creature is no longer registered in the horde.')
+            throw new Error('An effect is processed, but the target creature is no longer registered in the horde.');
         }
-        const oSource = this._horde.creatures[oEffect.source]
-        this.invokeEffectMethod(oEffect, 'mutate', oTarget, oSource)
-        const nCurrentDuration = oTarget.getters.getEffectRegistry[oEffect.id].duration
-        oTarget.mutations.setEffectDuration({ effect: oEffect, duration: nCurrentDuration - 1 })
+        const oSource = this._horde.creatures[oEffect.source];
+        this.invokeEffectMethod(oEffect, 'mutate', oTarget, oSource);
+        const nCurrentDuration = oTarget.getters.getEffectRegistry[oEffect.id].duration;
+        oTarget.mutations.setEffectDuration({ effect: oEffect, duration: nCurrentDuration - 1 });
     }
 }
 
-module.exports = EffectProcessor
+module.exports = EffectProcessor;

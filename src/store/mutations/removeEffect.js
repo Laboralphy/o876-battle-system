@@ -4,8 +4,8 @@
  * @param effect {RBSEffect}
  */
 module.exports = ({ state }, { effect }) => {
-    const iEffectIndex = state.findIndex(eff => eff.id === effect.id)
+    const iEffectIndex = state.findIndex(eff => eff.id === effect.id);
     if (iEffectIndex >= 0) {
-        state.effects.splice(iEffectIndex, 1)
+        state.effects.splice(iEffectIndex, 1);
     }
-}
+};

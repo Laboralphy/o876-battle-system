@@ -8,16 +8,16 @@ module.exports = ({ state, getters }, { action: idAction }) => {
     /**
      * @var {RBSStoreStateAction}
      */
-    const oAction = state.actions[idAction]
+    const oAction = state.actions[idAction];
     if (oAction) {
-        const ready = getters.getActions[idAction].ready
+        const ready = getters.getActions[idAction].ready;
         if (ready) {
-            oAction.cooldownTimer.push(oAction.cooldown)
-            return true
+            oAction.cooldownTimer.push(oAction.cooldown);
+            return true;
         } else {
-            return false
+            return false;
         }
     } else {
-        throw new Error(`Unknown action ${idAction}`)
+        throw new Error(`Unknown action ${idAction}`);
     }
-}
+};

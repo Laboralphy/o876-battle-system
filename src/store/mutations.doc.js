@@ -26,4 +26,4 @@
  * @property useAction {function({ idAction: string })}
  */
 
-module.exports = {}
+module.exports = {};

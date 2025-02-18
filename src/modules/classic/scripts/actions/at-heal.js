@@ -3,15 +3,15 @@
  * @param oCreature {Creature}
  */
 function getDamagePoints (oCreature) {
-    const cg = oCreature.getters
-    const hpmax = cg.getMaxHitPoints
-    const hp = oCreature.hitPoints
-    return hpmax - hp
+    const cg = oCreature.getters;
+    const hpmax = cg.getMaxHitPoints;
+    const hp = oCreature.hitPoints;
+    return hpmax - hp;
 }
 
 function heal (oManager, oCreature, oHealer, amount) {
-    const eHeal = oManager.createEffect(oManager.CONSTS.EFFECT_HEAL, amount)
-    oManager.applyEffect(eHeal, oCreature, oHealer)
+    const eHeal = oManager.createEffect(oManager.CONSTS.EFFECT_HEAL, amount);
+    oManager.applyEffect(eHeal, oCreature, oHealer);
 }
 
 /**
@@ -23,12 +23,12 @@ function heal (oManager, oCreature, oHealer, amount) {
  * @param combat {Combat}
  */
 function main ({ manager, action, combat }) {
-    const oTarget = combat.target
-    const oTargetCombat = manager.combatManager.getCombat(oTarget)
-    const oTargetCombatPrimaryTarget = oTargetCombat.target
-    let oHealedCreature
+    const oTarget = combat.target;
+    const oTargetCombat = manager.combatManager.getCombat(oTarget);
+    const oTargetCombatPrimaryTarget = oTargetCombat.target;
+    let oHealedCreature;
     if (getDamagePoints(oTargetCombatPrimaryTarget) > 0) {
-        oHealedCreature = oTargetCombatPrimaryTarget
+        oHealedCreature = oTargetCombatPrimaryTarget;
     } else {
         oHealedCreature = manager
             .combatManager
@@ -38,11 +38,11 @@ function main ({ manager, action, combat }) {
                 damagePoints: getDamagePoints(offender)
             }))
             .sort((a, b) => b.damagePoints - a.damagePoints)
-            .shift()
+            .shift();
     }
     if (oHealedCreature) {
-        heal(manager, oHealedCreature, combat.attacker, action.parameters.amount)
+        heal(manager, oHealedCreature, combat.attacker, action.parameters.amount);
     }
 }
 
-module.exports = main
+module.exports = main;

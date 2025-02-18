@@ -5,5 +5,5 @@
  * @returns {RBSEffect}
  */
 module.exports = ({ state }, { effect }) => {
-    return state.effects[state.effects.push(effect) - 1]
-}
+    return state.effects[state.effects.push(effect) - 1];
+};

@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+const CONSTS = require('../../consts');
 
 /**
  * Do damage to creature with a saving throw allowed for half damage
@@ -20,23 +20,23 @@ function doDamage (oManager, oTarget, oSource, {
     defensiveAbility = '',
     extraordinary = false
 }) {
-    let bSaved = false
+    let bSaved = false;
     if (offensiveAbility) {
-        const dc = oSource.getters.getSpellDifficultyClass[offensiveAbility]
-        const oSavingThrow = oTarget.rollSavingThrow(defensiveAbility, dc)
-        bSaved = oSavingThrow.success
+        const dc = oSource.getters.getSpellDifficultyClass[offensiveAbility];
+        const oSavingThrow = oTarget.rollSavingThrow(defensiveAbility, dc);
+        bSaved = oSavingThrow.success;
     }
-    const nFullDamage = oTarget.dice.roll(amount)
-    const nDamage = bSaved ? Math.floor(nFullDamage / 2) : nFullDamage
+    const nFullDamage = oTarget.dice.roll(amount);
+    const nDamage = bSaved ? Math.floor(nFullDamage / 2) : nFullDamage;
     const eDam = oManager.createEffect(CONSTS.EFFECT_DAMAGE, nDamage, {
         damageType,
         subtype: extraordinary ? oManager.CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY : oManager.CONSTS.EFFECT_SUBTYPE_MAGICAL
-    })
-    const effect = oManager.applyEffect(eDam, oTarget, 0, oSource)
+    });
+    const effect = oManager.applyEffect(eDam, oTarget, 0, oSource);
     return {
         effect,
         saved: bSaved
-    }
+    };
 }
 
 /**
@@ -47,16 +47,16 @@ function doDamage (oManager, oTarget, oSource, {
  */
 function getWeaponRange (weapon, DATA) {
     if (!weapon) {
-        return -1
+        return -1;
     }
-    const wa = weapon.blueprint.attributes
-    const wr = DATA['WEAPON_RANGES']
+    const wa = weapon.blueprint.attributes;
+    const wr = DATA['WEAPON_RANGES'];
     if (wa.includes(CONSTS.WEAPON_ATTRIBUTE_REACH)) {
-        return wr['WEAPON_RANGE_REACH'].range
+        return wr['WEAPON_RANGE_REACH'].range;
     } else if (wa.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)) {
-        return wr['WEAPON_RANGE_RANGED'].range
+        return wr['WEAPON_RANGE_RANGED'].range;
     } else {
-        return wr['WEAPON_RANGE_MELEE'].range
+        return wr['WEAPON_RANGE_MELEE'].range;
     }
 }
 
@@ -68,14 +68,14 @@ function getWeaponRange (weapon, DATA) {
  */
 function getBestDamageTypeVsMitigation (aDamageTypes, oMitigation) {
     if (aDamageTypes.length === 0) {
-        throw new Error('DamageType Array must have at least one item')
+        throw new Error('DamageType Array must have at least one item');
     }
     return aDamageTypes
         .map(dt => {
             if (dt in oMitigation) {
-                return { damageType: dt, factor: oMitigation[dt].factor, reduction: oMitigation[dt].reduction }
+                return { damageType: dt, factor: oMitigation[dt].factor, reduction: oMitigation[dt].reduction };
             } else {
-                return { damageType: dt, factor: 1, reduction: 0 }
+                return { damageType: dt, factor: 1, reduction: 0 };
             }
         })
         .sort((
@@ -86,7 +86,7 @@ function getBestDamageTypeVsMitigation (aDamageTypes, oMitigation) {
             : fb - fa
         )
         .map(({ damageType }) => damageType)
-        .shift() ?? aDamageTypes[0]
+        .shift() ?? aDamageTypes[0];
 }
 
 /**
@@ -97,14 +97,14 @@ function getBestDamageTypeVsMitigation (aDamageTypes, oMitigation) {
  */
 function getWorstDamageTypeVsAC (aDamageTypes, oArmorClasses) {
     if (aDamageTypes.length === 0) {
-        throw new Error('DamageType Array must have at least one item')
+        throw new Error('DamageType Array must have at least one item');
     }
     return aDamageTypes
         .filter(dt => dt in oArmorClasses)
         .map(dt => ({ damageType: dt, ac: oArmorClasses[dt] }))
         .sort(({ ac: a }, { ac: b }) => b - a)
         .map(({ damageType }) => damageType)
-        .shift() ?? aDamageTypes[0]
+        .shift() ?? aDamageTypes[0];
 }
 
 module.exports = {
@@ -112,4 +112,4 @@ module.exports = {
     getWeaponRange,
     getBestDamageTypeVsMitigation,
     getWorstDamageTypeVsAC
-}
+};

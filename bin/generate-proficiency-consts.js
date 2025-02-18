@@ -1,13 +1,13 @@
-const fs = require('fs')
+const fs = require('fs');
 
 
 function getProficienciesFromSkillFile (sFile) {
-    const oSkillData = JSON.parse(fs.readFileSync(sFile).toString())
+    const oSkillData = JSON.parse(fs.readFileSync(sFile).toString());
     return Object
         .values(oSkillData)
         .map(s => s.proficiency)
-        .join('\n')
+        .join('\n');
 }
 
-console.log(getProficienciesFromSkillFile(process.argv[2]))
+console.log(getProficienciesFromSkillFile(process.argv[2]));
 

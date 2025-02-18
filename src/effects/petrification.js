@@ -1,4 +1,4 @@
-const CONSTS = require('../consts')
+const CONSTS = require('../consts');
 
 /**
  * Effect is rejected if target is immune to petrification
@@ -8,7 +8,7 @@ const CONSTS = require('../consts')
  */
 function apply ({ effect, target, reject }) {
     if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_PETRIFICATION)) {
-        reject()
+        reject();
     }
 }
 
@@ -21,11 +21,11 @@ function apply ({ effect, target, reject }) {
  */
 function mutate ({ effect, effectProcessor, target, source }) {
     if (source.getters.isDead) {
-        effectProcessor.removeEffect(effect)
+        effectProcessor.removeEffect(effect);
     }
 }
 
 module.exports = {
     apply,
     mutate
-}
+};

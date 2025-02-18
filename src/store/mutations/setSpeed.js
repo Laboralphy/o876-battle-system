@@ -4,5 +4,5 @@
  * @param value {number}
  */
 module.exports = ({ state }, { value }) => {
-    state.speed = Math.max(0, value)
-}
+    state.speed = Math.max(0, value);
+};

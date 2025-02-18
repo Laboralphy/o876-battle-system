@@ -1,5 +1,5 @@
-const { doDamage } = require('../../../../libs/helpers')
-const { checkConst } = require("../../../../libs/check-const");
+const { doDamage } = require('../../../../libs/helpers');
+const { checkConst } = require('../../../../libs/check-const');
 
 /**
  * Poison breath
@@ -17,20 +17,20 @@ function main ({ manager, action, combat }) {
         parameters: {
             amount
         }
-    } = action
-    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range)
+    } = action;
+    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range);
     aOffenders.forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_CONSTITUTION,
             combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY]
-        )
+        );
         if (!success) {
             const ePoison = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_DAMAGE, amount, {
                 damageType: manager.CONSTS.DAMAGE_TYPE_POISON
-            })
-            manager.applyEffect(ePoison, offender, duration, combat.attacker)
+            });
+            manager.applyEffect(ePoison, offender, duration, combat.attacker);
         }
-    })
+    });
 }
 
-module.exports = main
+module.exports = main;
