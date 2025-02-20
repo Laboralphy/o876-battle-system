@@ -33,7 +33,7 @@ class Combats extends ServiceAbstract {
             .manager
             .combatManager
             .getOffenders(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT], nRange)
-            .map((c) => new BoxedCreature(c));
+            .map((c) => this.services.entities.getEntityById(c.id));
     }
 
     /**

@@ -3,6 +3,8 @@ const Effects = require('./sub-api/Effects');
 const Core = require('./sub-api/Core');
 const Properties = require('./sub-api/Properties');
 const Items = require('./sub-api/Items');
+const Combats = require('./sub-api/Combats');
+const Entities = require('./sub-api/Entities');
 
 class API {
     constructor () {
@@ -12,10 +14,19 @@ class API {
             effects: new Effects(),
             items: new Items(),
             properties: new Properties(),
+            combats: new Combats(),
+            entities: new Entities()
         };
         Object
-            .keys(services)
-            .forEach(service => service.injectServices(services));
+            .entries(services)
+            .forEach(([idService, service]) => {
+                try {
+                    service.injectServices(services);
+                } catch (e) {
+                    console.error(`while iterating over ${idService}...`);
+                    throw e;
+                }
+            });
         this._services = services;
     }
 

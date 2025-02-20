@@ -19,11 +19,6 @@ class Core extends Abstract {
         GenericEvent.useBoxedObjects = true;
         this._events = this._manager.events;
         this._manager.combatManager.defaultDistance = 50;
-        /**
-         * @type {{[id: string]: RBSItem | Creature}}
-         * @private
-         */
-        this._entities = {};
     }
 
     get events () {
@@ -43,6 +38,14 @@ class Core extends Abstract {
      */
     get manager () {
         return this._manager;
+    }
+
+    loadModule (sModule) {
+        this._manager.loadModule(sModule);
+    }
+
+    defineModule (oModule) {
+        this._manager.defineModule(oModule);
     }
 
     /**

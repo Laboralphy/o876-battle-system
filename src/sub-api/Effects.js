@@ -4,8 +4,6 @@ const BoxedCreature = require('./classes/BoxedCreature');
 
 const TAG_SPELL_GROUP = 'SPELL_GROUP::';
 
-
-
 class Effects extends Abstract {
     /**
      * Returns a list of effect applied on the specified creature
@@ -61,7 +59,28 @@ class Effects extends Abstract {
      * @returns {BoxedCreature}
      */
     getEffectCreator (oEffect) {
-        return new BoxedCreature(oEffect.source);
+        const idCreatureSource = oEffect[BoxedEffect.SYMBOL_BOXED_OBJECT].source;
+        const ent = this.services.entities;
+        if (ent.isEntityExists(idCreatureSource)) {
+            return ent.getEntityById(idCreatureSource);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the creature whose effect is appleid on
+     * @param oEffect {BoxedEffect}
+     * @returns {BoxedCreature}
+     */
+    getEffectTarget (oEffect) {
+        const idCreature = oEffect[BoxedEffect.SYMBOL_BOXED_OBJECT].source;
+        const ent = this.services.entities;
+        if (ent.isEntityExists(idCreature)) {
+            return ent.getEntityById(idCreature);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -100,21 +119,21 @@ class Effects extends Abstract {
     /**
      * Gather several effects in a "spell effect". These spells are siblings, removing one effect removes all effects
      * @param idSpell {string} spell identifier
-     * @param target {string} identifier of target creature
+     * @param target {BoxedCreature} identifier of target creature
      * @param duration {number} duration of all effects
-     * @param source {string} identifier of source creature
+     * @param source {BoxedCreature} identifier of source creature
      * @param aEffects {BoxedEffect[]} list of all effects
      */
     applySpellEffectGroup (idSpell, aEffects, target, duration = 0, source = undefined) {
-        const oTarget = this._services.creatures.getCreature(target);
-        const oSource = this._services.creatures.getCreature(source ?? target);
+        const oTarget = target[BoxedCreature.SYMBOL_BOXED_OBJECT];
+        const oSource = (source ?? target)[BoxedCreature.SYMBOL_BOXED_OBJECT];
         this
             ._services
             .core
             .manager
             .effectProcessor
             .applyEffectGroup(
-                aEffects.map(effect => effect[SYMBOL_ORIGINAL_EFFECT]),
+                aEffects.map(effect => effect[BoxedEffect.SYMBOL_BOXED_OBJECT]),
                 TAG_SPELL_GROUP + idSpell,
                 oTarget,
                 duration,
@@ -125,15 +144,17 @@ class Effects extends Abstract {
     /**
      * Applies an effect to the target creature
      * @param oEffect {BoxedEffect} Effect created by createEffect
-     * @param idTargetCreature {string} creature whose effect is applied
+     * @param oTarget {BoxedCreature} creature whose effect is applied
      * @param nDuration {number} duration of effect
-     * @param [idSourceCreature] {string} if undefined, will be set to idTargetCreature
+     * @param [oSource] {BoxedCreature} if undefined, will be set to idTargetCreature
      */
-    applyEffect (oEffect, idTargetCreature, nDuration = 0, idSourceCreature = undefined) {
-        const oRealEffect = oEffect[SYMBOL_ORIGINAL_EFFECT];
-        const target = this._services.creatures.getCreature(idTargetCreature);
-        const source = this._services.creatures.getCreature(idSourceCreature ?? idTargetCreature);
-        this._services.core.manager.applyEffect(oRealEffect, target, nDuration, source);
+    applyEffect (oEffect, oTarget, nDuration = 0, oSource = undefined) {
+        this._services.core.manager.applyEffect(
+            oEffect[BoxedEffect.SYMBOL_BOXED_OBJECT],
+            oTarget[BoxedCreature.SYMBOL_BOXED_OBJECT],
+            nDuration,
+            (oSource ?? oTarget)[BoxedCreature.SYMBOL_BOXED_OBJECT]
+        );
     }
 
     /**
@@ -141,9 +162,9 @@ class Effects extends Abstract {
      * @param effect {BoxedEffect}
      */
     removeEffect (effect) {
-        const oRealEffect = effect[SYMBOL_ORIGINAL_EFFECT];
-        const oCreature = this._services.creatures.getCreature(oRealEffect.target);
-        const oAppliedEffect = oCreature.getters.getEffectRegistry[effect.id];
+        const oCreature = this.getEffectTarget(effect);
+        const oRealCreature = oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT];
+        const oAppliedEffect = oRealCreature.getters.getEffectRegistry[effect.id];
         this._services.core.manager.effectProcessor.removeEffect(oAppliedEffect);
     }
 }

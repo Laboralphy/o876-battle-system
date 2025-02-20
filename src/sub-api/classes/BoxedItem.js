@@ -5,8 +5,8 @@ const BoxedObject = require('./BoxedObject');
 class BoxedItem extends BoxedObject{
     constructor (item) {
         super(item);
-        if (!(item?.blueprint?.entityType === CONSTS.ENTITY_TYPE_ITEM instanceof Creature)) {
-            throw new TypeError('Expected Creature instance');
+        if (!(item?.blueprint?.entityType === CONSTS.ENTITY_TYPE_ITEM)) {
+            throw new TypeError('Expected Item instance');
         }
         this.id = item.id;
     }
