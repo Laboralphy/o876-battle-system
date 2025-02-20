@@ -1,20 +1,20 @@
-const CONSTS = require('../consts');
 const BoxedCreature = require('../sub-api/classes/BoxedCreature');
 const BoxedItem = require('../sub-api/classes/BoxedItem');
+const BoxedEffect = require('../sub-api/classes/BoxedEffect');
 
 /**
  * The parent of al events
  * @class
  */
 class GenericEvent {
-    static _objectBoxingFactory = null;
+    static _useObjectBoxing = false;
 
     constructor (sType, system) {
         /**
          * Type of event
          * @type {string}
          */
-        this.type = CONSTS.EVENT_COMBAT_ACTION;
+        this.type = '';
         /**
          * The controlling instance that can be used by event handler to interact back with the entities that
          * notify their event
@@ -28,9 +28,7 @@ class GenericEvent {
      * @returns {BoxedCreature|string}
      */
     boxCreature (oCreature) {
-        return GenericEvent.objectBoxingFactory !== null
-            ? GenericEvent.objectBoxingFactory(oCreature)
-            : oCreature.id;
+        return GenericEvent.useObjectBoxing ? new BoxedCreature(oCreature) : oCreature.id;
     }
 
     /**
@@ -39,9 +37,7 @@ class GenericEvent {
      * @returns {BoxedItem|string}
      */
     boxItem (oItem) {
-        return GenericEvent.objectBoxingFactory !== null
-            ? GenericEvent.objectBoxingFactory(oItem)
-            : oItem.id;
+        return GenericEvent.useObjectBoxing ? new BoxedItem(oItem) : oItem.id;
     }
 
     /**
@@ -50,24 +46,24 @@ class GenericEvent {
      * @returns {BoxedEffect|string}
      */
     boxEffect (oEffect) {
-        return GenericEvent.objectBoxingFactory ? new BoxedEffect(oEffect) : oEffect.id;
+        return GenericEvent.useObjectBoxing ? new BoxedEffect(oEffect) : oEffect.id;
     }
 
     /**
-     * Returns useBoxedObject parameter
+     * Returns true if Events must box entities
      * If true, then boxCreature() and boxItem() will return BoxObject instead of string identifier
-     * @returns {function|null}
+     * @returns {boolean}
      */
-    static get objectBoxingFactory () {
-        return this._objectBoxingFactory;
+    static get useObjectBoxing () {
+        return this._useObjectBoxing;
     }
 
     /**
      * Turns the use of BoxedObject on or off.
-     * @param value {function}
+     * @param value {boolean}
      */
-    static set objectBoxingFactory (value) {
-        this._objectBoxingFactory = value;
+    static set useObjectBoxing (value) {
+        this._useObjectBoxing = value;
     }
 }
 

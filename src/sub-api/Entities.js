@@ -3,6 +3,7 @@ const Creature = require('../Creature');
 const BoxedCreature = require('./classes/BoxedCreature');
 const BoxedItem = require('./classes/BoxedItem');
 
+
 class Entities extends ServiceAbstract {
     constructor() {
         super();
@@ -74,6 +75,7 @@ class Entities extends ServiceAbstract {
             this._services.core.manager.destroyEntity(oEntity[BoxedCreature.SYMBOL_BOXED_OBJECT]);
             delete this._entities[oEntity.id];
         }
+        oEntity.free();
     }
 
     /**

@@ -130,6 +130,9 @@ class EffectProcessor {
             target,
             source
         });
+        if (duration <= 0) {
+            this.invokeEffectMethod(oEffect, 'dispose', target, source);
+        }
         return oEffect;
     }
 
@@ -222,7 +225,6 @@ class EffectProcessor {
         } else {
             this.setEffectDuration(oEffect, 0);
         }
-        console.groupEnd();
     }
 
     processEffect (oEffect) {
