@@ -16,7 +16,14 @@ class Core extends Abstract {
         super(services);
         this._manager = new Manager();
         this._manager.systemInstance = this;
-        GenericEvent.useBoxedObjects = true;
+        GenericEvent.objectBoxingFactory = (oEntity) => {
+            const bo = this.services.entities.getEntityById(oEntity.id);
+            if (bo) {
+                return bo;
+            } else {
+                return null;
+            }
+        };
         this._events = this._manager.events;
         this._manager.combatManager.defaultDistance = 50;
     }

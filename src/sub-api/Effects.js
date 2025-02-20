@@ -1,10 +1,10 @@
-const Abstract = require('./ServiceAbstract');
+const ServiceAbstract = require('./ServiceAbstract');
 const BoxedEffect = require('./classes/BoxedEffect');
 const BoxedCreature = require('./classes/BoxedCreature');
 
 const TAG_SPELL_GROUP = 'SPELL_GROUP::';
 
-class Effects extends Abstract {
+class Effects extends ServiceAbstract {
     /**
      * Returns a list of effect applied on the specified creature
      * @param oCreature {BoxedCreature} creature identifier

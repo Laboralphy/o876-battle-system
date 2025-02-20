@@ -7,7 +7,7 @@ const BoxedItem = require('../sub-api/classes/BoxedItem');
  * @class
  */
 class GenericEvent {
-    static _useBoxedObjects = false;
+    static _objectBoxingFactory = null;
 
     constructor (sType, system) {
         /**
@@ -28,7 +28,9 @@ class GenericEvent {
      * @returns {BoxedCreature|string}
      */
     boxCreature (oCreature) {
-        return GenericEvent.useBoxedObjects ? new BoxedCreature(oCreature) : oCreature.id;
+        return GenericEvent.objectBoxingFactory !== null
+            ? GenericEvent.objectBoxingFactory(oCreature)
+            : oCreature.id;
     }
 
     /**
@@ -37,7 +39,9 @@ class GenericEvent {
      * @returns {BoxedItem|string}
      */
     boxItem (oItem) {
-        return GenericEvent.useBoxedObjects ? new BoxedItem(oItem) : oItem.id;
+        return GenericEvent.objectBoxingFactory !== null
+            ? GenericEvent.objectBoxingFactory(oItem)
+            : oItem.id;
     }
 
     /**
@@ -46,24 +50,24 @@ class GenericEvent {
      * @returns {BoxedEffect|string}
      */
     boxEffect (oEffect) {
-        return GenericEvent.useBoxedObjects ? new BoxedEffect(oEffect) : oEffect.id;
+        return GenericEvent.objectBoxingFactory ? new BoxedEffect(oEffect) : oEffect.id;
     }
 
     /**
      * Returns useBoxedObject parameter
      * If true, then boxCreature() and boxItem() will return BoxObject instead of string identifier
-     * @returns {boolean}
+     * @returns {function|null}
      */
-    static get useBoxedObjects () {
-        return this._useBoxedObjects;
+    static get objectBoxingFactory () {
+        return this._objectBoxingFactory;
     }
 
     /**
      * Turns the use of BoxedObject on or off.
-     * @param value {boolean}
+     * @param value {function}
      */
-    static set useBoxedObjects (value) {
-        this._useBoxedObjects = value;
+    static set objectBoxingFactory (value) {
+        this._objectBoxingFactory = value;
     }
 }
 
