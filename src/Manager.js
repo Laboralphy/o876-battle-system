@@ -112,7 +112,14 @@ class Manager {
      * @param source {Creature}
      */
     _effectApplied({effect, target, source}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, new CreatureEffectAppliedEvent({ system: this._systemInstance, effect }));
+        this._events.emit(
+            CONSTS.EVENT_CREATURE_EFFECT_APPLIED,
+            new CreatureEffectAppliedEvent({
+                system: this._systemInstance,
+                effect,
+                target,
+                source
+            }));
     }
 
     /**
@@ -132,7 +139,7 @@ class Manager {
      * @param source {Creature}
      */
     _effectDisposed({effect, target, source}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, new CreatureEffectExpiredEvent({ system: this._systemInstance, effect }));
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, new CreatureEffectExpiredEvent({ system: this._systemInstance, effect, target }));
     }
 
     _combatManagerEventTurn (evt) {
@@ -195,6 +202,7 @@ class Manager {
             combat,
             action: evt.action.id
         });
+        combat.selectCurrentAction(oActionEvent.action);
         this._events.emit(CONSTS.EVENT_COMBAT_ACTION, oActionEvent);
         const action = combat.currentAction;
 
@@ -279,13 +287,13 @@ class Manager {
                 manager: this
             });
         }
+        if (oAttackOutcome.hit) {
+            oAttackOutcome.applyDamages();
+        }
         this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, new CombatAttackEvent({
             system: this._systemInstance,
             attack: oAttackOutcome
         }));
-        if (oAttackOutcome.hit) {
-            oAttackOutcome.applyDamages();
-        }
     }
 
     /**

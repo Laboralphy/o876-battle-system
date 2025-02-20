@@ -20,7 +20,7 @@ class BoxedObject {
             writable: false,
             configurable: false
         });
-        BoxedObject.#instances.set(oInstance.id, oInstance);
+        BoxedObject.#instances.set(oInstance.id, this);
     }
 
     free () {
@@ -29,6 +29,22 @@ class BoxedObject {
 
     static destroy (id) {
         this.#instances.delete(id);
+    }
+
+    static fromId (id) {
+        return this.#instances.get(id) ?? null;
+    }
+
+    static from ({ id }) {
+        return this.fromId(id);
+    }
+
+    static get instanceMapCount () {
+        return this.#instances.size;
+    }
+
+    static resetMap () {
+        this.#instances = new Map();
     }
 
     /**

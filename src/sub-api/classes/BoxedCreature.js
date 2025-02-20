@@ -1,7 +1,12 @@
 const Creature = require('../../Creature');
 const BoxedObject = require('./BoxedObject');
+const BoxedItem = require('./BoxedItem');
 
 class BoxedCreature extends BoxedObject{
+    /**
+     *
+     * @param creature {Creature}
+     */
     constructor (creature) {
         super(creature);
         if (!(creature instanceof Creature)) {

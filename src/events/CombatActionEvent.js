@@ -3,11 +3,11 @@ const GenericEvent = require('./GenericEvent');
 const BoxedCreature = require('../sub-api/classes/BoxedCreature');
 
 class CombatActionEvent extends GenericEvent {
-    constructor ({ system, combat }) {
+    constructor ({ system, combat, action }) {
         super(CONSTS.EVENT_COMBAT_ACTION, system);
-        this.attacker = new BoxedCreature(combat.attacker);
-        this.target = new BoxedCreature(combat.target);
-        this.action = combat.currentAction.id;
+        this.attacker = this.boxCreature(combat.attacker);
+        this.target = this.boxCreature(combat.target);
+        this.action = action;
     }
 }
 

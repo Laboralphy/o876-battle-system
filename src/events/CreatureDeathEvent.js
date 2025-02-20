@@ -5,8 +5,8 @@ const BoxedCreature = require('../sub-api/classes/BoxedCreature');
 class CreatureDeathEvent extends GenericEvent {
     constructor ({ system, creature, killer }) {
         super(CONSTS.EVENT_CREATURE_DEATH, system);
-        this.creature = new BoxedCreature(creature);
-        this.killer = new BoxedCreature(killer);
+        this.creature = this.boxCreature(creature);
+        this.killer = this.boxCreature(killer);
     }
 }
 

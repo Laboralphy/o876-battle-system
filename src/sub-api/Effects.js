@@ -1,6 +1,7 @@
 const ServiceAbstract = require('./ServiceAbstract');
-const BoxedEffect = require('./classes/BoxedEffect');
 const BoxedCreature = require('./classes/BoxedCreature');
+const BoxedObject = require('./classes/BoxedObject');
+const CONSTS = require('../consts');
 
 const TAG_SPELL_GROUP = 'SPELL_GROUP::';
 
@@ -8,18 +9,17 @@ class Effects extends ServiceAbstract {
     /**
      * Returns a list of effect applied on the specified creature
      * @param oCreature {BoxedCreature} creature identifier
-     * @returns {BoxedEffect[]}
+     * @returns {RBSEffect[]}
      */
     getEffects (oCreature) {
         return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
             .getters
-            .getEffects
-            .map(effect => new BoxedEffect(effect));
+            .getEffects;
     }
 
     /**
      * Get effect duration
-     * @param oEffect {BoxedEffect}
+     * @param oEffect {RBSEffect}
      * @returns {number}
      */
     getEffectDuration (oEffect) {
@@ -28,7 +28,7 @@ class Effects extends ServiceAbstract {
 
     /**
      * Get effect type
-     * @param oEffect {BoxedEffect}
+     * @param oEffect {RBSEffect}
      * @returns {string} EFFECT_*
      */
     getEffectType (oEffect) {
@@ -37,47 +37,47 @@ class Effects extends ServiceAbstract {
 
     /**
      * Returns true if effect is extraordinary
-     * @param oEffect {BoxedEffect}
+     * @param oEffect {RBSEffect}
      * @returns {boolean}
      */
     isEffectExtraordinary (oEffect) {
-        return oEffect.isExtraordinary;
+        return oEffect.subtype === CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY;
     }
 
     /**
      * Returns true if effect is supernatural
-     * @param oEffect {BoxedEffect}
+     * @param oEffect {RBSEffect}
      * @returns {boolean}
      */
     isEffectSupernatural (oEffect) {
-        return oEffect.isSupernatural;
+        return oEffect.subtype === CONSTS.EFFECT_SUBTYPE_SUPERNATURAL;
     }
 
     /**
      * Returns the creature identifier who created this effect
-     * @param oEffect {BoxedEffect}
+     * @param oEffect {RBSEffect}
      * @returns {BoxedCreature}
      */
     getEffectCreator (oEffect) {
-        const idCreatureSource = oEffect[BoxedEffect.SYMBOL_BOXED_OBJECT].source;
+        const idCreature = oEffect.source;
         const ent = this.services.entities;
-        if (ent.isEntityExists(idCreatureSource)) {
-            return ent.getEntityById(idCreatureSource);
+        if (ent.entityExists(idCreature)) {
+            return BoxedCreature.fromId(idCreature);
         } else {
             return null;
         }
     }
 
     /**
-     * Returns the creature whose effect is appleid on
-     * @param oEffect {BoxedEffect}
+     * Returns the creature whose effect is applied on
+     * @param oEffect {RBSEffect}
      * @returns {BoxedCreature}
      */
     getEffectTarget (oEffect) {
-        const idCreature = oEffect[BoxedEffect.SYMBOL_BOXED_OBJECT].source;
+        const idCreature = oEffect.target;
         const ent = this.services.entities;
-        if (ent.isEntityExists(idCreature)) {
-            return ent.getEntityById(idCreature);
+        if (ent.entityExists(idCreature)) {
+            return BoxedObject.fromId(idCreature);
         } else {
             return null;
         }
@@ -88,10 +88,10 @@ class Effects extends ServiceAbstract {
      * @param sEffect {string} EFFECT_*
      * @param amp {string|number} amplitude can be either a number or a Die expression (1d6, 2d8+5, ...)
      * @param data {object} Effect parameters
-     * @return {BoxedEffect} Can be safely serialized, but should not be modified
+     * @return {RBSEffect} Can be safely serialized, but should not be modified
      */
     createEffect (sEffect, amp = 0, data = {}) {
-        return new BoxedEffect(this._services.core.manager.createEffect(sEffect, amp, data));
+        return this._services.core.manager.createEffect(sEffect, amp, data);
     }
 
     /**
@@ -102,7 +102,7 @@ class Effects extends ServiceAbstract {
      * @return {RBSEffect}
      */
     createExtraordinaryEffect (sEffect, amp = 0, data = {}) {
-        return new BoxedEffect(this._services.core.manager.createExtraordinaryEffect(sEffect, amp, data));
+        return this._services.core.manager.createExtraordinaryEffect(sEffect, amp, data);
     }
 
     /**
@@ -113,7 +113,7 @@ class Effects extends ServiceAbstract {
      * @return {RBSEffect}
      */
     createSupernaturalEffect (sEffect, amp = 0, data = {}) {
-        return new BoxedEffect(this._services.core.manager.createSupernaturalEffect(sEffect, amp, data));
+        return this._services.core.manager.createSupernaturalEffect(sEffect, amp, data);
     }
 
     /**
@@ -122,7 +122,7 @@ class Effects extends ServiceAbstract {
      * @param target {BoxedCreature} identifier of target creature
      * @param duration {number} duration of all effects
      * @param source {BoxedCreature} identifier of source creature
-     * @param aEffects {BoxedEffect[]} list of all effects
+     * @param aEffects {RBSEffect[]} list of all effects
      */
     applySpellEffectGroup (idSpell, aEffects, target, duration = 0, source = undefined) {
         const oTarget = target[BoxedCreature.SYMBOL_BOXED_OBJECT];
@@ -133,7 +133,7 @@ class Effects extends ServiceAbstract {
             .manager
             .effectProcessor
             .applyEffectGroup(
-                aEffects.map(effect => effect[BoxedEffect.SYMBOL_BOXED_OBJECT]),
+                aEffects,
                 TAG_SPELL_GROUP + idSpell,
                 oTarget,
                 duration,
@@ -143,14 +143,14 @@ class Effects extends ServiceAbstract {
 
     /**
      * Applies an effect to the target creature
-     * @param oEffect {BoxedEffect} Effect created by createEffect
+     * @param oEffect {RBSEffect} Effect created by createEffect
      * @param oTarget {BoxedCreature} creature whose effect is applied
      * @param nDuration {number} duration of effect
      * @param [oSource] {BoxedCreature} if undefined, will be set to idTargetCreature
      */
     applyEffect (oEffect, oTarget, nDuration = 0, oSource = undefined) {
         this._services.core.manager.applyEffect(
-            oEffect[BoxedEffect.SYMBOL_BOXED_OBJECT],
+            oEffect,
             oTarget[BoxedCreature.SYMBOL_BOXED_OBJECT],
             nDuration,
             (oSource ?? oTarget)[BoxedCreature.SYMBOL_BOXED_OBJECT]
@@ -159,13 +159,19 @@ class Effects extends ServiceAbstract {
 
     /**
      * Removes an effect
-     * @param effect {BoxedEffect}
+     * @param effect {RBSEffect}
      */
-    removeEffect (effect) {
+    dispellEffect (effect) {
         const oCreature = this.getEffectTarget(effect);
         const oRealCreature = oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT];
         const oAppliedEffect = oRealCreature.getters.getEffectRegistry[effect.id];
         this._services.core.manager.effectProcessor.removeEffect(oAppliedEffect);
+    }
+
+    findEffects (oCreature, sType) {
+        this.services.core.checkConstEffect(sType);
+        const oRealCreature = oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT];
+        return oRealCreature.getters.getEffects.filter(effect => effect.type === sType);
     }
 }
 

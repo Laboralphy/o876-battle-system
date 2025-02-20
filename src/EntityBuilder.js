@@ -200,9 +200,12 @@ class EntityBuilder {
         }
     }
 
-    createEntity (blueprint, id) {
+    createEntity (blueprint, id = '') {
         const bp = this._registerUnidentifiedBlueprint(blueprint);
         const idbp = bp.ref;
+        if ((id ?? '') === '') {
+            id = getUniqueId();
+        }
         switch (bp.entityType) {
         case CONSTS.ENTITY_TYPE_ITEM: {
             return this.createItemFromResRef(idbp, id);

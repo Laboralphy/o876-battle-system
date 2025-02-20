@@ -40,7 +40,7 @@ class TreeAsync {
     }
 
     /**
-     * @typedef FormatTreeStruct {Object<string, Object>}
+     * @typedef FormatTreeStruct {Map<string, Object>}
      *
      *
      * @param aTree
@@ -62,9 +62,9 @@ class TreeAsync {
                 module: oModule
             };
         });
-        const t3 = {};
+        const t3 = new Map();
         t1.forEach(({ id, module: m }) => {
-            t3[id] = m;
+            t3.set(id, m);
         });
         return t3;
     }

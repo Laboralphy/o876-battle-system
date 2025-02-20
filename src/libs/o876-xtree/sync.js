@@ -59,9 +59,9 @@ class TreeSync {
                 module: oModule
             };
         });
-        const t3 = {};
+        const t3 = new Map();
         t2.forEach(({ id, module: m }) => {
-            t3[id] = m;
+            t3.set(id, m);
         });
         return t3;
     }

@@ -14,8 +14,8 @@ class CreatureDamagedEvent extends GenericEvent {
      */
     constructor ({ system, creature, source, amount, resisted, damageType }) {
         super(CONSTS.EVENT_CREATURE_DAMAGED, system);
-        this.creature = new BoxedCreature(creature);
-        this.source = new BoxedCreature(source);
+        this.creature = this.boxCreature(creature);
+        this.source = this.boxCreature(source);
         this.amount = amount;
         this.resisted = resisted;
         this.damageType = damageType;

@@ -30,6 +30,10 @@ class API {
         this._services = services;
     }
 
+    /**
+     * Returns all services
+     * @returns {{core: Core, creatures: Creatures, effects: Effects, items: Items, properties: Properties, combats: Combats, entities: Entities}}
+     */
     get services () {
         return this._services;
     }

@@ -232,45 +232,43 @@ describe('Real Combat simulator', function () {
         m.events.on(CONSTS.EVENT_COMBAT_START, evt => {
             logs.push({
                 event: 'combat.start',
-                attacker: evt.combat.attacker.id,
-                target: evt.combat.target.id,
-                attackerHP: evt.combat.attacker.getters.getHitPoints,
-                targetHP: evt.combat.target.getters.getHitPoints
+                attacker: evt.attacker.id,
+                target: evt.target.id,
+                attackerHP: evt.attacker.getters.getHitPoints,
+                targetHP: evt.target.getters.getHitPoints
             });
         });
         m.events.on(CONSTS.EVENT_COMBAT_END, evt => {
             logs.push({
                 event: 'combat.end',
-                attacker: evt.combat.attacker.id,
-                target: evt.combat.target.id,
-                attackerHP: evt.combat.attacker.getters.getHitPoints,
-                targetHP: evt.combat.target.getters.getHitPoints
+                attacker: evt.attacker.id,
+                target: evt.target.id,
+                attackerHP: evt.attacker.getters.getHitPoints,
+                targetHP: evt.target.getters.getHitPoints
             });
         });
         m.events.on(CONSTS.EVENT_COMBAT_TURN, evt => {
+            const combat = m.combatManager.getCombat(evt.attacker);
             logs.push({
                 event: 'combat.turn',
-                attacker: evt.combat.attacker.id,
-                target: evt.combat.target.id,
-                turn: evt.combat.turn,
-                attackerHP: evt.combat.attacker.getters.getHitPoints,
-                targetHP: evt.combat.target.getters.getHitPoints
+                attacker: evt.attacker.id,
+                target: evt.target.id,
+                turn: evt.turn,
+                attackerHP: combat.attacker.getters.getHitPoints,
+                targetHP: combat.target.getters.getHitPoints
             });
         });
         m.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => {
+            const combat = m.combatManager.getCombat(evt.attacker);
             logs.push({
                 event: 'combat.distance',
-                turn: evt.combat.turn,
-                attacker: evt.combat.attacker.id,
-                target: evt.combat.attacker.id,
+                turn: combat.turn,
+                attacker: evt.attacker.id,
+                target: evt.attacker.id,
                 distance: evt.distance
             });
         });
-        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => {
-            /**
-             * @type {AttackOutcome}
-             */
-            const ao = evt.attack;
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ao => {
             logs.push({
                 event: 'combat.attack',
                 attacker: ao.attacker.id,
@@ -373,7 +371,7 @@ describe('Real Combat simulator', function () {
             roll: 11,
             ac: 10,
             attackerHP: 17,
-            targetHP: 17
+            targetHP: 13 // damages have been applied before sending event
         });
 
         expect(logs[7]).toEqual({
@@ -413,7 +411,7 @@ describe('Real Combat simulator', function () {
             roll: 11,
             ac: 10,
             attackerHP: 17,
-            targetHP: 13
+            targetHP: 11 // damages have been applied before sending event
         });
 
         expect(logs[11]).toEqual({
@@ -443,10 +441,15 @@ describe('attack advantage', function () {
             const combat = m.startCombat(c1, c2);
             const logs = [];
             m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => {
-                const a = evt.attack;
+                /**
+                 * @type {CombatAttackEvent}
+                 */
+                const a = evt;
                 logs.push({
                     attacker: a.attacker.id,
-                    rollBias: a.rollBias
+                    rollBias: a.bias,
+                    advantages: a.advantages,
+                    disadvantages: a.disadvantages
                 });
             });
             m.processEntities();
@@ -457,8 +460,8 @@ describe('attack advantage', function () {
             m.processCombats();
             m.processCombats();
 
-            expect(logs[0].rollBias.result).toBe(0);
-            expect(logs[1].rollBias.result).toBe(0);
+            expect(logs[0].rollBias).toBe(0);
+            expect(logs[1].rollBias).toBe(0);
 
             const eBlind = m.createEffect(CONSTS.EFFECT_BLINDNESS);
             m.applyEffect(eBlind, c2, 10);
@@ -474,14 +477,14 @@ describe('attack advantage', function () {
             // target can't detect attacker
             // attack should be advantaged
             expect(logs[2].attacker).toBe(c1.id);
-            expect(logs[2].rollBias.result).toBe(1);
-            expect(logs[2].rollBias.advantages.size).toBe(1);
-            expect(logs[2].rollBias.advantages.has(CONSTS.ADV_ATTACK_UNDETECTED_BY_TARGET)).toBeTruthy();
+            expect(logs[2].rollBias).toBe(1);
+            expect(logs[2].advantages.length).toBe(1);
+            expect(logs[2].advantages.includes(CONSTS.ADV_ATTACK_UNDETECTED_BY_TARGET)).toBeTruthy();
 
             expect(logs[3].attacker).toBe(c2.id);
-            expect(logs[3].rollBias.result).toBe(-1);
-            expect(logs[3].rollBias.disadvantages.size).toBe(1);
-            expect(logs[3].rollBias.disadvantages.has(CONSTS.DIS_ATTACK_TARGET_UNDETECTED)).toBeTruthy();
+            expect(logs[3].rollBias).toBe(-1);
+            expect(logs[3].disadvantages.length).toBe(1);
+            expect(logs[3].disadvantages.includes(CONSTS.DIS_ATTACK_TARGET_UNDETECTED)).toBeTruthy();
         });
     });
 });
@@ -512,7 +515,7 @@ describe('combat with monster with on-attack-hit property weapon', function () {
         const logs = [];
         m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => logs.push({
             what: 'attack',
-            who: evt.attack.attacker.id
+            who: evt.attacker.id
         }));
         m.events.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, evt => logs.push({
             what: 'effect applied',
@@ -575,15 +578,15 @@ describe('deliverAttack', function () {
         p1.dice.cheat(0.9);
         p2.dice.cheat(0.1);
         const logs = [];
-        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
-            if (attack.attacker.id === 'player1') {
-                logs.push(attack);
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, (evt) => {
+            if (evt.attacker.id === 'player1') {
+                logs.push(evt);
             }
         });
         m.startCombat(p1, p2);
         m.deliverAttack(p1, p2, { additionalWeaponDamage: '6d10' });
-        expect(logs[0].damages.amount).toBe(63);
         expect(logs[0].rush).toBeTruthy();
+        expect(logs[0].damages.amount).toBe(63);
     });
 });
 
@@ -617,11 +620,11 @@ describe('Multiattack', function () {
         p4.dice.cheat(0.5);
         p5.dice.cheat(0.5);
         const logs = [];
-        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
-            if (attack.attacker.id === 'hydra') {
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, (evt) => {
+            if (evt.attacker.id === 'hydra') {
                 logs.push({
-                    attacker: attack.attacker.id,
-                    target: attack.target.id
+                    attacker: evt.attacker.id,
+                    target: evt.target.id
                 });
             }
         });
@@ -665,11 +668,11 @@ describe('Multiattack', function () {
         c1.dice.cheat(0.5);
         p1.dice.cheat(0.5);
         const logs = [];
-        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
-            if (attack.attacker.id === 'hydra') {
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, (evt) => {
+            if (evt.attacker.id === 'hydra') {
                 logs.push({
-                    attacker: attack.attacker.id,
-                    target: attack.target.id
+                    attacker: evt.attacker.id,
+                    target: evt.target.id
                 });
             }
         });

@@ -6,9 +6,12 @@ const GenericEvent = require('../events/GenericEvent');
 
 
 const PREFIXES = {
-    ABILITY: 'ABILITY_',
-    CAPABILITY: 'CAPABILITY_',
-    CONDITION: 'CONDITION_',
+    ABILITY: 'ABILITY',
+    CAPABILITY: 'CAPABILITY',
+    CONDITION: 'CONDITION',
+    EFFECT: 'EFFECT',
+    PROPERTY: 'PROPERTY',
+    EQUIPMENT_SLOT: 'EQUIPMENT_SLOT'
 };
 
 class Core extends Abstract {
@@ -23,10 +26,6 @@ class Core extends Abstract {
 
     get events () {
         return this._events;
-    }
-
-    get PREFIXES () {
-        return PREFIXES;
     }
 
     get CONSTS () {
@@ -55,10 +54,30 @@ class Core extends Abstract {
      * @returns {string}
      */
     checkConst (sConstName, sPrefix = '') {
-        if (sPrefix !== '' && !sConstName.startsWith(sPrefix)) {
+        if (sPrefix !== '' && !sConstName.startsWith(sPrefix + '_')) {
             throw new Error(`invalid value ${sConstName}. must start with ${sPrefix}`);
         }
         return checkConst(sConstName);
+    }
+
+    checkConstAbility (sConstName) {
+        return this.checkConst(sConstName, PREFIXES.ABILITY);
+    }
+
+    checkConstCapability (sConstName) {
+        return this.checkConst(sConstName, PREFIXES.CAPABILITY);
+    }
+
+    checkConstCondition (sConstName) {
+        return this.checkConst(sConstName, PREFIXES.CONDITION);
+    }
+
+    checkConstEffect (sConstName) {
+        return this.checkConst(sConstName, PREFIXES.EFFECT);
+    }
+
+    checkConstEquipmentSlot (sConstName) {
+        return this.checkConst(sConstName, PREFIXES.EQUIPMENT_SLOT);
     }
 }
 

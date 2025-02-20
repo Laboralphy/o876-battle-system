@@ -5,7 +5,7 @@ const BoxedCreature = require('../sub-api/classes/BoxedCreature');
 class CreatureSelectWeaponEvent extends GenericEvent {
     constructor ({ system, creature }) {
         super(CONSTS.EVENT_CREATURE_SELECT_WEAPON, system);
-        this.creature = new BoxedCreature(creature);
+        this.creature = this.boxCreature(creature);
     }
 }
 

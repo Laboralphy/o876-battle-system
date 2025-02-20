@@ -1,6 +1,5 @@
 const BoxedCreature = require('../sub-api/classes/BoxedCreature');
 const BoxedItem = require('../sub-api/classes/BoxedItem');
-const BoxedEffect = require('../sub-api/classes/BoxedEffect');
 
 /**
  * The parent of al events
@@ -14,7 +13,7 @@ class GenericEvent {
          * Type of event
          * @type {string}
          */
-        this.type = '';
+        this.type = sType;
         /**
          * The controlling instance that can be used by event handler to interact back with the entities that
          * notify their event
@@ -25,28 +24,19 @@ class GenericEvent {
     /**
      * According to property useBoxedObjects, returns boxed version of specified creature or creature identifier
      * @param oCreature {Creature}
-     * @returns {BoxedCreature|string}
+     * @returns {BoxedCreature|Creature}
      */
     boxCreature (oCreature) {
-        return GenericEvent.useObjectBoxing ? new BoxedCreature(oCreature) : oCreature.id;
+        return GenericEvent.useObjectBoxing ? new BoxedCreature(oCreature) : oCreature;
     }
 
     /**
      * According to property useBoxedObjects, returns boxed version of specified item or item identifier
      * @param oItem {RBSItem}
-     * @returns {BoxedItem|string}
+     * @returns {BoxedItem|RBSItem}
      */
     boxItem (oItem) {
-        return GenericEvent.useObjectBoxing ? new BoxedItem(oItem) : oItem.id;
-    }
-
-    /**
-     * According to property useBoxedObjects, returns boxed version of effect or effect identifier
-     * @param oEffect {RBSEffect}
-     * @returns {BoxedEffect|string}
-     */
-    boxEffect (oEffect) {
-        return GenericEvent.useObjectBoxing ? new BoxedEffect(oEffect) : oEffect.id;
+        return GenericEvent.useObjectBoxing ? new BoxedItem(oItem) : oItem;
     }
 
     /**

@@ -2,6 +2,10 @@ const ServiceAbstract = require('./ServiceAbstract');
 const BoxedItem = require('./classes/BoxedItem');
 
 class Items extends ServiceAbstract {
+    checkItem (oItem) {
+        return oItem instanceof BoxedItem;
+    }
+
     /**
      * Return the type of an item
      * @param oItem {BoxedItem} identifier of item
