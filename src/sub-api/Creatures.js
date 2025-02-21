@@ -110,7 +110,7 @@ class Creatures extends Abstract {
      * @param oCreature {BoxedCreature} creature identifier
      * @returns {number}
      */
-    getCarriedWeight (oCreature) {
+    getEquipmentWeight (oCreature) {
         this.checkCreature(oCreature);
         return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getEncumbrance.value;
     }
@@ -120,7 +120,7 @@ class Creatures extends Abstract {
      * @param oCreature {BoxedCreature} creature identifier
      * @returns {number}
      */
-    getMaxCarryWeight (oCreature) {
+    getMaxEquipmentWeight (oCreature) {
         this.checkCreature(oCreature);
         return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getEncumbrance.capacity;
     }

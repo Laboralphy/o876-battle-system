@@ -194,4 +194,37 @@ describe('creatures', function () {
             expect(api.services.creatures.hasCapability(c1, CONSTS.CAPABILITY_SEE)).toBeTruthy();
         });
     });
+
+    describe('hasConditions / getConditions', function () {
+        it('should return no condition when creature has no effect', function () {
+            const api = new API();
+            api.services.core.loadModule('classic');
+            const c1 = api.services.entities.createEntity('c-goblin', 'c1');
+            expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_BLINDED)).toBeFalsy();
+            const eBlindness = api.services.effects.createEffect(CONSTS.EFFECT_BLINDNESS);
+            const eParalysis = api.services.effects.createEffect(CONSTS.EFFECT_PARALYSIS);
+            const eDamage = api.services.effects.createEffect(CONSTS.EFFECT_DAMAGE, '1d3', { damageType: CONSTS.DAMAGE_TYPE_POISON });
+            api.services.effects.applySpellEffectGroup('spell1', [
+                eBlindness, eParalysis, eDamage
+            ], c1, 10);
+            expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_DISEASE)).toBeFalsy();
+            expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_BLINDED)).toBeTruthy();
+            expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_FRIGHTENED)).toBeFalsy();
+            expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_PARALYZED)).toBeTruthy();
+            expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_POISONED)).toBeTruthy();
+            expect(api.services.creatures.getConditions(c1).sort()).toEqual([
+                CONSTS.CONDITION_BLINDED, CONSTS.CONDITION_PARALYZED, CONSTS.CONDITION_POISONED
+            ]);
+        });
+    });
+
+    describe('getWeight / getMaxCarryWeight', function () {
+        it('should return no weight when creature has no equipped item', function () {
+            const api = new API();
+            api.services.core.loadModule('classic');
+            const c1 = api.services.entities.createEntity('c-griffon', 'c1');
+            expect(api.services.creatures.getEquipmentWeight(c1)).toBe(0);
+            expect(api.services.creatures.getMaxEquipmentWeight(c1)).toBe(200);
+        });
+    });
 });

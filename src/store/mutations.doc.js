@@ -13,6 +13,7 @@
  * @property setAbilityValue {function({ ability: string, value: number })}
  * @property setClassType {function({ value: string CLASS_TYPE_* })}
  * @property setEffectDuration {function({ effect: RBSEffect, duration: number })}
+ * @property setEncumbrance {function({ value: number })}
  * @property setEnvironment {function({ environment, value })}
  * @property setGender {function({ value: string GENDER_* })}
  * @property setHitDie {function({ value: number })}
@@ -26,4 +27,4 @@
  * @property useAction {function({ idAction: string })}
  */
 
-module.exports = {};
+module.exports = {}

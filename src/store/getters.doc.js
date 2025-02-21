@@ -51,4 +51,4 @@
  * @property isWieldingTwoHandedWeapon {boolean}
  */
 
-module.exports = {};
+module.exports = {}
