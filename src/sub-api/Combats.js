@@ -72,13 +72,31 @@ class Combats extends ServiceAbstract {
         }
     }
 
+    getSelectedAction (oCreature) {
+        const oCombat = this.getCreatureCombat(oCreature);
+        if (oCombat) {
+            return oCombat.currentAction;
+        } else {
+            return null;
+        }
+    }
+
+    getTargetDistance (oCreature) {
+        const oCombat = this.getCreatureCombat(oCreature);
+        if (oCombat) {
+            return oCombat.distance;
+        } else {
+            throw new Error(`This creature is not in combat : ${oCreature.id}`);
+        }
+    }
+
     /**
      * Makes a creature starts a fighting with another creature
      * @param oCreature {BoxedCreature}
      * @param oTarget {BoxedCreature}
      */
     startCombat (oCreature, oTarget) {
-        this
+        return this
             .services
             .core
             .manager

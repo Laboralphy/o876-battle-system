@@ -1,6 +1,7 @@
 const Abstract = require('./ServiceAbstract');
 const BoxedCreature = require('./classes/BoxedCreature');
 const BoxedItem = require('./classes/BoxedItem');
+const CONSTS = require('../consts');
 
 class Creatures extends Abstract {
     /**
@@ -155,6 +156,82 @@ class Creatures extends Abstract {
         }
         this.services.items.checkItem(oItem);
         return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].equipItem(oItem, sSlot);
+    }
+
+    /**
+     * Get current creature hit points.
+     * @param oCreature {BoxedCreature}
+     * @returns {number}
+     */
+    getHitPoints (oCreature) {
+        this.checkCreature(oCreature);
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].hitPoints;
+    }
+
+    /**
+     * Set current creature hit points
+     * @param oCreature {BoxedCreature}
+     * @param nHP {number}
+     */
+    setHitPoints (oCreature, nHP) {
+        this.checkCreature(oCreature);
+        oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].hitPoints = nHP;
+    }
+
+    /**
+     * Get creature maximum hit points
+     * @param oCreature {BoxedCreature}
+     * @returns {number}
+     */
+    getMaxHitPoints (oCreature) {
+        this.checkCreature(oCreature);
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getMaxHitPoints;
+    }
+
+    /**
+     * Checks if a creature manages to overcome a task difficulty involving the specified ability
+     * @param oCreature {BoxedCreature} creature
+     * @param sAbility {string} ability involved
+     * @param dc {number} task difficulty
+     * @returns {boolean}
+     */
+    checkAbility (oCreature, sAbility, dc) {
+        this.checkCreature(oCreature);
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].checkAbility(sAbility, dc).success;
+    }
+
+    /**
+     * Checks if a creature manages to overcome a task difficulty involving the specified skill
+     * @param oCreature {BoxedCreature} creature
+     * @param sSkill {string} skill involved
+     * @param dc {number} task difficulty
+     * @returns {boolean}
+     */
+    checkSkill (oCreature, sSkill, dc) {
+        this.checkCreature(oCreature);
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].checkSkill(sSkill, dc).success;
+    }
+
+    /**
+     * If a creature is dead, revive it
+     * @param oCreature {BoxedCreature}
+     */
+    revive (oCreature) {
+        this.checkCreature(oCreature);
+        oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].revive();
+    }
+
+    /**
+     * Checks if a creature can see another creature
+     * @param oCreature {BoxedCreature}
+     * @param oTarget {BoxedCreature}
+     * @returns {boolean}
+     */
+    isCreatureVisible (oCreature, oTarget) {
+        this.checkCreature(oCreature);
+        this.checkCreature(oTarget);
+        return oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]
+            .getCreatureVisibility(oTarget[BoxedCreature.SYMBOL_BOXED_OBJECT]) === CONSTS.CREATURE_VISIBILITY_VISIBLE;
     }
 }
 

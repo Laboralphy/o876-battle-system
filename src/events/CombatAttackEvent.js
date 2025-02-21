@@ -12,6 +12,8 @@ class CombatAttackEvent extends GenericEvent {
         super(CONSTS.EVENT_COMBAT_ATTACK, system);
         this.attacker = this.boxCreature(attack.attacker);
         this.target = this.boxCreature(attack.target);
+        this.weapon = this.boxItem(attack.weapon);
+        this.ammo = this.boxItem(attack.ammo);
         this.hit = attack.hit;
         this.ac = attack.ac;
         this.sneak = attack.sneak;
@@ -24,6 +26,7 @@ class CombatAttackEvent extends GenericEvent {
         this.fumble = attack.fumble;
         this.hit = attack.hit;
         this.roll = attack.roll;
+        this.bonus = attack.attackBonus;
         this.lethal = attack.lethal;
         this.failed = attack.failed;
         this.failure = attack.failure;

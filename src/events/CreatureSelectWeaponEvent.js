@@ -6,6 +6,10 @@ class CreatureSelectWeaponEvent extends GenericEvent {
     constructor ({ system, creature }) {
         super(CONSTS.EVENT_CREATURE_SELECT_WEAPON, system);
         this.creature = this.boxCreature(creature);
+        const w = creature.getters.getSelectedWeapon;
+        this.weapon = w
+            ? this.boxItem(creature.getters.getSelectedWeapon)
+            : null;
     }
 }
 

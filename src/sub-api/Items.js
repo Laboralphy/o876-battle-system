@@ -16,12 +16,21 @@ class Items extends ServiceAbstract {
     }
 
     /**
-     * Weight of an item
-     * @param oItem {BoxedItem} item identifier
-     * @returns {number}
+     * Returns an item tag
+     * @param oItem {BoxedItem}
+     * @returns {string}
      */
-    getWeight (oItem) {
-        return oItem[BoxedItem.SYMBOL_BOXED_OBJECT].blueprint.weight;
+    getItemTag (oItem) {
+        return oItem[BoxedItem.SYMBOL_BOXED_OBJECT].tag;
+    }
+
+    /**
+     * Sets an item tag with new value
+     * @param oItem {BoxedItem}
+     * @param tag {string}
+     */
+    setItemTag (oItem, tag) {
+        oItem[BoxedItem.SYMBOL_BOXED_OBJECT].tag = tag;
     }
 }
 

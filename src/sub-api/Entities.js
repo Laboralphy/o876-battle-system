@@ -2,6 +2,7 @@ const ServiceAbstract = require('./ServiceAbstract');
 const Creature = require('../Creature');
 const BoxedCreature = require('./classes/BoxedCreature');
 const BoxedItem = require('./classes/BoxedItem');
+const BoxedObject = require('./classes/BoxedObject');
 
 class Entities extends ServiceAbstract {
     constructor() {
@@ -79,6 +80,85 @@ class Entities extends ServiceAbstract {
         } else {
             throw new TypeError('entity is invalid - neither creature nor item');
         }
+    }
+
+    /**
+     * Returns a list of properties affected to entity
+     * @param oEntity {BoxedCreature|BoxedItem}
+     * @returns {RBSProperty[]}
+     */
+    getProperties (oEntity) {
+        if (oEntity instanceof BoxedObject) {
+            return oEntity.properties;
+        } else {
+            throw new TypeError('parameter must be BoxedObject');
+        }
+    }
+
+    /**
+     * Creates a new property. The property can be applied to a creature or an item
+     * @param sType {string}
+     * @param amp {number|string}
+     * @param data {{[p: string]: number | string}}
+     */
+    createProperty (sType, amp, data) {
+        const pb = this.services.core.manager.propertyBuilder;
+        return pb.buildProperty({
+            type: this.services.core.checkConstProperty(sType),
+            amp,
+            ...data
+        });
+    }
+
+    /**
+     * Finds a list of property by their type
+     * @param oEntity {BoxedItem|BoxedCreature}
+     * @param sType {string} PROPERTY_*
+     * @return {RBSProperty[]}
+     */
+    findProperty (oEntity, sType) {
+        this.services.core.checkConstProperty(sType);
+        this.switchEntityType(oEntity, {
+            creature: creature => creature.getters.getInnateProperties.filter(p => p.type === sType),
+            item: item => item.properties.filter(p => p.type === sType)
+        });
+    }
+
+    /**
+     * Adds a new property to an item or a creature
+     * @param oEntity {BoxedCreature|BoxedItem}
+     * @param property {RBSProperty}
+     */
+    addProperty (oEntity, property) {
+        this.services.entities.switchEntityType(
+            oEntity,
+            {
+                creature: (oCreature) => {
+                    oCreature.mutations.addProperty({ property });
+                },
+                item: (oItem) => oItem.properties.push(property)
+            }
+        );
+    }
+
+    /**
+     * Removes a property from an item or a creature
+     * @param oEntity {BoxedCreature|BoxedItem}
+     * @param property {RBSProperty}
+     */
+    removeProperty (oEntity, property) {
+        this.services.entities.switchEntityType(
+            oEntity,
+            {
+                creature: (oCreature) => oCreature.mutations.removeProperty({ property }),
+                item: (oItem) => {
+                    const iProp = oItem.properties.findIndex(p => p.id === property.id);
+                    if (iProp >= 0) {
+                        oItem.properties.splice(iProp, 1);
+                    }
+                }
+            }
+        );
     }
 }
 

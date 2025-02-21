@@ -76,6 +76,10 @@ class Core extends Abstract {
         return this.checkConst(sConstName, PREFIXES.EFFECT);
     }
 
+    checkConstProperty (sConstName) {
+        return this.checkConst(sConstName, PREFIXES.PROPERTY);
+    }
+
     checkConstEquipmentSlot (sConstName) {
         return this.checkConst(sConstName, PREFIXES.EQUIPMENT_SLOT);
     }

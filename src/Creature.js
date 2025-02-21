@@ -213,6 +213,10 @@ class Creature {
         }
     }
 
+    /**
+     * get current hit points
+     * @returns {number}
+     */
     get hitPoints () {
         return this.getters.getHitPoints;
     }

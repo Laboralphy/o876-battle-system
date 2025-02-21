@@ -27,6 +27,9 @@ class GenericEvent {
      * @returns {BoxedCreature|Creature}
      */
     boxCreature (oCreature) {
+        if (oCreature === null) {
+            return null;
+        }
         return GenericEvent.useObjectBoxing ? new BoxedCreature(oCreature) : oCreature;
     }
 
@@ -36,6 +39,9 @@ class GenericEvent {
      * @returns {BoxedItem|RBSItem}
      */
     boxItem (oItem) {
+        if (oItem === null) {
+            return null;
+        }
         return GenericEvent.useObjectBoxing ? new BoxedItem(oItem) : oItem;
     }
 

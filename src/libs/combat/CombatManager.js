@@ -127,9 +127,6 @@ class CombatManager {
         combat.events.on(CONSTS.EVENT_COMBAT_MOVE, ev => this._events.emit(CONSTS.EVENT_COMBAT_MOVE, this._addManagerToObject(ev)));
         combat.setFighters(oCreature, oTarget);
         combat.distance = nStartingDistance === null ? this.defaultDistance : nStartingDistance;
-        this._events.emit(CONSTS.EVENT_COMBAT_START, this._addManagerToObject({
-            combat
-        }));
         return combat;
     }
 
@@ -250,6 +247,9 @@ class CombatManager {
         if (!this.isCreatureFighting(oTarget) && oTarget.getCreatureVisibility(oCreature) === CONSTS.CREATURE_VISIBILITY_VISIBLE) {
             this._fighters[oTarget.id] = this._createCombat(oTarget, oCreature, nStartingDistance);
         }
+        this._events.emit(CONSTS.EVENT_COMBAT_START, this._addManagerToObject({
+            combat: oCombat
+        }));
         return oCombat;
     }
 
