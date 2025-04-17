@@ -3,28 +3,24 @@
     "description": "Caused by spells, spits, Prevent from seeing and casting spell on target",
     "prevents": ["CAPABILITY_CAST_TARGET", "CAPABILITY_SEE"]
   },
-  "CONDITION_CONFUSED": {
-    "description": "Cause by spells, gases, charms. Prevent from doing hostile actions and fleeing",
-    "prevents": ["CAPABILITY_ACT", "CAPABILITY_FIGHT", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET"]
-  },
-  "CONDITION_DISEASE": {
-    "description": "Being afflicted by a disease",
-    "prevents": []
+  "CONDITION_CHARMED": {
+    "description": "Caused buy spells and some supernatural abilities, the charmed creature cannot take hostile actions against creator of condition",
+    "prevents": ["CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
   },
   "CONDITION_FRIGHTENED": {
-    "description": "Caused by spells, auras. Prevent from doing hostile actions",
-    "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
+    "description": "Caused by spells, and supernatural auras. Prevent from doing complex mental action like casting.",
+    "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET"]
   },
   "CONDITION_INCAPACITATED": {
     "description": "The result of having 0 HP. Being unable to do anything",
     "prevents": ["CAPABILITY_SEE", "CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
   },
   "CONDITION_PARALYZED": {
-    "description": "Cause by spells or grasp. Prevent from doing anything, except seeing. This is a body affliction.",
+    "description": "Cause by spells. Prevent from doing anything, except seeing. This is a body affliction. Each turn, a saving throw is allowed to end condition",
     "prevents": ["CAPABILITY_ACT", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
   },
   "CONDITION_PETRIFIED": {
-    "description": "Cause by spells or monster abilities. Prevent from doing anything. Condition is close to death. This is a body affliction.",
+    "description": "Cause by spells or monster abilities. Prevent from doing anything. Creature is immune to poison and disease",
     "prevents": ["CAPABILITY_ACT", "CAPABILITY_SEE", "CAPABILITY_MOVE", "CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
   },
   "CONDITION_POISONED": {

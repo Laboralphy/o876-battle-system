@@ -1,7 +1,7 @@
 const CONSTS = require('./consts');
 const Events = require('events');
 const { aggregateModifiers } = require('./libs/aggregator');
-const { getAttackAdvantages } = require('./advantages/attack-roll');
+const { computeAttackRollAdvantages } = require('./advantages');
 const {getWorstDamageTypeVsAC, getBestDamageTypeVsMitigation} = require('./libs/helpers');
 
 /**
@@ -449,7 +449,7 @@ class AttackOutcome {
 
         // rolling attack
         let nRoll = oAttacker.dice.roll('1d20');
-        this._rollBias = getAttackAdvantages(this);
+        this._rollBias = computeAttackRollAdvantages(this);
         switch (this._rollBias.result) {
         case -1: {
             // only disadvantage

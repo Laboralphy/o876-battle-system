@@ -418,6 +418,29 @@ class Combat {
         }
     }
 
+    _isTargetApplyingEffect (sEffectType) {
+        const oFearEffects = this.attacker.getters.getEffectRegistry[CONSTS.EFFECT_FEAR]
+        if (oFearEffects) {
+            const idTarget = this.target.id
+            for (const oEffect of oFearEffects) {
+                if (oEffect.source === idTarget) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    /**
+     * Can you approach this target ?
+     * Remember ! You cannot approach a creature that frightens you
+     * @private
+     */
+    _isTargetFrightening () {
+        return this.attacker.getters.getConditionSet.has(CONSTS.CONDITION_FRIGHTENED) &&
+            this.
+    }
+
     /**
      * This action is used when a creature has no ranged capabilities and is trying to move toward its target
      * @param [nUseSpeed] {number} if undefined, the creature normal speed will apply
@@ -425,7 +448,8 @@ class Combat {
     approachTarget (nUseSpeed = undefined) {
         if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_MOVE) &&
             this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_SEE) &&
-            this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)
+            this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT) &&
+            !this._isTargetFrightening()
         ) {
             const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed;
             const previousDistance = this.distance;

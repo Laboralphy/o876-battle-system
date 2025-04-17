@@ -97,7 +97,7 @@ function apply ({ effect, target, reject }) {
         reject();
     } else if (excludeSpecies.includes(sTargetSpecie)) {
         reject();
-    } else if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_DISEASE)) {
+    } else if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_DISEASE) || target.getters.getConditionSet.has(CONSTS.CONDITION_PETRIFIED)) {
         reject();
     } else if (target.getters.getEffectTagSet.has(effect.tag)) {
         // A disease can't be applied twice

@@ -311,7 +311,7 @@ describe('Real Combat simulator', function () {
         // process()
         // process()
 
-        expect(logs).toHaveLength(12);
+        expect(logs).toHaveLength(11);
 
         expect(logs[0]).toEqual({
             event: 'combat.start',
@@ -322,109 +322,100 @@ describe('Real Combat simulator', function () {
         });
 
         expect(logs[1]).toEqual({
-            event: 'combat.start',
-            attacker: 'c2',
-            target: 'c1',
+            attacker: 'c1',
             attackerHP: 17,
-            targetHP: 17
+            event: 'combat.turn',
+            target: 'c2',
+            targetHP: 17,
+            turn: 0
         });
 
         expect(logs[2]).toEqual({
-            event: 'combat.turn',
-            attacker: 'c1',
-            target: 'c2',
-            turn: 0,
-            attackerHP: 17,
-            targetHP: 17
+            'attacker': 'c1',
+            'distance': 20,
+            'event': 'combat.distance',
+            'target': 'c1',
+            'turn': 0
         });
 
         expect(logs[3]).toEqual({
-            event: 'combat.distance',
-            turn: 0,
-            attacker: 'c1',
-            target: 'c1',
-            distance: 20
+            'attacker': 'c2',
+            'attackerHP': 17,
+            'event': 'combat.turn',
+            'target': 'c1',
+            'targetHP': 17,
+            'turn': 0
         });
 
         expect(logs[4]).toEqual({
-            event: 'combat.turn',
-            attacker: 'c2',
-            target: 'c1',
-            turn: 0,
-            attackerHP: 17,
-            targetHP: 17
+            'attacker': 'c2',
+            'distance': 5,
+            'event': 'combat.distance',
+            'target': 'c2',
+            'turn': 0
         });
 
         expect(logs[5]).toEqual({
-            event: 'combat.distance',
-            turn: 0,
-            attacker: 'c2',
-            target: 'c2',
-            distance: 5
+            'ac': 10,
+            'attacker': 'c1',
+            'attackerHP': 17,
+            'event': 'combat.attack',
+            'hit': true,
+            'roll': 11,
+            'target': 'c2',
+            'targetHP': 13
         });
 
         expect(logs[6]).toEqual({
-            event: 'combat.attack',
-            attacker: 'c1',
-            target: 'c2',
-            hit: true,
-            roll: 11,
-            ac: 10,
-            attackerHP: 17,
-            targetHP: 13 // damages have been applied before sending event
+            'ac': 10,
+            'attacker': 'c2',
+            'attackerHP': 13,
+            'event': 'combat.attack',
+            'hit': false,
+            'roll': 9,
+            'target': 'c1',
+            'targetHP': 17
         });
 
         expect(logs[7]).toEqual({
-            event: 'combat.attack',
-            attacker: 'c2',
-            target: 'c1',
-            hit: false,
-            roll: 9,
-            ac: 10,
-            attackerHP: 13,
-            targetHP: 17
+            'attacker': 'c1',
+            'attackerHP': 17,
+            'event': 'combat.turn',
+            'target': 'c2',
+            'targetHP': 13,
+            'turn': 1
         });
 
         expect(logs[8]).toEqual({
-            event: 'combat.turn',
-            attacker: 'c1',
-            target: 'c2',
-            turn: 1,
-            attackerHP: 17,
-            targetHP: 13
+            'attacker': 'c2',
+            'attackerHP': 13,
+            'event': 'combat.turn',
+            'target': 'c1',
+            'targetHP': 17,
+            'turn': 1
         });
 
         expect(logs[9]).toEqual({
-            event: 'combat.turn',
-            attacker: 'c2',
-            target: 'c1',
-            turn: 1,
-            attackerHP: 13,
-            targetHP: 17
+            'ac': 10,
+            'attacker': 'c1',
+            'attackerHP': 17,
+            'event': 'combat.attack',
+            'hit': true,
+            'roll': 11,
+            'target': 'c2',
+            'targetHP': 11
         });
 
         expect(logs[10]).toEqual({
-            event: 'combat.attack',
-            attacker: 'c1',
-            target: 'c2',
-            hit: true,
-            roll: 11,
-            ac: 10,
-            attackerHP: 17,
-            targetHP: 11 // damages have been applied before sending event
+            'ac': 10,
+            'attacker': 'c2',
+            'attackerHP': 11,
+            'event': 'combat.attack',
+            'hit': false,
+            'roll': 9,
+            'target': 'c1',
+            'targetHP': 17
         });
-
-        expect(logs[11]).toEqual({
-            event: 'combat.attack',
-            attacker: 'c2',
-            target: 'c1',
-            hit: false,
-            roll: 9,
-            ac: 10,
-            attackerHP: 11,
-            targetHP: 17
-        });
-
     });
 });
 
@@ -479,12 +470,12 @@ describe('attack advantage', function () {
             expect(logs[2].attacker).toBe(c1.id);
             expect(logs[2].rollBias).toBe(1);
             expect(logs[2].advantages.length).toBe(1);
-            expect(logs[2].advantages.includes(CONSTS.ADV_ATTACK_UNDETECTED_BY_TARGET)).toBeTruthy();
+            expect(logs[2].advantages.includes(CONSTS.ADV_ATTACK_ROLL_UNDETECTED_BY_TARGET)).toBeTruthy();
 
             expect(logs[3].attacker).toBe(c2.id);
             expect(logs[3].rollBias).toBe(-1);
             expect(logs[3].disadvantages.length).toBe(1);
-            expect(logs[3].disadvantages.includes(CONSTS.DIS_ATTACK_TARGET_UNDETECTED)).toBeTruthy();
+            expect(logs[3].disadvantages.includes(CONSTS.DIS_ATTACK_ROLL_TARGET_UNDETECTED)).toBeTruthy();
         });
     });
 });
