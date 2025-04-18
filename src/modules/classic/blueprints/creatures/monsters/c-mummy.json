@@ -7,7 +7,8 @@
     "PROFICIENCY_WEAPON_MARTIAL",
     "PROFICIENCY_ARMOR_LIGHT",
     "PROFICIENCY_ARMOR_MEDIUM",
-    "PROFICIENCY_ARMOR_HEAVY"
+    "PROFICIENCY_ARMOR_HEAVY",
+    "PROFICIENCY_SHIELD"
   ],
   "abilities": {
     "strength": 16,
@@ -107,7 +108,7 @@
     {
       "type": "PROPERTY_IMMUNITY",
       "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_CONFUSION"
+      "immunityType": "IMMUNITY_TYPE_CHARM"
     },
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",

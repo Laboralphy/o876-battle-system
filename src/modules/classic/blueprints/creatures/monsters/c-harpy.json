@@ -7,7 +7,8 @@
     "PROFICIENCY_WEAPON_MARTIAL",
     "PROFICIENCY_ARMOR_LIGHT",
     "PROFICIENCY_ARMOR_MEDIUM",
-    "PROFICIENCY_ARMOR_HEAVY"
+    "PROFICIENCY_ARMOR_HEAVY",
+    "PROFICIENCY_SHIELD"
   ],
   "abilities": {
     "strength": 12,
@@ -46,7 +47,7 @@
     {
       "id": "act-luring-song",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-confusion-chant",
+      "script": "at-charm-chant",
       "range": 300,
       "parameters": {},
       "cooldown": 6

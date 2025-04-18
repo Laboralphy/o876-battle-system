@@ -419,26 +419,36 @@ class Combat {
     }
 
     _isTargetApplyingEffect (sEffectType) {
-        const oFearEffects = this.attacker.getters.getEffectRegistry[CONSTS.EFFECT_FEAR]
+        const oFearEffects = this.attacker.getters.getEffectRegistry[CONSTS.EFFECT_FEAR];
         if (oFearEffects) {
-            const idTarget = this.target.id
+            const idTarget = this.target.id;
             for (const oEffect of oFearEffects) {
                 if (oEffect.source === idTarget) {
-                    return true
+                    return true;
                 }
             }
         }
-        return false
+        return false;
     }
 
     /**
-     * Can you approach this target ?
-     * Remember ! You cannot approach a creature that frightens you
+     * Returns true if the current target has applied a EFFECT_FEAR on self
      * @private
+     * @return {boolean}
      */
     _isTargetFrightening () {
         return this.attacker.getters.getConditionSet.has(CONSTS.CONDITION_FRIGHTENED) &&
-            this.
+            this._isTargetApplyingEffect(CONSTS.EFFECT_FEAR);
+    }
+
+    /**
+     * Returns true if the current target has applied a EFFECT_CHARM on self
+     * @private
+     * @return {boolean}
+     */
+    _isTargetCharming () {
+        return this.attacker.getters.getConditionSet.has(CONSTS.CONDITION_CHARMED) &&
+            this._isTargetApplyingEffect(CONSTS.EFFECT_CHARM);
     }
 
     /**

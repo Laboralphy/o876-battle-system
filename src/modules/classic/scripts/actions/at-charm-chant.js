@@ -1,6 +1,6 @@
 /**
- * Confusion Chant
- * Offenders hearing this chant and failing at saving throw will be struck by confusion
+ * Charm Chant
+ * Offenders hearing this chant and failing at saving throw will be struck by charm
  * This is an extraordinary effect
  * @this {Manager}
  * @param manager {Manager}
@@ -16,7 +16,7 @@ function main ({ manager, action, combat }) {
             combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA]
         );
         if (!success) {
-            const eFear = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_CONFUSION);
+            const eFear = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_CHARM);
             manager.applyEffect(eFear, offender, duration, combat.attacker);
         }
     });
