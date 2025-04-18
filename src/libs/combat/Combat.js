@@ -3,11 +3,7 @@ const { getUniqueId } = require('../unique-id');
 const CombatFighterState = require('./CombatFighterState');
 const CONSTS = require('../../consts');
 
-const NATURAL_SLOTS = new Set([
-    CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1,
-    CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2,
-    CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_3
-]);
+const MAX_COMBAT_DISTANCE = 60;
 
 class Combat {
     constructor ({ distance = 0, tickCount }) {
@@ -153,7 +149,7 @@ class Combat {
         }
         const nOldDistance = this._distance;
         if (nOldDistance !== value) {
-            this._distance = Math.max(0, value);
+            this._distance = Math.max(0, Math.min(MAX_COMBAT_DISTANCE, value));
             this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, {
                 ...this.eventDefaultPayload,
                 distance: this._distance,
@@ -247,7 +243,7 @@ class Combat {
         if (bPartingShot || nAttackCount > 0) {
             const action = this.currentAction;
             if (action) {
-                if (action.ready) {
+                if (action.ready && this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_ACT)) {
                     this._events.emit(CONSTS.EVENT_COMBAT_ACTION, {
                         ...this.eventDefaultPayload,
                         action: action
@@ -256,11 +252,13 @@ class Combat {
                     this.selectCurrentAction('');
                 }
             } else if (this.attacker.getters.getSelectedWeapon) {
-                this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
-                    ...this.eventDefaultPayload,
-                    count: nAttackCount,
-                    opportunity: bPartingShot // if true, then no retaliation (start combat back)
-                });
+                if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)) {
+                    this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
+                        ...this.eventDefaultPayload,
+                        count: nAttackCount,
+                        opportunity: bPartingShot // if true, then no retaliation (start combat back)
+                    });
+                }
             }
         }
     }
@@ -419,7 +417,7 @@ class Combat {
     }
 
     _isTargetApplyingEffect (sEffectType) {
-        const oFearEffects = this.attacker.getters.getEffectRegistry[CONSTS.EFFECT_FEAR];
+        const oFearEffects = this.attacker.getters.getEffectRegistry[sEffectType];
         if (oFearEffects) {
             const idTarget = this.target.id;
             for (const oEffect of oFearEffects) {
@@ -456,10 +454,14 @@ class Combat {
      * @param [nUseSpeed] {number} if undefined, the creature normal speed will apply
      */
     approachTarget (nUseSpeed = undefined) {
+        if (this._isTargetFrightening() && nUseSpeed > 0) {
+            // cannot approach a particular target when frightened by this target
+            // Can retreat
+            return;
+        }
         if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_MOVE) &&
             this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_SEE) &&
-            this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT) &&
-            !this._isTargetFrightening()
+            this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)
         ) {
             const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed;
             const previousDistance = this.distance;
@@ -473,7 +475,7 @@ class Combat {
                     nNewDistance = parseFloat(d) || 0;
                 }
             });
-            this.distance = nNewDistance;
+            this.distance = Math.max(0, Math.min(MAX_COMBAT_DISTANCE, nNewDistance));
         }
     }
 

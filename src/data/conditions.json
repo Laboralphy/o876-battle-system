@@ -4,11 +4,11 @@
     "prevents": ["CAPABILITY_CAST_TARGET", "CAPABILITY_SEE"]
   },
   "CONDITION_CHARMED": {
-    "description": "Caused buy spells and some supernatural abilities, the charmed creature cannot take hostile actions against creator of condition",
-    "prevents": ["CAPABILITY_CAST_TARGET", "CAPABILITY_FIGHT"]
+    "description": "Caused buy spells and some supernatural abilities, the charmed creature cannot perform complex actions and hostile actions against creator of condition",
+    "prevents": ["CAPABILITY_CAST", "CAPABILITY_CAST_TARGET"]
   },
   "CONDITION_FRIGHTENED": {
-    "description": "Caused by spells, and supernatural auras. Prevent from doing complex mental action like casting.",
+    "description": "Caused by spells, and supernatural auras. Prevent from doing complex mental action like casting. And cannot approach creator of condition",
     "prevents": ["CAPABILITY_CAST_SELF", "CAPABILITY_CAST_TARGET"]
   },
   "CONDITION_INCAPACITATED": {

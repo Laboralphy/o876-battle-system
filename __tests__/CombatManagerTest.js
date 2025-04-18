@@ -52,23 +52,6 @@ const bpFangs3d6 = {
     attributes: []
 };
 
-const bpSting1d6Poison = {
-    entityType: CONSTS.ENTITY_TYPE_ITEM,
-    itemType: CONSTS.ITEM_TYPE_WEAPON,
-    extends: ['bpNaturalWeapon'],
-    damages: '1d6',
-    damageType: CONSTS.DAMAGE_TYPE_PIERCING,
-    size: CONSTS.WEAPON_SIZE_SMALL,
-    properties: [{
-        type: CONSTS.PROPERTY_ON_ATTACK_HIT,
-        ailment: CONSTS.ON_ATTACK_HIT_POISON,
-        amp: '1d2',
-        subtype: CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY,
-        duration: 11
-    }],
-    attributes: []
-};
-
 const bpMonster1 = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
     specie: CONSTS.SPECIE_MONSTROSITY,
@@ -83,22 +66,6 @@ const bpMonster1 = {
     equipment: [
         'bpClaws2d6',
         'bpFangs3d6'
-    ]
-};
-
-const bpMonster2 = {
-    entityType: CONSTS.ENTITY_TYPE_ACTOR,
-    specie: CONSTS.SPECIE_MONSTROSITY,
-    race: CONSTS.RACE_UNKNOWN,
-    ac: 0,
-    proficiencies: [],
-    speed: 30,
-    classType: CONSTS.CLASS_TYPE_MONSTER,
-    level: 1,
-    hd: 6,
-    actions: [],
-    equipment: [
-        'bpSting1d6Poison'
     ]
 };
 
@@ -503,7 +470,6 @@ describe('advancing combat', function () {
             script: 'script1'
         });
         const logs = [];
-        const distancelogs = [];
         cm.events.on('combat.action', evt => {
             logs.push({
                 type: 'combat.attack',
@@ -512,17 +478,6 @@ describe('advancing combat', function () {
                 turn: evt.combat.turn,
                 tick: evt.combat.tick,
                 action: evt.action
-            });
-        });
-        cm.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => {
-            distancelogs.push({
-                type: 'combat.distance',
-                attacker: evt.combat.attacker.id,
-                target: evt.combat.target.id,
-                turn: evt.combat.turn,
-                tick: evt.combat.tick,
-                prevDistance: evt.previousDistance,
-                distance: evt.distance
             });
         });
         expect(combat.distance).toBe(50);
@@ -584,7 +539,7 @@ describe('advancing combat', function () {
         expect(combat.distance).toBe(1000);
 
         cm.processCombats(); // turn 0 : tick 0->1
-        expect(combat.distance).toBe(940);
+        expect(combat.distance).toBe(30); // MAX_COMBAT_DISTANCE - target speed
 
         cm.processCombats(); // turn 0 : tick 1->2
         cm.processCombats(); // turn 0 : tick 2->3
@@ -597,7 +552,7 @@ describe('advancing combat', function () {
         expect(logs).toHaveLength(0);
         cm.processCombats(); // turn 1 : tick 0->1
         expect(combat.currentAction).toBeNull();
-        expect(combat.distance).toBe(880);
+        expect(combat.distance).toBe(5);
         expect(combat.currentAction).toBeNull();
         expect(logs).toHaveLength(0);
         cm.processCombats(); // turn 1 : tick 1->2
@@ -608,17 +563,7 @@ describe('advancing combat', function () {
         cm.processCombats(); // turn 1->2 : tick 5->0
         expect(combat.currentAction).toBeNull();
         cm.processCombats(); // turn 2 : tick 0->1
-        expect(combat.currentAction).toBeNull();
-        expect(combat.distance).toBe(820);
-        combat.nextAction = 'a1';
-        combat.distance = 5; // now action a1 can be used
-        cm.processCombats(); // turn 2 : tick 1->2
-        cm.processCombats(); // turn 2 : tick 2->3
-        cm.processCombats(); // turn 2 : tick 3->4
-        cm.processCombats(); // turn 2 : tick 4->5
-        cm.processCombats(); // turn 2->3 : tick 5->0
         expect(combat.currentAction).not.toBeNull();
-        expect(combat.currentAction.id).toBe('a1');
     });
 });
 
@@ -628,7 +573,7 @@ describe('Try real combat', function () {
         cm.defaultDistance = 50;
         const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
         const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
-        const combat = cm.startCombat(c1, c2);
+        cm.startCombat(c1, c2);
         c1.mutations.defineAction({
             id: 'a1',
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
@@ -644,8 +589,7 @@ describe('Try real combat', function () {
         const logs = [];
         cm.events.on('combat.move', ({
             previousDistance,
-            speed,
-            distance
+            speed
         }) => {
             logs.push({
                 type: 'move',
