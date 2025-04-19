@@ -27,6 +27,9 @@ class GenericEvent {
      * @returns {BoxedCreature|Creature}
      */
     boxCreature (oCreature) {
+        if (oCreature === undefined) {
+            throw new ReferenceError('Undefined creature');
+        }
         if (oCreature === null) {
             return null;
         }

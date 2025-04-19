@@ -173,8 +173,8 @@ class EffectProcessor {
     getEffectTargetSource (oEffect) {
         const idTarget = oEffect.target;
         const idSource = oEffect.source;
-        const target = this._horde.creatures[idTarget];
-        const source = this._horde.creatures[idSource];
+        const target = this._horde.getCreature(idTarget);
+        const source = this._horde.getCreature(idSource);
         return {
             target,
             source
@@ -228,12 +228,12 @@ class EffectProcessor {
     }
 
     processEffect (oEffect) {
-        const oTarget = this._horde.creatures[oEffect.target];
+        const oTarget = this._horde.getCreature(oEffect.target);
         if (!oTarget) {
             // Target creature is no longer online
             throw new Error('An effect is processed, but the target creature is no longer registered in the horde.');
         }
-        const oSource = this._horde.creatures[oEffect.source];
+        const oSource = this._horde.getCreature(oEffect.source);
         this.invokeEffectMethod(oEffect, 'mutate', oTarget, oSource);
         const nCurrentDuration = oTarget.getters.getEffectRegistry[oEffect.id].duration;
         oTarget.mutations.setEffectDuration({ effect: oEffect, duration: nCurrentDuration - 1 });

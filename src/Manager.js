@@ -26,7 +26,7 @@ const CreatureEffectExpiredEvent = require('./events/CreatureEffectExpiredEvent'
 const CreatureEffectImmunityEvent = require('./events/CreatureEffectImmunityEvent');
 const CreatureSelectWeaponEvent = require('./events/CreatureSelectWeaponEvent');
 const CreatureReviveEvent = require('./events/CreatureReviveEvent');
-const CreatureSavingThrowEvent = require('./events/CreatureDamagedEvent');
+const CreatureSavingThrowEvent = require('./events/CreatureSavingThrowEvent');
 const CreatureDamagedEvent = require('./events/CreatureDamagedEvent');
 const CreatureDeathEvent = require('./events/CreatureDeathEvent');
 
@@ -287,13 +287,13 @@ class Manager {
                 manager: this
             });
         }
-        if (oAttackOutcome.hit) {
-            oAttackOutcome.applyDamages();
-        }
         this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, new CombatAttackEvent({
             system: this._systemInstance,
             attack: oAttackOutcome
         }));
+        if (oAttackOutcome.hit) {
+            oAttackOutcome.applyDamages();
+        }
     }
 
     /**
@@ -324,6 +324,9 @@ class Manager {
         }
     }
 
+    /**
+     * @returns {Map<string, any>}
+     */
     get blueprints () {
         return this._entityBuilder.blueprints;
     }
@@ -484,7 +487,7 @@ class Manager {
         const ep = this._effectProcessor;
         const h = this._horde;
         for (const effect of oCreature.getters.getEffects) {
-            const source = h.creatures[effect.source];
+            const source = h.getCreature(effect.source);
             ep.invokeEffectMethod(effect, sScript, oCreature, source, oParams);
         }
         this.runPropertyScript(oCreature, sScript, oParams);

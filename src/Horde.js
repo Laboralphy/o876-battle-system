@@ -1,8 +1,12 @@
 class Horde {
     constructor () {
-        this._creatures = {};
+        this._creatures = new Map();
         // list of creatures that have running effect or action cooling down
         this._activeCreatures = new Set();
+    }
+
+    getCreature (id) {
+        return this._creatures.get(id);
     }
 
     get creatures () {
@@ -10,21 +14,24 @@ class Horde {
     }
 
     get count () {
-        return Object.values(this._creatures).length;
+        return this._creatures.size;
     }
 
     forEach (f) {
-        const aCreatures = Object.values(this._creatures);
-        aCreatures.forEach(((creature, index) => f(creature, index, aCreatures)));
+        const aCreatures = this._creatures.values();
+        for (let index = 0, l = this.count; index < l; ++index) {
+            const creature = aCreatures[index];
+            f(creature, index, aCreatures);
+        }
     }
 
     linkCreature (oCreature) {
-        this._creatures[oCreature.id] = oCreature;
+        this._creatures.set(oCreature.id, oCreature);
     }
 
     unlinkCreature (oCreature) {
         this._activeCreatures.delete(oCreature);
-        delete this._creatures[oCreature.id];
+        this._creatures.delete(oCreature.id);
     }
 
     /**

@@ -26,7 +26,7 @@ describe('defineBlueprint', function () {
             properties: [],
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
         });
-        expect(ib.blueprints).toHaveProperty('shortsword');
+        expect(ib.blueprints.has('shortsword')).toBeTruthy();
     });
     it('should not keep original blueprint but copy blueprint with additional property when defining blueprint', function () {
         const ib = new EntityBuilder();
@@ -45,8 +45,8 @@ describe('defineBlueprint', function () {
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
         };
         ib.defineBlueprint('shortsword', oOriginalBlueprint);
-        expect(ib.blueprints.shortsword).not.toBe(oOriginalBlueprint);
-        expect(ib.blueprints.shortsword).toHaveProperty('ref');
+        expect(ib.blueprints.get('shortsword')).not.toBe(oOriginalBlueprint);
+        expect(ib.blueprints.get('shortsword')).toHaveProperty('ref');
     });
     it('should throw an error when weapon blueprint is missing some required property', function () {
         const ib = new EntityBuilder();
@@ -116,7 +116,7 @@ describe('defineBlueprint', function () {
         eb.defineBlueprint('wpn-shortsword', {
             extends: 'weapon-type-shortsword'
         });
-        expect(eb.blueprints['wpn-shortsword']).toEqual({
+        expect(eb.blueprints.get('wpn-shortsword')).toEqual({
             ref: 'wpn-shortsword',
             entityType: CONSTS.ENTITY_TYPE_ITEM,
             itemType: CONSTS.ITEM_TYPE_WEAPON,
@@ -369,14 +369,14 @@ describe('createEntity', function () {
             properties: [],
             equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
         };
-        expect(Object.values(ib.blueprints).length).toBe(0);
+        expect(ib.blueprints.size).toBe(0);
         const s1 = ib.createEntity(oShorSwordBP, 's1');
-        expect(Object.values(ib.blueprints).length).toBe(1);
+        expect(ib.blueprints.size).toBe(1);
         const s2 = ib.createEntity(oShorSwordBP, 's2');
-        expect(Object.values(ib.blueprints).length).toBe(1);
+        expect(ib.blueprints.size).toBe(1);
         const s3 = ib.createEntity(oShorSwordBP, 's3');
-        expect(Object.values(ib.blueprints).length).toBe(1);
-        const sShortSwordBPRef = Object.keys(ib.blueprints)[0];
+        expect(ib.blueprints.size).toBe(1);
+        const sShortSwordBPRef = [...ib.blueprints.keys()][0];
         expect(sShortSwordBPRef).toBe(s1.blueprint.ref);
         expect(sShortSwordBPRef).toBe(s2.blueprint.ref);
         expect(sShortSwordBPRef).toBe(s3.blueprint.ref);

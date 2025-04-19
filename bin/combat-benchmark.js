@@ -8,7 +8,7 @@ function main () {
     const argv = getArgv();
     const cs = new CombatSimulator();
     cs.events.on('output', ({ output }) => console.log(...output));
-    cs.playCombat(argv[0], argv[1]);
+    cs.benchmark(argv[0], argv[1]);
 }
 
 main();

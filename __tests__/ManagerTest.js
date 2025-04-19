@@ -159,16 +159,16 @@ describe('createEntity / destroyEntity', function () {
     it('should add creature to horde when creating creature', function () {
         const m = new Manager();
         const c1 = m.createEntity(bpNormalActor, 'c1');
-        expect(Object.values(m.horde.creatures)).toHaveLength(1);
-        expect(m.horde.creatures['c1']).toBeDefined();
-        expect(m.horde.creatures['c1']).toBe(c1);
+        expect(m.horde.count).toBe(1);
+        expect(m.horde.getCreature('c1')).toBeDefined();
+        expect(m.horde.getCreature('c1')).toBe(c1);
     });
     it('should remove creature to horde when destroying creature', function () {
         const m = new Manager();
         const c1 = m.createEntity(bpNormalActor, 'c1');
-        expect(Object.values(m.horde.creatures)).toHaveLength(1);
+        expect(m.horde.count).toBe(1);
         m.destroyEntity(c1);
-        expect(m.horde.creatures['c1']).toBeUndefined();
+        expect(m.horde.getCreature('c1')).toBeUndefined();
     });
 });
 
@@ -311,7 +311,7 @@ describe('Real Combat simulator', function () {
         // process()
         // process()
 
-        expect(logs).toHaveLength(12);
+        expect(logs).toHaveLength(11);
 
         expect(logs[0]).toEqual({
             event: 'combat.start',
@@ -322,109 +322,108 @@ describe('Real Combat simulator', function () {
         });
 
         expect(logs[1]).toEqual({
-            event: 'combat.start',
-            attacker: 'c2',
-            target: 'c1',
-            attackerHP: 17,
-            targetHP: 17
+            'attacker': 'c1',
+            'attackerHP': 17,
+            'event': 'combat.turn',
+            'target': 'c2',
+            'targetHP': 17,
+            'turn': 0,
         });
 
+        // expect(logs[1]).toEqual({
+        //     event: 'combat.start',
+        //     attacker: 'c2',
+        //     target: 'c1',
+        //     attackerHP: 17,
+        //     targetHP: 17
+        // });
+
         expect(logs[2]).toEqual({
-            event: 'combat.turn',
-            attacker: 'c1',
-            target: 'c2',
-            turn: 0,
-            attackerHP: 17,
-            targetHP: 17
+            'attacker': 'c1',
+            'distance': 20,
+            'event': 'combat.distance',
+            'target': 'c1',
+            'turn': 0,
         });
 
         expect(logs[3]).toEqual({
-            event: 'combat.distance',
-            turn: 0,
-            attacker: 'c1',
-            target: 'c1',
-            distance: 20
+            'attacker': 'c2',
+            'attackerHP': 17,
+            'event': 'combat.turn',
+            'target': 'c1',
+            'targetHP': 17,
+            'turn': 0
         });
 
         expect(logs[4]).toEqual({
-            event: 'combat.turn',
-            attacker: 'c2',
-            target: 'c1',
-            turn: 0,
-            attackerHP: 17,
-            targetHP: 17
+            'attacker': 'c2',
+            'distance': 5,
+            'event': 'combat.distance',
+            'target': 'c2',
+            'turn': 0
         });
 
         expect(logs[5]).toEqual({
-            event: 'combat.distance',
-            turn: 0,
-            attacker: 'c2',
-            target: 'c2',
-            distance: 5
+            'ac': 10,
+            'attacker': 'c1',
+            'attackerHP': 17,
+            'event': 'combat.attack',
+            'hit': true,
+            'roll': 11,
+            'target': 'c2',
+            'targetHP': 17
         });
 
         expect(logs[6]).toEqual({
-            event: 'combat.attack',
-            attacker: 'c1',
-            target: 'c2',
-            hit: true,
-            roll: 11,
-            ac: 10,
-            attackerHP: 17,
-            targetHP: 13 // damages have been applied before sending event
+            'ac': 10,
+            'attacker': 'c2',
+            'attackerHP': 13,
+            'event': 'combat.attack',
+            'hit': false,
+            'roll': 9,
+            'target': 'c1',
+            'targetHP': 17
         });
 
         expect(logs[7]).toEqual({
-            event: 'combat.attack',
-            attacker: 'c2',
-            target: 'c1',
-            hit: false,
-            roll: 9,
-            ac: 10,
-            attackerHP: 13,
-            targetHP: 17
+            'attacker': 'c1',
+            'attackerHP': 17,
+            'event': 'combat.turn',
+            'target': 'c2',
+            'targetHP': 13,
+            'turn': 1
         });
 
         expect(logs[8]).toEqual({
-            event: 'combat.turn',
-            attacker: 'c1',
-            target: 'c2',
-            turn: 1,
-            attackerHP: 17,
-            targetHP: 13
+            'attacker': 'c2',
+            'attackerHP': 13,
+            'event': 'combat.turn',
+            'target': 'c1',
+            'targetHP': 17,
+            'turn': 1
         });
 
         expect(logs[9]).toEqual({
-            event: 'combat.turn',
-            attacker: 'c2',
-            target: 'c1',
-            turn: 1,
-            attackerHP: 13,
-            targetHP: 17
+            'ac': 10,
+            'attacker': 'c1',
+            'attackerHP': 17,
+            'event': 'combat.attack',
+            'hit': true,
+            'roll': 11,
+            'target': 'c2',
+            'targetHP': 13
         });
 
         expect(logs[10]).toEqual({
-            event: 'combat.attack',
-            attacker: 'c1',
-            target: 'c2',
-            hit: true,
-            roll: 11,
-            ac: 10,
-            attackerHP: 17,
-            targetHP: 11 // damages have been applied before sending event
+            'ac': 10,
+            'attacker': 'c2',
+            'attackerHP': 11,
+            'event': 'combat.attack',
+            'hit': false,
+            'roll': 9,
+            'target': 'c1',
+            'targetHP': 17
         });
-
-        expect(logs[11]).toEqual({
-            event: 'combat.attack',
-            attacker: 'c2',
-            target: 'c1',
-            hit: false,
-            roll: 9,
-            ac: 10,
-            attackerHP: 11,
-            targetHP: 17
-        });
-
     });
 });
 
@@ -833,5 +832,15 @@ describe('testing vampyre effect', function () {
         expect(c1.getters.getSelectedWeapon.blueprint.ref).toBe('wpn-long-sword-wight');
         m.deliverAttack(c1, c2);
         expect(c1.hitPoints).toBeGreaterThan(4);
+    });
+});
+
+describe('checking if gobs are proficient to their equipment', function () {
+    it('gob shoud be proficient with their armor', function () {
+        const m = new Manager();
+        m.loadModule('classic');
+        const g1 = m.createEntity('c-goblin', 'g1');
+        expect(g1.getters.isEquipmentProficient[CONSTS.EQUIPMENT_SLOT_CHEST]).toBeTruthy();
+        expect(g1.getters.isEquipmentProficient[CONSTS.EQUIPMENT_SLOT_SHIELD]).toBeTruthy();
     });
 });

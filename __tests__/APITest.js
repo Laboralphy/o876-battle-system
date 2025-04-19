@@ -163,6 +163,7 @@ describe('creatures', function () {
             api.services.core.loadModule('classic');
             const c1 = api.services.entities.createEntity('c-goblin', 'c1');
             expect(api.services.creatures.hasCapability(c1, CONSTS.CAPABILITY_SEE)).toBeTruthy();
+            api.services.entities.destroyEntity(c1);
         });
         it('should throw an error when capability is invalid', function () {
             const api = new API();

@@ -96,7 +96,7 @@ class Combats extends ServiceAbstract {
      * @param oTarget {BoxedCreature}
      */
     startCombat (oCreature, oTarget) {
-        return this
+        this
             .services
             .core
             .manager

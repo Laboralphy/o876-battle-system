@@ -1,6 +1,5 @@
 const Events = require('events');
-const API = require('../src/API');
-const {CONDITIONS} = require('../src/data');
+const API = require('../../API');
 
 class CombatSimulator {
     constructor () {
@@ -9,6 +8,7 @@ class CombatSimulator {
         this.services = this._api.services;
         this.services.core.loadModule('classic');
         this.pluginCombatEvents();
+        this._bVerbose = true;
     }
 
     get events () {
@@ -118,7 +118,10 @@ class CombatSimulator {
             amount,
             damageType
         } = evt;
-        this.sendTextEvent(creature.id, 'takes', amount, 'damages (' + damageType + ') - hp left:', creature.hitPoints);
+        this.sendTextEvent(
+            creature.id, 'takes', amount, 'damages (' + damageType + ')' +
+            ' - hp left:', this.services.creatures.getHitPoints(creature)
+        );
     }
 
     /**
@@ -219,13 +222,21 @@ class CombatSimulator {
     }
 
     sendTextEvent(...aStrings) {
-        this._events.emit('output', { output: aStrings });
+        if (this._bVerbose) {
+            this._events.emit('output', { output: aStrings });
+        }
     }
 
+    /**
+     *
+     * @param resref1
+     * @param resref2
+     * @returns {{ attacker: BoxedCreature, target: BoxedCreature }}
+     */
     startCombat (resref1, resref2) {
         const c1 = this.services.entities.createEntity(resref1, resref1 + '-1');
         const c2 = this.services.entities.createEntity(resref2, resref2 + '-2');
-        const combat = this.services.combats.startCombat(c1, c2);
+        this.services.combats.startCombat(c1, c2);
         return {
             attacker: c1,
             target: c2
@@ -242,10 +253,13 @@ class CombatSimulator {
 
     playCombat (ref1, ref2) {
         const DOOM_LOOP_IT_COUNT = Math.pow(2, 32);
-        let combat;
+        let combat, attacker, target;
         try {
-            combat = this.startCombat(ref1, ref2);
-            const { attacker, target } = combat;
+            const time = process.hrtime();
+            const sc = this.startCombat(ref1, ref2);
+            attacker = sc.attacker;
+            target = sc.target;
+            combat = this._api.services.combats.getCreatureCombat(attacker);
             for (let i = 0; i < DOOM_LOOP_IT_COUNT; ++i) {
                 this.doomloop();
                 if (this.activeCombatCount === 0) {
@@ -253,16 +267,28 @@ class CombatSimulator {
                     break;
                 }
             }
-            return [
-                { hp: attacker.hitPoints, maxhp: this.services.creatures.getMaxHitPoints(attacker) },
-                { hp: target.hitPoints, maxhp: this.services.creatures.getMaxHitPoints(target) }
-            ];
+            return {
+                turns: combat.turn,
+                time: process.hrtime(time),
+                stats: [
+                    {
+                        dead: this.services.creatures.getHitPoints(attacker) <= 0,
+                        hp: this.services.creatures.getHitPoints(attacker),
+                        maxhp: this.services.creatures.getMaxHitPoints(attacker)
+                    },
+                    {
+                        dead: this.services.creatures.getHitPoints(target) <= 0,
+                        hp: this.services.creatures.getHitPoints(target),
+                        maxhp: this.services.creatures.getMaxHitPoints(target)
+                    }
+                ]
+            };
         } catch (e) {
             throw e;
         } finally {
             if (combat) {
-                this.services.entities.destroyEntity(combat.attacker);
-                this.services.entities.destroyEntity(combat.target);
+                this.services.entities.destroyEntity(attacker);
+                this.services.entities.destroyEntity(target);
             }
         }
     }
@@ -271,35 +297,31 @@ class CombatSimulator {
         const COMBAT_COUNT = 1000;
         const aStats = [];
         let time = process.hrtime();
+        let nCC = 0;
+        let nTurns = 0;
         for (let i = 0; i < COMBAT_COUNT; ++i) {
-            aStats.push(this.playCombat(resref1, resref2));
+            this._bVerbose = false;
+            const oStat = this.playCombat(resref1, resref2);
+            aStats.push(oStat);
+            ++nCC;
+            nTurns += oStat.turns;
+            this._bVerbose = true;
             const time2 = process.hrtime(time);
             if (time2[0] >= 1) {
-                console.log(Math.round(100 * i / COMBAT_COUNT) + '%');
+                this.sendTextEvent('combat', i, 'of', COMBAT_COUNT, '(+' + nCC + ')', '; turns:', nTurns, ';', Math.round(1000 / nTurns) + 'ms per turn', '(' + Math.round(100 * i / COMBAT_COUNT) + '%)');
                 time = process.hrtime();
+                nCC = 0;
+                nTurns = 0;
             }
         }
-        console.log(100 + '%');
-        const w1 = aStats.filter(x => x[0].hp > 0 && x[1].hp <= 0).length / COMBAT_COUNT;
-        const w2 = aStats.filter(x => x[1].hp > 0 && x[0].hp <= 0).length / COMBAT_COUNT;
-        const x1 = aStats.reduce((prev, curr) => prev + curr[0].hp / curr[0].maxhp, 0) / COMBAT_COUNT;
-        const x2 = aStats.reduce((prev, curr) => prev + curr[1].hp / curr[1].maxhp, 0) / COMBAT_COUNT;
-        console.log(resref1, 'wins', (w1 * 100).toFixed(2) + '%', 'hp left', (x1 * 100).toFixed(2) + '%');
-        console.log(resref2, 'wins', (w2 * 100).toFixed(2) + '%', 'hp left', (x2 * 100).toFixed(2) + '%');
+        this.sendTextEvent(100 + '%');
+        const w1 = aStats.filter(({ stats: [a, d] }) => !a.dead && d.dead).length / COMBAT_COUNT;
+        const w2 = aStats.filter(({ stats: [a, d] }) => !d.dead && a.dead).length / COMBAT_COUNT;
+        const x1 = aStats.reduce((prev, { stats: [a, d] }) => prev + a.hp / a.maxhp, 0) / COMBAT_COUNT;
+        const x2 = aStats.reduce((prev, { stats: [a, d] }) => prev + d.hp / d.maxhp, 0) / COMBAT_COUNT;
+        this.sendTextEvent(resref1, 'wins', (w1 * 100).toFixed(2) + '%', 'hp left', (x1 * 100).toFixed(2) + '%');
+        this.sendTextEvent(resref2, 'wins', (w2 * 100).toFixed(2) + '%', 'hp left', (x2 * 100).toFixed(2) + '%');
     }
 }
 
-
-
-function getArgv () {
-    return process.argv.slice(2);
-}
-
-function main () {
-    const argv = getArgv();
-    const cs = new CombatSimulator();
-    cs.events.on('output', ({ output }) => console.log(...output));
-    cs.playCombat(argv[0], argv[1]);
-}
-
-main();
+module.exports = CombatSimulator;

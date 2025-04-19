@@ -1,6 +1,5 @@
 const CONSTS = require('../consts');
 const GenericEvent = require('./GenericEvent');
-const BoxedCreature = require('../sub-api/classes/BoxedCreature');
 
 class CombatAttackEvent extends GenericEvent {
     /**
@@ -34,10 +33,7 @@ class CombatAttackEvent extends GenericEvent {
         this.advantages = [...attack.rollBias.advantages];
         this.disadvantages = [...attack.rollBias.disadvantages];
         this.bias = attack.rollBias.result;
-        this.damages = {
-            types: attack.damages.types,
-            amount: attack.damages.amount
-        };
+        this.damageTypes = Object.keys(attack.damages.types);
     }
 }
 

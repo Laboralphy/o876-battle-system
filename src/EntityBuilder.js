@@ -10,7 +10,7 @@ const { sortByDependency } = require('./libs/sort-by-dependency');
  */
 class EntityBuilder {
     constructor () {
-        this._blueprints = {};
+        this._blueprints = new Map();
         this._schemaValidator = null;
         this._propertyBuilder = null;
     }
@@ -77,15 +77,15 @@ class EntityBuilder {
      * @returns {RBSItemBlueprint}
      */
     defineBlueprint (id, blueprint) {
-        if (id in this._blueprints) {
+        if (this._blueprints.has(id)) {
             throw new Error(`blueprint ${id} is already defined`);
         }
         const oBuiltBlueprint = {};
         if ('extends' in blueprint) {
             const aExtends = Array.isArray(blueprint.extends) ? blueprint.extends : [blueprint.extends];
             aExtends.forEach(x => {
-                if (x in this._blueprints) {
-                    deepMerge(oBuiltBlueprint, this._blueprints[x]);
+                if (this._blueprints.has(x)) {
+                    deepMerge(oBuiltBlueprint, this._blueprints.get(x));
                 } else {
                     throw new Error(`blueprint ${id} extends from an non-existant blueprint ${x}`);
                 }
@@ -112,7 +112,9 @@ class EntityBuilder {
         } catch (e) {
             throw new Error(`Schema validation error on blueprint : ${id}`, { cause: e });
         }
-        return this._blueprints[id] = deepFreeze(oBuiltBlueprint);
+        const oFinalBP = deepFreeze(oBuiltBlueprint);
+        this._blueprints.set(id, oFinalBP);
+        return oFinalBP;
     }
 
     _hashObject (oObject) {
@@ -121,10 +123,10 @@ class EntityBuilder {
     }
 
     _checkResRef (resref) {
-        if (!(resref in this._blueprints)) {
+        if (!(this._blueprints.has(resref))) {
             throw new Error(`resref ${resref} does not lead to a defined blueprint`);
         }
-        return this._blueprints[resref];
+        return this._blueprints.get(resref);
     }
 
     /**
@@ -134,15 +136,15 @@ class EntityBuilder {
      */
     _registerUnidentifiedBlueprint (blueprint) {
         if (typeof blueprint === 'string') {
-            if (blueprint in this._blueprints) {
-                return this._blueprints[blueprint];
+            if (this._blueprints.has(blueprint)) {
+                return this._blueprints.get(blueprint);
             } else {
                 throw new ReferenceError(`This blueprint does not exist ${blueprint}`);
             }
         }
         const sHash = this._hashObject(blueprint);
-        if (sHash in this._blueprints) {
-            return this._blueprints[sHash];
+        if (this._blueprints.has(sHash)) {
+            return this._blueprints.get(sHash);
         } else {
             return this.defineBlueprint(sHash, blueprint);
         }

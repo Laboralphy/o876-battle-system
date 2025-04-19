@@ -1,6 +1,5 @@
 const CONSTS = require('../consts');
 const GenericEvent = require('./GenericEvent');
-const BoxedCreature = require('../sub-api/classes/BoxedCreature');
 
 class CreatureSavingThrowEvent extends GenericEvent {
     constructor ({ system, creature, roll, dc, success, bonus, ability }) {

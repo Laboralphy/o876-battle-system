@@ -1,16 +1,16 @@
 {
   "name": "o876-battle-system",
   "version": "1.0.0",
-  "description": "",
+  "description": "Custom version of D&D 5th edition OGL combat rules.",
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build-indexes": "./bin/build-indexes",
-    "build-module-blueprints": "./bin/build-module-blueprints && jest __tests__/BlueprintTest.js",
+    "build:indexes": "./bin/build-indexes",
+    "build:blueprints": "./bin/build-module-blueprints && jest __tests__/BlueprintTest.js",
     "eslint:fix": "npx eslint . --fix"
   },
   "keywords": [],
-  "author": "",
+  "author": "Raphaël MARANDET",
   "license": "ISC",
   "dependencies": {
     "@laboralphy/object-fusion": "^1.3.0",
