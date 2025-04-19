@@ -5,6 +5,6 @@
 | strength         | paralysis, root, snare                         |
 | dexterity        | breath, explosions, missiles, traps            |
 | constitution     | death spells, poison, diseases, ability damage |
-| intelligence     | psionic attacks, illusions, confusion          |
-| wisdom           | confusion                                      |
+| intelligence     | psionic attacks, illusions                     |
+| wisdom           | charm                                          |
 | charisma         | charm, calm, daze                              |

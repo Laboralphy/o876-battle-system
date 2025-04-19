@@ -208,7 +208,6 @@ describe('creatures', function () {
             api.services.effects.applySpellEffectGroup('spell1', [
                 eBlindness, eParalysis, eDamage
             ], c1, 10);
-            expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_DISEASE)).toBeFalsy();
             expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_BLINDED)).toBeTruthy();
             expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_FRIGHTENED)).toBeFalsy();
             expect(api.services.creatures.hasConditions(c1, CONSTS.CONDITION_PARALYZED)).toBeTruthy();

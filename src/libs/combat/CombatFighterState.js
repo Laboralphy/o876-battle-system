@@ -74,7 +74,6 @@ class CombatFighterState {
         return this._plan[tick % this._plan.length];
     }
 
-
     getMeleeExtraAttackCount () {
         return aggregateModifiers([
             CONSTS.PROPERTY_ATTACK_COUNT_MODIFIER,

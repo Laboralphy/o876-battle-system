@@ -9,8 +9,6 @@ module.exports = (state, getters) => {
     const aEffectSet = getters.getEffectSet;
     const aConditions = {
         [CONSTS.CONDITION_BLINDED]: aEffectSet.has(CONSTS.EFFECT_BLINDNESS),
-        [CONSTS.CONDITION_CONFUSED]: aEffectSet.has(CONSTS.EFFECT_CONFUSION),
-        [CONSTS.CONDITION_DISEASE]: aEffectSet.has(CONSTS.EFFECT_DISEASE),
         [CONSTS.CONDITION_FRIGHTENED]: aEffectSet.has(CONSTS.EFFECT_FEAR),
         [CONSTS.CONDITION_INCAPACITATED]: getters.isDead,
         [CONSTS.CONDITION_PARALYZED]: aEffectSet.has(CONSTS.EFFECT_PARALYSIS),

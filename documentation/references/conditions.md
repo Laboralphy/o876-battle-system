@@ -18,7 +18,7 @@
 | Poison        |                             |              |                                                  |
 | Disease       |                             |              |                                                  |
 | Restrained    | move                        | dexterity    | Retaliate with ranged attack                     |
-| Confusion     | act, cast                   | intelligence | Cannot use proficiency                           |
+| Charm         | act, cast                   | wisdom       | Cannot use proficiency                           |
 | Blindness     | see, cast.target            | wisdom       | You may fight, but with penalties                |
 | Fear          | act, fight, cast            | charisma     | You may flee.                                    |
 | Stunned       | act, move, fight, cast      |              |                                                  |

@@ -23,27 +23,20 @@ function init ({ effect, damageType: sDamageType, critical = false }) {
 
 /**
  * @param damageType {string}
- * @param material {string[]}
- * @param source {Creature}
  * @param amp {string|number}
+ * @param target {Creature}
  * @returns {{amount: number, resisted: number}}
  */
-function rollDamageAmount ({ damageType, material, amp, target }) {
+function rollDamageAmount ({ damageType, amp, target }) {
     // What is the damage resistance, vulnerability, reduction ?
     const oMitigation = target.getters.getDamageMitigation;
     const sType = damageType;
-    const aMaterials = material;
-    let bMaterialVulnerable = false;
-    if (aMaterials) {
-        bMaterialVulnerable = aMaterials.some(m => oMitigation[m] && oMitigation[m].vulnerability);
-    }
     amp = typeof amp === 'number'
         ? amp
         : target.dice.roll(amp);
     if (sType in oMitigation) {
         const { factor, reduction } = oMitigation[sType];
-        const nFinalFactor = bMaterialVulnerable ? Math.max(1, 2 * factor) : factor;
-        const nModifiedAmount = Math.floor(Math.max(0, (amp - reduction)) * nFinalFactor);
+        const nModifiedAmount = Math.floor(Math.max(0, (amp - reduction)) * factor);
         const nResistedAmount = Math.max(0, amp - nModifiedAmount);
         return {
             amount: nModifiedAmount,
@@ -88,7 +81,13 @@ function mutate ({ effect, target, source }) {
 }
 
 function apply ({ effect, target, reject }) {
-    if (effect.data.damageType === CONSTS.DAMAGE_TYPE_POISON && target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_POISON)) {
+    if (
+        effect.data.damageType === CONSTS.DAMAGE_TYPE_POISON &&
+        (
+            target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_POISON) ||
+            target.getters.getConditionSet.has(CONSTS.CONDITION_PETRIFIED)
+        )
+    ) {
         reject();
     }
 }

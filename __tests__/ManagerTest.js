@@ -322,28 +322,20 @@ describe('Real Combat simulator', function () {
         });
 
         expect(logs[1]).toEqual({
-            'attacker': 'c1',
-            'attackerHP': 17,
-            'event': 'combat.turn',
-            'target': 'c2',
-            'targetHP': 17,
-            'turn': 0,
+            attacker: 'c1',
+            attackerHP: 17,
+            event: 'combat.turn',
+            target: 'c2',
+            targetHP: 17,
+            turn: 0
         });
-
-        // expect(logs[1]).toEqual({
-        //     event: 'combat.start',
-        //     attacker: 'c2',
-        //     target: 'c1',
-        //     attackerHP: 17,
-        //     targetHP: 17
-        // });
 
         expect(logs[2]).toEqual({
             'attacker': 'c1',
             'distance': 20,
             'event': 'combat.distance',
             'target': 'c1',
-            'turn': 0,
+            'turn': 0
         });
 
         expect(logs[3]).toEqual({
@@ -371,7 +363,7 @@ describe('Real Combat simulator', function () {
             'hit': true,
             'roll': 11,
             'target': 'c2',
-            'targetHP': 17
+            'targetHP': 13
         });
 
         expect(logs[6]).toEqual({
@@ -411,7 +403,7 @@ describe('Real Combat simulator', function () {
             'hit': true,
             'roll': 11,
             'target': 'c2',
-            'targetHP': 13
+            'targetHP': 11
         });
 
         expect(logs[10]).toEqual({
@@ -478,12 +470,12 @@ describe('attack advantage', function () {
             expect(logs[2].attacker).toBe(c1.id);
             expect(logs[2].rollBias).toBe(1);
             expect(logs[2].advantages.length).toBe(1);
-            expect(logs[2].advantages.includes(CONSTS.ADV_ATTACK_UNDETECTED_BY_TARGET)).toBeTruthy();
+            expect(logs[2].advantages.includes(CONSTS.ADV_ATTACK_ROLL_UNDETECTED_BY_TARGET)).toBeTruthy();
 
             expect(logs[3].attacker).toBe(c2.id);
             expect(logs[3].rollBias).toBe(-1);
             expect(logs[3].disadvantages.length).toBe(1);
-            expect(logs[3].disadvantages.includes(CONSTS.DIS_ATTACK_TARGET_UNDETECTED)).toBeTruthy();
+            expect(logs[3].disadvantages.includes(CONSTS.DIS_ATTACK_ROLL_TARGET_UNDETECTED)).toBeTruthy();
         });
     });
 });

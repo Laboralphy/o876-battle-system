@@ -86,7 +86,7 @@
     {
       "type": "PROPERTY_IMMUNITY",
       "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_CONFUSION"
+      "immunityType": "IMMUNITY_TYPE_CHARM"
     },
     {
       "type": "PROPERTY_DARKVISION",

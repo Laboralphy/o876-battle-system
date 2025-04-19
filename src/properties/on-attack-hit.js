@@ -59,10 +59,6 @@ function _createAilmentEffect (property, oTarget, oSource, oEffectProcessor) {
         oEffect = oEffectProcessor.createEffect(CONSTS.EFFECT_BLINDNESS);
         break;
     }
-    case CONSTS.ON_ATTACK_HIT_CONFUSION: {
-        oEffect = oEffectProcessor.createEffect(CONSTS.EFFECT_CONFUSION);
-        break;
-    }
     case CONSTS.ON_ATTACK_HIT_DISEASE: {
         const { disease } = extraParams;
         const { stages } = oSource.data.DISEASES[disease];

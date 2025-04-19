@@ -73,8 +73,8 @@ function buildRequireIndex (sPath, sType, sPrefix) {
         '// List of files in ' + sPath,
         '',
         'module.exports = {',
-        aRequires.map(s => '  ' + s).join(',\n'),
-        '}'
+        aRequires.map(s => '    ' + s).join(',\n'),
+        '};'
     ];
     const sOutput = aOutput.join('\n');
     console.log(sOutput);
