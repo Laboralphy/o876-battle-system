@@ -1390,7 +1390,7 @@ describe('getEffects', function() {
 describe('getSavingThrowBonus', function () {
     it('should return 0 for all abilities', function () {
         const c1 = new Creature({ blueprint: bpNormalActor });
-        expect(c1.getters.getSavingThrowBonus).toEqual({
+        expect(c1.getters.getSavingThrowBonus).toMatchObject({
             [CONSTS.ABILITY_STRENGTH]: 0,
             [CONSTS.ABILITY_DEXTERITY]: 0,
             [CONSTS.ABILITY_CONSTITUTION]: 0,
@@ -1403,7 +1403,7 @@ describe('getSavingThrowBonus', function () {
         const c1 = new Creature({ blueprint: bpNormalActor });
         c1.mutations.setLevel({ value: 5 });
         c1.mutations.addProficiency({ value: CONSTS.PROFICIENCY_SAVING_THROW_CONSTITUTION });
-        expect(c1.getters.getSavingThrowBonus).toEqual({
+        expect(c1.getters.getSavingThrowBonus).toMatchObject({
             [CONSTS.ABILITY_STRENGTH]: 0,
             [CONSTS.ABILITY_DEXTERITY]: 0,
             [CONSTS.ABILITY_CONSTITUTION]: 3,
@@ -1427,7 +1427,7 @@ describe('getSavingThrowBonus', function () {
                 }
             }
         });
-        expect(c1.getters.getSavingThrowBonus).toEqual({
+        expect(c1.getters.getSavingThrowBonus).toMatchObject({
             [CONSTS.ABILITY_STRENGTH]: 0,
             [CONSTS.ABILITY_DEXTERITY]: 0,
             [CONSTS.ABILITY_CONSTITUTION]: 5,
@@ -1450,7 +1450,7 @@ describe('getSavingThrowBonus', function () {
                 }
             }
         });
-        expect(c1.getters.getSavingThrowBonus).toEqual({
+        expect(c1.getters.getSavingThrowBonus).toMatchObject({
             [CONSTS.ABILITY_STRENGTH]: 2,
             [CONSTS.ABILITY_DEXTERITY]: 2,
             [CONSTS.ABILITY_CONSTITUTION]: 5,
@@ -1459,15 +1459,36 @@ describe('getSavingThrowBonus', function () {
             [CONSTS.ABILITY_CHARISMA]: 2
         });
     });
+    it('should return 5 = 3 + 2 when having a saving throw nbonus against poison', function () {
+        const c1 = new Creature({ blueprint: bpNormalActor });
+        c1.mutations.setLevel({ value: 5 });
+        c1.mutations.addProficiency({ value: CONSTS.PROFICIENCY_SAVING_THROW_CONSTITUTION });
+        c1.mutations.addProperty({
+            property: {
+                id: 'xxxx1',
+                type: CONSTS.PROPERTY_SAVING_THROW_MODIFIER,
+                amp: 2,
+                data: {
+                    ability: CONSTS.THREAT_TYPE_POISON
+                }
+            }
+        });
+        const stb = c1.getters.getSavingThrowBonus;
+        expect(stb[CONSTS.ABILITY_CONSTITUTION]).toBe(3);
+        expect(stb[CONSTS.THREAT_TYPE_POISON]).toBe(2);
+        const sx = c1.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, 0, CONSTS.THREAT_TYPE_POISON);
+        expect(sx.bonus).toBe(5);
+        const sx2 = c1.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, 0);
+        expect(sx2.bonus).toBe(3);
+    });
 });
 
 describe('rollSkill', function () {
     it('should have 0 to all skill', function () {
         const c = new Creature();
         expect(c.getters.getSkillValues).toEqual({
-            'SKILL_INVESTIGATION': 0,
             'SKILL_STEALTH': 0,
-            'SKILL_UNLOCK': 0,
+            'SKILL_SLEIGHT_OF_HAND': 0,
             'SKILL_PERCEPTION': 0
         });
     });
@@ -1475,21 +1496,19 @@ describe('rollSkill', function () {
         const c = new Creature();
         c.mutations.setAbilityValue({ ability: 'ABILITY_DEXTERITY', value: 12});
         expect(c.getters.getSkillValues).toEqual({
-            'SKILL_INVESTIGATION': 0,
             'SKILL_STEALTH': 1,
-            'SKILL_UNLOCK': 1,
+            'SKILL_SLEIGHT_OF_HAND': 1,
             'SKILL_PERCEPTION': 0
         });
     });
     it('should have 4 to unlock and 1 to stealth skill when dexterity is 12 and level is 5 and has proficiency to unlock', function () {
         const c = new Creature();
         c.mutations.setAbilityValue({ ability: 'ABILITY_DEXTERITY', value: 12 });
-        c.mutations.addProficiency({ value: 'PROFICIENCY_SKILL_UNLOCK' });
+        c.mutations.addProficiency({ value: 'PROFICIENCY_SKILL_SLEIGHT_OF_HAND' });
         c.mutations.setLevel({ value: 5 });
         expect(c.getters.getSkillValues).toEqual({
-            'SKILL_INVESTIGATION': 0,
             'SKILL_STEALTH': 1,
-            'SKILL_UNLOCK': 4,
+            'SKILL_SLEIGHT_OF_HAND': 4,
             'SKILL_PERCEPTION': 0
         });
     });

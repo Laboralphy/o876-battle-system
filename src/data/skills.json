@@ -1,15 +1,11 @@
 {
-  "SKILL_UNLOCK": {
+  "SKILL_SLEIGHT_OF_HAND": {
     "ability": "ABILITY_DEXTERITY",
-    "proficiency": "PROFICIENCY_SKILL_UNLOCK"
+    "proficiency": "PROFICIENCY_SKILL_SLEIGHT_OF_HAND"
   },
   "SKILL_STEALTH": {
     "ability": "ABILITY_DEXTERITY",
     "proficiency": "PROFICIENCY_SKILL_STEALTH"
-  },
-  "SKILL_INVESTIGATION": {
-    "ability": "ABILITY_INTELLIGENCE",
-    "proficiency": "PROFICIENCY_SKILL_INVESTIGATION"
   },
   "SKILL_PERCEPTION": {
     "ability": "ABILITY_WISDOM",

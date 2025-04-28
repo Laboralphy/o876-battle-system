@@ -31,7 +31,7 @@ function getAbilitySavingThrowProficiency (sAbility) {
  * Returns all saving throws bonus
  * @param state {RBSStoreState}
  * @param getters {RBSStoreState}
- * @return {{[ability: string]: number}}
+ * @return {Object<string, number>}
  */
 module.exports = (state, getters) => {
     const UNIVERSAL = 'UNIVERSAL';
@@ -43,7 +43,7 @@ module.exports = (state, getters) => {
         effectSorter: effect => effect.data.universal ? UNIVERSAL : effect.data.ability
     });
     const nUniversalBonus = UNIVERSAL in sorter ? sorter[UNIVERSAL].sum : 0;
-    const result = {
+    const results = {
         [CONSTS.ABILITY_STRENGTH]: nUniversalBonus,
         [CONSTS.ABILITY_DEXTERITY]: nUniversalBonus,
         [CONSTS.ABILITY_CONSTITUTION]: nUniversalBonus,
@@ -51,12 +51,17 @@ module.exports = (state, getters) => {
         [CONSTS.ABILITY_WISDOM]: nUniversalBonus,
         [CONSTS.ABILITY_CHARISMA]: nUniversalBonus
     };
-    for (const ability of Object.keys(result)) {
+    for (const ability of Object.keys(results)) {
         const sProficiency = getAbilitySavingThrowProficiency(ability);
         const bProficient = getters.getProficiencySet.has(sProficiency);
         const nProfBonus = bProficient ? getters.getProficiencyBonus : 0;
         const nPropEffectBonus = ability in sorter ? sorter[ability].sum : 0;
-        result[ability] += nPropEffectBonus + nProfBonus;
+        results[ability] += nPropEffectBonus + nProfBonus;
     }
-    return result;
+    for (const [sThreat, { sum: nThreatBonus }] of Object.entries(sorter)) {
+        if (!(sThreat in results)) {
+            results[sThreat] = nThreatBonus;
+        }
+    }
+    return results;
 };

@@ -129,7 +129,7 @@ class Manager {
      * @private
      */
     _effectImmunity({effect, target}) {
-        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_IMMUNITY, new CreatureEffectImmunityEvent({ system: this._systemInstance, effect }));
+        this._events.emit(CONSTS.EVENT_CREATURE_EFFECT_IMMUNITY, new CreatureEffectImmunityEvent({ system: this._systemInstance, effect, target }));
     }
 
     /**
@@ -494,7 +494,7 @@ class Manager {
     }
 
     /**
-     * Starts a commbat beetween c1 & c2
+     * Starts a combat between c1 & c2
      * @param c1 {Creature}
      * @param c2 {Creature}
      * @returns {Combat}
@@ -507,7 +507,7 @@ class Manager {
      * Creates an effect
      * @param sEffect {string}
      * @param amp {number|string}
-     * @param data {{[key: string]: *}}
+     * @param data {Object<string, *>}
      */
     createEffect (sEffect, amp = 0, data = {}) {
         return this._effectProcessor.createEffect(sEffect, amp, data);
@@ -520,7 +520,7 @@ class Manager {
      * It must be removed by specific means like 'remove curse' or 'restoration'
      * @param sEffect {string}
      * @param amp {number|string}
-     * @param data {{[key: string]: *}}
+     * @param data {Object<string, *>}
      * @return {RBSEffect}
      */
     createSupernaturalEffect (sEffect, amp = 0, data = {}) {
@@ -535,7 +535,7 @@ class Manager {
      * Just like supernatural effect, extraordinary effects can only be removed by specialized means.
      * @param sEffect {string}
      * @param amp {number|string}
-     * @param data {{[key: string]: *}}
+     * @param data {Object<string, *>}
      * @return {RBSEffect}
      */
     createExtraordinaryEffect (sEffect, amp = 0, data = {}) {

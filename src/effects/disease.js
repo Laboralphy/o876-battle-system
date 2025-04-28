@@ -25,7 +25,7 @@ function init ({ effect, disease, stages }) {
 
 function doMutationStage ({ effectProcessor, effect: eDisease, target, source }, oReadyStage) {
     const { savingThrow = false, potency = 0 } = oReadyStage;
-    if (savingThrow && target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, potency).success) {
+    if (savingThrow && target.rollSavingThrow(CONSTS.ABILITY_CONSTITUTION, potency, CONSTS.THREAT_TYPE_DISEASE).success) {
         // this stage allow saving throw, and saving throw is success
         // No previously applied bad effects are removed, they must be cured separately with cure_disease effect or likewise
         if (oReadyStage.endDisease) {

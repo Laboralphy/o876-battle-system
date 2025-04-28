@@ -1,10 +1,10 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-04-18T09:27:31.448Z
+// Date : 2025-04-23T19:00:46.215Z
 // List of files in ./src/consts
 
 module.exports = {
     ...require('./abilities.json'),
-    ...require('./advantages-disadvantages.json'),
+    ...require('./advantages-disadvantages.js'),
     ...require('./attack-failures.json'),
     ...require('./attack-types.json'),
     ...require('./capabilities.json'),
@@ -30,7 +30,7 @@ module.exports = {
     ...require('./roll-types.json'),
     ...require('./skill-proficiencies.json'),
     ...require('./species.json'),
-    ...require('./threats.json'),
+    ...require('./threat-types.json'),
     ...require('./weapon-attributes.json'),
     ...require('./weapon-sizes.json')
 };

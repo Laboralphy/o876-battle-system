@@ -34,7 +34,7 @@ function getSlotAttackBonus (sSlot, getters) {
  * Returns the attack bonus of the selected action
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
- * @returns {{[slot: string]: number}}
+ * @returns {Object<string, number>}
  */
 module.exports = (state, getters) => {
     const eq = getters.getEquipment;

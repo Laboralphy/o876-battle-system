@@ -41,7 +41,8 @@ function main ({ manager, action, combat }) {
             manager.applyEffect(eHeal, oAttacker);
             const { success } = oTarget.rollSavingThrow(
                 manager.CONSTS.ABILITY_CONSTITUTION,
-                oAttacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA]
+                oAttacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
+                manager.CONSTS.THREAT_TYPE_DEATH
             );
             if (!success) { // saving throw failed
                 // absorb experience level if saving throw fails

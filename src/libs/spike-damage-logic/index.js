@@ -1,4 +1,5 @@
 const CONSTS = require('../../consts');
+const {getThreatTypeFromDamageType} = require('../helpers');
 
 /**
  *
@@ -14,12 +15,16 @@ function onAttacked (effectProcessor, attackOutcome, amp, data) {
     const {
         attacker,
         target,
-        ability
+        ability,
     } = attackOutcome;
     // check saving throw
     if (
         data.savingThrow &&
-        attacker.rollSavingThrow(CONSTS.ABILITY_DEXTERITY, attacker.getters.getSpellDifficultyClass[ability]).success
+        attacker.rollSavingThrow(
+            CONSTS.ABILITY_DEXTERITY,
+            attacker.getters.getSpellDifficultyClass[ability],
+            getThreatTypeFromDamageType(data.damageType),
+        ).success
     ) {
         return;
     }

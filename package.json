@@ -1,7 +1,7 @@
 {
   "name": "o876-battle-system",
   "version": "1.0.0",
-  "description": "Custom version of D&D 5th edition OGL combat rules.",
+  "description": "Dungeons & Dragons 5th edition OGL 1.1 combat rules.",
   "main": "index.js",
   "scripts": {
     "test": "jest",

@@ -11,6 +11,7 @@ do
   fi
 done
 "$SCRIPT_DIR"/build-proficiencies
+"$SCRIPT_DIR"/build-advantages
 "$SCRIPT_DIR"/build-schemas
 "$SCRIPT_DIR"/build-data
 "$SCRIPT_DIR"/build-store

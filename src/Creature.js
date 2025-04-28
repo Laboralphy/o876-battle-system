@@ -4,6 +4,7 @@ const CONSTS = require('./consts');
 const Events = require('events');
 const Dice = require('./libs/dice');
 const { checkConst } = require('./libs/check-const');
+const { computeSavingThrowAdvantages } = require('./advantages');
 
 class Creature {
     constructor ({ blueprint = null, id = null } = {}) {
@@ -235,26 +236,64 @@ class Creature {
     }
 
     /**
-     * Check saving throw
-     * @param sAbility
-     * @param dc
-     * @returns {{success: boolean, bonus: number, roll: number, ability: string, dc: number}}
+     * Roll a D20 and return the result
+     * however if the roll is advantaged (nRollBias > 0) then roll twice and return greatest
+     * if roll is disadvantaged (nRollBias < 0) then roll twice and return lowest
+     * @param nRollBias {number} 0 = non-advantaged, >0 = advantaged, <0 = disadvantaged
+     * @returns {number}
+     * @private
      */
-    rollSavingThrow (sAbility, dc) {
-        const roll = this._dice.roll('1d20');
-        const bonus = this.getters.getSavingThrowBonus[sAbility];
-        const success = roll === this.getters.getVariables['ROLL_FUMBLE_VALUE']
+    _rollD20 (nRollBias = 0) {
+        if (nRollBias === 0) {
+            return this._dice.roll('1d20');
+        } else {
+            return Math[nRollBias > 0 ? 'max' : 'min'](this._rollD20(), this._rollD20());
+        }
+    }
+
+    /**
+     * @typedef SavingThrowOutcome {object}
+     * @property creature {Creature} creature throwing the save
+     * @property roll {number}
+     * @property dc {number}
+     * @property success {boolean}
+     * @property bonus {number}
+     * @property ability {string}
+     * @property threat {string}
+     * @property rollBias {RollBias}
+     *
+     * Check saving throw
+     * @param sAbility {string}
+     * @param dc {number}
+     * @param threat {string} THREAT_*
+     * @returns {SavingThrowOutcome}
+     */
+    rollSavingThrow (sAbility, dc, threat = '') {
+        const stb = this.getters.getSavingThrowBonus;
+        const threatBonus = threat !== '' ? stb[threat] : 0;
+        const bonus = stb[sAbility] + threatBonus;
+        const result = {
+            creature: this,
+            roll: 0,
+            dc,
+            success: false,
+            bonus,
+            ability: sAbility,
+            threat,
+            rollBias: {
+                result: 0,
+                advantages: new Set(),
+                disadvantage: new Set()
+            }
+        };
+        result.rollBias = computeSavingThrowAdvantages(result);
+        const roll = this._rollD20(result.rollBias.result);
+        result.roll = roll;
+        result.success = roll === this.getters.getVariables['ROLL_FUMBLE_VALUE']
             ? false
             : roll === this.getters.getVariables['ROLL_CRITICAL_SUCCESS_VALUE']
                 ? true
                 : (roll + bonus >= dc);
-        const result = {
-            roll,
-            dc,
-            success,
-            bonus,
-            ability: sAbility
-        };
         this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, result);
         return result;
     }
@@ -268,7 +307,7 @@ class Creature {
     checkAbility (sAbility, dc) {
         checkConst(sAbility);
         const nModifier = this.getters.getAbilityModifiers[sAbility];
-        const nRoll = this._dice.roll('1d20');
+        const nRoll = this._rollD20();
         const result = {
             ability: sAbility,
             roll: nRoll,
@@ -291,7 +330,7 @@ class Creature {
             throw new Error(`Invalid skill ${sSkill}`);
         }
         const bonus = sv[sSkill];
-        const roll = this._dice.roll('1d20');
+        const roll = this._rollD20();
         const result = {
             skill: sSkill,
             roll: roll,

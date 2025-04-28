@@ -40,7 +40,7 @@ function isWeaponRanged (oWeapon) {
  *
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
- * @returns {{[p: string]: string}}
+ * @returns {Object<string, string>}
  */
 module.exports = (state, getters) => {
     const bShouldIUseDex = shouldUseDexterity(getters);

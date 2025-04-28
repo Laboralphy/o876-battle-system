@@ -13,7 +13,8 @@ function main ({ manager, action, combat }) {
     const oTarget = combat.target;
     const { success } = oTarget.rollSavingThrow(
         manager.CONSTS.ABILITY_CONSTITUTION,
-        combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA]
+        combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
+        manager.CONSTS.THREAT_TYPE_PETRIFICATION
     );
     if (!success) {
         const eStone = manager.createSupernaturalEffect(manager.CONSTS.EFFECT_PETRIFICATION);

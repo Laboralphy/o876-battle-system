@@ -1,3 +1,5 @@
+const {CONSTS} = require('../../../../../index');
+
 /**
  * Stench
  * Applies disadvantage on attack for anybody within action range.
@@ -12,11 +14,12 @@ function main ({ manager, action, combat }) {
     aOffenders.forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_CONSTITUTION,
-            combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA]
+            combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
+            manager.CONSTS.THREAT_TYPE_POISON
         );
         if (!success) {
-            const eDisadvantage = manager.createEffect(manager.CONSTS.EFFECT_DISADVANTAGE_ATTACK);
-            manager.applyEffect(eDisadvantage, offender, duration, combat.attacker);
+            const ePoison = manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, 1, { damageType: CONSTS.DAMAGE_TYPE_POISON});
+            manager.applyEffect(ePoison, offender, duration, combat.attacker);
         }
     });
 }

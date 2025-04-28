@@ -3,14 +3,14 @@
  * @property getAbilities {Object<string, number>}
  * @property getAbilityBaseValues {Object<string, number>}
  * @property getAbilityModifiers {Object<string, number>}
- * @property getActions {{ [id: string]: RBSAction }}
+ * @property getActions {Object<string, RBSAction >}
  * @property getActiveProperties {RBSProperty[]}
  * @property getArmorClass {Object<string, number>}
- * @property getAttackAbility {{[p: string]: string}}
- * @property getAttackBonus {{[slot: string]: number}}
+ * @property getAttackAbility {Object<string, string>}
+ * @property getAttackBonus {Object<string, number>}
  * @property getCapabilitySet {Set<string>}
  * @property getConditionSet {Set<string>}
- * @property getDamageMitigation {Object<string, RBSOneDamageMitigation>}}
+ * @property getDamageMitigation {Object<string, RBSOneDamageMitigation>}
  * @property getDefensiveSlots {string[]}
  * @property getEffectRegistry {Object<string, RBSEffect>}
  * @property getEffectSet {Set<string>}
@@ -33,22 +33,22 @@
  * @property getProperties {RBSProperty[]}
  * @property getPropertySet {Set<string>}
  * @property getRangedAttackBonus {number}
- * @property getSavingThrowBonus {{[ability: string]: number}}
+ * @property getSavingThrowBonus {Object<string, string>}
  * @property getSelectedOffensiveSlot {string} EQUIPMENT_SLOT_WEAPON_MELEE or RANGED
  * @property getSelectedWeapon {RBSItem|null}
  * @property getSelectedWeaponAttributeSet {Set<string>}
- * @property getSkillValues {{[skill: string]: number}}
- * @property getSlotProperties {{[slot: string]: RBSProperty[]}}
+ * @property getSkillValues {Object<string, number>}
+ * @property getSlotProperties {Object<string, RBSProperty[]>}
  * @property getSpecie {string}
  * @property getSpeed {number}
- * @property getSpellDifficultyClass {{[ability: string]: number}}
- * @property getVariables {{[variable: string]: number|string}}
- * @property getWeaponRanges {{[slot: string]: number}}
+ * @property getSpellDifficultyClass {Object<string, string>}
+ * @property getVariables {Object<string, number|string>}
+ * @property getWeaponRanges {Object<string, number>}
  * @property isDead {boolean}
- * @property isEquipmentProficient {{[p: string]: boolean}}
+ * @property isEquipmentProficient {Object<string, boolean>}
  * @property isRangedWeaponLoaded {boolean}
  * @property isWieldingShield {boolean}
  * @property isWieldingTwoHandedWeapon {boolean}
  */
 
-module.exports = {}
+module.exports = {};

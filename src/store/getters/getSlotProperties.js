@@ -2,7 +2,7 @@
  * Renvoie les propriétés classées par Slot d'équipements
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
- * @returns {{[slot: string]: RBSProperty[]}}
+ * @returns {Object<string, RBSProperty[]>}
  */
 module.exports = (state, getters) => {
     const aSlots = [

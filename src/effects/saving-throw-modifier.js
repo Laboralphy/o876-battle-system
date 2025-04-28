@@ -1,9 +1,10 @@
 const CONSTS = require('../consts');
 const { checkConst } = require('../libs/check-const');
 
-function init ({ effect, ability = '' }) {
-    if (ability) {
-        effect.data.ability = checkConst(ability);
+function init ({ effect, ability = '', threat = '' }) {
+    const sType = ability || threat;
+    if (sType) {
+        effect.data.ability = checkConst(sType);
         effect.data.universal = false;
     } else {
         effect.data.universal = true;

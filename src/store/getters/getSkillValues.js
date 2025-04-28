@@ -6,7 +6,7 @@ const { aggregateModifiers } = require('../../libs/aggregator');
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
  * @param externals {*}
- * @return {{[skill: string]: number}}
+ * @return {Object<string, number>}
  */
 
 module.exports = (state, getters, externals) => {

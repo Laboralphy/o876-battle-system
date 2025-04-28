@@ -21,7 +21,7 @@ function isProficient (aProficiencies, oItem, bNaturalSlot = false) {
  * Returns the proficiency of item equipped on some offensive and defensive equipment slots
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
- * @returns {{[p: string]: boolean}}
+ * @returns {Object<string, boolean>}
  */
 module.exports = (state, getters) => {
     const eq = getters.getEquipment;

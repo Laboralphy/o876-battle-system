@@ -5,9 +5,9 @@ const CONSTS = require('../consts');
 
 class Creatures extends Abstract {
     /**
-     * Returns true if the specified entity id refers to a creature, not an item
-     * @param oEntity
-     * @returns {boolean}
+     * Returns true if the specified entity id refers to a creature
+     * @param oEntity {*} An object
+     * @returns {boolean} true if specified object is a creature
      */
     isCreature (oEntity) {
         return oEntity instanceof BoxedCreature;
@@ -24,7 +24,9 @@ class Creatures extends Abstract {
     }
 
     /**
-     * Returns a creature ability modifier
+     * Returns a creature ability modifier.
+     * An ability modifier is a number added to any roll involving this ability.
+     * For example, a melee attack involving strength, will use strength modifier to increase attack roll.
      * @param oCreature {BoxedCreature}
      * @param sAbility {string} ABILITY_*
      * @returns {number}
@@ -38,7 +40,8 @@ class Creatures extends Abstract {
     }
 
     /**
-     * Returns a creature ability score
+     * Returns a creature ability score.
+     * The score is the actual value of the ability. Not to be mistaken with ability modifier.
      * @param oCreature {BoxedCreature}
      * @param sAbility {string} ABILITY_*
      * @returns {number}
@@ -50,9 +53,19 @@ class Creatures extends Abstract {
     }
 
     /**
-     * Get a list of action identifier
+     * Get a list of actions available to the specified creature.
+     * For each action, an object is return which properties are describe below
+     *
+     * @typedef CreatureActionDescription {object}
+     * @property id {string} action identifier
+     * @property ready {boolean} if true, this action is available, else action is unavailable.
+     * @property cooldown {number} when action is unavailable, this property is the number of turn to wait before this action becomes available.
+     * @property charges {number} number of charges left for this action. this value should increase at a regular rate (influenced by cooldown)
+     * @property maxCharges {number} maximum number of charges for this actions
+     * @property range {number} range of this action
+     *
      * @param oCreature {BoxedCreature}
-     * @return {{[id: string]: {id: string, cooldown: number, charges: number, maxCharges: number, range: number, ready: boolean}}}
+     * @return {Object<string, CreatureActionDescription>}
      */
     getActions (oCreature) {
         this.checkCreature(oCreature);
@@ -69,7 +82,15 @@ class Creatures extends Abstract {
     }
 
     /**
-     * Returns true if creature has the specified basic capability
+     * Returns true if creature has the specified basic capability.
+     * A basic capability is one of this value :
+     * - CAPABIlITY_ACT creature is able to take actions
+     * - CAPABIlITY_SEE creature is able to detect other creature by sight
+     * - CAPABIlITY_MOVE creature is able to move
+     * - CAPABIlITY_FIGHT creature is able to take hostile action with weapon
+     * - CAPABIlITY_CAST_TARGET creature is able to cast spell on others creatures
+     * - CAPABIlITY_CAST_SELF creature is able to cast spell on self
+     *
      * @param oCreature {BoxedCreature} creature identifier
      * @param sCapability {string} CAPABILITY_*
      * @returns {boolean}
@@ -83,7 +104,8 @@ class Creatures extends Abstract {
     }
 
     /**
-     * Returns true if creature has the specified condition
+     * Returns true if creature has the specified condition.
+     * Refer to CONDITION_* constant group for a complete list of conditions.
      * @param oCreature {BoxedCreature} creature identifier
      * @param sCondition {string} CONDITION_*
      * @returns {boolean}
@@ -97,7 +119,7 @@ class Creatures extends Abstract {
     }
 
     /**
-     * Returns a list of conditions that affect creature
+     * Returns a list of conditions that affect the specified creature
      * @param oCreature {BoxedCreature} creature identifier
      * @returns {string[]} CONDITION_* []
      */

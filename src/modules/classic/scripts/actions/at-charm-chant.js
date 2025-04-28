@@ -13,7 +13,8 @@ function main ({ manager, action, combat }) {
     aOffenders.forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_WISDOM,
-            combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA]
+            combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
+            manager.CONSTS.THREAT_TYPE_CHARM
         );
         if (!success) {
             const eFear = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_CHARM);

@@ -12,7 +12,8 @@ function main ({ manager, action, combat }) {
     const oTarget = combat.target;
     const { success } = oTarget.rollSavingThrow(
         manager.CONSTS.ABILITY_CONSTITUTION,
-        combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY]
+        combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY],
+        manager.CONSTS.THREAT_TYPE_PETRIFICATION
     );
     if (!success) {
         const eStone = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_PETRIFICATION);

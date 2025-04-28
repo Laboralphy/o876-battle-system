@@ -1,4 +1,4 @@
-const { doDamage } = require('../../../../libs/helpers');
+const { doDamage, getThreatTypeFromDamageType} = require('../../../../libs/helpers');
 const { checkConst } = require('../../../../libs/check-const');
 
 /**
@@ -22,7 +22,8 @@ function main ({ manager, action, combat }) {
     aOffenders.forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_CONSTITUTION,
-            combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY]
+            combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY],
+            manager.CONSTS.THREAT_TYPE_POISON
         );
         if (!success) {
             const ePoison = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_DAMAGE, amount, {

@@ -4,6 +4,18 @@ const BoxedCreature = require('./classes/BoxedCreature');
 class Combats extends ServiceAbstract {
     constructor () {
         super();
+        this._combatManager = null;
+    }
+
+    /**
+     * Returns the instance of the Combat Manager
+     * @returns {CombatManager}
+     */
+    get combatManager () {
+        if (!this._combatManager) {
+            this._combatManager = this.services.core.manager.combatManager;
+        }
+        return this._combatManager;
     }
 
     /**
@@ -12,9 +24,6 @@ class Combats extends ServiceAbstract {
      */
     getCreatureCombat (oCreature) {
         return this
-            .services
-            .core
-            .manager
             .combatManager
             .getCombat(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]);
     }
@@ -28,9 +37,6 @@ class Combats extends ServiceAbstract {
      */
     getCreatureOffenders (oCreature, nRange = Infinity) {
         return this
-            .services
-            .core
-            .manager
             .combatManager
             .getOffenders(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT], nRange)
             .map((c) => new BoxedCreature(c));
@@ -58,6 +64,17 @@ class Combats extends ServiceAbstract {
         if (oCombat) {
             oCombat.retreatFromTarget(nSpeed);
         }
+    }
+
+    /**
+     * Return the number of currently active combats
+     * @return {number}
+     */
+    get count () {
+        this
+            .combatManager
+            .combats
+            .length;
     }
 
     /**
@@ -97,9 +114,6 @@ class Combats extends ServiceAbstract {
      */
     startCombat (oCreature, oTarget) {
         this
-            .services
-            .core
-            .manager
             .combatManager
             .startCombat(
                 oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT],

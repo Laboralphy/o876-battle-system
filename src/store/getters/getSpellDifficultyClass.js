@@ -8,7 +8,7 @@ const {filterAbility} = require('../../libs/props-effects-filters');
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
  * @param externals {{}}
- * @return {{[ability: string]: number}}
+ * @return {Object<string, number>}
  */
 module.exports = (state, getters, externals) => {
     const spellPower = aggregateModifiers([

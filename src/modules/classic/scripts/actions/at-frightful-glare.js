@@ -11,7 +11,8 @@ function main ({ manager, action, combat }) {
     const oTarget = combat.target; // getCombatTarget
     const { success } = oTarget.rollSavingThrow( // rollSavingThrow(creature, ability, dc)
         manager.CONSTS.ABILITY_WISDOM,
-        combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA] // getActionDifficultyClass(creature, ability)
+        combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
+        manager.CONSTS.THREAT_TYPE_FEAR
     );
     if (!success) {
         const eFear = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_FEAR); // createEffect(effectType, amp, parameters)

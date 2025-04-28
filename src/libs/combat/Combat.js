@@ -293,7 +293,7 @@ class Combat {
 
     /**
      * Returns true for each slot the target is in range
-     * @returns {{[slot: string]: boolean}}
+     * @returns {Object<string, boolean>}
      */
     getTargetInCreatureWeaponRange () {
         const d = this._distance;

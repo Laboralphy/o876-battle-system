@@ -99,7 +99,7 @@ class Entities extends ServiceAbstract {
      * Creates a new property. The property can be applied to a creature or an item
      * @param sType {string}
      * @param amp {number|string}
-     * @param data {{[p: string]: number | string}}
+     * @param data {Object<string, number | string>}
      */
     createProperty (sType, amp, data) {
         const pb = this.services.core.manager.propertyBuilder;

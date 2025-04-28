@@ -29,9 +29,9 @@ const CONSTS = require('../../consts');
  * @property equipment {[slot: string]: RBSItem}
  * @property encumbrance {number}
  * @property proficiencies {string[]}
- * @property environment {{ [env: string]: boolean }}
+ * @property environment {Object<string, boolean >}
  * @property selectedOffensiveSlot {string}
- * @property actions {{ [action: string]: RBSStoreStateCombatAction }}
+ * @property actions {Object<string, RBSStoreStateCombatAction >}
  *
  *
  * @returns {RBSStoreState}

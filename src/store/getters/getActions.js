@@ -14,7 +14,7 @@ const CONSTS = require('../../consts');
  * @property ready {boolean} if true this action is ready to use, else, action cannot be used
  *
  * @param state {RBSStoreState}
- * @returns {{ [id: string]: RBSAction }}
+ * @returns {Object<string, RBSAction >}
  */
 module.exports = state => Object.fromEntries(
     Object

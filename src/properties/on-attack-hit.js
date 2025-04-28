@@ -1,4 +1,5 @@
 const CONSTS = require('../consts');
+const DATA = require('../data');
 
 /**
  * This property will be applied an effect on anybody hit by attack
@@ -14,6 +15,11 @@ function init ({ property, ailment, savingThrow = '', ...extraParams }) {
     property.data.ailment = ailment;
     property.data.savingThrow = savingThrow;
     property.data.extraParams = extraParams;
+}
+
+function _getThreatTypeFromAilment (sAilment) {
+    const att = DATA['AILMENT_TO_THREAT_TYPES'];
+    return DATA['AILMENT_TO_THREAT_TYPES'][sAilment] ?? '';
 }
 
 /**
@@ -129,7 +135,7 @@ function attack ({ property, item, manager, attack }) {
     if (sDefensiveAbility) {
         const sOffensiveAbility = attack.ability;
         const dc = attacker.getters.getSpellDifficultyClass[sOffensiveAbility];
-        const { success } = target.rollSavingThrow(sDefensiveAbility, dc);
+        const { success } = target.rollSavingThrow(sDefensiveAbility, dc, _getThreatTypeFromAilment(property.data.ailment));
         if (success) {
             return;
         }

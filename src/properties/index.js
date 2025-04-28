@@ -1,10 +1,11 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-04-18T09:27:31.421Z
+// Date : 2025-04-23T19:00:46.153Z
 // List of files in ./src/properties
 
 module.exports = {
     'PROPERTY_ABILITY_MODIFIER': require('./ability-modifier.js'),
     'PROPERTY_ADVANTAGE_ATTACK': require('./advantage-attack.js'),
+    'PROPERTY_ADVANTAGE_SAVING_THROW': require('./advantage-saving-throw.js'),
     'PROPERTY_ARMOR_CLASS_MODIFIER': require('./armor-class-modifier.js'),
     'PROPERTY_ATTACK_COUNT_MODIFIER': require('./attack-count-modifier.js'),
     'PROPERTY_ATTACK_MODIFIER': require('./attack-modifier.js'),
@@ -16,6 +17,7 @@ module.exports = {
     'PROPERTY_DAMAGE_VULNERABILITY': require('./damage-vulnerability.js'),
     'PROPERTY_DARKVISION': require('./darkvision.js'),
     'PROPERTY_DISADVANTAGE_ATTACK': require('./disadvantage-attack.js'),
+    'PROPERTY_DISADVANTAGE_SAVING_THROW': require('./disadvantage-saving-throw.js'),
     'PROPERTY_EXTRA_HITPOINTS': require('./extra-hitpoints.js'),
     'PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE': require('./extra-weapon-damage-type.js'),
     'PROPERTY_HEALING_FACTOR': require('./healing-factor.js'),

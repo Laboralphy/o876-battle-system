@@ -1,15 +1,30 @@
 const CONSTS = require('../../consts');
 
+const DAMAGE_TYPE_TO_THREAT_TYPE = {
+    DAMAGE_TYPE_FIRE: CONSTS.THREAT_TYPE_FIRE,
+    DAMAGE_TYPE_COLD: CONSTS.THREAT_TYPE_COLD,
+    DAMAGE_TYPE_ACID: CONSTS.THREAT_TYPE_ACID,
+    DAMAGE_TYPE_ELECTRICITY: CONSTS.THREAT_TYPE_ELECTRICITY,
+    DAMAGE_TYPE_PSYCHIC: CONSTS.THREAT_TYPE_PSYCHIC,
+    DAMAGE_TYPE_POISON: CONSTS.THREAT_TYPE_POISON,
+    DAMAGE_TYPE_RADIANT: CONSTS.THREAT_TYPE_RADIANT,
+    DAMAGE_TYPE_WITHERING: CONSTS.THREAT_TYPE_WITHERING,
+};
+
+function getThreatTypeFromDamageType (sDamageType) {
+    return DAMAGE_TYPE_TO_THREAT_TYPE[sDamageType] ?? '';
+}
+
 /**
  * Do damage to creature with a saving throw allowed for half damage
- * @param oManager {Manager}
- * @param oTarget {Creature}
- * @param oSource {Creature}
- * @param amount {string|number}
- * @param damageType {string}
- * @param offensiveAbility {string}
- * @param defensiveAbility {string}
- * @param extraordinary {boolean}
+ * @param oManager {Manager} Manager instance
+ * @param oTarget {Creature} Creature receiving damage
+ * @param oSource {Creature} Creature dealing damage
+ * @param amount {string|number} Amount of damage dealt (can be dice expression)
+ * @param damageType {string} Damage Type DAMAGE_TYPE_* constant group
+ * @param offensiveAbility {string} offensive ability used to compute saving throw difficulty class
+ * @param defensiveAbility {string} defensive ability sued to resolve saving throw success
+ * @param extraordinary {boolean} an extraordinary effect is not dispellable
  *
  * @return {{ effect: RBSEffect, saved: boolean }}
  */
@@ -22,8 +37,9 @@ function doDamage (oManager, oTarget, oSource, {
 }) {
     let bSaved = false;
     if (offensiveAbility) {
+        const sThreatType = getThreatTypeFromDamageType(damageType);
         const dc = oSource.getters.getSpellDifficultyClass[offensiveAbility];
-        const oSavingThrow = oTarget.rollSavingThrow(defensiveAbility, dc);
+        const oSavingThrow = oTarget.rollSavingThrow(defensiveAbility, dc, sThreatType);
         bSaved = oSavingThrow.success;
     }
     const nFullDamage = oTarget.dice.roll(amount);
@@ -108,6 +124,7 @@ function getWorstDamageTypeVsAC (aDamageTypes, oArmorClasses) {
 }
 
 module.exports = {
+    getThreatTypeFromDamageType,
     doDamage,
     getWeaponRange,
     getBestDamageTypeVsMitigation,

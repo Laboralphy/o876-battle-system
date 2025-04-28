@@ -12,7 +12,11 @@ function init ({ effect, dc = 0 }) {
  */
 function mutate ({ effect, effectProcessor, target }) {
     if (effect.data.dc > 0) {
-        if (target.rollSavingThrow(CONSTS.ABILITY_STRENGTH, effect.data.dc).success) {
+        if (target.rollSavingThrow(
+            CONSTS.ABILITY_STRENGTH,
+            effect.data.dc,
+            CONSTS.THREAT_TYPE_PARALYSIS
+        ).success) {
             effectProcessor.removeEffect(effect);
         }
     }

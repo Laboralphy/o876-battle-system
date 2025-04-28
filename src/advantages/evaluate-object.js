@@ -2,7 +2,7 @@
  * Evaluates an object : produces an objet { result: boolean, values: Set<string> }
  * evaluate all properties as boolean returning function.
  * need to evaluate all properties to get a complete true-property list
- * @param object {{[s: string]: function(*): boolean}}
+ * @param object {Object<string, function(*): boolean>}
  * @param params {*}
  * @returns {{result: boolean, values: Set<string>}}
  * result would be the final boolean result, and values would be a set of string indicating which properties

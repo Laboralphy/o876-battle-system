@@ -244,7 +244,7 @@ class CombatSimulator {
     }
 
     doomloop () {
-        this.services.core.manager.process();
+        this.services.core.process();
     }
 
     get activeCombatCount () {

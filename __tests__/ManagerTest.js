@@ -363,7 +363,7 @@ describe('Real Combat simulator', function () {
             'hit': true,
             'roll': 11,
             'target': 'c2',
-            'targetHP': 13
+            'targetHP': 17
         });
 
         expect(logs[6]).toEqual({
@@ -403,7 +403,7 @@ describe('Real Combat simulator', function () {
             'hit': true,
             'roll': 11,
             'target': 'c2',
-            'targetHP': 11
+            'targetHP': 13
         });
 
         expect(logs[10]).toEqual({

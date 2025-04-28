@@ -64,7 +64,7 @@ function buildRequireIndex (sPath, sType, sPrefix) {
     // all files in directory
     const aRequires = TreeSync
         .tree(sPath)
-        .filter(sFile => sFile !== 'index.js' && path.extname(sFile).match(/\.js(on)?$/))
+        .filter(sFile => !sFile.endsWith('index.js') && path.extname(sFile).match(/\.js(on)?$/))
         .map(sFile => buildLine(sFile, sType, sPrefix));
     const d = new Date();
     const aOutput = [

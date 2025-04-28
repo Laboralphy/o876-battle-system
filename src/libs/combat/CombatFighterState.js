@@ -24,7 +24,7 @@ class CombatFighterState {
 
     /**
      * Return all actions
-     * @returns {{ [id: string]: RBSAction }}
+     * @returns {Object<string, RBSAction >}
      */
     get actions () {
         return this._creature.getters.getActions;

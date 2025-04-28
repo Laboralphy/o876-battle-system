@@ -1,5 +1,4 @@
 const CONSTS = require('../../consts');
-const Creature = require('../../Creature');
 const BoxedObject = require('./BoxedObject');
 
 class BoxedItem extends BoxedObject{

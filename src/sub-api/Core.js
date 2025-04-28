@@ -47,6 +47,10 @@ class Core extends Abstract {
         this._manager.defineModule(oModule);
     }
 
+    process () {
+        this._manager.process();
+    }
+
     /**
      * Validate constant with prefix
      * @param sConstName {string}

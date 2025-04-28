@@ -6,7 +6,7 @@ const { getWeaponRange } = require('../../libs/helpers');
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
  * @param externals {*}
- * @return {{[slot: string]: number}}
+ * @return {Object<string, number>}
  */
 module.exports = (state, getters, externals) => {
     const eq = getters.getEquipment;

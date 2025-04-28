@@ -1,10 +1,58 @@
 {
-  "SKILL_ATHLETICS": {
+  "PROFICIENCY_SKILL_ATHLETICS": {
     "ability": "ABILITY_STRENGTH",
     "proficiency": "PROFICIENCY_SKILL_ATHLETICS"
+  },
+  "SKILL_INVESTIGATION": {
+    "ability": "ABILITY_INTELLIGENCE",
+    "proficiency": "PROFICIENCY_SKILL_INVESTIGATION"
   },
   "SKILL_ARCANA": {
     "ability": "ABILITY_INTELLIGENCE",
     "proficiency": "PROFICIENCY_SKILL_ARCANA"
+  },
+  "SKILL_RELIGION": {
+    "ability": "ABILITY_INTELLIGENCE",
+    "proficiency": "PROFICIENCY_SKILL_RELIGION"
+  },
+  "SKILL_NATURE": {
+    "ability": "ABILITY_INTELLIGENCE",
+    "proficiency": "PROFICIENCY_SKILL_NATURE"
+  },
+  "SKILL_HISTORY": {
+    "ability": "ABILITY_INTELLIGENCE",
+    "proficiency": "PROFICIENCY_SKILL_HISTORY"
+  },
+  "SKILL_INSIGHT": {
+    "ability": "ABILITY_WISDOM",
+    "proficiency": "PROFICIENCY_SKILL_INSIGHT"
+  },
+  "SKILL_MEDICINE": {
+    "ability": "ABILITY_WISDOM",
+    "proficiency": "PROFICIENCY_SKILL_MEDICINE"
+  },
+  "SKILL_SURVIVAL": {
+    "ability": "ABILITY_WISDOM",
+    "proficiency": "PROFICIENCY_SKILL_SURVIVAL"
+  },
+  "SKILL_ANIMAL_HANDLING": {
+    "ability": "ABILITY_WISDOM",
+    "proficiency": "PROFICIENCY_SKILL_ANIMAL_HANDLING"
+  },
+  "SKILL_PERSUASION": {
+    "ability": "ABILITY_CHARISMA",
+    "proficiency": "PROFICIENCY_SKILL_PERSUASION"
+  },
+  "SKILL_INTIMIDATION": {
+    "ability": "ABILITY_CHARISMA",
+    "proficiency": "PROFICIENCY_SKILL_INTIMIDATION"
+  },
+  "SKILL_DECEPTION": {
+    "ability": "ABILITY_CHARISMA",
+    "proficiency": "PROFICIENCY_SKILL_DECEPTION"
+  },
+  "SKILL_PERFORMANCE": {
+    "ability": "ABILITY_CHARISMA",
+    "proficiency": "PROFICIENCY_SKILL_PERFORMANCE"
   }
 }

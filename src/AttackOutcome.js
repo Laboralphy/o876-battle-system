@@ -2,7 +2,7 @@ const CONSTS = require('./consts');
 const Events = require('events');
 const { aggregateModifiers } = require('./libs/aggregator');
 const { computeAttackRollAdvantages } = require('./advantages');
-const {getWorstDamageTypeVsAC, getBestDamageTypeVsMitigation} = require('./libs/helpers');
+const { getWorstDamageTypeVsAC, getBestDamageTypeVsMitigation } = require('./libs/helpers');
 
 /**
  * @class
@@ -106,7 +106,7 @@ class AttackOutcome {
         this._ability = '';
 
         /**
-         * @type {{result: number, advantages: Set<string>, disadvantages: Set<string>}}
+         * @type {RollBias}
          * @private
          */
         this._rollBias = {

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo -n "building advantages/disadvantages index and consts..."
+node ./bin/generate-indexes.js ./src/advantages/functions CONST_FILENAME > ./src/consts/advantages-disadvantages.js
+node ./bin/generate-indexes.js ./src/advantages/functions/attack-rolls/adv CONST_REQUIRE > ./src/advantages/functions/attack-rolls/adv/index.js
+node ./bin/generate-indexes.js ./src/advantages/functions/attack-rolls/dis CONST_REQUIRE > ./src/advantages/functions/attack-rolls/dis/index.js
+node ./bin/generate-indexes.js ./src/advantages/functions/saving-throws/adv CONST_REQUIRE > ./src/advantages/functions/saving-throws/adv/index.js
+node ./bin/generate-indexes.js ./src/advantages/functions/saving-throws/dis CONST_REQUIRE > ./src/advantages/functions/saving-throws/dis/index.js
+
+echo " done"
