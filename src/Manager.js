@@ -208,16 +208,10 @@ class Manager {
 
         // Lancement de l'action
         if (action) {
-            // creature : creature doing the action
-            // target : primary target
-            // availableTargets : potentially other non primary targettable creatures
-
             this.runScript(action.script, {
                 manager: this,
                 combat,
-                action,
-                creature: combat.attacker,
-                target: combat.target
+                action
             });
             const bIsActionCoolingDown = action.cooldownTimer > 0;
             if (bIsActionCoolingDown) {
@@ -501,6 +495,36 @@ class Manager {
             ep.invokeEffectMethod(effect, sScript, oCreature, source, oParams);
         }
         this.runPropertyScript(oCreature, sScript, oParams);
+    }
+
+    /**
+     * Will run a non-combat-action script
+     * @param oCreature {Creature}
+     * @param sAction {string}
+     * @param oTarget {Creature|null}
+     * @param oParams {object}
+     */
+    runAction (oCreature, sAction, oTarget = null, oParams = {}) {
+        const oActionEvent = new CombatActionEvent({
+            system: this._systemInstance,
+            combat,
+            action: evt.action.id
+        });
+        this._events.emit(CONSTS.EVENT_COMBAT_ACTION, oActionEvent);
+        const action = combat.currentAction;
+
+        // Lancement de l'action
+        if (action) {
+            this.runScript(action.script, {
+                manager: this,
+                combat,
+                action
+            });
+            const bIsActionCoolingDown = action.cooldownTimer > 0;
+            if (bIsActionCoolingDown) {
+                this._horde.setCreatureActive(attacker);
+            }
+        }
     }
 
     /**
