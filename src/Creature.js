@@ -265,13 +265,20 @@ class Creature {
      * Check saving throw
      * @param sAbility {string}
      * @param dc {number}
-     * @param threat {string} THREAT_*
+     * @param threat {string|string[]|null} THREAT_*
      * @returns {SavingThrowOutcome}
      */
-    rollSavingThrow (sAbility, dc, threat = '') {
+    rollSavingThrow (sAbility, dc, threat = null) {
         const stb = this.getters.getSavingThrowBonus;
-        const threatBonus = threat !== '' ? stb[threat] : 0;
-        const bonus = stb[sAbility] + threatBonus;
+        let nThreatBonus = 0;
+        if (Array.isArray(threat)) {
+            nThreatBonus = threat
+                .map(t => stb[t] ?? 0)
+                .reduce((prev, curr) => prev + curr, 0);
+        } else if (typeof threat === 'string') {
+            nThreatBonus = stb[threat] ?? 0;
+        }
+        const bonus = stb[sAbility] + nThreatBonus;
         const result = {
             creature: this,
             roll: 0,

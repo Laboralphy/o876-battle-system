@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-04-23T19:00:45.733Z
+// Date : 2025-05-06T14:23:19.214Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -12,6 +12,7 @@ module.exports = {
     'getAttackAbility': require('./getAttackAbility.js'),
     'getAttackBonus': require('./getAttackBonus.js'),
     'getCapabilitySet': require('./getCapabilitySet.js'),
+    'getClassType': require('./getClassType.js'),
     'getConditionSet': require('./getConditionSet.js'),
     'getDamageMitigation': require('./getDamageMitigation.js'),
     'getDefensiveSlots': require('./getDefensiveSlots.js'),

@@ -208,7 +208,17 @@ class Manager {
 
         // Lancement de l'action
         if (action) {
-            this.runScript(action.script, { manager: this, combat, action });
+            // creature : creature doing the action
+            // target : primary target
+            // availableTargets : potentially other non primary targettable creatures
+
+            this.runScript(action.script, {
+                manager: this,
+                combat,
+                action,
+                creature: combat.attacker,
+                target: combat.target
+            });
             const bIsActionCoolingDown = action.cooldownTimer > 0;
             if (bIsActionCoolingDown) {
                 this._horde.setCreatureActive(attacker);

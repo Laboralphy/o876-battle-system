@@ -12,6 +12,20 @@
       "type": "string",
       "description": "Action technical identifier, can be used to retrieve action name"
     },
+    "requirements": {
+      "description": "If requirements are not met, action is not available",
+      "type": "object",
+      "properties": {
+        "classType": {
+          "type": "string",
+          "description": "Class type required to use this action"
+        },
+        "level": {
+          "type": "number",
+          "description": "Class level required to use this action"
+        }
+      }
+    },
     "actionType": {
       "type": "string",
       "pattern": "^COMBAT_ACTION_TYPE_",

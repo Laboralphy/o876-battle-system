@@ -5,10 +5,21 @@
     "PROFICIENCY_ARMOR_HEAVY",
     "PROFICIENCY_ARMOR_MEDIUM",
     "PROFICIENCY_ARMOR_LIGHT",
+    "PROFICIENCY_SHIELD",
     "PROFICIENCY_WEAPON_MARTIAL",
     "PROFICIENCY_WEAPON_SIMPLE",
     "PROFICIENCY_SAVING_THROW_STRENGTH",
     "PROFICIENCY_SAVING_THROW_CONSTITUTION"
   ],
-  "classType": "CLASS_TYPE_FIGHTER"
+  "classType": "CLASS_TYPE_FIGHTER",
+  "actions": [
+    {
+      "id": "act-fighter-second-wind",
+      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
+      "script": "at-fighter-second-wind",
+      "range": 0,
+      "parameters": {},
+      "cooldown": 120
+    }
+  ]
 }

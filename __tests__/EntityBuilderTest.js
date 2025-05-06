@@ -542,7 +542,7 @@ describe('create a complex monster', function () {
         expect(() => {
             monster = ib.createEntity(bpMonster);
         }).not.toThrow();
-        expect(monster.getters.getMaxHitPoints).toBe(16);
+        expect(monster.getters.getMaxHitPoints).toBe(18);
         expect(monster.getters.getAbilities).toEqual({
             'ABILITY_STRENGTH': 10,
             'ABILITY_DEXTERITY': 10,
@@ -635,7 +635,7 @@ describe('extends again, see if base monster is properly extended', function () 
         expect(() => {
             monster = eb.createEntity('c-skeleton');
         }).not.toThrow();
-        expect(monster.getters.getMaxHitPoints).toBe(9);
+        expect(monster.getters.getMaxHitPoints).toBe(14);
         expect(monster.getters.getAbilities[CONSTS.ABILITY_DEXTERITY]).toBe(14);
     });
 });

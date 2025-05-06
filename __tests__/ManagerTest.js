@@ -317,16 +317,16 @@ describe('Real Combat simulator', function () {
             event: 'combat.start',
             attacker: 'c1',
             target: 'c2',
-            attackerHP: 17,
-            targetHP: 17
+            attackerHP: 20,
+            targetHP: 20
         });
 
         expect(logs[1]).toEqual({
             attacker: 'c1',
-            attackerHP: 17,
+            attackerHP: 20,
             event: 'combat.turn',
             target: 'c2',
-            targetHP: 17,
+            targetHP: 20,
             turn: 0
         });
 
@@ -340,10 +340,10 @@ describe('Real Combat simulator', function () {
 
         expect(logs[3]).toEqual({
             'attacker': 'c2',
-            'attackerHP': 17,
+            'attackerHP': 20,
             'event': 'combat.turn',
             'target': 'c1',
-            'targetHP': 17,
+            'targetHP': 20,
             'turn': 0
         });
 
@@ -358,63 +358,63 @@ describe('Real Combat simulator', function () {
         expect(logs[5]).toEqual({
             'ac': 10,
             'attacker': 'c1',
-            'attackerHP': 17,
+            'attackerHP': 20,
             'event': 'combat.attack',
             'hit': true,
             'roll': 11,
             'target': 'c2',
-            'targetHP': 17
+            'targetHP': 20
         });
 
         expect(logs[6]).toEqual({
             'ac': 10,
             'attacker': 'c2',
-            'attackerHP': 13,
+            'attackerHP': 16,
             'event': 'combat.attack',
             'hit': false,
             'roll': 9,
             'target': 'c1',
-            'targetHP': 17
+            'targetHP': 20
         });
 
         expect(logs[7]).toEqual({
             'attacker': 'c1',
-            'attackerHP': 17,
+            'attackerHP': 20,
             'event': 'combat.turn',
             'target': 'c2',
-            'targetHP': 13,
+            'targetHP': 16,
             'turn': 1
         });
 
         expect(logs[8]).toEqual({
             'attacker': 'c2',
-            'attackerHP': 13,
+            'attackerHP': 16,
             'event': 'combat.turn',
             'target': 'c1',
-            'targetHP': 17,
+            'targetHP': 20,
             'turn': 1
         });
 
         expect(logs[9]).toEqual({
             'ac': 10,
             'attacker': 'c1',
-            'attackerHP': 17,
+            'attackerHP': 20,
             'event': 'combat.attack',
             'hit': true,
             'roll': 11,
             'target': 'c2',
-            'targetHP': 13
+            'targetHP': 16
         });
 
         expect(logs[10]).toEqual({
             'ac': 10,
             'attacker': 'c2',
-            'attackerHP': 11,
+            'attackerHP': 14,
             'event': 'combat.attack',
             'hit': false,
             'roll': 9,
             'target': 'c1',
-            'targetHP': 17
+            'targetHP': 20
         });
     });
 });
@@ -715,12 +715,12 @@ describe('active properties', function () {
         expect([...m.propertyBuilder.mutatingProperties]).toEqual([CONSTS.PROPERTY_REGENERATION]);
         c1.mutations.setLevel({ value: 10 });
         expect(c1.getters.getAbilities[CONSTS.ABILITY_CONSTITUTION]).toBe(10);
-        expect(c1.hitPoints).toBe(17);
-        expect(c1.getters.getMaxHitPoints).toBe(35);
+        expect(c1.hitPoints).toBe(20);
+        expect(c1.getters.getMaxHitPoints).toBe(40);
         for (let i = 0; i < 100; ++i) {
             m.process();
         }
-        expect(c1.getters.getMaxHitPoints).toBe(35);
+        expect(c1.getters.getMaxHitPoints).toBe(40);
         const pRegen = m.propertyBuilder.buildProperty({
             type: CONSTS.PROPERTY_REGENERATION,
             amp: 1
@@ -738,7 +738,7 @@ describe('active properties', function () {
         for (let i = 0; i < 18; ++i) { // about 3 turn -> +3 hp
             m.process();
         }
-        expect(c1.hitPoints).toBe(20);
+        expect(c1.hitPoints).toBe(23);
     });
 
     it('should add vampire as an active creature', function () {
@@ -777,7 +777,7 @@ describe('focus on regeneration', function () {
         };
         process();
         expect(c1.hitPoints).toBe(30);
-        expect(c1.getters.getMaxHitPoints).toBe(76);
+        expect(c1.getters.getMaxHitPoints).toBe(153);
 
         process();
         expect(c1.hitPoints).toBe(50);
@@ -786,10 +786,10 @@ describe('focus on regeneration', function () {
         expect(c1.hitPoints).toBe(70);
 
         process();
-        expect(c1.hitPoints).toBe(76);
+        expect(c1.hitPoints).toBe(90);
 
         process();
-        expect(c1.hitPoints).toBe(76);
+        expect(c1.hitPoints).toBe(110);
 
         c1.hitPoints = 10;
         process();

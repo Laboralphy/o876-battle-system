@@ -9,8 +9,9 @@
  * @property getAttackAbility {Object<string, string>}
  * @property getAttackBonus {Object<string, number>}
  * @property getCapabilitySet {Set<string>}
+ * @property getClassType {string} CLASS_TYPE_*
  * @property getConditionSet {Set<string>}
- * @property getDamageMitigation {Object<string, RBSOneDamageMitigation>}
+ * @property getDamageMitigation {Object<string, RBSOneDamageMitigation>}}
  * @property getDefensiveSlots {string[]}
  * @property getEffectRegistry {Object<string, RBSEffect>}
  * @property getEffectSet {Set<string>}
@@ -33,7 +34,7 @@
  * @property getProperties {RBSProperty[]}
  * @property getPropertySet {Set<string>}
  * @property getRangedAttackBonus {number}
- * @property getSavingThrowBonus {Object<string, string>}
+ * @property getSavingThrowBonus {Object<string, number>}
  * @property getSelectedOffensiveSlot {string} EQUIPMENT_SLOT_WEAPON_MELEE or RANGED
  * @property getSelectedWeapon {RBSItem|null}
  * @property getSelectedWeaponAttributeSet {Set<string>}
@@ -41,7 +42,7 @@
  * @property getSlotProperties {Object<string, RBSProperty[]>}
  * @property getSpecie {string}
  * @property getSpeed {number}
- * @property getSpellDifficultyClass {Object<string, string>}
+ * @property getSpellDifficultyClass {Object<string, number>}
  * @property getVariables {Object<string, number|string>}
  * @property getWeaponRanges {Object<string, number>}
  * @property isDead {boolean}
@@ -51,4 +52,4 @@
  * @property isWieldingTwoHandedWeapon {boolean}
  */
 
-module.exports = {};
+module.exports = {}
