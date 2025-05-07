@@ -29,6 +29,7 @@ const CreatureReviveEvent = require('./events/CreatureReviveEvent');
 const CreatureSavingThrowEvent = require('./events/CreatureSavingThrowEvent');
 const CreatureDamagedEvent = require('./events/CreatureDamagedEvent');
 const CreatureDeathEvent = require('./events/CreatureDeathEvent');
+const CreatureActionEvent = require('./events/CreatureActionEvent');
 
 class Manager {
     constructor () {
@@ -186,6 +187,39 @@ class Manager {
             combat: evt.combat,
             distance: evt.combat.distance
         }));
+    }
+
+    /**
+     * Execute an action when not involved in a combat
+     * @param oCreature {Creature}
+     * @param oAction {RBSAction}
+     * @param oTarget {Creature|null}
+     * @return {boolean} true = action executed, false = could not execute action (not ready)
+     */
+    executeActionScript (oCreature, oAction, oTarget = null) {
+        const oActionEvent = new CreatureActionEvent({
+            system: this._systemInstance,
+            creature: oCreature,
+            target: oTarget,
+            action: oAction
+        });
+        this._events.emit(CONSTS.EVENT_COMBAT_ACTION, oActionEvent);
+        if (oAction.ready) {
+            this.runScript(oAction.script, {
+                manager: this,
+                action: oAction,
+                creature: oCreature,
+                target: oTarget
+            });
+            const bIsActionCoolingDown = oAction.cooldownTimer > 0;
+            if (bIsActionCoolingDown) {
+                this._horde.setCreatureActive(oCreature);
+            }
+            oCreature.mutations.useAction(oAction.id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

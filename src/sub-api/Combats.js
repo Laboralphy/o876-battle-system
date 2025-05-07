@@ -19,6 +19,7 @@ class Combats extends ServiceAbstract {
     }
 
     /**
+     * return combat instance of a creature, if involved
      * @param oCreature {BoxedCreature}
      * @returns {Combat|null}
      */
@@ -26,6 +27,15 @@ class Combats extends ServiceAbstract {
         return this
             .combatManager
             .getCombat(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT]);
+    }
+
+    /**
+     * return true if creature is involved in a combat
+     * @param oCreature {BoxedCreature}
+     * @returns {boolean}
+     */
+    isCreatureFighting (oCreature) {
+        return this.getCreatureCombat(oCreature) !== null;
     }
 
     /**
@@ -130,6 +140,8 @@ class Combats extends ServiceAbstract {
         const cm = this.services.core.manager.combatManager;
         cm.endCombat(oAttacker[BoxedCreature.SYMBOL_BOXED_OBJECT], bBothSide);
     }
+
+
 }
 
 module.exports = Combats;
