@@ -11,20 +11,21 @@
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
- * @param combat {Combat}
+ * @param creature {Creature}
+ * @param target {Creature}
  */
-function main ({ manager, action, combat }) {
+function main ({ manager, action, creature, target }) {
     const { range } = action;
-    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range);
+    const aOffenders = manager.combatManager.getOffenders(creature, range);
     aOffenders.forEach(oTarget => {
         const {success} = oTarget.rollSavingThrow(
             manager.CONSTS.ABILITY_CONSTITUTION,
-            combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY],
+            creature.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY],
             manager.CONSTS.THREAT_TYPE_PETRIFICATION
         );
         if (!success) {
             const eStone = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_PETRIFICATION);
-            manager.applyEffect(eStone, oTarget, Infinity, combat.attacker);
+            manager.applyEffect(eStone, oTarget, Infinity, creature);
         }
     });
 }

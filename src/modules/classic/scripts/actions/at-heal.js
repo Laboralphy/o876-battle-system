@@ -25,11 +25,11 @@ function heal (oManager, oCreature, oHealer, amount) {
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
- * @param combat {Combat}
+ * @param creature {Creature}
+ * @param target {Creature}
  */
-function main ({ manager, action, combat }) {
-    const oTarget = combat.target;
-    const oTargetCombat = manager.combatManager.getCombat(oTarget);
+function main ({ manager, action, creature, target }) {
+    const oTargetCombat = manager.combatManager.getCombat(target);
     const oTargetCombatPrimaryTarget = oTargetCombat.target;
     let oHealedCreature;
     if (getDamagePoints(oTargetCombatPrimaryTarget) > 0) {
@@ -37,7 +37,7 @@ function main ({ manager, action, combat }) {
     } else {
         oHealedCreature = manager
             .combatManager
-            .getOffenders(oTarget)
+            .getOffenders(target)
             .map(offender => ({
                 offender,
                 damagePoints: getDamagePoints(offender)
@@ -46,7 +46,7 @@ function main ({ manager, action, combat }) {
             .shift();
     }
     if (oHealedCreature) {
-        heal(manager, oHealedCreature, combat.attacker, action.parameters.amount);
+        heal(manager, oHealedCreature, creature, action.parameters.amount);
     }
 }
 

@@ -12,14 +12,13 @@ const { doDamage } = require('../../../../libs/helpers');
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
- * @param combat {Combat}
+ * @param creature {Creature}
+ * @param target {Creature}
  */
-function main ({ manager, action, combat }) {
-    const oTarget = combat.target;
-    if (oTarget.getters.getEffectSet.has(manager.CONSTS.EFFECT_STUN)) {
-        const oAttacker = combat.attacker;
-        const { effect } = doDamage(manager, oTarget, oAttacker, {
-            amount: oAttacker.dice.roll(action.parameters.amount) + oAttacker.getters.getAbilityModifiers[manager.CONSTS.ABILITY_CHARISMA],
+function main ({ manager, action, creature, target }) {
+    if (target.getters.getEffectSet.has(manager.CONSTS.EFFECT_STUN)) {
+        const { effect } = doDamage(manager, target, creature, {
+            amount: creature.dice.roll(action.parameters.amount) + creature.getters.getAbilityModifiers[manager.CONSTS.ABILITY_CHARISMA],
             damageType: manager.CONSTS.DAMAGE_TYPE_PSYCHIC,
             offensiveAbility: manager.CONSTS.ABILITY_CHARISMA,
             defensiveAbility: manager.CONSTS.ABILITY_CONSTITUTION,
@@ -27,7 +26,7 @@ function main ({ manager, action, combat }) {
         });
         if (effect.data.appliedAmount > 0) {
             const eHeal = manager.createSupernaturalEffect(manager.CONSTS.EFFECT_HEAL, effect.data.appliedAmount);
-            manager.applyEffect(eHeal, oAttacker);
+            manager.applyEffect(eHeal, creature);
         }
     }
 }

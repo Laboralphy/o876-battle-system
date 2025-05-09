@@ -11,20 +11,21 @@ const {CONSTS} = require('../../../../../index');
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
- * @param combat {Combat}
+ * @param creature {Creature}
+ * @param target {Creature}
  */
-function main ({ manager, action, combat }) {
-    const { range, duration = combat.attacker.getters.getVariables['DEFAULT_AILMENT_DURATION'] } = action; // getActionDuration
-    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range);
+function main ({ manager, action, creature, target }) {
+    const { range, duration = creature.getters.getVariables['DEFAULT_AILMENT_DURATION'] } = action; // getActionDuration
+    const aOffenders = manager.combatManager.getOffenders(creature, range);
     aOffenders.forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_CONSTITUTION,
-            combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
+            creature.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
             manager.CONSTS.THREAT_TYPE_POISON
         );
         if (!success) {
             const ePoison = manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, 1, { damageType: CONSTS.DAMAGE_TYPE_POISON});
-            manager.applyEffect(ePoison, offender, duration, combat.attacker);
+            manager.applyEffect(ePoison, offender, duration, creature);
         }
     });
 }

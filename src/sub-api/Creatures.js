@@ -257,7 +257,9 @@ class Creatures extends Abstract {
     }
 
     /**
-     *
+     * This will execute an action,
+     * If the creature is in combat, the action will go through combat pipeline
+     * If the creature is out of combat, the action is immediately run (if cooldown is 0)
      * @param oCreature {BoxedCreature}
      * @param sAction {string}
      * @param oTarget {BoxedCreature | null}

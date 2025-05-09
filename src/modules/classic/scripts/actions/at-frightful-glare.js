@@ -9,19 +9,19 @@
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
- * @param combat {Combat}
+ * @param creature {Creature}
+ * @param target {Creature}
  */
-function main ({ manager, action, combat }) {
-    const { duration = combat.attacker.getters.getVariables['DEFAULT_AILMENT_DURATION'] } = action; // getActionDuration
-    const oTarget = combat.target; // getCombatTarget
-    const { success } = oTarget.rollSavingThrow( // rollSavingThrow(creature, ability, dc)
+function main ({ manager, action, creature, target }) {
+    const { duration = creature.getters.getVariables['DEFAULT_AILMENT_DURATION'] } = action; // getActionDuration
+    const { success } = target.rollSavingThrow( // rollSavingThrow(creature, ability, dc)
         manager.CONSTS.ABILITY_WISDOM,
-        combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
+        creature.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
         manager.CONSTS.THREAT_TYPE_FEAR
     );
     if (!success) {
         const eFear = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_FEAR); // createEffect(effectType, amp, parameters)
-        manager.applyEffect(eFear, oTarget, duration, combat.attacker); // applyEffect(effect, creature, duration, creature)
+        manager.applyEffect(eFear, target, duration, creature); // applyEffect(effect, creature, duration, creature)
     }
 }
 

@@ -9,13 +9,13 @@
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
- * @param combat {Combat}
+ * @param creature {Creature}
+ * @param target {Creature}
  */
-function main ({ manager, action, combat }) {
-    const oTarget = combat.target;
+function main ({ manager, action, creature, target }) {
     // affect only humanoids
-    if (!oTarget.getters.getCapabilitySet.has(manager.CONSTS.CAPABILITY_ACT)) {
-        const oAttacker = combat.attacker;
+    if (!target.getters.getCapabilitySet.has(manager.CONSTS.CAPABILITY_ACT)) {
+        const oAttacker = creature;
         // compute piercing damage amount
         const nPiercingDamage = oAttacker.dice.roll('1d6') + oAttacker.getters.getAbilityModifiers[manager.CONSTS.ABILITY_STRENGTH];
         // compute withering damage amount
@@ -37,14 +37,14 @@ function main ({ manager, action, combat }) {
             }
         );
         // applying damage effects
-        manager.applyEffect(ePiercingDamage, oTarget, 0, oAttacker);
-        const w = manager.applyEffect(eWitheringDamage, oTarget, 0, oAttacker);
+        manager.applyEffect(ePiercingDamage, target, 0, oAttacker);
+        const w = manager.applyEffect(eWitheringDamage, target, 0, oAttacker);
         // if some damage has been done
         if (w.data.appliedAmount > 0) {
             // healing effect
             const eHeal = manager.createEffect(manager.CONSTS.EFFECT_HEAL, w.data.appliedAmount);
             manager.applyEffect(eHeal, oAttacker);
-            const { success } = oTarget.rollSavingThrow(
+            const { success } = target.rollSavingThrow(
                 manager.CONSTS.ABILITY_CONSTITUTION,
                 oAttacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],
                 manager.CONSTS.THREAT_TYPE_DEATH
@@ -52,7 +52,7 @@ function main ({ manager, action, combat }) {
             if (!success) { // saving throw failed
                 // absorb experience level if saving throw fails
                 const eNegLevel = manager.createSupernaturalEffect(manager.CONSTS.EFFECT_NEGATIVE_LEVEL, 1);
-                manager.applyEffect(eNegLevel, oTarget, Infinity, oAttacker);
+                manager.applyEffect(eNegLevel, target, Infinity, oAttacker);
             }
         }
     }

@@ -12,13 +12,14 @@ const { doDamage } = require('../../../../libs/helpers');
  * @param manager {Manager}
  * @param CONSTS {*}
  * @param action {RBSAction}
- * @param combat {Combat}
+ * @param creature {Creature}
+ * @param target {Creature}
  */
-function main ({ manager, action, combat }) {
+function main ({ manager, action, creature, target }) {
     const { range } = action;
-    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range);
+    const aOffenders = manager.combatManager.getOffenders(creature, range);
     aOffenders.forEach(offender => {
-        const { savingThrow: success } = doDamage(manager, offender, combat.attacker, {
+        const { savingThrow: success } = doDamage(manager, offender, creature, {
             amount: action.parameters.amount,
             damageType: manager.CONSTS.DAMAGE_TYPE_CRUSHING,
             offensiveAbility: manager.CONSTS.ABILITY_STRENGTH,
@@ -27,7 +28,7 @@ function main ({ manager, action, combat }) {
         });
         if (!success) {
             const eStun = manager.createEffect(manager.CONSTS.EFFECT_STUN);
-            manager.applyEffect(eStun, offender, 1, combat.attacker);
+            manager.applyEffect(eStun, offender, 1, creature);
         }
     });
 }

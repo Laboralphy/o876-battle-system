@@ -201,8 +201,7 @@ class Manager {
             system: this._systemInstance,
             creature: oCreature,
             target: oTarget,
-            action: oAction,
-            combat: this.combatManager.getCombat(oCreature)
+            action: oAction
         });
         this._events.emit(CONSTS.EVENT_CREATURE_ACTION, oActionEvent);
         if (oAction.ready) {
@@ -216,7 +215,7 @@ class Manager {
             if (bIsActionCoolingDown) {
                 this._horde.setCreatureActive(oCreature);
             }
-            oCreature.mutations.useAction(oAction.id);
+            oCreature.mutations.useAction({ action: oAction.id });
             return true;
         } else {
             return false;
@@ -232,26 +231,12 @@ class Manager {
     _combatManagerAction (evt) {
         const combat = evt.combat;
         const attacker = combat.attacker;
-        const oActionEvent = new CombatActionEvent({
-            system: this._systemInstance,
-            combat,
-            action: evt.action.id
-        });
-        combat.selectCurrentAction(oActionEvent.action);
-        this._events.emit(CONSTS.EVENT_COMBAT_ACTION, oActionEvent);
+        const target = combat.target;
+        combat.selectCurrentAction(evt.action.id);
         const action = combat.currentAction;
-
         // Lancement de l'action
         if (action) {
-            this.runScript(action.script, {
-                manager: this,
-                combat,
-                action
-            });
-            const bIsActionCoolingDown = action.cooldownTimer > 0;
-            if (bIsActionCoolingDown) {
-                this._horde.setCreatureActive(attacker);
-            }
+            this.executeActionScript(attacker, action, target);
         }
     }
 

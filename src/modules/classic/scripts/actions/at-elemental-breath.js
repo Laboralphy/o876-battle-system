@@ -13,13 +13,14 @@ const { checkConst } = require('../../../../libs/check-const');
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
- * @param combat {Combat}
+ * @param creature {Creature}
+ * @param target {Creature}
  */
-function main ({ manager, action, combat }) {
+function main ({ manager, action, creature, target }) {
     const { range } = action;
-    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range);
+    const aOffenders = manager.combatManager.getOffenders(creature, range);
     aOffenders.forEach(offender => {
-        doDamage(manager, offender, combat.attacker, {
+        doDamage(manager, offender, creature, {
             amount: action.parameters.amount,
             damageType: checkConst(action.parameters.damageType),
             offensiveAbility: manager.CONSTS.ABILITY_DEXTERITY,

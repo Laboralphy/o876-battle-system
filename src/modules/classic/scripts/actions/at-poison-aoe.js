@@ -12,28 +12,29 @@ const { checkConst } = require('../../../../libs/check-const');
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
- * @param combat {Combat}
+ * @param creature {Creature}
+ * @param target {Creature}
  */
-function main ({ manager, action, combat }) {
+function main ({ manager, action, creature, target }) {
     const {
         range,
-        duration = combat.attacker.getters.getVariables['DEFAULT_POISON_DURATION'],
+        duration = creature.getters.getVariables['DEFAULT_POISON_DURATION'],
         parameters: {
             amount
         }
     } = action;
-    const aOffenders = manager.combatManager.getOffenders(combat.attacker, range);
+    const aOffenders = manager.combatManager.getOffenders(creature, range);
     aOffenders.forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_CONSTITUTION,
-            combat.attacker.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY],
+            creature.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY],
             manager.CONSTS.THREAT_TYPE_POISON
         );
         if (!success) {
             const ePoison = manager.createExtraordinaryEffect(manager.CONSTS.EFFECT_DAMAGE, amount, {
                 damageType: manager.CONSTS.DAMAGE_TYPE_POISON
             });
-            manager.applyEffect(ePoison, offender, duration, combat.attacker);
+            manager.applyEffect(ePoison, offender, duration, creature);
         }
     });
 }
