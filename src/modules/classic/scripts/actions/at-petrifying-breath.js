@@ -4,6 +4,10 @@
  * a vapor of toxic chemical surrounds all offenders, turning them to stone.
  * Target failing at saving throw will be turned to stone
  * Target will remain petrified until the beast is killed, and the vapor dissipates
+ *
+ * combat dependencies :
+ * - attacker
+ *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

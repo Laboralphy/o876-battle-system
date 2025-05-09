@@ -4,6 +4,11 @@ const { doDamage } = require('../../../../libs/helpers');
  * Draining Kiss
  * Will do damage to a stunned creature, the damage dealt will heal the source,
  * This is a supernatural effect.
+ *
+ * combat dependencies :
+ * - attacker
+ * - target
+ *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

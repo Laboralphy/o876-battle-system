@@ -2,6 +2,10 @@
  * Frightful presence
  * Offenders failing at saving throw will be struck by fear
  * This is an extraordinary effect, often used by huge creature like dragons
+ *
+ * combat dependencies :
+ * - attacker
+ *
  * @this {Manager}
  * @param manager {Manager}
  * @param CONSTS {*}

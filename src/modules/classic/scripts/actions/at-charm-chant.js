@@ -2,6 +2,11 @@
  * Charm Chant
  * Offenders hearing this chant and failing at saving throw will be struck by charm
  * This is an extraordinary effect
+ *
+ * combat dependencies :
+ * - attacker
+ *
+ *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

@@ -5,6 +5,10 @@ const { checkConst } = require('../../../../libs/check-const');
  * Poison breath
  * A cloud of poison damage is breath at all offenders
  * If target succeed in saving throw, poison is avoided
+ *
+ * combat dependencies :
+ * - attacker
+ *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

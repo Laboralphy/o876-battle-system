@@ -6,6 +6,10 @@ const { checkConst } = require('../../../../libs/check-const');
  * A huge cone of elemental damage is breath att all offenders
  * This is an extraordinary attack
  * If target succeed in saving throw, damage is halved
+ *
+ * combat dependencies :
+ * - attacker
+ *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

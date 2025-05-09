@@ -17,6 +17,11 @@ function heal (oManager, oCreature, oHealer, amount) {
 /**
  * Heal
  * Will heal one of target's primary target, if this creature is full hp, will heal another offender
+ *
+ * combat dependencies :
+ * - attacker
+ * - target
+ *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

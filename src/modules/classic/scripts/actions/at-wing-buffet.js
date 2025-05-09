@@ -4,6 +4,10 @@ const { doDamage } = require('../../../../libs/helpers');
  * Wing buffet
  * A wing attack that deals damage to all offender.
  * If target fails saving throw it will be stunned until the end of the turn
+ *
+ * combat dependencies :
+ * -attacker
+ *
  * @this {Manager}
  * @param manager {Manager}
  * @param CONSTS {*}
