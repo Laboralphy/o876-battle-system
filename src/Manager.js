@@ -232,7 +232,7 @@ class Manager {
         const combat = evt.combat;
         const attacker = combat.attacker;
         const target = combat.target;
-        combat.selectCurrentAction(evt.action.id);
+        // combat.selectCurrentAction(evt.action.id);
         const action = combat.currentAction;
         // Lancement de l'action
         if (action) {

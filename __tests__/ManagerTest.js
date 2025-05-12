@@ -1,6 +1,8 @@
 const Manager = require('../src/Manager');
 const CONSTS = require('../src/consts');
 const PropertyBuilder = require('../src/PropertyBuilder');
+const CombatManager = require('../src/libs/combat/CombatManager');
+const Creature = require('../src/Creature');
 
 const bpNormalActor = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -834,5 +836,70 @@ describe('checking if gobs are proficient to their equipment', function () {
         const g1 = m.createEntity('c-goblin', 'g1');
         expect(g1.getters.isEquipmentProficient[CONSTS.EQUIPMENT_SLOT_CHEST]).toBeTruthy();
         expect(g1.getters.isEquipmentProficient[CONSTS.EQUIPMENT_SLOT_SHIELD]).toBeTruthy();
+    });
+});
+
+
+describe('bonus action test', function () {
+    it('should run bonus action immédiatly when ot in combat', function () {
+        const m = new Manager();
+        const cm = m.combatManager;
+        const logScript = [];
+        m.defineModule({
+            scripts: {
+                'normal-action': ({ action, creature, target }) => {
+                    logScript.push(`x1 ${creature.id} runs action ${action.id} on ${target.id}`);
+                },
+                'bonus-action': ({ action, creature, target }) => {
+                    logScript.push(`x2 ${creature.id} runs action ${action.id} on ${target.id}`);
+                }
+            }
+        });
+        cm.defaultDistance = 50;
+        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
+        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
+        c1.dice.cheat(0.1);
+        c2.dice.cheat(0.1);
+        c1.mutations.defineAction({
+            id: 'a1',
+            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+            script: 'normal-action',
+            range: 500,
+            bonus: false
+        });
+        c1.mutations.defineAction({
+            id: 'a2',
+            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+            script: 'bonus-action',
+            range: 500,
+            bonus: true
+        });
+        const logs = [];
+        cm.events.on(CONSTS.EVENT_CREATURE_ACTION, (
+            action,
+            creature,
+            target
+        ) => {
+            logs.push({
+                attacker: creature.id,
+                target: target.id,
+                script: action.script
+            });
+        });
+        const a1 = c1.getters.getActions['a1'];
+        const a2 = c1.getters.getActions['a2'];
+        const combat = m.startCombat(c1, c2);
+        // no action is selection before first turn
+        expect(combat.currentAction).toBeNull();
+        combat.advance();
+        expect(combat.currentAction).not.toBeNull();
+        expect(combat.currentAction.id).toBe('a1');
+        combat.advance();
+        combat.advance();
+        console.log(combat.currentAction);
+        // m.executeActionScript(c1, a1, c2);
+        combat.advance();
+        combat.advance();
+        combat.advance();
     });
 });

@@ -654,37 +654,3 @@ describe('combat vs monster with claws and fangs', function () {
         expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2);
     });
 });
-
-describe('bonus action test', function () {
-    it('should run bonus action immédiatly when ot in combat', function () {
-        const cm = new CombatManager();
-        cm.defaultDistance = 50;
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
-        c1.mutations.defineAction({
-            id: 'a1',
-            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-            script: 'normal-action',
-            range: 5,
-            bonus: false
-        });
-        c1.mutations.defineAction({
-            id: 'a2',
-            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-            script: 'bonus-action',
-            range: 5,
-            bonus: true
-        });
-        const logs = [];
-        cm.events.on(CONSTS.EVENT_COMBAT_ACTION, (
-            action,
-            creature,
-            target
-        ) => {
-            logs.push({
-                script: action.script
-            });
-        });
-
-    });
-});
