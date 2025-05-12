@@ -269,25 +269,15 @@ class Creatures extends Abstract {
         if (oTarget) {
             this.checkCreature(oTarget);
         }
-        // check if creature is in combat
-        const oCombat = this.services.combats.getCreatureCombat(oCreature);
-        // if in combat, and same target as combat target, then use combat action mechanism
-        if (oCombat) {
-            if (oTarget === null || oCombat.target === oTarget[BoxedCreature.SYMBOL_BOXED_OBJECT]) {
-                // same target in combat : use combat action mechanism
-                this.services.combats.selectAction(oCreature, sAction);
-                return;
-            } else {
-                // different target, disengage from combat
-                this.services.combats.endCombat(oCreature, false);
-            }
-        }
-        const oAction = oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT].getters.getActions[sAction];
-        this.executeActionScript(
-            oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT],
-            oAction,
-            oTarget[BoxedCreature.SYMBOL_BOXED_OBJECT]
-        );
+        return this
+            .services
+            .core
+            .manager
+            .doAction(
+                oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT],
+                sAction,
+                oTarget[BoxedCreature.SYMBOL_BOXED_OBJECT]
+            );
     }
 }
 

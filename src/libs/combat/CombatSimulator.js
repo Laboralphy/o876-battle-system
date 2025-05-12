@@ -57,10 +57,10 @@ class CombatSimulator {
 
     /**
      * Event handler : a creature is using an action
-     * @param evt {CombatActionEvent}
+     * @param evt {CreatureActionEvent}
      */
     eventCombatAction (evt) {
-        this.sendTextEvent(evt.attacker.id, 'used action', evt.action.id);
+        this.sendTextEvent(evt.creature.id, 'used action', evt.action.id);
     }
 
     /**
@@ -195,7 +195,7 @@ class CombatSimulator {
         e.on(CONSTS.EVENT_COMBAT_TURN, evt => {
             this.eventCombatTurn(evt);
         });
-        e.on(CONSTS.EVENT_COMBAT_ACTION, evt => {
+        e.on(CONSTS.EVENT_CREATURE_ACTION, evt => {
             this.eventCombatAction(evt);
         });
         e.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => {

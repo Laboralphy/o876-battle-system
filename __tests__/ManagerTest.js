@@ -840,66 +840,447 @@ describe('checking if gobs are proficient to their equipment', function () {
 });
 
 
-describe('bonus action test', function () {
-    it('should run bonus action immédiatly when ot in combat', function () {
-        const m = new Manager();
-        const cm = m.combatManager;
-        const logScript = [];
-        m.defineModule({
-            scripts: {
-                'normal-action': ({ action, creature, target }) => {
-                    logScript.push(`x1 ${creature.id} runs action ${action.id} on ${target.id}`);
-                },
-                'bonus-action': ({ action, creature, target }) => {
-                    logScript.push(`x2 ${creature.id} runs action ${action.id} on ${target.id}`);
+describe('normal & bonus action test', function () {
+    describe('when not in combat', function () {
+        it('should run normal action immediately', function () {
+            const m = new Manager();
+            m.loadModule('classic');
+            const cm = m.combatManager;
+            m.defineModule({
+                scripts: {
+                    'normal-action-1': ({ action, creature, target }) => {
+                    },
+                    'normal-action-2': ({ action, creature, target }) => {
+                    },
+                    'bonus-action-1': ({ action, creature, target }) => {
+                    }
                 }
-            }
-        });
-        cm.defaultDistance = 50;
-        const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
-        const c2 = new Creature({ blueprint: bpNormalActor, id: 'c2' });
-        c1.dice.cheat(0.1);
-        c2.dice.cheat(0.1);
-        c1.mutations.defineAction({
-            id: 'a1',
-            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-            script: 'normal-action',
-            range: 500,
-            bonus: false
-        });
-        c1.mutations.defineAction({
-            id: 'a2',
-            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
-            script: 'bonus-action',
-            range: 500,
-            bonus: true
-        });
-        const logs = [];
-        cm.events.on(CONSTS.EVENT_CREATURE_ACTION, (
-            action,
-            creature,
-            target
-        ) => {
-            logs.push({
-                attacker: creature.id,
-                target: target.id,
-                script: action.script
+            });
+            cm.defaultDistance = 50;
+            /**
+             * @type {Creature}
+             */
+            const c1 = m.createEntity('c-orc');
+            /**
+             * @type {Creature}
+             */
+            const c2 = m.createEntity('c-orc');
+            expect(c1.getters.getLevel).toBe(2);
+            c1.dice.cheat(0.1);
+            c2.dice.cheat(0.1);
+            c1.mutations.defineAction({
+                id: 'na1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-1',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'na2',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-2',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'ba1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'bonus-action-1',
+                range: 500,
+                bonus: true
+            });
+            const oActions = c1.getters.getActions;
+            const aActionNames = new Set(Object.keys(oActions));
+            // checks if all defined actions are here :
+            expect(aActionNames.has('na1'));
+            expect(aActionNames.has('na2'));
+            expect(aActionNames.has('ba1'));
+
+            // check if using action triggers events
+            const logs = [];
+            m.events.on(CONSTS.EVENT_CREATURE_ACTION, ({
+                action,
+                creature,
+                target
+            }) => {
+                logs.push({
+                    event: CONSTS.EVENT_CREATURE_ACTION,
+                    attacker: creature.id,
+                    target: target.id,
+                    script: action.script
+                });
+            });
+
+            m.doAction(c1, 'na1', c2);
+            expect(logs).toHaveLength(1);
+            expect(logs[0]).toMatchObject({
+                event: 'creature.action',
+                attacker: c1.id,
+                target: c2.id,
+                script: 'normal-action-1'
             });
         });
-        const a1 = c1.getters.getActions['a1'];
-        const a2 = c1.getters.getActions['a2'];
-        const combat = m.startCombat(c1, c2);
-        // no action is selection before first turn
-        expect(combat.currentAction).toBeNull();
-        combat.advance();
-        expect(combat.currentAction).not.toBeNull();
-        expect(combat.currentAction.id).toBe('a1');
-        combat.advance();
-        combat.advance();
-        console.log(combat.currentAction);
-        // m.executeActionScript(c1, a1, c2);
-        combat.advance();
-        combat.advance();
-        combat.advance();
+
+        it('should run bonus action immediately', function () {
+            const m = new Manager();
+            m.loadModule('classic');
+            const cm = m.combatManager;
+            m.defineModule({
+                scripts: {
+                    'normal-action-1': ({ action, creature, target }) => {
+                    },
+                    'normal-action-2': ({ action, creature, target }) => {
+                    },
+                    'bonus-action-1': ({ action, creature, target }) => {
+                    }
+                }
+            });
+            cm.defaultDistance = 50;
+            /**
+             * @type {Creature}
+             */
+            const c1 = m.createEntity('c-orc');
+            /**
+             * @type {Creature}
+             */
+            const c2 = m.createEntity('c-orc');
+            expect(c1.getters.getLevel).toBe(2);
+            c1.dice.cheat(0.1);
+            c2.dice.cheat(0.1);
+            c1.mutations.defineAction({
+                id: 'na1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-1',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'na2',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-2',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'ba1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'bonus-action-1',
+                range: 500,
+                bonus: true
+            });
+            const oActions = c1.getters.getActions;
+            const aActionNames = new Set(Object.keys(oActions));
+            // checks if all defined actions are here :
+            expect(aActionNames.has('na1'));
+            expect(aActionNames.has('na2'));
+            expect(aActionNames.has('ba1'));
+
+            // check if using action triggers events
+            const logs = [];
+            m.events.on(CONSTS.EVENT_CREATURE_ACTION, ({
+                action,
+                creature,
+                target
+            }) => {
+                logs.push({
+                    event: CONSTS.EVENT_CREATURE_ACTION,
+                    attacker: creature.id,
+                    target: target.id,
+                    script: action.script
+                });
+            });
+
+            m.doAction(c1, 'ba1', c2);
+            expect(logs).toHaveLength(1);
+            expect(logs[0]).toMatchObject({
+                event: 'creature.action',
+                attacker: c1.id,
+                target: c2.id,
+                script: 'bonus-action-1'
+            });
+        });
+    });
+    describe('when in combat', function () {
+        it('should run normal action at first turn end', function () {
+            const m = new Manager();
+            m.loadModule('classic');
+            const cm = m.combatManager;
+            m.defineModule({
+                scripts: {
+                    'normal-action-1': ({ action, creature, target }) => {
+                    },
+                    'normal-action-2': ({ action, creature, target }) => {
+                    },
+                    'bonus-action-1': ({ action, creature, target }) => {
+                    }
+                }
+            });
+            cm.defaultDistance = 50;
+            /**
+             * @type {Creature}
+             */
+            const c1 = m.createEntity('c-orc');
+            /**
+             * @type {Creature}
+             */
+            const c2 = m.createEntity('c-orc');
+            c1.dice.cheat(0.1);
+            c2.dice.cheat(0.1);
+            c1.mutations.defineAction({
+                id: 'na1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-1',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'na2',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-2',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'ba1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'bonus-action-1',
+                range: 500,
+                bonus: true
+            });
+            const oActions = c1.getters.getActions;
+            const aActionNames = new Set(Object.keys(oActions));
+            // checks if all defined actions are here :
+            expect(aActionNames.has('na1'));
+            expect(aActionNames.has('na2'));
+            expect(aActionNames.has('ba1'));
+
+            // check if using action triggers events
+            const logs = [];
+            m.events.on(CONSTS.EVENT_CREATURE_ACTION, ({
+                action,
+                creature,
+                target
+            }) => {
+                logs.push({
+                    event: CONSTS.EVENT_CREATURE_ACTION,
+                    attacker: creature.id,
+                    target: target.id,
+                    script: action.script
+                });
+            });
+
+            const combat = m.startCombat(c1, c2);
+
+            m.process(); // t0
+
+            m.doAction(c1, 'na2', c2);
+            expect(logs).toHaveLength(0);
+            m.process(); // t1
+            m.process(); // t2
+            m.process(); // t3
+            m.process(); // t4
+            // still no action at t4
+            expect(logs).toHaveLength(0);
+            m.process(); // t5 -> at the end, action is run
+            expect(logs).toHaveLength(1);
+            expect(logs[0]).toMatchObject({
+                event: 'creature.action',
+                attacker: c1.id,
+                target: c2.id,
+                script: 'normal-action-2'
+            });
+        });
+
+        it('should run normal action at turn end, and bonus action immediately', function () {
+            const m = new Manager();
+            m.loadModule('classic');
+            const cm = m.combatManager;
+            m.defineModule({
+                scripts: {
+                    'normal-action-1': ({ action, creature, target }) => {
+                    },
+                    'normal-action-2': ({ action, creature, target }) => {
+                    },
+                    'bonus-action-1': ({ action, creature, target }) => {
+                    }
+                }
+            });
+            cm.defaultDistance = 50;
+            /**
+             * @type {Creature}
+             */
+            const c1 = m.createEntity('c-orc');
+            /**
+             * @type {Creature}
+             */
+            const c2 = m.createEntity('c-orc');
+            c1.dice.cheat(0.1);
+            c2.dice.cheat(0.1);
+            c1.mutations.defineAction({
+                id: 'na1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-1',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'na2',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-2',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'ba1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'bonus-action-1',
+                range: 500,
+                bonus: true
+            });
+            const oActions = c1.getters.getActions;
+            const aActionNames = new Set(Object.keys(oActions));
+            // checks if all defined actions are here :
+            expect(aActionNames.has('na1'));
+            expect(aActionNames.has('na2'));
+            expect(aActionNames.has('ba1'));
+
+            // check if using action triggers events
+            const logs = [];
+            m.events.on(CONSTS.EVENT_CREATURE_ACTION, ({
+                action,
+                creature,
+                target
+            }) => {
+                logs.push({
+                    event: CONSTS.EVENT_CREATURE_ACTION,
+                    attacker: creature.id,
+                    target: target.id,
+                    script: action.script,
+                    bonus: action.bonus
+                });
+            });
+
+            const combat = m.startCombat(c1, c2);
+
+            m.process(); // t0
+
+            m.doAction(c1, 'na2', c2);
+            expect(logs).toHaveLength(0);
+            m.process(); // t1
+            m.doAction(c1, 'ba1', c2);
+            m.process(); // t2
+            expect(logs).toHaveLength(1);
+            expect(logs[0]).toMatchObject({
+                event: 'creature.action',
+                attacker: c1.id,
+                target: c2.id,
+                script: 'bonus-action-1',
+                bonus: true
+            });
+            m.process(); // t3
+            m.process(); // t4
+            // still no action at t4
+            m.process(); // t5 -> at the end, action is run
+            expect(logs).toHaveLength(2);
+            expect(logs[1]).toMatchObject({
+                event: 'creature.action',
+                attacker: c1.id,
+                target: c2.id,
+                script: 'normal-action-2',
+                bonus: false
+            });
+        });
+        it('should not run several bonus action', function () {
+            const m = new Manager();
+            m.loadModule('classic');
+            const cm = m.combatManager;
+            m.defineModule({
+                scripts: {
+                    'normal-action-1': ({ action, creature, target }) => {
+                    },
+                    'normal-action-2': ({ action, creature, target }) => {
+                    },
+                    'bonus-action-1': ({ action, creature, target }) => {
+                    }
+                }
+            });
+            cm.defaultDistance = 50;
+            /**
+             * @type {Creature}
+             */
+            const c1 = m.createEntity('c-orc');
+            /**
+             * @type {Creature}
+             */
+            const c2 = m.createEntity('c-orc');
+            c1.dice.cheat(0.1);
+            c2.dice.cheat(0.1);
+            c1.mutations.defineAction({
+                id: 'na1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-1',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'na2',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'normal-action-2',
+                range: 500,
+                bonus: false
+            });
+            c1.mutations.defineAction({
+                id: 'ba1',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
+                script: 'bonus-action-1',
+                range: 500,
+                bonus: true
+            });
+            const oActions = c1.getters.getActions;
+            const aActionNames = new Set(Object.keys(oActions));
+            // checks if all defined actions are here :
+            expect(aActionNames.has('na1'));
+            expect(aActionNames.has('na2'));
+            expect(aActionNames.has('ba1'));
+
+            // check if using action triggers events
+            const logs = [];
+            m.events.on(CONSTS.EVENT_CREATURE_ACTION, ({
+                action,
+                creature,
+                target
+            }) => {
+                logs.push({
+                    event: CONSTS.EVENT_CREATURE_ACTION,
+                    attacker: creature.id,
+                    target: target.id,
+                    script: action.script,
+                    bonus: action.bonus
+                });
+            });
+
+            const combat = m.startCombat(c1, c2);
+
+            m.process(); // t0
+
+            m.doAction(c1, 'na2', c2);
+            expect(logs).toHaveLength(0);
+            m.process(); // t1
+            m.doAction(c1, 'ba1', c2);
+            m.process(); // t2
+            expect(logs).toHaveLength(1);
+            expect(logs[0]).toMatchObject({
+                event: 'creature.action',
+                attacker: c1.id,
+                target: c2.id,
+                script: 'bonus-action-1',
+                bonus: true
+            });
+            m.doAction(c1, 'ba1', c2);
+            m.process(); // t3
+            expect(logs).toHaveLength(1);
+            m.process(); // t4
+            expect(logs).toHaveLength(1);
+        });
     });
 });

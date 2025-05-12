@@ -30,6 +30,7 @@ const CreatureSavingThrowEvent = require('./events/CreatureSavingThrowEvent');
 const CreatureDamagedEvent = require('./events/CreatureDamagedEvent');
 const CreatureDeathEvent = require('./events/CreatureDeathEvent');
 const CreatureActionEvent = require('./events/CreatureActionEvent');
+const BoxedCreature = require('./sub-api/classes/BoxedCreature');
 
 class Manager {
     constructor () {
@@ -196,7 +197,7 @@ class Manager {
      * @param oTarget {Creature|null}
      * @return {boolean} true = action executed, false = could not execute action (not ready)
      */
-    executeActionScript (oCreature, oAction, oTarget = null) {
+    executeAction (oCreature, oAction, oTarget = null) {
         const oActionEvent = new CreatureActionEvent({
             system: this._systemInstance,
             creature: oCreature,
@@ -223,6 +224,30 @@ class Manager {
     }
 
     /**
+     * Run an action
+     * @param oCreature {Creature}
+     * @param sAction {string}
+     * @param oTarget {Creature}
+     */
+    doAction (oCreature, sAction, oTarget = null) {
+        // check if creature is in combat
+        const oCombat = this.combatManager.getCombat(oCreature);
+        // if in combat, and same target as combat target, then use combat action mechanism
+        if (oCombat) {
+            if (oTarget === null || oCombat.target === oTarget) {
+                // same target in combat : use combat action mechanism
+                oCombat.selectCurrentAction(sAction);
+                return;
+            } else {
+                // different target, disengage from combat
+                this.combatManager.endCombat(oCreature, false);
+            }
+        }
+        const oAction = oCreature.getters.getActions[sAction];
+        this.executeAction(oCreature, oAction, oTarget);
+    }
+
+    /**
      * Initiate a combat action.
      * Must run the script associated with this action
      * @param evt
@@ -233,10 +258,10 @@ class Manager {
         const attacker = combat.attacker;
         const target = combat.target;
         // combat.selectCurrentAction(evt.action.id);
-        const action = combat.currentAction;
+        const action = evt.action;
         // Lancement de l'action
         if (action) {
-            this.executeActionScript(attacker, action, target);
+            this.executeAction(attacker, action, target);
         }
     }
 
