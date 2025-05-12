@@ -70,6 +70,7 @@
       "id": "act-petrifying-breath",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-petrifying-vapor",
+      "bonus": true,
       "range": 30,
       "parameters": {},
       "cooldown": 6

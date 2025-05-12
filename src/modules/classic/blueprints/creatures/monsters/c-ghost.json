@@ -135,6 +135,7 @@
       "id": "act-horrifying-visage",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-frightful-glare",
+      "bonus": true,
       "range": 60,
       "parameters": {},
       "cooldown": 6
@@ -143,6 +144,7 @@
       "id": "act-elemental-breath",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-elemental-breath",
+      "bonus": true,
       "range": 90,
       "parameters": {
         "damageType": "DAMAGE_TYPE_COLD",

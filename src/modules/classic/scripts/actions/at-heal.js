@@ -1,3 +1,5 @@
+const {doHeal} = require('../../../../libs/helpers');
+
 /**
  *
  * @param oCreature {Creature}
@@ -7,11 +9,6 @@ function getDamagePoints (oCreature) {
     const hpmax = cg.getMaxHitPoints;
     const hp = oCreature.hitPoints;
     return hpmax - hp;
-}
-
-function heal (oManager, oCreature, oHealer, amount) {
-    const eHeal = oManager.createEffect(oManager.CONSTS.EFFECT_HEAL, amount);
-    oManager.applyEffect(eHeal, oCreature, oHealer);
 }
 
 /**
@@ -46,7 +43,7 @@ function main ({ manager, action, creature, target }) {
             .shift();
     }
     if (oHealedCreature) {
-        heal(manager, oHealedCreature, creature, action.parameters.amount);
+        doHeal(manager, oHealedCreature, creature, action.parameters.amount);
     }
 }
 

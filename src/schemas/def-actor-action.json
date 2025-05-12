@@ -5,7 +5,8 @@
   "required": [
     "id",
     "actionType",
-    "script"
+    "script",
+    "bonus"
   ],
   "properties": {
     "id": {
@@ -30,6 +31,10 @@
       "type": "string",
       "pattern": "^COMBAT_ACTION_TYPE_",
       "description": "Type of combat action, can be weapon, spell, or spell like ability"
+    },
+    "bonus": {
+      "type": "boolean",
+      "description": "if true, this is a bonus action that can be used on top of a normal action"
     },
     "script": {
       "type": "string",

@@ -92,6 +92,7 @@
       "id": "act-stench",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-stench",
+      "bonus": true,
       "range": 10,
       "parameters": {},
       "cooldown": 2

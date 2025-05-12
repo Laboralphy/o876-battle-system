@@ -1,4 +1,5 @@
 const CONSTS = require('../../consts');
+const os = require('node:os');
 
 const DAMAGE_TYPE_TO_THREAT_TYPE = {
     DAMAGE_TYPE_FIRE: CONSTS.THREAT_TYPE_FIRE,
@@ -53,6 +54,11 @@ function doDamage (oManager, oTarget, oSource, {
         effect,
         saved: bSaved
     };
+}
+
+function doHeal (oManager, oCreature, oHealer, amount) {
+    const eHeal = oManager.createEffect(oManager.CONSTS.EFFECT_HEAL, amount);
+    oManager.applyEffect(eHeal, oCreature, oHealer);
 }
 
 /**
@@ -126,6 +132,7 @@ function getWorstDamageTypeVsAC (aDamageTypes, oArmorClasses) {
 module.exports = {
     getThreatTypeFromDamageType,
     doDamage,
+    doHeal,
     getWeaponRange,
     getBestDamageTypeVsMitigation,
     getWorstDamageTypeVsAC

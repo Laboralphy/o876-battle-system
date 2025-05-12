@@ -85,6 +85,7 @@
       "id": "act-charm",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-stunning-glare",
+      "bonus": true,
       "range": 30,
       "parameters": {},
       "cooldown": 6
@@ -93,6 +94,7 @@
       "id": "act-vampire-bite",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-vampiric-bite",
+      "bonus": true,
       "range": 5,
       "parameters": {},
       "cooldown": 3

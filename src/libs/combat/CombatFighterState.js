@@ -20,6 +20,8 @@ class CombatFighterState {
         this._creature = null;
         this._lastAttackCount = 0;
         this._attackCount = 0;
+        this._bonusActionCount = 1;
+        this._bonusActionDone = 0;
     }
 
     /**
@@ -66,6 +68,11 @@ class CombatFighterState {
         this._creature.mutations.useAction({ action: id });
     }
 
+    useBonusAction (id) {
+        this.useAction(id);
+        ++this._bonusActionDone;
+    }
+
     /**
      * @param tick
      * @returns {number}
@@ -96,7 +103,16 @@ class CombatFighterState {
         }).sum;
     }
 
+    /**
+     * returns true if creature has bonus action available
+     * @returns {boolean}
+     */
+    hasBonusAction () {
+        return this._bonusActionDone < this._bonusActionCount;
+    }
+
     computePlan (nTurnTickCount, reverseOrder = false) {
+        this._bonusActionDone = 0;
         const oWeapon = this._creature.getters.getSelectedWeapon;
         const bRanged = oWeapon
             ? oWeapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)

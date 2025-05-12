@@ -435,7 +435,8 @@ describe('building a monster', function () {
                         'oneParam': 'oneValue'
                     },
                     'cooldown': 6,
-                    'charges': 5
+                    'charges': 5,
+                    'bonus': false
                 }
             ]
         };
@@ -530,7 +531,8 @@ describe('create a complex monster', function () {
                     'oneParam': 'oneValue'
                 },
                 'cooldown': 6,
-                'charges': 5
+                'charges': 5,
+                'bonus': false
             }
         ]
     };

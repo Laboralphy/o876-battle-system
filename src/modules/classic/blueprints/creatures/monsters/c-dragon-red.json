@@ -99,6 +99,7 @@
       "id": "act-elemental-breath",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-elemental-breath",
+      "bonus": true,
       "range": 60,
       "parameters": {
         "damageType": "DAMAGE_TYPE_FIRE",
@@ -110,6 +111,7 @@
       "id": "act-frightful-roar",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-frightful-presence",
+      "bonus": true,
       "range": 60,
       "parameters": {},
       "cooldown": 6
@@ -118,6 +120,7 @@
       "id": "act-wing-buffet",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-wing-buffet",
+      "bonus": true,
       "range": 20,
       "parameters": {
         "amount": "2d6+8"

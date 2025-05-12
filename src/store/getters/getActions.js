@@ -17,6 +17,7 @@ const CONSTS = require('../../consts');
  * @property script {string} script to call if action hits
  * @property parameters {{}} parameters passed to script
  * @property ready {boolean} if true this action is ready to use, else, action cannot be used
+ * @property bonus {boolean} if true, this is a bonus action
  *
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
@@ -52,7 +53,8 @@ module.exports = (state, getters) => Object.fromEntries(
                 range: action.range,
                 script: action.script,
                 parameters: action.parameters,
-                ready
+                ready,
+                bonus: action.bonus
             };
             return [id, oAction];
         })

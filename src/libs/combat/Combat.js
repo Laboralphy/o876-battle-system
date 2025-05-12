@@ -46,6 +46,9 @@ class Combat {
          */
         this._nextAction = '';
         this._currentAction = '';
+
+        this._nextBonusAction = '';
+        this._currentBonusAction = '';
     }
 
     get id () {
@@ -183,7 +186,17 @@ class Combat {
         } else if (value in this._attackerState.actions) {
             const oAction = this._attackerState.actions[value];
             if (oAction.ready && oAction.range >= this.distance) {
-                this._currentAction = value;
+                if (oAction.bonus) {
+                    if (this._attackerState.hasBonusAction()) {
+                        // We can play bonus action immediately
+                        this.playActionNow(oAction);
+                    } else {
+                        // We can play bonus action next turn (already used bonus action this turn)
+                        this._currentBonusAction = value;
+                    }
+                } else {
+                    this._currentAction = value;
+                }
                 return true;
             } else {
                 // Action not available
@@ -232,6 +245,30 @@ class Combat {
     }
 
     /**
+     * Immediately play an action
+     * @param action
+     */
+    playActionNow (action) {
+        const attackerState = this._attackerState;
+        const bCanUseAction = this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_ACT) &&
+            action.ready &&
+            (action.bonus ? attackerState.hasBonusAction() : true);
+        if (bCanUseAction) {
+            this._events.emit(CONSTS.EVENT_COMBAT_ACTION, {
+                ...this.eventDefaultPayload,
+                action: action
+            });
+            if (action.bonus) {
+                attackerState.useBonusAction(action.id);
+                this._currentBonusAction = '';
+            } else {
+                attackerState.useAction(action.id);
+                this.selectCurrentAction('');
+            }
+        }
+    }
+
+    /**
      * trigger a combat action.
      * The system must repsond to this event in order to make a creature attack or take action
      * @param bPartingShot {boolean} si true alors attaque d'opportunité
@@ -243,14 +280,7 @@ class Combat {
         if (bPartingShot || nAttackCount > 0) {
             const action = this.currentAction;
             if (action) {
-                if (action.ready && this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_ACT)) {
-                    this._events.emit(CONSTS.EVENT_COMBAT_ACTION, {
-                        ...this.eventDefaultPayload,
-                        action: action
-                    });
-                    attackerState.useAction(action.id);
-                    this.selectCurrentAction('');
-                }
+                this.playActionNow(action);
             } else if (this.attacker.getters.getSelectedWeapon) {
                 if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)) {
                     this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {

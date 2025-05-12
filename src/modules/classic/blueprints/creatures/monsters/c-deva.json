@@ -64,6 +64,7 @@
       "id": "act-heal",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-heal",
+      "bonus": true,
       "range": 100,
       "parameters": {},
       "cooldown": 6

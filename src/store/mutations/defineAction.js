@@ -11,6 +11,7 @@ const CONSTS = require('../../consts');
  * @property range {number}
  * @property script {string}
  * @property parameters {{}}
+ * @property bonus {boolean}
  *
  * @param state {RBSStoreState}
  * @param id {string}
@@ -20,6 +21,7 @@ const CONSTS = require('../../consts');
  * @param range {number}
  * @param script {string}
  * @param parameters {{}}
+ * @param bonus {boolean}
  */
 module.exports = ({ state }, {
     id,
@@ -28,7 +30,8 @@ module.exports = ({ state }, {
     charges = 0,
     range = Infinity,
     script,
-    parameters = {}
+    parameters = {},
+    bonus = false
 }) => {
     const bHasCooldown = cooldown > 0;
     const bHasCharges = charges > 0;
@@ -65,6 +68,7 @@ module.exports = ({ state }, {
         dailyCharges: charges,
         range,
         script,
-        parameters
+        parameters,
+        bonus
     };
 };
