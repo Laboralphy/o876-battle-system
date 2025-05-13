@@ -6,7 +6,7 @@
  */
 module.exports = ({ state, getters }, { action: idAction }) => {
     /**
-     * @var {RBSStoreStateAction}
+     * @var {RBSAction}
      */
     const oAction = state.actions[idAction];
     if (oAction) {

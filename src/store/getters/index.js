@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-05-06T22:52:10.925Z
+// Date : 2025-05-13T06:22:24.239Z
 // List of files in ./src/store/getters
 
 module.exports = {

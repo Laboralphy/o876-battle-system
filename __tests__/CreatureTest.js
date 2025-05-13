@@ -1535,3 +1535,22 @@ describe('rollSkill', function () {
         });
     });
 });
+
+describe('action and level requirement', function () {
+    it('shant have action a1 available when level is 1', function () {
+        const c = new Creature();
+        c.mutations.defineAction({
+            id: 'a1',
+            script: 's1',
+            requirements: {
+                level: 10,
+                classType: ''
+            }
+        });
+        expect(c.getters.getActions).not.toHaveProperty('a1');
+        c.mutations.setLevel({ value: 9 });
+        expect(c.getters.getActions).not.toHaveProperty('a1');
+        c.mutations.setLevel({ value: 10 });
+        expect(c.getters.getActions).toHaveProperty('a1');
+    });
+});

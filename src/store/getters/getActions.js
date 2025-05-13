@@ -7,7 +7,7 @@ const CONSTS = require('../../consts');
  *
  * @typedef RBSAction {object}
  * @property id {string} id of action
- * @property requirements {object<string, RBSActionRequirement>}
+ * @property requirements {RBSActionRequirement}
  * @property limited {boolean} if true, then this action has limited use
  * @property attackType {string} attack type
  * @property cooldown {number} if > 0 then the action cannot be used until 0
@@ -30,8 +30,11 @@ module.exports = (state, getters) => Object.fromEntries(
             if (!action.requirements) {
                 return true;
             }
-            const { classType, level = 1 } = action.requirements;
-            return getters.getClassType === classType && getters.getLevel >= level;
+            const { classType = '', level = 1 } = action.requirements;
+            if (classType !== '' && classType !== getters.getClassType) {
+                return false;
+            }
+            return getters.getLevel >= level;
         })
         .map(([id, action]) => {
             const acdt = action.cooldownTimer;

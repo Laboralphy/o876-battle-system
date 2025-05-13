@@ -1,18 +1,6 @@
 const CONSTS = require('../../consts');
 
 /**
- * @typedef RBSStoreStateAction {object}
- * @property id {string}
- * @property limited {boolean} if true, the action has limited use (limited charges, or/and limited cooldown)
- * @property actionType {string} COMBAT_ACTION_TYPE_*
- * @property cooldown {number}
- * @property cooldownTimer {number}
- * @property dailyCharges {number}
- * @property range {number}
- * @property script {string}
- * @property parameters {{}}
- * @property bonus {boolean}
- *
  * @param state {RBSStoreState}
  * @param id {string}
  * @param actionType {string}
@@ -22,6 +10,7 @@ const CONSTS = require('../../consts');
  * @param script {string}
  * @param parameters {{}}
  * @param bonus {boolean}
+ * @param requirements {RBSActionRequirement|null}
  */
 module.exports = ({ state }, {
     id,
@@ -31,7 +20,8 @@ module.exports = ({ state }, {
     range = Infinity,
     script,
     parameters = {},
-    bonus = false
+    bonus = false,
+    requirements = null
 }) => {
     const bHasCooldown = cooldown > 0;
     const bHasCharges = charges > 0;
@@ -69,6 +59,7 @@ module.exports = ({ state }, {
         range,
         script,
         parameters,
-        bonus
+        bonus,
+        requirements
     };
 };
