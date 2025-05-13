@@ -72,7 +72,7 @@ class Creature {
 
     set blueprint (blueprint) {
         const m = this.mutations;
-        m.setLevel({ value: blueprint.specie });
+        m.setSpecie({ value: blueprint.specie });
         m.setRace({ value: blueprint.race || CONSTS.RACE_UNKNOWN });
         m.setGender({ value: blueprint.gender || CONSTS.GENDER_NONE });
         m.setNaturalArmorClass({ value: blueprint.ac || 0 });
@@ -347,6 +347,14 @@ class Creature {
         };
         this.events.emit(CONSTS.EVENT_CREATURE_SKILL_CHECK, result);
         return result;
+    }
+
+    /**
+     * Increases creature level
+     */
+    levelUp () {
+        this.mutations.setLevel({ value: this.getters.getUnmodifiedLevel });
+        this.events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP);
     }
 }
 
