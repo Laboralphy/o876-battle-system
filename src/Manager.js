@@ -312,7 +312,7 @@ class Manager {
         opportunity = false,
         additionalWeaponDamage = 0
     } = {}) {
-        const oAttackOutcome = new AttackOutcome({ effectProcessor: this._effectProcessor });
+        const oAttackOutcome = new AttackOutcome({ manager: this });
         oAttackOutcome.attacker = attacker;
         oAttackOutcome.opportunity = opportunity;
         oAttackOutcome.target = target;

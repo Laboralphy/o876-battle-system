@@ -5,6 +5,24 @@ const ATTACK_ROLL_DISADVANTAGES = require('./functions/attack-rolls/dis');
 const SAVING_THROW_ADVANTAGES = require('./functions/saving-throws/adv');
 const SAVING_THROW_DISADVANTAGES = require('./functions/saving-throws/dis');
 
+const ADVANTAGES = {
+    attacks: {
+        ...ATTACK_ROLL_ADVANTAGES
+    },
+    savingThrows: {
+        ...SAVING_THROW_ADVANTAGES
+    }
+};
+const DISADVANTAGES = {
+    attacks: {
+        ...ATTACK_ROLL_DISADVANTAGES
+    },
+    savingThrows: {
+        ...SAVING_THROW_DISADVANTAGES
+    }
+};
+
+
 /**
  * @typedef RollBias {object}
  * @property result {number}
@@ -27,7 +45,27 @@ function computeAdvDis (advFunctions, disFunctions, ...params) {
     };
 }
 
+function defineAttackAdvantage (sId, pFunction) {
+    ADVANTAGES.attacks[sId] = pFunction;
+}
+
+function defineAttackDisadvantage (sId, pFunction) {
+    DISADVANTAGES.attacks[sId] = pFunction;
+}
+
+function defineSavingThrowAdvantage (sId, pFunction) {
+    ADVANTAGES.savingThrows[sId] = pFunction;
+}
+
+function defineSavingThrowDisadvantage (sId, pFunction) {
+    DISADVANTAGES.savingThrows[sId] = pFunction;
+}
+
 module.exports = {
-    computeAttackRollAdvantages: (...params) => computeAdvDis(ATTACK_ROLL_ADVANTAGES, ATTACK_ROLL_DISADVANTAGES, ...params),
-    computeSavingThrowAdvantages: (...params) => computeAdvDis(SAVING_THROW_ADVANTAGES, SAVING_THROW_DISADVANTAGES, ...params),
+    defineAttackAdvantage,
+    defineAttackDisadvantage,
+    defineSavingThrowAdvantage,
+    defineSavingThrowDisadvantage,
+    computeAttackRollAdvantages: (...params) => computeAdvDis(ADVANTAGES.attacks, DISADVANTAGES.attacks, ...params),
+    computeSavingThrowAdvantages: (...params) => computeAdvDis(ADVANTAGES.savingThrows, DISADVANTAGES.savingThrows, ...params),
 };

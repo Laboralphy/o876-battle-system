@@ -10,11 +10,11 @@ const { getWorstDamageTypeVsAC, getBestDamageTypeVsMitigation } = require('./lib
 class AttackOutcome {
     /**
      *
-     * @param effectProcessor {EffectProcessor}
+     * @param manager {Manager}
      */
-    constructor ({ effectProcessor = null } = {}) {
+    constructor ({ manager = null } = {}) {
         this._events = new Events();
-        this._effectProcessor = effectProcessor;
+        this._manager = manager;
 
         /// ATTACK PRESETS /// /// ATTACK PRESETS /// /// ATTACK PRESETS /// /// ATTACK PRESETS ///
         /// ATTACK PRESETS /// /// ATTACK PRESETS /// /// ATTACK PRESETS /// /// ATTACK PRESETS ///
@@ -292,7 +292,11 @@ class AttackOutcome {
     }
 
     get effectProcessor () {
-        return this._effectProcessor;
+        return this._manager.effectProcessor;
+    }
+
+    get manager () {
+        return this._manager;
     }
 
     /**
@@ -516,7 +520,7 @@ class AttackOutcome {
         return this._damages.effects = Object
             .entries(this._damages.types)
             .map(([sType, oDmg]) => {
-                const eDmg = this._effectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, oDmg.amount, { damageType: sType });
+                const eDmg = this.effectProcessor.createEffect(CONSTS.EFFECT_DAMAGE, oDmg.amount, { damageType: sType });
                 eDmg.subtype = CONSTS.EFFECT_SUBTYPE_WEAPON;
                 return eDmg;
             });
@@ -527,7 +531,7 @@ class AttackOutcome {
      */
     applyDamages () {
         const aDamages = this
-            ._effectProcessor
+            .effectProcessor
             .applyEffectGroup(this._damages.effects, '', this._target, 0, this._attacker);
         const dam = this._damages;
         aDamages.forEach(({ amp, data: { damageType, resistedAmount } }) => {
