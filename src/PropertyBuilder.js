@@ -66,7 +66,7 @@ class PropertyBuilder {
     }
 
     /**
-     * @typedef RBSProperty
+     * @typedef RBSProperty {object}
      * @property id {string}
      * @property type {string} PROPERTY_*
      * @property amp {number|string}

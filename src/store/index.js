@@ -26,6 +26,9 @@ function buildStore () {
 
 module.exports = {
     buildStore,
+    getData: function () {
+        return externals;
+    },
     loadData: function (data) {
         deepMerge(externals, data);
     }

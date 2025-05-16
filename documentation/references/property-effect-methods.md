@@ -4,7 +4,7 @@
 
 ### init ({ effect, ... })
 
-This method will be called on effect creation. `type` and `amp` will be set with proper values.
+This method will be called on effect/property creation. `type` and `amp` will be set with proper values.
 
 
 

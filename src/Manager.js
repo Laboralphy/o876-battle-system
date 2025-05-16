@@ -9,8 +9,8 @@ const Creature = require('./Creature');
 const path = require('path');
 const AttackOutcome = require('./AttackOutcome');
 const CONSTS = require('./consts');
-const { loadData } = require('./store');
-const {aggregateModifiers} = require('./libs/aggregator');
+const { getData, loadData } = require('./store');
+const { aggregateModifiers } = require('./libs/aggregator');
 const PropertyBuilder = require('./PropertyBuilder');
 const baseModule = require('./modules/base');
 
@@ -31,6 +31,7 @@ const CreatureDamagedEvent = require('./events/CreatureDamagedEvent');
 const CreatureDeathEvent = require('./events/CreatureDeathEvent');
 const CreatureActionEvent = require('./events/CreatureActionEvent');
 const BoxedCreature = require('./sub-api/classes/BoxedCreature');
+const {addProperty} = require('./store/mutations');
 
 class Manager {
     constructor () {
@@ -601,6 +602,75 @@ class Manager {
      */
     applyEffect (oEffect, oTarget, duration = 0, oSource = null) {
         return this._effectProcessor.applyEffect(oEffect, oTarget, duration, oSource);
+    }
+
+    /**
+     * @param oCreature {Creature}
+     * @param oProperty {object}
+     */
+    addProperty (oCreature, oProperty) {
+        const p = this.propertyBuilder.buildProperty(oProperty);
+        oCreature.mutations.addProperty({ property: p });
+        return p;
+    }
+
+    /**
+     * @param oCreature {Creature}
+     * @param oProperty {RBSProperty}
+     */
+    removeProperty (oCreature, oProperty) {
+        const idProperty = oProperty.id;
+        const p = oCreature.getters.getInnateProperties.find(({ id }) => id === idProperty);
+        if (p) {
+            oCreature.mutations.removeProperty({ property: p });
+        }
+    }
+
+    hasFeat (oCreature, sFeat) {
+        return !!oCreature
+            .getters
+            .getInnateProperties
+            .find(p => p.type === CONSTS.PROPERTY_FEAT && p.feat === sFeat);
+    }
+
+    getFeatRepository () {
+        return getData()['feat'];
+    }
+
+    /**
+     * Adds a feat to a creature
+     * @param oCreature {Creature}
+     * @param sFeat {string}
+     */
+    addCreatureFeat (oCreature, sFeat) {
+        if (this.hasFeat(oCreature, sFeat)) {
+            return;
+        }
+        const oFeat = this.getFeatRepository()[sFeat];
+        if (oFeat) {
+            const aPropIds = oFeat.map(property => addProperty(oCreature, property));
+            this.addProperty(oCreature, {
+                type: CONSTS.PROPERTY_FEAT,
+                feat: oFeat.id,
+                properties: aPropIds
+            });
+        }
+    }
+
+    /**
+     *
+     * @param oCreature {Creature}
+     * @param sFeat {string}
+     */
+    removeCreatureFeat (oCreature, sFeat) {
+        const aInnateProps = oCreature.getters.getInnateProperties;
+        const oProps = Object.fromEntries(aInnateProps.map(p => [p.id, p]));
+        aInnateProps
+            .filter(p => p.type === CONSTS.PROPERTY_FEAT && p.feat === sFeat)
+            .reduce((prev, idProp) => prev.concat(idProp), [])
+            .map(idProp => oProps[idProp])
+            .filter(p => !!p)
+            .forEach(p => this.removeProperty(oCreature, p));
     }
 }
 

@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-05-13T13:05:55.691Z
+// Date : 2025-05-16T09:10:52.200Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -20,6 +20,7 @@ module.exports = {
     'PROPERTY_DISADVANTAGE_SAVING_THROW': require('./disadvantage-saving-throw.js'),
     'PROPERTY_EXTRA_HITPOINTS': require('./extra-hitpoints.js'),
     'PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE': require('./extra-weapon-damage-type.js'),
+    'PROPERTY_FEAT': require('./feat.js'),
     'PROPERTY_HEALING_FACTOR': require('./healing-factor.js'),
     'PROPERTY_HEALING_MODIFIER': require('./healing-modifier.js'),
     'PROPERTY_IMMUNITY': require('./immunity.js'),
