@@ -647,11 +647,15 @@ class Manager {
             return;
         }
         const oFeat = this.getFeatRepository()[sFeat];
-        if (oFeat) {
-            const aPropIds = oFeat.map(property => addProperty(oCreature, property));
+        const aFeatProperties = oFeat.properties;
+        if (aFeatProperties) {
+            const aPropIds = aFeatProperties.map(property => {
+                const p = this.addProperty(oCreature, property);
+                return p.id;
+            });
             this.addProperty(oCreature, {
                 type: CONSTS.PROPERTY_FEAT,
-                feat: oFeat.id,
+                feat: sFeat,
                 properties: aPropIds
             });
         }

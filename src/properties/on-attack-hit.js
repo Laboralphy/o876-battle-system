@@ -18,7 +18,6 @@ function init ({ property, ailment, savingThrow = '', ...extraParams }) {
 }
 
 function _getThreatTypeFromAilment (sAilment) {
-    const att = DATA['AILMENT_TO_THREAT_TYPES'];
     return DATA['AILMENT_TO_THREAT_TYPES'][sAilment] ?? '';
 }
 

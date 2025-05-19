@@ -1,6 +1,25 @@
 {
-  "FEAT_MARTIAL_ARCHETYPE_PROTECTION": "FEAT_MARTIAL_ARCHETYPE_PROTECTION",
-  "FEAT_MARTIAL_ARCHETYPE_DEFENSE": "FEAT_MARTIAL_ARCHETYPE_DEFENSE",
-  "FEAT_MARTIAL_ARCHETYPE_HEAVY_WEAPON": "FEAT_MARTIAL_ARCHETYPE_HEAVY_WEAPON",
-  "FEAT_MARTIAL_ARCHETYPE_ARCHERY": "FEAT_MARTIAL_ARCHETYPE_ARCHERY"
+  "FEAT_MARTIAL_ARCHETYPE_PROTECTION": {
+  },
+  "FEAT_MARTIAL_ARCHETYPE_DEFENSE": {
+    "description": "+2 to AC",
+    "properties": [{
+      "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
+      "amp": 2
+    }]
+  },
+  "FEAT_MARTIAL_ARCHETYPE_HEAVY_WEAPON": {
+    "description": "when wielding a melee weapon with both hand, you may re-roll damage die if the first roll was 1 or 2"
+  },
+  "FEAT_MARTIAL_ARCHETYPE_DUELLING": {
+    "description": "+2 to damage roll when wielding a one hand weapon, with no shield"
+  },
+  "FEAT_MARTIAL_ARCHETYPE_ARCHERY": {
+    "description": "+2 to attack roll with ranged weapon",
+    "properties": [{
+      "type": "PROPERTY_ATTACK_MODIFIER",
+      "amp": 2,
+      "attackType": "ATTACK_TYPE_RANGED"
+    }]
+  }
 }
