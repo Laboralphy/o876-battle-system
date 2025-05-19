@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-05-16T09:10:52.200Z
+// Date : 2025-05-19T17:13:16.871Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -32,6 +32,7 @@ module.exports = {
     'PROPERTY_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
     'PROPERTY_SKILL_MODIFIER': require('./skill-modifier.js'),
     'PROPERTY_SNEAK_ATTACK': require('./sneak-attack.js'),
+    'PROPERTY_SPECIAL_BEHAVIOR': require('./special-behavior.js'),
     'PROPERTY_SPEED_FACTOR': require('./speed-factor.js'),
     'PROPERTY_SPELL_POWER': require('./spell-power.js'),
     'PROPERTY_SPIKE_DAMAGE': require('./spike-damage.js'),

@@ -1,20 +1,26 @@
 {
-  "FEAT_MARTIAL_ARCHETYPE_PROTECTION": {
-  },
-  "FEAT_MARTIAL_ARCHETYPE_DEFENSE": {
+  "FEAT_FIGHTING_STYLE_DEFENSE": {
     "description": "+2 to AC",
     "properties": [{
       "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
       "amp": 2
     }]
   },
-  "FEAT_MARTIAL_ARCHETYPE_HEAVY_WEAPON": {
-    "description": "when wielding a melee weapon with both hand, you may re-roll damage die if the first roll was 1 or 2"
+  "FEAT_FIGHTING_STYLE_GREAT_WEAPON": {
+    "description": "when wielding a melee weapon with both hand, you may re-roll damage die if the first roll was 1 or 2",
+    "properties": [{
+      "type": "PROPERTY_SPECIAL_BEHAVIOR",
+      "attack": "at-ffs-great-weapon-second-chance"
+    }]
   },
-  "FEAT_MARTIAL_ARCHETYPE_DUELLING": {
-    "description": "+2 to damage roll when wielding a one hand weapon, with no shield"
+  "FEAT_FIGHTING_STYLE_DUELLING": {
+    "description": "+2 to damage roll when wielding a one hand weapon, with no shield",
+    "properties": [{
+      "type": "PROPERTY_SPECIAL_BEHAVIOR",
+      "attack": "at-ffs-duelling-weapon-dmg-bonus"
+    }]
   },
-  "FEAT_MARTIAL_ARCHETYPE_ARCHERY": {
+  "FEAT_FIGHTING_STYLE_ARCHERY": {
     "description": "+2 to attack roll with ranged weapon",
     "properties": [{
       "type": "PROPERTY_ATTACK_MODIFIER",

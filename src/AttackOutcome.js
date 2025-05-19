@@ -401,7 +401,7 @@ class AttackOutcome {
     }
 
     rollDamages (xAmount, sDamageType) {
-        const oDamageType = this.damages.types;
+        const oDamageType = this._damages.types;
         if (!(sDamageType in oDamageType)) {
             oDamageType[sDamageType] = {
                 amount: 0,
@@ -415,6 +415,8 @@ class AttackOutcome {
      * Proceed to an attack against target, using melee or ranged weapon
      */
     attack () {
+        this._failed = false;
+        this._failure = '';
         if (this.target.getters.isDead) {
             this.fail(CONSTS.ATTACK_FAILURE_TARGET_DEAD);
             return false;
@@ -499,21 +501,20 @@ class AttackOutcome {
                     this.rollDamages(sSneakDice, sDamageType);
                 }
             }
+            aggregateModifiers([
+                CONSTS.PROPERTY_DAMAGE_MODIFIER,
+                CONSTS.EFFECT_DAMAGE_MODIFIER
+            ], oAttacker.getters, {
+                propAmpMapper: prop => oAttacker.dice.roll(prop.amp),
+                effectAmpMapper: effect => oAttacker.dice.roll(effect.amp),
+                propForEach: prop => {
+                    this.rollDamages(prop.amp, prop.data.damageType);
+                },
+                effectForEach: effect => {
+                    this.rollDamages(effect.amp, effect.data.damageType);
+                }
+            });
         }
-
-        aggregateModifiers([
-            CONSTS.PROPERTY_DAMAGE_MODIFIER,
-            CONSTS.EFFECT_DAMAGE_MODIFIER
-        ], oAttacker.getters, {
-            propAmpMapper: prop => oAttacker.dice.roll(prop.amp),
-            effectAmpMapper: effect => oAttacker.dice.roll(effect.amp),
-            propForEach: prop => {
-                this.rollDamages(prop.amp, prop.data.damageType);
-            },
-            effectForEach: effect => {
-                this.rollDamages(effect.amp, effect.data.damageType);
-            }
-        });
     }
 
     createDamageEffects () {
@@ -536,7 +537,6 @@ class AttackOutcome {
         const dam = this._damages;
         aDamages.forEach(({ amp, data: { damageType, resistedAmount } }) => {
             dam.amount += amp;
-            dam.types[damageType].amount += amp;
             dam.types[damageType].resisted += resistedAmount;
         });
         return aDamages;

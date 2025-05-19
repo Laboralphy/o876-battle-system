@@ -7,5 +7,8 @@ const CONSTS = require('../../consts');
  * @returns {boolean}
  */
 module.exports = (state, getters) => {
-    return getters.getSelectedWeaponAttributeSet.has(CONSTS.WEAPON_ATTRIBUTE_TWO_HANDED);
+    const wa = getters.getSelectedWeaponAttributeSet;
+    return wa.has(CONSTS.WEAPON_ATTRIBUTE_TWO_HANDED) || (
+        wa.has(CONSTS.WEAPON_ATTRIBUTE_VERSATILE) && !getters.isWieldingShield
+    );
 };

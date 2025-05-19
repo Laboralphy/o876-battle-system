@@ -321,6 +321,10 @@ class Manager {
         oAttackOutcome.computeDefenseParameters();
         oAttackOutcome.rush = additionalWeaponDamage !== 0;
         oAttackOutcome.attack();
+        this.runPropEffectScript(attacker, 'attack', {
+            attack: oAttackOutcome,
+            manager: this
+        });
         if (oAttackOutcome.hit) {
             if (oAttackOutcome.rush) {
                 const sWeaponDamageType = oAttackOutcome.weapon.blueprint.damageType;
@@ -328,10 +332,6 @@ class Manager {
                 oAttackOutcome.rollDamages(nAmount, sWeaponDamageType);
             }
             oAttackOutcome.createDamageEffects();
-            this.runPropEffectScript(attacker, 'attack', {
-                attack: oAttackOutcome,
-                manager: this
-            });
             this.runPropEffectScript(target, 'attacked', {
                 attack: oAttackOutcome,
                 manager: this
@@ -344,6 +344,7 @@ class Manager {
         if (oAttackOutcome.hit) {
             oAttackOutcome.applyDamages();
         }
+        return oAttackOutcome;
     }
 
     /**
@@ -630,11 +631,11 @@ class Manager {
         return !!oCreature
             .getters
             .getInnateProperties
-            .find(p => p.type === CONSTS.PROPERTY_FEAT && p.feat === sFeat);
+            .find(p => p.type === CONSTS.PROPERTY_FEAT && p.data.feat === sFeat);
     }
 
     getFeatRepository () {
-        return getData()['feat'];
+        return getData()['feats'];
     }
 
     /**
