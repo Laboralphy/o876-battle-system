@@ -9,7 +9,7 @@ const Creature = require('./Creature');
 const path = require('path');
 const AttackOutcome = require('./AttackOutcome');
 const CONSTS = require('./consts');
-const { getData, loadData } = require('./store');
+const { getData } = require('./store');
 const { aggregateModifiers } = require('./libs/aggregator');
 const PropertyBuilder = require('./PropertyBuilder');
 const baseModule = require('./modules/base');
@@ -19,7 +19,6 @@ const CombatMoveEvent = require('./events/CombatMoveEvent');
 const CombatTurnEvent = require('./events/CombatTurnEvent');
 const CombatEndEvent = require('./events/CombatEndEvent');
 const CombatDistanceEvent = require('./events/CombatDistanceEvent');
-const CombatActionEvent = require('./events/CombatActionEvent');
 const CombatAttackEvent = require('./events/CombatAttackEvent');
 const CreatureEffectAppliedEvent = require('./events/CreatureEffectAppliedEvent');
 const CreatureEffectExpiredEvent = require('./events/CreatureEffectExpiredEvent');
@@ -30,8 +29,6 @@ const CreatureSavingThrowEvent = require('./events/CreatureSavingThrowEvent');
 const CreatureDamagedEvent = require('./events/CreatureDamagedEvent');
 const CreatureDeathEvent = require('./events/CreatureDeathEvent');
 const CreatureActionEvent = require('./events/CreatureActionEvent');
-const BoxedCreature = require('./sub-api/classes/BoxedCreature');
-const {addProperty} = require('./store/mutations');
 
 class Manager {
     constructor () {
@@ -364,7 +361,7 @@ class Manager {
             .forEach(([id, script]) => {
                 this._scripts[id] = script;
             });
-        loadData(data);
+        this._entityBuilder.addData(data);
     }
 
     runScript (sScript, ...params) {
@@ -635,7 +632,7 @@ class Manager {
     }
 
     getFeatRepository () {
-        return getData()['feats'];
+        return this._entityBuilder.data['FEATS'];
     }
 
     /**

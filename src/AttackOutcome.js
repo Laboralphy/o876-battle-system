@@ -3,6 +3,7 @@ const Events = require('events');
 const { aggregateModifiers } = require('./libs/aggregator');
 const { computeAttackRollAdvantages } = require('./advantages');
 const { getWorstDamageTypeVsAC, getBestDamageTypeVsMitigation } = require('./libs/helpers');
+const {getUniqueId} = require('./libs/unique-id');
 
 /**
  * @class
@@ -13,6 +14,7 @@ class AttackOutcome {
      * @param manager {Manager}
      */
     constructor ({ manager = null } = {}) {
+        this._id = getUniqueId();
         this._events = new Events();
         this._manager = manager;
 
@@ -169,6 +171,10 @@ class AttackOutcome {
             types: {}, // amount of damage taken and resisted by type
             effects: []
         };
+    }
+
+    get id () {
+        return this._id;
     }
 
     get ability() {
@@ -501,6 +507,8 @@ class AttackOutcome {
                     this.rollDamages(sSneakDice, sDamageType);
                 }
             }
+            const nOffensiveAbilityModifier = oAttacker.getters.getAbilityModifiers[this._ability];
+            this.rollDamages(nOffensiveAbilityModifier, sDamageType);
             aggregateModifiers([
                 CONSTS.PROPERTY_DAMAGE_MODIFIER,
                 CONSTS.EFFECT_DAMAGE_MODIFIER

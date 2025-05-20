@@ -4,6 +4,8 @@ const { getUniqueId } = require('./libs/unique-id');
 const CONSTS = require('./consts');
 const Creature = require('./Creature');
 const { sortByDependency } = require('./libs/sort-by-dependency');
+const DATA = require('./data');
+
 
 /**
  * This class takes blueprints, and create real items out of them
@@ -13,6 +15,13 @@ class EntityBuilder {
         this._blueprints = new Map();
         this._schemaValidator = null;
         this._propertyBuilder = null;
+        this._data = {
+            ...DATA
+        };
+    }
+
+    get data () {
+        return this._data;
     }
 
     /**
@@ -53,6 +62,10 @@ class EntityBuilder {
         aSortedBlueprints.forEach(blueprint => {
             this.defineBlueprint(blueprint.ref, blueprint);
         });
+    }
+
+    addData (data) {
+        deepMerge(this._data, data);
     }
 
     /**
@@ -180,7 +193,7 @@ class EntityBuilder {
     createCreatureFromResRef (resref, id = undefined) {
         try {
             const oBlueprint = this._checkResRef(resref);
-            const oCreature = new Creature({ blueprint: oBlueprint, id });
+            const oCreature = new Creature({ blueprint: oBlueprint, id, data: this._data });
             this
                 ._buildProperties(oBlueprint.properties)
                 .forEach(property => oCreature.mutations.addProperty({ property }));

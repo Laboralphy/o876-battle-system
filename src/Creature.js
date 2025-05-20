@@ -7,8 +7,8 @@ const { checkConst } = require('./libs/check-const');
 const { computeSavingThrowAdvantages } = require('./advantages');
 
 class Creature {
-    constructor ({ blueprint = null, id = null } = {}) {
-        this._store = buildStore();
+    constructor ({ blueprint = null, id = null, data = undefined } = {}) {
+        this._store = buildStore({ externals: data });
         if (blueprint) {
             this.blueprint = blueprint;
         } else {
@@ -21,6 +21,10 @@ class Creature {
         }
         this._events = new Events;
         this._dice = new Dice();
+    }
+
+    get store () {
+        return this._store;
     }
 
     get data () {

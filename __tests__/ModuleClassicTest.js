@@ -47,10 +47,12 @@ describe('fighter feat fighting style great weapon', function () {
         const c2 = m.createEntity('c-goblin');
         c.dice.cheat(0.5);
         const ao = m.deliverAttack(c, c2);
+        expect(ao.roll).toBe(11);
         expect(aLog1).toEqual(['do NOT reroll attack 11']);
     });
 
     it('should attack twice when attack roll is <= 2', function () {
+        const m1 = new Manager();
         const m = new Manager();
         m.loadModule('classic');
         const aLog1 = [];
@@ -80,7 +82,8 @@ describe('fighter feat fighting style great weapon', function () {
         const c2 = m.createEntity('c-goblin');
         c.dice.cheat(0.001);
         const ao = m.deliverAttack(c, c2);
-        expect(aLog1).toEqual(['reroll attack 1 -> 11', 'do NOT reroll attack 11']);
+        expect(ao.roll).toBe(11);
+        expect(aLog1).toEqual(['reroll attack 1 -> 11']);
     });
 
     it('should not infinite loop when both attack die are low', function () {
@@ -130,9 +133,14 @@ describe('fighter feat fighting style duelling', function () {
         c.equipItem(w);
         expect(c.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_SHIELD]).toBeNull();
         const c2 = m.createEntity('c-goblin');
-        c.dice.cheat(0.99);
+        c.dice.cheat(0.7);
         const ao = m.deliverAttack(c, c2);
-        expect(ao.damages.amount).toBe(12);
+        expect(ao.critical).toBeFalsy();
+        expect(ao.ability).toBe(CONSTS.ABILITY_STRENGTH);
+        expect(c.getters.getLevel).toBe(2);
+        expect(c.getters.getAbilities[CONSTS.ABILITY_STRENGTH]).toBe(16);
+        expect(c.getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH]).toBe(3);
+        expect(ao.damages.amount).toBe(8); // 5 (70% max damage) + 3 (str bonus)
     });
 
     it('should add two points of damage when having short sword', function () {
@@ -144,10 +152,8 @@ describe('fighter feat fighting style duelling', function () {
         c.equipItem(w);
         expect(c.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_SHIELD]).toBeNull();
         const c2 = m.createEntity('c-goblin');
-        c.dice.cheat(0.99);
+        c.dice.cheat(0.7);
         const ao = m.deliverAttack(c, c2);
-        // console.log(ao.damages);
-        // console.log(c.getters.getInnateProperties);
-        expect(ao.damages.amount).toBe(14);
+        expect(ao.damages.amount).toBe(10); // 5 (70% damage max) + 3 (str bonus) + 2 (feat bonus)
     });
 });

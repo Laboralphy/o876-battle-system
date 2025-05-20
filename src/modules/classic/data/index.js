@@ -1,7 +1,7 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-05-19T17:13:16.367Z
+// Date : 2025-05-20T15:26:42.863Z
 // List of files in ./src/modules/classic/data
 
 module.exports = {
-    'skills': require('./skills.json')
+    'SKILLS': require('./skills.json')
 };
