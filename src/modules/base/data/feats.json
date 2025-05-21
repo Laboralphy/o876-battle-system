@@ -4,21 +4,24 @@
     "properties": [{
       "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
       "amp": 2
-    }]
+    }],
+    "action": null
   },
   "FEAT_FIGHTING_STYLE_GREAT_WEAPON": {
     "description": "when wielding a melee weapon with both hand, you may re-roll damage die if the first roll was 1 or 2",
     "properties": [{
       "type": "PROPERTY_SPECIAL_BEHAVIOR",
       "attack": "at-ffs-great-weapon-second-chance"
-    }]
+    }],
+    "action": null
   },
   "FEAT_FIGHTING_STYLE_DUELLING": {
     "description": "+2 to damage roll when wielding a one hand weapon, with no shield",
     "properties": [{
       "type": "PROPERTY_SPECIAL_BEHAVIOR",
       "attack": "at-ffs-duelling-weapon-dmg-bonus"
-    }]
+    }],
+    "action": null
   },
   "FEAT_FIGHTING_STYLE_ARCHERY": {
     "description": "+2 to attack roll with ranged weapon",
@@ -26,6 +29,60 @@
       "type": "PROPERTY_ATTACK_MODIFIER",
       "amp": 2,
       "attackType": "ATTACK_TYPE_RANGED"
-    }]
+    }],
+    "action": null
+  },
+  "FEAT_ACTION_SECOND_WIND": {
+    "description": "heals 1d10 + fighter level",
+    "properties": [],
+    "action": {
+      "id": "act-fighter-second-wind",
+      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
+      "script": "at-fighter-second-wind",
+      "range": 0,
+      "parameters": {},
+      "cooldown": 120,
+      "bonus": true
+    }
+  },
+  "FEAT_IMPROVED_CRITICAL": {
+    "description": "critical range is now 19-20",
+    "properties": [
+      {
+        "type": "PROPERTY_CRITICAL_RANGE_MODIFIER",
+        "amp": 1,
+        "attackType": "ATTACK_TYPE_ANY"
+      }
+    ]
+  },
+  "FEAT_SUPERIOR_CRITICAL": {
+    "description": "critical range is now 18-20",
+    "properties": [
+      {
+        "type": "PROPERTY_CRITICAL_RANGE_MODIFIER",
+        "amp": 2,
+        "attackType": "ATTACK_TYPE_ANY"
+      }
+    ]
+  },
+  "FEAT_SURVIVOR": {
+    "description": "heals 5 + constitution when hp is lower that 1/2 maxHP",
+    "properties": [
+      {
+        "type": "PROPERTY_REGENERATION",
+        "amp": 5,
+        "useConstitutionModifier": true,
+        "threshold": 0.5
+      }
+    ]
+  },
+  "FEAT_REMARKABLE_ATHLETE": {
+    "description": "Moving speed increased by 20%",
+    "properties": [
+      {
+        "type": "PROPERTY_SPEED_FACTOR",
+        "amp": 0.2
+      }
+    ]
   }
 }

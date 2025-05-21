@@ -418,6 +418,23 @@ class AttackOutcome {
     }
 
     /**
+     * Get a creture's critical range
+     * @param oCreature {Creature}
+     * @param sAttackType {string} ATTACK_TYPE_*
+     * @returns {number}
+     * @private
+     */
+    _getCriticalRange (oCreature, sAttackType) {
+        const amp = aggregateModifiers([
+            CONSTS.PROPERTY_CRITICAL_RANGE_MODIFIER
+        ], oCreature.getters,
+        {
+            propFilter: prop => prop.data.attackType === CONSTS.ATTACK_TYPE_ANY || prop.data.attackType === sAttackType
+        }).sum;
+        return oCreature.getters.getVariables['ROLL_CRITICAL_SUCCESS_VALUE'] - amp;
+    }
+
+    /**
      * Proceed to an attack against target, using melee or ranged weapon
      */
     attack () {
@@ -479,7 +496,7 @@ class AttackOutcome {
             break;
         }
         }
-        const bCritical = nRoll === this._attacker.getters.getVariables['ROLL_CRITICAL_SUCCESS_VALUE'];
+        const bCritical = nRoll === this._getCriticalRange(this._attacker, this._attackType);
         const bFumble = nRoll === this._attacker.getters.getVariables['ROLL_FUMBLE_VALUE'];
         const bHit = bFumble
             ? false

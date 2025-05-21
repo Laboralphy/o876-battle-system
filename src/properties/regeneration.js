@@ -4,11 +4,14 @@ const CONSTS = require('../consts');
  *
  * @param property {RBSProperty}
  * @param damageTypeVulnerabilities {string[]} if creature is damaged by one of this damage types, the regeneration is
+ * @param threshold {number} regen is active only when current hp is lower than `threshold * maxHP`
  * shut down until damage amount is soaked down by regeneration
  */
-function init ({ property, damageTypeVulnerabilities = [] }) {
+function init ({ property, damageTypeVulnerabilities = [], threshold = 1, useConstitutionModifier = false }) {
     property.data.vulnerabilities = damageTypeVulnerabilities;
-    property.data.shutdown = 0;
+    property.data.shutdown = 0; // use internally to deals with regend stopped because of vulnerabilities
+    property.data.threshold = threshold;
+    property.data.useConstitutionModifier = useConstitutionModifier;
 }
 
 /**
@@ -22,9 +25,10 @@ function mutate ({ property, item, creature, manager }) {
     if (creature.getters.isDead) {
         return;
     }
-    const amount = creature.dice.roll(property.amp);
+    const amount = creature.dice.roll(property.amp) +
+        (property.data.useConstitutionModifier ? creature.getters.getAbilityModifiers[CONSTS.ABILITY_CONSTITUTION] : 0);
     if (property.data.shutdown === 0) {
-        if (creature.hitPoints < creature.getters.getMaxHitPoints) {
+        if (creature.hitPoints < (property.data.threshold * creature.getters.getMaxHitPoints)) {
             const effectProcessor = manager.effectProcessor;
             const eHeal = effectProcessor.createEffect(CONSTS.EFFECT_HEAL, amount);
             effectProcessor.applyEffect(eHeal, creature);

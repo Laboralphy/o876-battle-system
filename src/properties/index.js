@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-05-20T15:26:43.439Z
+// Date : 2025-05-21T08:55:59.643Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -9,6 +9,7 @@ module.exports = {
     'PROPERTY_ARMOR_CLASS_MODIFIER': require('./armor-class-modifier.js'),
     'PROPERTY_ATTACK_COUNT_MODIFIER': require('./attack-count-modifier.js'),
     'PROPERTY_ATTACK_MODIFIER': require('./attack-modifier.js'),
+    'PROPERTY_CRITICAL_RANGE_MODIFIER': require('./critical-range-modifier.js'),
     'PROPERTY_CURSED': require('./cursed.js'),
     'PROPERTY_DAMAGE_IMMUNITY': require('./damage-immunity.js'),
     'PROPERTY_DAMAGE_MODIFIER': require('./damage-modifier.js'),

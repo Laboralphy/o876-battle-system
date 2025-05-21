@@ -12,32 +12,5 @@
     "PROFICIENCY_SAVING_THROW_CONSTITUTION"
   ],
   "classType": "CLASS_TYPE_FIGHTER",
-  "actions": [
-    {
-      "id": "act-fighter-second-wind",
-      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-fighter-second-wind",
-      "range": 0,
-      "parameters": {},
-      "cooldown": 120,
-      "bonus": true,
-      "requirements": {
-        "classType": "CLASS_TYPE_FIGHTER",
-        "level": 1
-      }
-    },
-    {
-      "id": "act-fighter-action-surge",
-      "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-fighter-action-surge",
-      "range": 0,
-      "parameters": {},
-      "cooldown": 120,
-      "bonus": true,
-      "requirements": {
-        "classType": "CLASS_TYPE_FIGHTER",
-        "level": 2
-      }
-    }
-  ]
+  "actions": []
 }
