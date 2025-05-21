@@ -7,7 +7,13 @@
       },
       {
         "level": 2,
-        "feats": ["FEAT_FIGHTING_STYLE_DEFENSE"]
+        "feats": ["FEAT_ACTION_SURGE"],
+        "selectFeats": [
+          "FEAT_FIGHTING_STYLE_DEFENSE",
+          "FEAT_FIGHTING_STYLE_ARCHERY",
+          "FEAT_FIGHTING_STYLE_DUELLING",
+          "FEAT_FIGHTING_STYLE_GREAT_WEAPON"
+        ]
       },
       {
         "level": 3,
@@ -22,49 +28,70 @@
         "extraAttack": 1
       },
       {
-        "level": 6
+        "level": 6,
+        "abilityPoints": 2
       },
       {
-        "level": 7
+        "level": 7,
+        "feats": ["FEAT_REMARKABLE_ATHLETE"]
       },
       {
-        "level": 8
+        "level": 8,
+        "abilityPoints": 2
       },
       {
         "level": 9
       },
       {
-        "level": 10
+        "level": 10,
+        "feats": ["FEAT_FIGHTING_STYLE_ARCHERY"],
+        "selectFeats": [
+          "FEAT_FIGHTING_STYLE_DEFENSE",
+          "FEAT_FIGHTING_STYLE_ARCHERY",
+          "FEAT_FIGHTING_STYLE_DUELLING",
+          "FEAT_FIGHTING_STYLE_GREAT_WEAPON"
+        ]
       },
       {
-        "level": 11
+        "level": 11,
+        "extraAttack": 1
       },
       {
-        "level": 12
+        "level": 12,
+        "abilityPoints": 2
       },
       {
         "level": 13
       },
       {
-        "level": 14
+        "level": 14,
+        "abilityPoints": 2
       },
       {
-        "level": 15
+        "level": 15,
+        "feats": ["FEAT_SUPERIOR_CRITICAL"],
+        "removeFeats": ["FEAT_IMPROVED_CRITICAL"]
       },
       {
-        "level": 16
+        "level": 16,
+        "abilityPoints": 2
       },
       {
-        "level": 17
+        "level": 17,
+        "feats": ["FEAT_ACTION_SURGE_2"],
+        "removeFeats": ["FEAT_ACTION_SURGE"]
       },
       {
-        "level": 18
+        "level": 18,
+        "feats": ["FEAT_SURVIVOR"]
       },
       {
-        "level": 19
+        "level": 19,
+        "abilityPoints": 2
       },
       {
-        "level": 20
+        "level": 20,
+        "extraAttack": 1
       }
     ]
   }
