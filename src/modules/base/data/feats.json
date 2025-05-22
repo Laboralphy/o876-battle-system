@@ -111,5 +111,32 @@
         "amp": 0.2
       }
     ]
+  },
+  "FEAT_EXTRA_ATTACK_1": {
+    "description": "adds one extra attack",
+    "properties": [
+      {
+        "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+        "amp": 1
+      }
+    ]
+  },
+  "FEAT_EXTRA_ATTACK_2": {
+    "description": "adds two extra attacks",
+    "properties": [
+      {
+        "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+        "amp": 2
+      }
+    ]
+  },
+  "FEAT_EXTRA_ATTACK_3": {
+    "description": "adds three extra attacks",
+    "properties": [
+      {
+        "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+        "amp": 3
+      }
+    ]
   }
 }
