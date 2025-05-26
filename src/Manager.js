@@ -9,7 +9,6 @@ const Creature = require('./Creature');
 const path = require('path');
 const AttackOutcome = require('./AttackOutcome');
 const CONSTS = require('./consts');
-const { getData } = require('./store');
 const { aggregateModifiers } = require('./libs/aggregator');
 const PropertyBuilder = require('./PropertyBuilder');
 const baseModule = require('./modules/base');
@@ -64,6 +63,10 @@ class Manager {
 
     get CONSTS () {
         return CONSTS;
+    }
+
+    get data () {
+        return this._entityBuilder.data;
     }
 
     get propertyBuilder () {

@@ -8,7 +8,7 @@
       {
         "level": 2,
         "feats": ["FEAT_ACTION_SURGE"],
-        "selectFeatGroup": [
+        "selectFeatGroups": [
           {
             "group": "FEAT_GROUP_FIGHTING_STYLE",
             "count": 1,
@@ -51,7 +51,7 @@
       {
         "level": 10,
         "feats": ["FEAT_FIGHTING_STYLE_ARCHERY"],
-        "selectFeatGroup": [
+        "selectFeatGroups": [
           {
             "group": "FEAT_GROUP_FIGHTING_STYLE",
             "count": 1,

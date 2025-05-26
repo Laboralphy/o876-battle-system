@@ -1,8 +1,9 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-05-21T08:55:59.418Z
+// Date : 2025-05-26T14:39:42.242Z
 // List of files in ./src/store/getters
 
 module.exports = {
+    'definePool': require('./definePool.js'),
     'getAbilities': require('./getAbilities.js'),
     'getAbilityBaseValues': require('./getAbilityBaseValues.js'),
     'getAbilityModifiers': require('./getAbilityModifiers.js'),
@@ -32,6 +33,7 @@ module.exports = {
     'getMaxHitPoints': require('./getMaxHitPoints.js'),
     'getMeleeAttackBonus': require('./getMeleeAttackBonus.js'),
     'getOffensiveSlots': require('./getOffensiveSlots.js'),
+    'getPoolValues': require('./getPoolValues.js'),
     'getProficiencyBonus': require('./getProficiencyBonus.js'),
     'getProficiencySet': require('./getProficiencySet.js'),
     'getProperties': require('./getProperties.js'),
