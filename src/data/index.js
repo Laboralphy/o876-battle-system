@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-05-26T14:39:42.212Z
+// Date : 2025-05-27T15:01:23.859Z
 // List of files in ./src/data
 
 module.exports = {
@@ -7,6 +7,7 @@ module.exports = {
     'CONDITIONS': require('./conditions.json'),
     'DAMAGE_FACTORS': require('./damage-factors.json'),
     'DISEASES': require('./diseases.json'),
+    'EXPERIENCE_LEVELS': require('./experience-levels.json'),
     'PROFICIENCY_BONUS': require('./proficiency-bonus.json'),
     'SKILLS': require('./skills.json'),
     'VARIABLES': require('./variables.json'),

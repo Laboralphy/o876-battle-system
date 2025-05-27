@@ -21,26 +21,6 @@ function filterRangedAttackTypes (effectOrProp) {
 }
 
 /**
- * filters ATTACK_TYPE_MELEE_TOUCH or ATTACK_TYPE_ANY to get the bonus
- * @param effectOrProp {{ data: { attackType: string }}}
- * @returns {boolean}
- */
-function filterMeleeTouchAttackTypes (effectOrProp) {
-    return effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_MELEE_TOUCH ||
-        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY;
-}
-
-/**
- * filters ATTACK_TYPE_RANGED_TOUCH or ATTACK_TYPE_ANY to get the bonus
- * @param effectOrProp {{ data: { damageType: string }}}
- * @returns {boolean}
- */
-function filterRangedTouchAttackTypes (effectOrProp) {
-    return effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_RANGED_TOUCH ||
-        effectOrProp.data.attackType === CONSTS.ATTACK_TYPE_ANY;
-}
-
-/**
  * filters DAMAGE_TYPE_SLASHING or DAMAGE_TYPE_ANY to get the bonus
  * @param effectOrProp {{ data: { damageType: string }}}
  * @returns {boolean}
@@ -82,8 +62,6 @@ function filterAbility (effectOrProp) {
 module.exports = {
     filterMeleeAttackTypes,
     filterRangedAttackTypes,
-    filterMeleeTouchAttackTypes,
-    filterRangedTouchAttackTypes,
     filterSlashingDamageTypes,
     filterCrushingDamageTypes,
     filterPiercingDamageTypes,

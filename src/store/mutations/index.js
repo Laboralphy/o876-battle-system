@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-05-26T14:39:42.351Z
+// Date : 2025-05-27T15:01:23.940Z
 // List of files in ./src/store/mutations
 
 module.exports = {
@@ -7,6 +7,7 @@ module.exports = {
     'addProficiency': require('./addProficiency.js'),
     'addProperty': require('./addProperty.js'),
     'defineAction': require('./defineAction.js'),
+    'definePool': require('./definePool.js'),
     'equipItem': require('./equipItem.js'),
     'rechargeActions': require('./rechargeActions.js'),
     'removeEffect': require('./removeEffect.js'),

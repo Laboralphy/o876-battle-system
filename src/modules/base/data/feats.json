@@ -32,7 +32,7 @@
     }],
     "action": null
   },
-  "FEAT_ACTION_SECOND_WIND": {
+  "FEAT_SECOND_WIND": {
     "description": "heals 1d10 + fighter level",
     "properties": [],
     "action": {
@@ -104,11 +104,16 @@
     ]
   },
   "FEAT_REMARKABLE_ATHLETE": {
-    "description": "Moving speed increased by 20%",
+    "description": "Moving speed increased by 20%, add +2 to dexterity saving throws",
     "properties": [
       {
         "type": "PROPERTY_SPEED_FACTOR",
         "amp": 0.2
+      },
+      {
+        "type": "PROPERTY_SAVING_THROW_MODIFIER",
+        "amp": 2,
+        "ability": "ABILITY_DEXTERITY"
       }
     ]
   },

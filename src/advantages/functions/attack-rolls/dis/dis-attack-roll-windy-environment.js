@@ -7,10 +7,7 @@ const CONSTS = require('../../../../consts');
  */
 function main (attackOutcome) {
     return !!attackOutcome.attacker.getters.getEnvironment[CONSTS.ENVIRONMENT_WINDY] &&
-        (
-            attackOutcome.attackType === CONSTS.ATTACK_TYPE_RANGED ||
-            attackOutcome.attackType === CONSTS.ATTACK_TYPE_RANGED_TOUCH
-        );
+        attackOutcome.attackType === CONSTS.ATTACK_TYPE_RANGED;
 }
 
 module.exports = main;

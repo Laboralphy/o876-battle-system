@@ -1,7 +1,8 @@
+const CONSTS = require('./consts');
+
 class Evolution {
     constructor ({ data }) {
         this._data = data;
-        this._classTypes = new Map();
     }
 
     getClassTypeKey (sClassType) {
@@ -55,13 +56,13 @@ class Evolution {
         return cteld;
     }
 
+
     /**
      *
      * @param oManager {Manager}
      * @param oCreature {Creature}
-     * @param selectFeats {{ [group: string]: string[] }}
      */
-    levelUp (oManager, oCreature, selectFeats) {
+    levelUp (oManager, oCreature) {
         // retrieve evolution data
         const sClassType = oCreature.getters.getClassType;
         const nLevel = oCreature.getters.getUnmodifiedLevel;
@@ -71,22 +72,55 @@ class Evolution {
         const {
             feats = [],
             removeFeats = [],
-            abilityPoints = 0,
-            selectFeatGroups = []
+            abilityPoints = 0
         } = this.getClassTypeEvolutionLevelData(sClassType, nLevel);
         // remove feats
         removeFeats.forEach(feat => oManager.removeCreatureFeat(oCreature, feat));
         // add auto feats
         feats.forEach(feat => oManager.addCreatureFeat(oCreature, feat));
         // ability points
-        oCreature.mutations.setPoolValue({ pool: 'abilityPoints', value: oCreature.getters.getPoolValues['abilityPoints'] + abilityPoints });
-        // feat groups
-        Object.entries(selectFeats).forEach(([ group, aFeats ]) => {
-            aFeats.forEach(feat => {
-
-            });
+        oCreature.mutations.setPoolValue({
+            pool: CONSTS.POOL_ABILITY_POINTS,
+            value: oCreature.getters.getPoolValues[CONSTS.POOL_ABILITY_POINTS] + abilityPoints
         });
     }
+
+    get experienceLevelTable () {
+        return this._data['EXPERIENCE_LEVELS'].table;
+    }
+
+    getLevelFromXP (nXP) {
+        const aTable = this.experienceLevelTable;
+        let iLevel = 0;
+        for (const xp of aTable) {
+            if (xp > nXP) {
+                return iLevel;
+            }
+            ++iLevel;
+        }
+        return iLevel;
+    }
+
+    getMinXPFromLevel (nLevel) {
+        return this.experienceLevelTable[nLevel - 1];
+    }
+
+    getMaxXPFromLevel (nLevel) {
+        return this.experienceLevelTable[nLevel];
+    }
+
+    // gainXP (oCreature, nXP) {
+    //     const aTable = this._data['EVOLUTION_LEVELS'].table;
+    //     const nCreatureXP = oCreature.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS]
+    //     const nCreatureLevel = oCreature.getters.getUnmodifiedLevel
+    //     const nNewXP = nCreatureXP + nXP
+    //     if (nXP >= 0) {
+    //         let nLevel = 0
+    //         for (const xp of aTable) {
+    //             if (nXP)
+    //         }
+    //     }
+    // }
 }
 
 module.exports = Evolution;

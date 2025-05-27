@@ -169,8 +169,8 @@ module.exports = (state, getters, externals) => {
     // **** Results **** Results **** Results **** Results **** Results **** Results **** Results ****
 
     const nBaseArmorClass = externals.VARIABLES.BASE_ARMOR_CLASS + nACDexBonus;
-    const nACArmorMeleeBonus = nACArmorBaseBonus + nACArmorPropMeleeBonus;
-    const nACArmorRangedBonus = nACArmorBaseBonus + nACArmorPropRangedBonus;
+    const nACArmorMeleeBonus = nACArmorBaseBonus + nACArmorPropMeleeBonus + nACGearMeleeBonus;
+    const nACArmorRangedBonus = nACArmorBaseBonus + nACArmorPropRangedBonus + nACGearRangedBonus;
     const nACShieldMeleeBonus = nACShieldBaseBonus + nACShieldPropMeleeBonus;
     const nACShieldRangedBonus = nACShieldBaseBonus + nACShieldPropRangedBonus;
     const nSlashingDamageBonus =
@@ -188,9 +188,7 @@ module.exports = (state, getters, externals) => {
 
     return {
         [CONSTS.ATTACK_TYPE_MELEE]: nBaseArmorClass + nACNaturalArmorClass + nACArmorMeleeBonus + nACShieldMeleeBonus,
-        [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: nBaseArmorClass + nACGearMeleeBonus,
         [CONSTS.ATTACK_TYPE_RANGED]: nBaseArmorClass + nACNaturalArmorClass + nACArmorRangedBonus + nACShieldRangedBonus,
-        [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: nBaseArmorClass + nACGearRangedBonus,
         [CONSTS.DAMAGE_TYPE_SLASHING]: nSlashingDamageBonus,
         [CONSTS.DAMAGE_TYPE_CRUSHING]: nCrushingDamageBonus,
         [CONSTS.DAMAGE_TYPE_PIERCING]: nPiercingDamageBonus

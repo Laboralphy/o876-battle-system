@@ -357,36 +357,12 @@ class AttackOutcome {
         const wa = ag.getSelectedWeaponAttributeSet;
         this._weapon = w;
         this._ability = ag.getAttackAbility[ag.getSelectedOffensiveSlot];
-        let n = 0;
         if (wa.has(CONSTS.WEAPON_ATTRIBUTE_RANGED) && ag.isRangedWeaponLoaded) {
             this._ammo = ag.getEquipment[CONSTS.EQUIPMENT_SLOT_AMMO];
-            n += 1;
+            this._attackType = CONSTS.ATTACK_TYPE_RANGED;
         } else {
             this._ammo = null;
-        }
-        if (wa.has(CONSTS.WEAPON_ATTRIBUTE_IGNORE_ARMOR)) {
-            n += 10;
-        }
-        switch (n) {
-        case 0: {
             this._attackType = CONSTS.ATTACK_TYPE_MELEE;
-            break;
-        }
-        case 1: {
-            this._attackType = CONSTS.ATTACK_TYPE_RANGED;
-            break;
-        }
-        case 10: {
-            this._attackType = CONSTS.ATTACK_TYPE_MELEE_TOUCH;
-            break;
-        }
-        case 11: {
-            this._attackType = CONSTS.ATTACK_TYPE_RANGED_TOUCH;
-            break;
-        }
-        default: {
-            throw new Error('failed to select attack type');
-        }
         }
         const sSelectedSlot = ag.getSelectedOffensiveSlot;
         this._range = ag.getWeaponRanges[sSelectedSlot];

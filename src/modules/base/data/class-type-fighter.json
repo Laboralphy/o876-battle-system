@@ -3,23 +3,11 @@
     "levels": [
       {
         "level": 1,
-        "feats": ["FEAT_ACTION_SECOND_WIND"]
+        "feats": ["FEAT_FIGHTING_STYLE_DEFENSE", "FEAT_SECOND_WIND"]
       },
       {
         "level": 2,
-        "feats": ["FEAT_ACTION_SURGE"],
-        "selectFeatGroups": [
-          {
-            "group": "FEAT_GROUP_FIGHTING_STYLE",
-            "count": 1,
-            "feats": [
-              "FEAT_FIGHTING_STYLE_DEFENSE",
-              "FEAT_FIGHTING_STYLE_ARCHERY",
-              "FEAT_FIGHTING_STYLE_DUELLING",
-              "FEAT_FIGHTING_STYLE_GREAT_WEAPON"
-            ]
-          }
-        ]
+        "feats": ["FEAT_ACTION_SURGE"]
       },
       {
         "level": 3,
@@ -50,19 +38,7 @@
       },
       {
         "level": 10,
-        "feats": ["FEAT_FIGHTING_STYLE_ARCHERY"],
-        "selectFeatGroups": [
-          {
-            "group": "FEAT_GROUP_FIGHTING_STYLE",
-            "count": 1,
-            "feats": [
-              "FEAT_FIGHTING_STYLE_DEFENSE",
-              "FEAT_FIGHTING_STYLE_ARCHERY",
-              "FEAT_FIGHTING_STYLE_DUELLING",
-              "FEAT_FIGHTING_STYLE_GREAT_WEAPON"
-            ]
-          }
-        ]
+        "feats": ["FEAT_FIGHTING_STYLE_ARCHERY"]
       },
       {
         "level": 11,

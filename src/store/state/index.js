@@ -55,7 +55,9 @@ module.exports = () => ({
     },
     classType: CONSTS.CLASS_TYPE_TOURIST,
     pools: {
-        hitPoints: 1
+        [CONSTS.POOL_HITPOINTS]: 1,
+        [CONSTS.POOL_ABILITY_POINTS]: 0,
+        [CONSTS.POOL_EXPERIENCE_POINTS]: 0
     },
     properties: [],
     proficiencies: [],

@@ -226,9 +226,7 @@ describe('getArmorClass', function () {
         });
         expect(oCreature.getters.getArmorClass).toEqual({
             [CONSTS.ATTACK_TYPE_RANGED]: 10,
-            [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 10,
             [CONSTS.ATTACK_TYPE_MELEE]: 10,
-            [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 10,
             [CONSTS.DAMAGE_TYPE_SLASHING]: 0,
             [CONSTS.DAMAGE_TYPE_CRUSHING]: 0,
             [CONSTS.DAMAGE_TYPE_PIERCING]: 0
@@ -248,9 +246,7 @@ describe('getArmorClass', function () {
         });
         expect(oCreature.getters.getArmorClass).toEqual({
             [CONSTS.ATTACK_TYPE_RANGED]: 12,
-            [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 12,
             [CONSTS.ATTACK_TYPE_MELEE]: 12,
-            [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 12,
             [CONSTS.DAMAGE_TYPE_SLASHING]: 0,
             [CONSTS.DAMAGE_TYPE_CRUSHING]: 0,
             [CONSTS.DAMAGE_TYPE_PIERCING]: 0
@@ -272,9 +268,7 @@ describe('getArmorClass', function () {
         oCreature.equipItem(oArmor);
         expect(oCreature.getters.getArmorClass).toEqual({
             [CONSTS.ATTACK_TYPE_RANGED]: 14,
-            [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 12,
             [CONSTS.ATTACK_TYPE_MELEE]: 14,
-            [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 12,
             [CONSTS.DAMAGE_TYPE_SLASHING]: 0,
             [CONSTS.DAMAGE_TYPE_CRUSHING]: 0,
             [CONSTS.DAMAGE_TYPE_PIERCING]: 0
@@ -302,9 +296,7 @@ describe('getArmorClass', function () {
         oCreature.equipItem(oMagicArmor);
         expect(oCreature.getters.getArmorClass).toEqual({
             [CONSTS.ATTACK_TYPE_RANGED]: 16,
-            [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 12,
             [CONSTS.ATTACK_TYPE_MELEE]: 16,
-            [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 12,
             [CONSTS.DAMAGE_TYPE_PIERCING]: 0,
             [CONSTS.DAMAGE_TYPE_CRUSHING]: 0,
             [CONSTS.DAMAGE_TYPE_SLASHING]: 0
@@ -326,9 +318,7 @@ describe('getArmorClass', function () {
         oCreature.equipItem(oPlateArmor);
         expect(oCreature.getters.getArmorClass).toEqual({
             [CONSTS.ATTACK_TYPE_RANGED]: 16,
-            [CONSTS.ATTACK_TYPE_RANGED_TOUCH]: 10,
             [CONSTS.ATTACK_TYPE_MELEE]: 16,
-            [CONSTS.ATTACK_TYPE_MELEE_TOUCH]: 10,
             [CONSTS.DAMAGE_TYPE_PIERCING]: 0,
             [CONSTS.DAMAGE_TYPE_CRUSHING]: 0,
             [CONSTS.DAMAGE_TYPE_SLASHING]: 2
