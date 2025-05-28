@@ -12,6 +12,7 @@ const CONSTS = require('./consts');
 const { aggregateModifiers } = require('./libs/aggregator');
 const PropertyBuilder = require('./PropertyBuilder');
 const baseModule = require('./modules/base');
+const Evolution = require('./Evolution');
 
 const CombatStartEvent = require('./events/CombatStartEvent');
 const CombatMoveEvent = require('./events/CombatMoveEvent');
@@ -59,6 +60,7 @@ class Manager {
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, evt => this._effectImmunity(evt));
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, evt => this._effectDisposed(evt));
         this.defineModule(baseModule);
+        this._evolution = null;
     }
 
     get CONSTS () {
@@ -677,6 +679,13 @@ class Manager {
             .filter(p => !!p)
             .forEach(p => this.removeProperty(oCreature, p));
     }
+
+    increaseCreatureExperience (oCreature, nXP) {
+        if (!this._evolution) {
+            this._evolution = new Evolution({ data: this.data });
+        }
+        this._evolution.gainXP(this, oCreature, nXP);
+    };
 }
 
 module.exports = Manager;

@@ -352,14 +352,6 @@ class Creature {
         this.events.emit(CONSTS.EVENT_CREATURE_SKILL_CHECK, result);
         return result;
     }
-
-    /**
-     * Increases creature level
-     */
-    levelUp () {
-        this.mutations.setLevel({ value: this.getters.getUnmodifiedLevel });
-        this.events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP);
-    }
 }
 
 module.exports = Creature;
