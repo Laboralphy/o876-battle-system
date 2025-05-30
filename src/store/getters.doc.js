@@ -1,6 +1,5 @@
 /**
  * @typedef RBSStoreGetters {object}
- * @property definePool undefined
  * @property getAbilities {Object<string, number>}
  * @property getAbilityBaseValues {Object<string, number>}
  * @property getAbilityModifiers {Object<string, number>}
@@ -30,7 +29,7 @@
  * @property getMaxHitPoints {number}
  * @property getMeleeAttackBonus {number}
  * @property getOffensiveSlots {string[]}
- * @property getPoolValues undefined
+ * @property getPoolValues {{ [idPool: string]: number }}
  * @property getProficiencyBonus {number}
  * @property getProficiencySet {Set<string>}
  * @property getProperties {RBSProperty[]}

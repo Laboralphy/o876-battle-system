@@ -1,5 +1,6 @@
 const CONSTS = require('./consts');
-const Events = require('./events');
+const Events = require('node:events');
+const CreatureLevelUpEvent = require('./events/CreatureLevelUpEvent');
 
 class Evolution {
     constructor ({ data }) {
@@ -46,7 +47,7 @@ class Evolution {
      * @return {{ feats?: string[], removeFeats?: string[], level: number, abilityPoints: number }}
      */
     getClassTypeEvolutionLevelData (sClassType, nLevel) {
-        const cteld = this.getClassTypeEvolutionData(sClassType).find(d => d.level === nLevel);
+        const cteld = this.getClassTypeEvolutionData(sClassType).levels.find(d => d.level === nLevel);
         if (!cteld) {
             throw new Error(`no level ${nLevel} definition in class type ${sClassType}`);
         }
@@ -111,31 +112,29 @@ class Evolution {
         const sClassType = oCreature.getters.getClassType;
         const oClassTypeEvolutionData = this.getClassTypeEvolutionLevelData(sClassType, nCurrentLevel);
         if (oClassTypeEvolutionData) {
-            const { feats, removeFeats, abilityPoints } = oClassTypeEvolutionData;
-            this._events;
+            const { feats, removeFeats, abilityPoints = 0 } = oClassTypeEvolutionData;
+            const oCreatureLevelUpEvent = new CreatureLevelUpEvent({
+                creature: oCreature,
+                feats,
+                removeFeats,
+                abilityPoints
+            });
+            oCreature.events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP, oCreatureLevelUpEvent);
         }
     }
 
     /**
      * Increase experience points, if xp is higher than next level required xp, then increase level
-     * @param oManager {Manager}
      * @param oCreature {Creature}
      * @param nXP {number}
      */
-    gainXP (oManager, oCreature, nXP) {
+    gainXP (oCreature, nXP) {
         if (nXP > 0) {
-            const nCurrentXP = oCreature.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS];
-            let nNewXP = nCurrentXP + nXP;
-            do {
-                const nCurrentLevel = oCreature.getters.getUnmodifiedLevel;
-                const nRequiredXP = this.getLevelUpRequiredXP(nCurrentLevel + 1);
-                if (nNewXP >= nRequiredXP) {
-                    oCreature.mutations.setLevel({ value: nCurrentLevel + 1 });
-                    this.events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP);
-                    this.creatureEnterNewLevel(oCreature);
-                    nNewXP -= nRequiredXP;
-                }
-            } while (nNewXP > 0);
+            const nNewXP = oCreature.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS] + nXP;
+            while (nNewXP >= this.getLevelUpRequiredXP(oCreature.getters.getUnmodifiedLevel)) {
+                oCreature.mutations.setLevel({ value: oCreature.getters.getUnmodifiedLevel + 1 });
+                this.creatureEnterNewLevel(oCreature);
+            }
         }
     }
 }

@@ -457,16 +457,33 @@ class Manager {
                 }));
             });
             oEntity.events.on(CONSTS.EVENT_CREATURE_EQUIP_ITEM, evt => {
-                this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, { creature: oEntity, ...evt });
+                this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
+                    system: this._systemInstance,
+                    creature: oEntity,
+                    ...evt
+                });
                 if (this._horde.isCreatureActive(oEntity)) {
                     this._horde.setCreatureActive(oEntity);
                 }
             });
-            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, { creature: oEntity, ...evt }));
-            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM_FAILED, { creature: oEntity, ...evt }));
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
+                system: this._systemInstance,
+                creature: oEntity,
+                ...evt
+            }));
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM_FAILED, {
+                system: this._systemInstance,
+                creature: oEntity,
+                ...evt
+            }));
             if (this._horde.isCreatureActive(oEntity)) {
                 this._horde.setCreatureActive(oEntity);
             }
+            oEntity.events.on(CONSTS.EVENT_CREATURE_LEVEL_UP, evt => this._events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP, {
+                ...evt,
+                system: this._systemInstance,
+                creature: oEntity
+            }));
         }
         return oEntity;
     }
@@ -684,7 +701,7 @@ class Manager {
         if (!this._evolution) {
             this._evolution = new Evolution({ data: this.data });
         }
-        this._evolution.gainXP(this, oCreature, nXP);
+        this._evolution.gainXP(oCreature, nXP);
     };
 }
 
