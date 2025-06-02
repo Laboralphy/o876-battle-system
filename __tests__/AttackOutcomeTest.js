@@ -23,7 +23,7 @@ const bpNormalActor = {
         CONSTS.PROFICIENCY_SHIELD
     ],
     speed: 30,
-    classType: CONSTS.CLASS_TYPE_TOURIST,
+    classType: 'CLASS_TYPE_TOURIST',
     level: 1,
     hd: 6,
     actions: [],

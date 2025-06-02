@@ -137,7 +137,7 @@ describe('getLevelByXP', function () {
 
 describe('getClassTypeEvolutionData', function () {
     it('should work 1', function () {
-        const e = new Evolution({ data: { EXPERIENCE_LEVELS, CLASS_TYPE_FIGHTER } });
+        const e = new Evolution({ data: { EXPERIENCE_LEVELS, CLASS_TYPES: { CLASS_TYPE_FIGHTER } } });
         const c = new Creature({ id: 'c1' });
         c.mutations.setClassType({ value: 'CLASS_TYPE_FIGHTER'});
         c.mutations.setLevel({ value: 1 });
@@ -147,18 +147,18 @@ describe('getClassTypeEvolutionData', function () {
 
 describe('getClassTypeEvolutionLevelData', function () {
     it('should work 1', function () {
-        const e = new Evolution({ data: { EXPERIENCE_LEVELS, CLASS_TYPE_FIGHTER } });
+        const e = new Evolution({ data: { EXPERIENCE_LEVELS, CLASS_TYPES: { CLASS_TYPE_FIGHTER } } });
         const c = new Creature({ id: 'c1' });
         c.mutations.setClassType({ value: 'CLASS_TYPE_FIGHTER'});
         c.mutations.setLevel({ value: 1 });
-        expect(e.getClassTypeEvolutionLevelData('CLASS_TYPE_FIGHTER', 1)).toEqual(CLASS_TYPE_FIGHTER.evolution[0]);
-        expect(e.getClassTypeEvolutionLevelData('CLASS_TYPE_FIGHTER', 3)).toEqual(CLASS_TYPE_FIGHTER.evolution[2]);
+        expect(e.getClassTypeEvolutionLevelData('CLASS_TYPE_FIGHTER', 1)).toEqual(CLASS_TYPE_FIGHTER.evolution.levels[0]);
+        expect(e.getClassTypeEvolutionLevelData('CLASS_TYPE_FIGHTER', 3)).toEqual(CLASS_TYPE_FIGHTER.evolution.levels[2]);
     });
 });
 
 describe('gainXP', function () {
     it('should fire creature level up event when creature level 0 gains 300 xp', function () {
-        const e = new Evolution({ data: { EXPERIENCE_LEVELS, CLASS_TYPE_FIGHTER } });
+        const e = new Evolution({ data: { EXPERIENCE_LEVELS, CLASS_TYPES: { CLASS_TYPE_FIGHTER } } });
         const c = new Creature({ id: 'c1' });
         c.mutations.setClassType({ value: 'CLASS_TYPE_FIGHTER'});
         c.mutations.setLevel({ value: 1 });
@@ -176,7 +176,25 @@ describe('gainXP', function () {
         expect(aLogs).toHaveLength(1);
         expect(aLogs[0]).toEqual({
             creature: 'c1',
-            feats: ['FEAT_ACTION_SURGE'],
+            feats: {
+                added: ['FEAT_ACTION_SURGE'],
+                removed: []
+            },
+            abilityPoints: 0
+        });
+        expect(c.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS]).toBe(300);
+        e.gainXP(c, 300);
+        expect(c.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS]).toBe(600);
+        expect(aLogs).toHaveLength(1);
+        e.gainXP(c, 300);
+        expect(c.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS]).toBe(900);
+        expect(aLogs).toHaveLength(2);
+        expect(aLogs[1]).toEqual({
+            creature: 'c1',
+            feats: {
+                added: ['FEAT_IMPROVED_CRITICAL'],
+                removed: []
+            },
             abilityPoints: 0
         });
     });

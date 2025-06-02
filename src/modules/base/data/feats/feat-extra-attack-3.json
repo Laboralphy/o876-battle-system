@@ -1,0 +1,9 @@
+{
+  "description": "adds three extra attacks",
+  "properties": [
+    {
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 3
+    }
+  ]
+}

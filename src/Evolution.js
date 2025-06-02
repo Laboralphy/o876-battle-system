@@ -20,8 +20,8 @@ class Evolution {
      */
     getClassTypeData (sClassType) {
         const sClassTypeDataKey = this.getClassTypeKey(sClassType);
-        if (sClassTypeDataKey in this._data) {
-            return this._data[sClassTypeDataKey];
+        if (sClassTypeDataKey in this._data['CLASS_TYPES']) {
+            return this._data['CLASS_TYPES'][sClassTypeDataKey];
         } else {
             throw new Error(`class type ${sClassType} data are not defined`);
         }
@@ -115,8 +115,10 @@ class Evolution {
             const { feats, removeFeats, abilityPoints = 0 } = oClassTypeEvolutionData;
             const oCreatureLevelUpEvent = new CreatureLevelUpEvent({
                 creature: oCreature,
-                feats,
-                removeFeats,
+                feats: {
+                    added: feats,
+                    removed: removeFeats
+                },
                 abilityPoints
             });
             oCreature.events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP, oCreatureLevelUpEvent);
@@ -131,6 +133,7 @@ class Evolution {
     gainXP (oCreature, nXP) {
         if (nXP > 0) {
             const nNewXP = oCreature.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS] + nXP;
+            oCreature.mutations.setPoolValue({ pool: CONSTS.POOL_EXPERIENCE_POINTS, value: nNewXP });
             while (nNewXP >= this.getLevelUpRequiredXP(oCreature.getters.getUnmodifiedLevel)) {
                 oCreature.mutations.setLevel({ value: oCreature.getters.getUnmodifiedLevel + 1 });
                 this.creatureEnterNewLevel(oCreature);

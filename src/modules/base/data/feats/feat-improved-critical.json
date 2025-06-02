@@ -1,0 +1,10 @@
+{
+  "description": "critical range is now 19-20",
+  "properties": [
+    {
+      "type": "PROPERTY_CRITICAL_RANGE_MODIFIER",
+      "amp": 1,
+      "attackType": "ATTACK_TYPE_ANY"
+    }
+  ]
+}

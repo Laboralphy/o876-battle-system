@@ -53,7 +53,7 @@ module.exports = () => ({
         [CONSTS.ABILITY_WISDOM]: 10,
         [CONSTS.ABILITY_CHARISMA]: 10
     },
-    classType: CONSTS.CLASS_TYPE_TOURIST,
+    classType: 'CLASS_TYPE_TOURIST',
     pools: {
         [CONSTS.POOL_HITPOINTS]: 1,
         [CONSTS.POOL_ABILITY_POINTS]: 0,

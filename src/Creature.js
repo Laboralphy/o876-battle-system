@@ -31,6 +31,10 @@ class Creature {
         return this._store.externals;
     }
 
+    get state () {
+
+    }
+
     /**
      * @returns {Dice}
      */

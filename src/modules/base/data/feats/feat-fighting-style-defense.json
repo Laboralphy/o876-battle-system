@@ -1,0 +1,8 @@
+{
+  "description": "+2 to AC",
+  "properties": [{
+    "type": "PROPERTY_ARMOR_CLASS_MODIFIER",
+    "amp": 2
+  }],
+  "action": null
+}

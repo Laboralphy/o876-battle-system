@@ -29,7 +29,7 @@ then
 fi
 if [ -d "$MODULE_PATH/data" ]
 then
-  node ./bin/generate-indexes.js "$MODULE_PATH/data" CONST_REQUIRE > "$MODULE_PATH/data/index.js"
+  node ./bin/generate-indexes.js "$MODULE_PATH/data" CONST_REQUIRE_SECTION > "$MODULE_PATH/data/index.js"
 fi
 if [ -d "$MODULE_PATH/scripts" ]
 then

@@ -8,7 +8,7 @@ const bpTourist = {
     ac: 0,
     proficiencies: [],
     speed: 30,
-    classType: CONSTS.CLASS_TYPE_TOURIST,
+    classType: 'CLASS_TYPE_TOURIST',
     level: 5,
     hd: 6,
     actions: [],

@@ -23,8 +23,8 @@ module.exports = (state, getters, externals) => {
     return Object.fromEntries(Object
         .entries(oSkillData)
         .map(([ skill, { ability, proficiency } ]) => {
-            const sm = oSkillModifiers[skill]?.sum || 0;
-            const am = oAbilityModifier[ability];
+            const sm = oSkillModifiers[skill]?.sum ?? 0;
+            const am = oAbilityModifier[ability] + (oSkillModifiers[ability]?.sum ?? 0);
             const pb = profs.has(proficiency) ? getters.getProficiencyBonus : 0;
             return [skill, sm + am + pb];
         })

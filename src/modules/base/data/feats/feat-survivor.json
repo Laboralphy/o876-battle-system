@@ -1,0 +1,11 @@
+{
+  "description": "heals 5 + constitution when hp is lower that 1/2 maxHP",
+  "properties": [
+    {
+      "type": "PROPERTY_REGENERATION",
+      "amp": 5,
+      "useConstitutionModifier": true,
+      "threshold": 0.5
+    }
+  ]
+}

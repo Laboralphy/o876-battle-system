@@ -304,7 +304,7 @@ describe('createEntity', function () {
             ac: 10,
             hd: 6,
             level: 1,
-            classType: CONSTS.CLASS_TYPE_TOURIST,
+            classType: 'CLASS_TYPE_TOURIST',
             speed: 30,
             properties: [],
             actions: [],

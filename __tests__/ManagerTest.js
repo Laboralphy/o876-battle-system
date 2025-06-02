@@ -1,8 +1,6 @@
 const Manager = require('../src/Manager');
 const CONSTS = require('../src/consts');
 const PropertyBuilder = require('../src/PropertyBuilder');
-const CombatManager = require('../src/libs/combat/CombatManager');
-const Creature = require('../src/Creature');
 
 const bpNormalActor = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -11,7 +9,7 @@ const bpNormalActor = {
     ac: 0,
     proficiencies: [],
     speed: 30,
-    classType: CONSTS.CLASS_TYPE_TOURIST,
+    classType: 'CLASS_TYPE_TOURIST',
     level: 5,
     hd: 6,
     actions: [],
@@ -73,7 +71,7 @@ const bpMonster1 = {
     ac: 0,
     proficiencies: [],
     speed: 30,
-    classType: CONSTS.CLASS_TYPE_MONSTER,
+    classType: 'CLASS_TYPE_MONSTER',
     level: 1,
     hd: 6,
     actions: [],
@@ -90,7 +88,7 @@ const bpMonster2 = {
     ac: 0,
     proficiencies: [],
     speed: 30,
-    classType: CONSTS.CLASS_TYPE_MONSTER,
+    classType: 'CLASS_TYPE_MONSTER',
     level: 1,
     hd: 6,
     actions: [],
@@ -431,7 +429,7 @@ describe('attack advantage', function () {
             const c1 = m.createEntity(bpNormalActor, 'c1');
             const c2 = m.createEntity(bpNormalActor, 'c2');
             expect(c1.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_1]).toBeDefined();
-            const combat = m.startCombat(c1, c2);
+            m.startCombat(c1, c2);
             const logs = [];
             m.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => {
                 /**

@@ -1,0 +1,8 @@
+{
+  "description": "when wielding a melee weapon with both hand, you may re-roll damage die if the first roll was 1 or 2",
+  "properties": [{
+    "type": "PROPERTY_SPECIAL_BEHAVIOR",
+    "attack": "at-ffs-great-weapon-second-chance"
+  }],
+  "action": null
+}

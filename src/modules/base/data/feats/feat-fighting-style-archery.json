@@ -1,0 +1,9 @@
+{
+  "description": "+2 to attack roll with ranged weapon",
+  "properties": [{
+    "type": "PROPERTY_ATTACK_MODIFIER",
+    "amp": 2,
+    "attackType": "ATTACK_TYPE_RANGED"
+  }],
+  "action": null
+}
