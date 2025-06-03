@@ -36,4 +36,4 @@ then
   node ./bin/generate-indexes.js "$MODULE_PATH/scripts" REQUIRE > "$MODULE_PATH/scripts/index.js"
 fi
 
-echo done
+echo "done"

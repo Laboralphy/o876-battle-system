@@ -30,26 +30,6 @@ const bpNormalActor = {
     equipment: []
 };
 
-const bpBeltOfOgreStrength = {
-    entityType: CONSTS.ENTITY_TYPE_ITEM,
-    itemType: CONSTS.ITEM_TYPE_BELT,
-    properties: [{
-        type: CONSTS.PROPERTY_ABILITY_MODIFIER,
-        ability: CONSTS.ABILITY_STRENGTH,
-        amp: 2
-    }],
-    weight: 5,
-    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WAIST]
-};
-const bpStuddedLeatherArmor = {
-    entityType: CONSTS.ENTITY_TYPE_ITEM,
-    itemType: CONSTS.ITEM_TYPE_ARMOR,
-    properties: [],
-    ac: 2,
-    weight: 5,
-    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_CHEST],
-    proficiency: CONSTS.PROFICIENCY_ARMOR_LIGHT
-};
 const bpDagger = {
     entityType: CONSTS.ENTITY_TYPE_ITEM,
     itemType: CONSTS.ITEM_TYPE_WEAPON,

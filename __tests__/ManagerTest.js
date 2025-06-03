@@ -1067,7 +1067,7 @@ describe('normal & bonus action test', function () {
                 });
             });
 
-            const combat = m.startCombat(c1, c2);
+            m.startCombat(c1, c2);
 
             m.process(); // t0
 
@@ -1158,7 +1158,7 @@ describe('normal & bonus action test', function () {
                 });
             });
 
-            const combat = m.startCombat(c1, c2);
+            m.startCombat(c1, c2);
 
             m.process(); // t0
 
@@ -1257,7 +1257,7 @@ describe('normal & bonus action test', function () {
                 });
             });
 
-            const combat = m.startCombat(c1, c2);
+            m.startCombat(c1, c2);
 
             m.process(); // t0
 

@@ -107,18 +107,6 @@ const bpShortSword = {
     attributes: [CONSTS.WEAPON_ATTRIBUTE_FINESSE],
     equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
 };
-const bpLongSword = {
-    entityType: CONSTS.ENTITY_TYPE_ITEM,
-    itemType: CONSTS.ITEM_TYPE_WEAPON,
-    damages: '1d8',
-    damageType: CONSTS.DAMAGE_TYPE_SLASHING,
-    size: CONSTS.WEAPON_SIZE_MEDIUM,
-    weight: 3,
-    proficiency: CONSTS.PROFICIENCY_WEAPON_MARTIAL,
-    properties: [],
-    attributes: [],
-    equipmentSlots: [CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE]
-};
 
 let eb;
 
