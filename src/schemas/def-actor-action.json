@@ -6,7 +6,8 @@
     "id",
     "actionType",
     "script",
-    "bonus"
+    "bonus",
+    "hostile"
   ],
   "properties": {
     "id": {
@@ -35,6 +36,10 @@
     "bonus": {
       "type": "boolean",
       "description": "if true, this is a bonus action that can be used on top of a normal action"
+    },
+    "hostile": {
+      "type": "boolean",
+      "description": "if true, this action is considered has hostile for the primary target"
     },
     "script": {
       "type": "string",

@@ -1085,7 +1085,7 @@ describe('normal & bonus action test', function () {
                 event: 'creature.action',
                 attacker: c1.id,
                 target: c2.id,
-                script: 'normal-action-2'
+                script: 'normal-action-1'
             });
         });
 
@@ -1158,11 +1158,17 @@ describe('normal & bonus action test', function () {
                 });
             });
 
-            m.startCombat(c1, c2);
+            const oCombat = m.startCombat(c1, c2);
+
+            expect(oCombat.currentAction).toBeNull();
 
             m.process(); // t0
 
-            m.doAction(c1, 'na2', c2);
+            expect(oCombat.currentAction).not.toBeNull();
+            expect(oCombat.currentAction.id).toBe('na1');
+
+            m.doAction(c1, 'na2', c2); // will be put in nextTurn
+
             expect(logs).toHaveLength(0);
             m.process(); // t1
             m.doAction(c1, 'ba1', c2);
@@ -1178,15 +1184,17 @@ describe('normal & bonus action test', function () {
             m.process(); // t3
             m.process(); // t4
             // still no action at t4
+            expect(oCombat.currentAction.id).toBe('na1'); // normal-action-1 still active this turn
             m.process(); // t5 -> at the end, action is run
             expect(logs).toHaveLength(2);
             expect(logs[1]).toMatchObject({
                 event: 'creature.action',
                 attacker: c1.id,
                 target: c2.id,
-                script: 'normal-action-2',
+                script: 'normal-action-1',
                 bonus: false
             });
+            expect(oCombat.currentAction.id).toBe('na2'); // now this is normal-action-2
         });
         it('should not run several bonus action', function () {
             const m = new Manager();
@@ -1218,21 +1226,24 @@ describe('normal & bonus action test', function () {
                 actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 script: 'normal-action-1',
                 range: 500,
-                bonus: false
+                bonus: false,
+                hostile: true
             });
             c1.mutations.defineAction({
                 id: 'na2',
                 actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 script: 'normal-action-2',
                 range: 500,
-                bonus: false
+                bonus: false,
+                hostile: true
             });
             c1.mutations.defineAction({
                 id: 'ba1',
                 actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY,
                 script: 'bonus-action-1',
                 range: 500,
-                bonus: true
+                bonus: true,
+                hostile: true
             });
             const oActions = c1.getters.getActions;
             const aActionNames = new Set(Object.keys(oActions));
@@ -1253,7 +1264,8 @@ describe('normal & bonus action test', function () {
                     attacker: creature.id,
                     target: target.id,
                     script: action.script,
-                    bonus: action.bonus
+                    bonus: action.bonus,
+                    hostile: action.hostile
                 });
             });
 
@@ -1264,7 +1276,8 @@ describe('normal & bonus action test', function () {
             m.doAction(c1, 'na2', c2);
             expect(logs).toHaveLength(0);
             m.process(); // t1
-            m.doAction(c1, 'ba1', c2);
+            const actionOutcome = m.doAction(c1, 'ba1', c2);
+            expect(actionOutcome.success).toBeTruthy();
             m.process(); // t2
             expect(logs).toHaveLength(1);
             expect(logs[0]).toMatchObject({
@@ -1272,7 +1285,8 @@ describe('normal & bonus action test', function () {
                 attacker: c1.id,
                 target: c2.id,
                 script: 'bonus-action-1',
-                bonus: true
+                bonus: true,
+                hostile: true
             });
             m.doAction(c1, 'ba1', c2);
             m.process(); // t3

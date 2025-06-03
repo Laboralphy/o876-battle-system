@@ -1,5 +1,3 @@
-const CONSTS = require('../../consts');
-
 /**
  * @typedef RBSActionRequirement {object}
  * @property classType {string} required class type to use this action
@@ -18,6 +16,7 @@ const CONSTS = require('../../consts');
  * @property parameters {{}} parameters passed to script
  * @property ready {boolean} if true this action is ready to use, else, action cannot be used
  * @property bonus {boolean} if true, this is a bonus action
+ * @property hostile {boolean} if true, this action is considered as hostile
  *
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
@@ -57,7 +56,8 @@ module.exports = (state, getters) => Object.fromEntries(
                 script: action.script,
                 parameters: action.parameters,
                 ready,
-                bonus: action.bonus
+                bonus: action.bonus,
+                hostile: action.hostile
             };
             return [id, oAction];
         })

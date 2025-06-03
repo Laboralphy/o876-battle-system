@@ -120,7 +120,8 @@
       "id": "act-dreadful-glare",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-frightful-glare",
-      "bonus": true,
+      "bonus": false,
+      "hostile": true,
       "range": 60,
       "parameters": {},
       "cooldown": 6

@@ -1,6 +1,9 @@
+const CombatActionSuccess = require('./CombatActionSuccess');
+const CombatActionFailure = require('./CombatActionFailure');
 const Events = require('events');
 const { getUniqueId } = require('../unique-id');
 const CombatFighterState = require('./CombatFighterState');
+const CombatActionTaken = require('./CombatActionTaken');
 const CONSTS = require('../../consts');
 
 const MAX_COMBAT_DISTANCE = 60;
@@ -41,14 +44,15 @@ class Combat {
         this._events = new Events();
         this._distance = distance;
         /**
-         * @type {string}
+         * @type {CombatActionTaken}
          * @private
          */
-        this._nextAction = '';
-        this._currentAction = '';
-
-        this._nextBonusAction = '';
-        this._currentBonusAction = '';
+        this._nextAction = null; // will be used next turn instead of attacks
+        /**
+         * @type {CombatActionTaken}
+         * @private
+         */
+        this._currentAction = null;
     }
 
     get id () {
@@ -165,46 +169,56 @@ class Combat {
      * @returns {RBSAction | null}
      */
     get currentAction () {
-        if (this._currentAction === '') {
-            return null;
-        }
-        if (this._currentAction in this._attackerState.actions) {
-            return this._attackerState.actions[this._currentAction];
-        }
-        const aActionList = Object.keys(this._attackerState.actions).join(', ');
-        throw new Error(`this action ${this._currentAction} does not exists in action list ${aActionList}`);
+        return this._currentAction?.action ?? null;
     }
 
     /**
-     * Select a new action
-     * @param value {string}
+     * @returns {RBSAction | null}
      */
-    selectCurrentAction (value) {
-        if (value === '') {
-            this._currentAction = '';
-            return true;
-        } else if (value in this._attackerState.actions) {
-            const oAction = this._attackerState.actions[value];
-            if (oAction.ready && oAction.range >= this.distance) {
-                if (oAction.bonus) {
-                    if (this._attackerState.hasBonusAction()) {
-                        // We can play bonus action immediately
-                        this.playActionNow(oAction);
-                    } else {
-                        // We can play bonus action next turn (already used bonus action this turn)
-                        this._currentBonusAction = value;
-                    }
-                } else {
-                    this._currentAction = value;
-                }
-                return true;
+    get nextTurnAction () {
+        return this._nextAction?.action ?? null;
+    }
+
+    /**
+     *
+     * @param idAction {string}
+     * @param parameters {{}}
+     * @returns {CombatActionOutcome}
+     */
+    selectAction (idAction, parameters = {}) {
+        if (idAction === '') {
+            this._currentAction = null;
+            return new CombatActionSuccess();
+        }
+        const oAction = new CombatActionTaken({
+            creature: this.attacker,
+            action: idAction,
+            target: this.target,
+            ...parameters
+        });
+        if (!oAction.action.ready) {
+            return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_NOT_READY);
+        }
+        if (oAction.action.range < this.distance) {
+            return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_RANGE);
+        }
+        if (oAction.action.bonus) {
+            if (this._attackerState.hasBonusAction()) {
+                // We can play bonus action immediately
+                return this.playActionNow(oAction.action, parameters);
             } else {
-                // Action not available
-                this._currentAction = '';
-                return false;
+                // We cannot play bonus action at the moment
+                return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_PENDING_ACTION);
             }
         } else {
-            throw new Error(`Action ${value} is unknown for this creature - allowed values are : ` + Object.keys(this._attackerState.actions).join(', '));
+            if (this._currentAction || this._attackerState.hasTakenAction()) {
+                // Already used an action this turn
+                this._nextAction = oAction;
+            } else {
+                // did not take action this turn : replacing current action
+                this._currentAction = oAction;
+            }
+            return new CombatActionSuccess();
         }
     }
 
@@ -246,25 +260,45 @@ class Combat {
 
     /**
      * Immediately play an action
-     * @param action
+     * @param action {RBSAction}
+     * @param parameters {{}}
+     * @return {CombatActionOutcome}
      */
-    playActionNow (action) {
+    playActionNow (action, parameters = {}) {
         const attackerState = this._attackerState;
-        const bCanUseAction = this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_ACT) &&
-            action.ready &&
-            (action.bonus ? attackerState.hasBonusAction() : true);
+        const bCanAct = (!action.hostile && this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_ACT)) ||
+            (action.hostile && this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT));
+        const bActionReady = action.ready;
+        const bActionInRange = action.range >= this.distance;
+        const bCanDoBonusAction = (action.bonus ? attackerState.hasBonusAction() : true);
+        const bCanUseAction = bCanAct && bActionReady && bActionInRange && bCanDoBonusAction;
         if (bCanUseAction) {
             this._events.emit(CONSTS.EVENT_COMBAT_ACTION, {
                 ...this.eventDefaultPayload,
-                action: action
+                action: action,
+                target: this.target,
+                parameters
             });
             if (action.bonus) {
                 attackerState.useBonusAction(action.id);
-                this._currentBonusAction = '';
             } else {
                 attackerState.useAction(action.id);
-                this.selectCurrentAction('');
+                attackerState.takeAction();
+                this._currentAction = null;
             }
+            return new CombatActionSuccess();
+        } else {
+            let reason = '';
+            if (!bActionReady) {
+                reason = CONSTS.ACTION_FAILURE_REASON_NOT_READY;
+            } else if (!bActionInRange) {
+                reason = CONSTS.ACTION_FAILURE_REASON_RANGE;
+            } else if (!bCanAct) {
+                reason = CONSTS.ACTION_FAILURE_REASON_CAPABILITY;
+            } else if (!bCanDoBonusAction) {
+                reason = CONSTS.ACTION_FAILURE_REASON_PENDING_ACTION;
+            }
+            return new CombatActionFailure(reason);
         }
     }
 
@@ -272,15 +306,16 @@ class Combat {
      * trigger a combat action.
      * The system must repsond to this event in order to make a creature attack or take action
      * @param bPartingShot {boolean} si true alors attaque d'opportunité
+     * @return {CombatActionOutcome}
      */
     playFighterAction (bPartingShot = false) {
         const attackerState = this._attackerState;
         // If no current action then we are attacking during this turn
         const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick);
         if (bPartingShot || nAttackCount > 0) {
-            const action = this.currentAction;
-            if (action) {
-                this.playActionNow(action);
+            const actionTaken = this._currentAction;
+            if (actionTaken) {
+                return this.playActionNow(actionTaken.action, actionTaken.parameters);
             } else if (this.attacker.getters.getSelectedWeapon) {
                 if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)) {
                     this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
@@ -288,8 +323,16 @@ class Combat {
                         count: nAttackCount,
                         opportunity: bPartingShot // if true, then no retaliation (start combat back)
                     });
+                    return new CombatActionSuccess();
+                } else {
+                    return new CombatActionFailure(CONSTS.ATTACK_FAILURE_CONDITION);
                 }
+            } else {
+                // neither action nor weapon equipped
+                return new CombatActionFailure(CONSTS.ATTACK_FAILURE_UNARMED);
             }
+        } else {
+            return new CombatActionFailure(CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK);
         }
     }
 
@@ -308,7 +351,13 @@ class Combat {
             }
         }
         if (!bHasMoved && this.isTargetInRange()) {
-            this.playFighterAction();
+            const outcome = this.playFighterAction();
+            if (outcome.failure && outcome.reason !== CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK) {
+                this._events.emit(CONSTS.EVENT_COMBAT_ACTION_FAILURE, {
+                    ...this.eventDefaultPayload,
+                    reason: outcome.reason
+                });
+            }
         }
         this._events.emit(CONSTS.EVENT_COMBAT_TICK_END, {
             ...this.eventDefaultPayload
@@ -316,8 +365,8 @@ class Combat {
         this.nextTick();
         if (this._tick === 0) {
             // start of next turn
-            this.selectCurrentAction(this._nextAction);
-            this.nextAction = '';
+            this._currentAction = this._nextAction;
+            this._nextAction = null;
         }
     }
 
@@ -360,8 +409,8 @@ class Combat {
      * @returns {boolean}
      */
     isTargetInRange () {
-        if (this.currentAction) {
-            return this._distance <= this.currentAction.range;
+        if (this._currentAction) {
+            return this._distance <= this._currentAction.action.range;
         } else {
             return this.isTargetInSelectedWeaponRange();
         }
@@ -436,12 +485,12 @@ class Combat {
         const sSelectAction = aAvailableActions.length > 0
             ? aAvailableActions[Math.floor(attacker.dice.random() * aAvailableActions.length)].id
             : '';
-        this.selectCurrentAction(sSelectAction);
+        this.selectAction(sSelectAction);
         this._events.emit(CONSTS.EVENT_COMBAT_TURN, {
             ...this.eventDefaultPayload,
-            action: action => this.selectCurrentAction(action)
+            action: action => this.selectAction(action)
         });
-        if (!this.currentAction) {
+        if (!this._currentAction) {
             this.selectMostSuitableWeapon();
         }
     }
@@ -518,18 +567,20 @@ class Combat {
      * @param value {String}
      */
     set nextAction (value) {
-        if ((value === '') || (value in this._attackerState.actions)) {
-            this._nextAction = value;
-        } else {
-            throw new Error(`Unknown action ${value}`);
-        }
+        // if ((value === '') || (value in this._attackerState.actions)) {
+        //     this._nextAction = value;
+        // } else {
+        //     throw new Error(`Unknown action ${value}`);
+        // }
+        throw new Error('ERR_DEPRECATED');
     }
 
     /**
      * @returns {string}
      */
     get nextAction () {
-        return this._nextAction;
+        // return this._nextAction;
+        throw new Error('ERR_DEPRECATED');
     }
 }
 

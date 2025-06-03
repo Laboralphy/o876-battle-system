@@ -1,9 +1,10 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-06-02T09:43:45.106Z
+// Date : 2025-06-03T09:19:36.760Z
 // List of files in ./src/consts
 
 module.exports = {
     ...require('./abilities.json'),
+    ...require('./action-failure-reasons.json'),
     ...require('./advantages-disadvantages.js'),
     ...require('./attack-failures.json'),
     ...require('./attack-types.json'),

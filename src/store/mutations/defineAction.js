@@ -10,6 +10,7 @@ const CONSTS = require('../../consts');
  * @param script {string}
  * @param parameters {{}}
  * @param bonus {boolean}
+ * @param hostile {boolean}
  * @param requirements {RBSActionRequirement|null}
  */
 module.exports = ({ state }, {
@@ -21,6 +22,7 @@ module.exports = ({ state }, {
     script,
     parameters = {},
     bonus = false,
+    hostile= false,
     requirements = null
 }) => {
     const bHasCooldown = cooldown > 0;
@@ -60,6 +62,7 @@ module.exports = ({ state }, {
         script,
         parameters,
         bonus,
+        hostile,
         requirements
     };
 };

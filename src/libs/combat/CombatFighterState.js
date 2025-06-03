@@ -22,6 +22,11 @@ class CombatFighterState {
         this._attackCount = 0;
         this._bonusActionCount = 1;
         this._bonusActionDone = 0;
+        /**
+         * @type {boolean}
+         * @private
+         */
+        this._actionTaken = false;
     }
 
     /**
@@ -73,6 +78,10 @@ class CombatFighterState {
         ++this._bonusActionDone;
     }
 
+    takeAction () {
+        this._actionTaken = true;
+    }
+
     /**
      * @param tick
      * @returns {number}
@@ -111,7 +120,18 @@ class CombatFighterState {
         return this._bonusActionDone < this._bonusActionCount;
     }
 
+    /**
+     * returns true if any action has been taken this turn
+     * if creature did nothing this turn (action or attack) returns false
+     * @return {boolean}
+     */
+    hasTakenAction () {
+        return this._actionTaken;
+    }
+
     computePlan (nTurnTickCount, reverseOrder = false) {
+        // resiting action counters
+        this._actionTaken = false;
         this._bonusActionDone = 0;
         const oWeapon = this._creature.getters.getSelectedWeapon;
         const bRanged = oWeapon

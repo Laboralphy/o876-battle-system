@@ -2,6 +2,8 @@ const EntityBuilder = require('./EntityBuilder');
 const EffectProcessor = require('./EffectProcessor');
 const Horde = require('./Horde');
 const CombatManager = require('./libs/combat/CombatManager');
+const CombatActionFailure = require('./libs/combat/CombatActionFailure');
+const CombatActionSuccess = require('./libs/combat/CombatActionSuccess');
 const Events = require('events');
 const SCHEMAS = require('./schemas');
 const SchemaValidator = require('./SchemaValidator');
@@ -198,7 +200,6 @@ class Manager {
      * @param oCreature {Creature}
      * @param oAction {RBSAction}
      * @param oTarget {Creature|null}
-     * @return {boolean} true = action executed, false = could not execute action (not ready)
      */
     executeAction (oCreature, oAction, oTarget = null) {
         const oActionEvent = new CreatureActionEvent({
@@ -208,22 +209,17 @@ class Manager {
             action: oAction
         });
         this._events.emit(CONSTS.EVENT_CREATURE_ACTION, oActionEvent);
-        if (oAction.ready) {
-            this.runScript(oAction.script, {
-                manager: this,
-                action: oAction,
-                creature: oCreature,
-                target: oTarget
-            });
-            const bIsActionCoolingDown = oAction.cooldownTimer > 0;
-            if (bIsActionCoolingDown) {
-                this._horde.setCreatureActive(oCreature);
-            }
-            oCreature.mutations.useAction({ action: oAction.id });
-            return true;
-        } else {
-            return false;
+        this.runScript(oAction.script, {
+            manager: this,
+            action: oAction,
+            creature: oCreature,
+            target: oTarget
+        });
+        const bIsActionCoolingDown = oAction.cooldownTimer > 0;
+        if (bIsActionCoolingDown) {
+            this._horde.setCreatureActive(oCreature);
         }
+        oCreature.mutations.useAction({ action: oAction.id });
     }
 
     /**
@@ -231,6 +227,7 @@ class Manager {
      * @param oCreature {Creature}
      * @param sAction {string}
      * @param oTarget {Creature}
+     * @return {CombatActionOutcome}
      */
     doAction (oCreature, sAction, oTarget = null) {
         // check if creature is in combat
@@ -238,16 +235,30 @@ class Manager {
         // if in combat, and same target as combat target, then use combat action mechanism
         if (oCombat) {
             if (oTarget === null || oCombat.target === oTarget) {
-                // same target in combat : use combat action mechanism
-                oCombat.selectCurrentAction(sAction);
-                return;
+                // no target or same target in combat : use combat action mechanism
+                return oCombat.selectAction(sAction);
             } else {
                 // different target, disengage from combat
-                this.combatManager.endCombat(oCreature, false);
+                const combat = this.combatManager.startCombat(oCreature, oTarget);
+                return combat.selectAction(sAction);
+            }
+        } else {
+            const oAction = oCreature.getters.getActions[sAction];
+            // Check if action can be cast
+            if (!oAction.ready) {
+                // Action fails if not ready
+                return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_NOT_READY);
+            }
+            if (oAction.hostile) {
+                // Hostile action are only cast during combat
+                const combat = this.combatManager.startCombat(oCreature, oTarget);
+                return combat.selectAction(sAction);
+            } else {
+                // non hostile action : go ahead
+                this.executeAction(oCreature, oAction, oTarget);
+                return new CombatActionSuccess();
             }
         }
-        const oAction = oCreature.getters.getActions[sAction];
-        this.executeAction(oCreature, oAction, oTarget);
     }
 
     /**

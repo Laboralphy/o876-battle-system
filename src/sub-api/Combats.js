@@ -95,14 +95,14 @@ class Combats extends ServiceAbstract {
     selectAction (oCreature, idAction) {
         const oCombat = this.getCreatureCombat(oCreature);
         if (oCombat) {
-            oCombat.selectCurrentAction(idAction);
+            oCombat.selectAction(idAction);
         }
     }
 
-    getSelectedAction (oCreature) {
+    getSelectedActionTaken (oCreature) {
         const oCombat = this.getCreatureCombat(oCreature);
         if (oCombat) {
-            return oCombat.currentAction;
+            return oCombat._currentAction;
         } else {
             return null;
         }

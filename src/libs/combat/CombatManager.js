@@ -70,11 +70,9 @@ class CombatManager {
      * @private
      */
     _sendCombatActionEvent (ev) {
-        const { combat } = ev;
-        // Special case concerning multi melee actions :
-        // Instead of striking target we strike a random offending target
+        const { combat, target, action, parameters } = ev;
         this._events.emit(CONSTS.EVENT_COMBAT_ACTION, this._addManagerToObject(ev));
-        if (!ev.opportunity && !this.isCreatureFighting(combat.target)) {
+        if (action.hostile && !this.isCreatureFighting(combat.target)) {
             this.startCombat(combat.target, combat.attacker, combat.distance);
         }
     }
@@ -240,6 +238,11 @@ class CombatManager {
      */
     startCombat (oCreature, oTarget, nStartingDistance = null) {
         if (this.isCreatureFighting(oCreature, oTarget)) {
+            // Already engaged in combat with this target : nothing change
+            return this.getCombat(oCreature);
+        }
+        if (this.isCreatureFighting(oCreature)) {
+            // Already in combat with another target, unilaterally quit combat and change target
             this.endCombat(oCreature);
         }
         const oCombat = this._fighters[oCreature.id] = this._createCombat(oCreature, oTarget, nStartingDistance);

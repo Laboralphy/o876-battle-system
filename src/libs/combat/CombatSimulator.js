@@ -49,7 +49,7 @@ class CombatSimulator {
      * @param evt {CombatTurnEvent}
      */
     eventCombatTurn (evt) {
-        const currentAction = this.services.combats.getSelectedAction(evt.attacker);
+        const currentAction = this.services.combats.getSelectedActionTaken(evt.attacker)?.action;
         if (currentAction) {
             this.sendTextEvent(evt.attacker.id, 'prepares action', currentAction.id);
         }

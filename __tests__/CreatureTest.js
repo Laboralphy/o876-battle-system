@@ -876,7 +876,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });
@@ -900,7 +901,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });
@@ -925,7 +927,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });
@@ -950,7 +953,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });
@@ -976,7 +980,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });
@@ -1000,7 +1005,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.useAction({ action: 'a1' });
@@ -1017,7 +1023,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.rechargeActions();
@@ -1034,7 +1041,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.rechargeActions();
@@ -1051,7 +1059,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.rechargeActions();
@@ -1068,7 +1077,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.rechargeActions();
@@ -1085,7 +1095,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.rechargeActions();
@@ -1102,7 +1113,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.rechargeActions();
@@ -1119,7 +1131,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });
@@ -1143,7 +1156,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });
@@ -1168,7 +1182,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.useAction({ action: 'a1' });
@@ -1185,7 +1200,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.useAction({ action: 'a1' });
@@ -1202,7 +1218,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.useAction({ action: 'a1' });
@@ -1219,7 +1236,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.useAction({ action: 'a1' });
@@ -1236,7 +1254,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });
@@ -1260,7 +1279,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });
@@ -1289,7 +1309,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: false,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
         oCreature.mutations.restoreAction({ action: 'a1' });
@@ -1306,7 +1327,8 @@ describe('getActions', function () {
                 script: 'script1',
                 parameters: {},
                 ready: true,
-                bonus: false
+                bonus: false,
+                hostile: false
             }
         });
     });

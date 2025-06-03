@@ -114,7 +114,8 @@
       "id": "act-poison-breath",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-poison-aoe",
-      "bonus": true,
+      "bonus": false,
+      "hostile": true,
       "range": 15,
       "parameters": {
         "amount": "10d8"

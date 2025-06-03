@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-06-02T09:43:44.611Z
+// Date : 2025-06-03T09:19:36.219Z
 // List of files in ./src/modules/classic/scripts
 
 module.exports = {

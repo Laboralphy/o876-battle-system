@@ -90,7 +90,8 @@
       "id": "act-charm",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-stunning-glare",
-      "bonus": true,
+      "bonus": false,
+      "hostile": true,
       "range": 30,
       "parameters": {},
       "cooldown": 6
@@ -99,7 +100,8 @@
       "id": "act-draining-kiss",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "at-draining-kiss",
-      "bonus": true,
+      "bonus": false,
+      "hostile": true,
       "range": 5,
       "parameters": {
         "amount": "5d10"

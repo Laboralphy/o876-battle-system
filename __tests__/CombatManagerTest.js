@@ -457,7 +457,7 @@ describe('advancing combat', function () {
         cm.processCombats();
         expect(logs).toHaveLength(0);
     });
-    it('should cast an action when calling next action', function () {
+    it('should set nextTurn action when calling selectAction twice in the same turn', function () {
         const cm = new CombatManager();
         cm.defaultDistance = 50;
         const c1 = new Creature({ blueprint: bpNormalActor, id: 'c1' });
@@ -495,7 +495,23 @@ describe('advancing combat', function () {
         cm.processCombats(); // turn 0 : tick 1->2
 
         cm.processCombats(); // turn 0 : tick 2->3
-        combat.nextAction = 'a1';
+
+        // Current : a1
+        // Next : null
+        expect(combat.nextTurnAction).toBeNull();
+        expect(combat.currentAction).not.toBeNull();
+        expect(combat.currentAction.id).toBe('a1');
+        expect(combat.attackerState.hasTakenAction()).toBeFalsy(); // Action still not used
+        expect(combat.attackerState.actions['a1'].ready).toBeTruthy();
+
+        combat.selectAction('a1'); // reselecting a1 : should be put in next turn action because current action still going on
+        // because action has not fired yet
+        expect(combat.nextTurnAction).not.toBeNull();
+        expect(combat.nextTurnAction.id).toBe('a1');
+        expect(combat.currentAction).not.toBeNull();
+
+
+
         expect(logs).toHaveLength(0);
         expect(combat.tick).toBe(3);
 
@@ -504,15 +520,14 @@ describe('advancing combat', function () {
 
         cm.processCombats(); // turn 0 : tick 4->5
         expect(logs).toHaveLength(0);
-        expect(combat.nextAction).toBe('a1');
         expect(combat.distance).toBe(20);
         expect(combat.getSelectedWeaponRange()).toBe(-1); // Absolutely no weapon (natural or other)
         expect(combat.isTargetInRange()).toBeTruthy();
 
         cm.processCombats(); // turn 0->1 : tick 5->0 !! new turn, selecting new action
-        expect(combat.nextAction).toBe('');
+        // now nextTurnAction should be null
+        expect(combat.nextTurnAction).toBeNull();
         expect(combat.currentAction).not.toBeNull();
-        expect(combat.currentAction.range).toBe(Infinity);
 
         cm.processCombats(); // // turn 1 : tick 0->1 !! beginning of tick 0 : taking action
         expect(logs).toHaveLength(1);
@@ -545,7 +560,7 @@ describe('advancing combat', function () {
         cm.processCombats(); // turn 0 : tick 2->3
         cm.processCombats(); // turn 0 : tick 3->4
         cm.processCombats(); // turn 0 : tick 4->5
-        combat.nextAction = 'a1';
+        combat.selectAction('a1');
         cm.processCombats(); // turn 0->1 : tick 5->0
         expect(combat.currentAction).toBeNull(); // action range is far to short than combat distance
 
