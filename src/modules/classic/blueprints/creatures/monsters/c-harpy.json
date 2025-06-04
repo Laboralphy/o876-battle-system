@@ -47,7 +47,7 @@
     {
       "id": "act-luring-song",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-charm-chant",
+      "script": "ca-charm-chant",
       "bonus": false,
       "hostile": true,
       "range": 300,

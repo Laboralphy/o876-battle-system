@@ -36,7 +36,7 @@ describe('fighter feat fighting style great weapon', function () {
         };
         m.defineModule({
             scripts: {
-                'at-ffs-great-weapon-second-chance': pNewScript
+                'sb-ffs-great-weapon-second-chance': pNewScript
             }
         });
         const c = m.createEntity('c-orc');
@@ -71,7 +71,7 @@ describe('fighter feat fighting style great weapon', function () {
         };
         m.defineModule({
             scripts: {
-                'at-ffs-great-weapon-second-chance': pNewScript
+                'sb-ffs-great-weapon-second-chance': pNewScript
             }
         });
         const c = m.createEntity('c-orc');
@@ -109,7 +109,7 @@ describe('fighter feat fighting style great weapon', function () {
         };
         m.defineModule({
             scripts: {
-                'at-ffs-great-weapon-second-chance': pNewScript
+                'sb-ffs-great-weapon-second-chance': pNewScript
             }
         });
         const c = m.createEntity('c-orc');

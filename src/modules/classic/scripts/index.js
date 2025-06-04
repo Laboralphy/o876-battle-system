@@ -1,23 +1,23 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-06-03T09:19:36.219Z
+// Date : 2025-06-04T08:08:05.387Z
 // List of files in ./src/modules/classic/scripts
 
 module.exports = {
-    'at-charge': require('./actions/at-charge.js'),
-    'at-charm-chant': require('./actions/at-charm-chant.js'),
-    'at-draining-kiss': require('./actions/at-draining-kiss.js'),
-    'at-elemental-breath': require('./actions/at-elemental-breath.js'),
-    'at-frightful-glare': require('./actions/at-frightful-glare.js'),
-    'at-frightful-presence': require('./actions/at-frightful-presence.js'),
-    'at-heal': require('./actions/at-heal.js'),
-    'at-petrifying-breath': require('./actions/at-petrifying-breath.js'),
-    'at-petrifying-gaze': require('./actions/at-petrifying-gaze.js'),
-    'at-petrifying-ray': require('./actions/at-petrifying-ray.js'),
-    'at-poison-aoe': require('./actions/at-poison-aoe.js'),
-    'at-stench': require('./actions/at-stench.js'),
-    'at-stunning-glare': require('./actions/at-stunning-glare.js'),
-    'at-vampiric-bite': require('./actions/at-vampiric-bite.js'),
-    'at-wing-buffet': require('./actions/at-wing-buffet.js'),
+    'ca-charge': require('./actions/ca-charge.js'),
+    'ca-charm-chant': require('./actions/ca-charm-chant.js'),
+    'ca-draining-kiss': require('./actions/ca-draining-kiss.js'),
+    'ca-elemental-breath': require('./actions/ca-elemental-breath.js'),
+    'ca-frightful-glare': require('./actions/ca-frightful-glare.js'),
+    'ca-frightful-presence': require('./actions/ca-frightful-presence.js'),
+    'ca-heal': require('./actions/ca-heal.js'),
+    'ca-petrifying-breath': require('./actions/ca-petrifying-breath.js'),
+    'ca-petrifying-gaze': require('./actions/ca-petrifying-gaze.js'),
+    'ca-petrifying-ray': require('./actions/ca-petrifying-ray.js'),
+    'ca-poison-aoe': require('./actions/ca-poison-aoe.js'),
+    'ca-stench': require('./actions/ca-stench.js'),
+    'ca-stunning-glare': require('./actions/ca-stunning-glare.js'),
+    'ca-vampiric-bite': require('./actions/ca-vampiric-bite.js'),
+    'ca-wing-buffet': require('./actions/ca-wing-buffet.js'),
     'thinker-succubus': require('./thinkers/thinker-succubus.js'),
     'thinker-vampire': require('./thinkers/thinker-vampire.js')
 };

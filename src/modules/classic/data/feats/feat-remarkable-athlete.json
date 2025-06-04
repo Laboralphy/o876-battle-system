@@ -1,0 +1,29 @@
+{
+  "description": "Moving speed increased by 20%, add +2 to dexterity saving throws",
+  "properties": [
+    {
+      "type": "PROPERTY_SPEED_FACTOR",
+      "amp": 0.2
+    },
+    {
+      "type": "PROPERTY_SAVING_THROW_MODIFIER",
+      "amp": 2,
+      "ability": "ABILITY_DEXTERITY"
+    },
+    {
+      "type": "PROPERTY_SKILL_MODIFIER",
+      "amp": 2,
+      "ability": "ABILITY_STRENGTH"
+    },
+    {
+      "type": "PROPERTY_SKILL_MODIFIER",
+      "amp": 2,
+      "ability": "ABILITY_DEXTERITY"
+    },
+    {
+      "type": "PROPERTY_SKILL_MODIFIER",
+      "amp": 2,
+      "ability": "ABILITY_CONSTITUTION"
+    }
+  ]
+}

@@ -36,7 +36,7 @@ describe('at-fightful-glare', function() {
             cooldown: 0,
             charges: 0,
             range: Infinity,
-            script: 'at-frightful-glare',
+            script: 'ca-frightful-glare',
             parameters: {}
         });
         c1.dice.cheat(0.9);
@@ -68,7 +68,7 @@ describe('at-fightful-glare', function() {
             cooldown: 0,
             charges: 0,
             range: Infinity,
-            script: 'at-frightful-glare',
+            script: 'ca-frightful-glare',
             parameters: {}
         });
         c1.dice.cheat(0.1);

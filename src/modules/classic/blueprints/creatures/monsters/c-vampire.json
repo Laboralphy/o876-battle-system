@@ -84,7 +84,7 @@
     {
       "id": "act-charm",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-stunning-glare",
+      "script": "ca-stunning-glare",
       "bonus": false,
       "hostile": true,
       "range": 30,
@@ -94,7 +94,7 @@
     {
       "id": "act-vampire-bite",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-vampiric-bite",
+      "script": "ca-vampiric-bite",
       "bonus": false,
       "hostile": true,
       "range": 5,

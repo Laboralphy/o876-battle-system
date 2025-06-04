@@ -69,7 +69,7 @@
     {
       "id": "act-petrifying-breath",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-petrifying-vapor",
+      "script": "ca-petrifying-vapor",
       "bonus": false,
       "hostile": true,
       "range": 30,

@@ -98,7 +98,7 @@
     {
       "id": "act-elemental-breath",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-elemental-breath",
+      "script": "ca-elemental-breath",
       "bonus": false,
       "hostile": true,
       "range": 60,
@@ -111,7 +111,7 @@
     {
       "id": "act-frightful-roar",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-frightful-presence",
+      "script": "ca-frightful-presence",
       "bonus": false,
       "hostile": true,
       "range": 60,
@@ -121,7 +121,7 @@
     {
       "id": "act-wing-buffet",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-wing-buffet",
+      "script": "ca-wing-buffet",
       "bonus": false,
       "hostile": true,
       "range": 20,

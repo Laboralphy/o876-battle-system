@@ -91,7 +91,7 @@
     {
       "id": "act-stench",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-stench",
+      "script": "ca-stench",
       "bonus": false,
       "hostile": true,
       "range": 10,

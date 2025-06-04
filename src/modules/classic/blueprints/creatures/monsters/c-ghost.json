@@ -132,7 +132,7 @@
     {
       "id": "act-horrifying-visage",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-frightful-glare",
+      "script": "ca-frightful-glare",
       "bonus": false,
       "hostile": true,
       "range": 60,
@@ -142,7 +142,7 @@
     {
       "id": "act-elemental-breath",
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
-      "script": "at-elemental-breath",
+      "script": "ca-elemental-breath",
       "bonus": false,
       "hostile": true,
       "range": 90,
