@@ -6,14 +6,14 @@ describe('assigning feat to creature', function () {
         const m = new Manager();
         m.loadModule('classic');
         const c = m.createEntity('c-orc');
-        expect(m.hasFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON')).toBeFalsy();
+        expect(m.entityBuilder.hasFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON')).toBeFalsy();
     });
     it('should have feat fighting style great weapon when creating orc and adding this feat', function () {
         const m = new Manager();
         m.loadModule('classic');
         const c = m.createEntity('c-orc');
-        m.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON');
-        expect(m.hasFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON')).toBeTruthy();
+        m.entityBuilder.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON');
+        expect(m.entityBuilder.hasFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON')).toBeTruthy();
     });
 });
 
@@ -40,7 +40,7 @@ describe('fighter feat fighting style great weapon', function () {
             }
         });
         const c = m.createEntity('c-orc');
-        m.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON');
+        m.entityBuilder.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON');
         const w = m.createEntity('wpn-great-axe');
         c.equipItem(w);
         expect(c.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_SHIELD]).toBeNull();
@@ -75,7 +75,7 @@ describe('fighter feat fighting style great weapon', function () {
             }
         });
         const c = m.createEntity('c-orc');
-        m.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON');
+        m.entityBuilder.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON');
         const w = m.createEntity('wpn-great-axe');
         c.equipItem(w);
         expect(c.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_SHIELD]).toBeNull();
@@ -113,7 +113,7 @@ describe('fighter feat fighting style great weapon', function () {
             }
         });
         const c = m.createEntity('c-orc');
-        m.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON');
+        m.entityBuilder.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_GREAT_WEAPON');
         const w = m.createEntity('wpn-great-axe');
         c.equipItem(w);
         expect(c.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_SHIELD]).toBeNull();
@@ -147,7 +147,7 @@ describe('fighter feat fighting style duelling', function () {
         const m = new Manager();
         m.loadModule('classic');
         const c = m.createEntity('c-orc');
-        m.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_DUELLING');
+        m.entityBuilder.addCreatureFeat(c, 'FEAT_FIGHTING_STYLE_DUELLING');
         const w = m.createEntity('wpn-short-sword');
         c.equipItem(w);
         expect(c.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_SHIELD]).toBeNull();

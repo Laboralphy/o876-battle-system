@@ -1,8 +1,9 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-06-04T08:08:05.320Z
+// Date : 2025-06-04T15:08:07.389Z
 // List of files in ./src/modules/classic/blueprints
 
 module.exports = {
+    'class-type-fighter': require('./class-types/class-type-fighter.json'),
     'c-base-skeleton': require('./creatures/monsters/c-base-skeleton.json'),
     'c-basilisk-greater': require('./creatures/monsters/c-basilisk-greater.json'),
     'c-basilisk': require('./creatures/monsters/c-basilisk.json'),

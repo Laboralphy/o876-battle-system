@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-06-04T08:08:05.387Z
+// Date : 2025-06-04T15:08:07.509Z
 // List of files in ./src/modules/classic/scripts
 
 module.exports = {
@@ -18,6 +18,8 @@ module.exports = {
     'ca-stunning-glare': require('./actions/ca-stunning-glare.js'),
     'ca-vampiric-bite': require('./actions/ca-vampiric-bite.js'),
     'ca-wing-buffet': require('./actions/ca-wing-buffet.js'),
+    'fa-fighter-action-surge': require('./actions/fa-fighter-action-surge.js'),
+    'fa-fighter-second-wind': require('./actions/fa-fighter-second-wind.js'),
     'thinker-succubus': require('./thinkers/thinker-succubus.js'),
     'thinker-vampire': require('./thinkers/thinker-vampire.js')
 };

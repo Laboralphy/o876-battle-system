@@ -1,9 +1,8 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-06-04T08:08:05.209Z
+// Date : 2025-06-04T15:08:07.203Z
 // List of files in ./src/modules/base/blueprints
 
 module.exports = {
-    'class-type-fighter': require('./class-types/class-type-fighter.json'),
     'class-type-monster': require('./class-types/class-type-monster.json'),
     'class-type-tourist': require('./class-types/class-type-tourist.json'),
     'natwpn-punch-1d3': require('./items/natural-weapons/natwpn-punch-1d3.json'),

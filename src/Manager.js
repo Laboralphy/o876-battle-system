@@ -77,6 +77,10 @@ class Manager {
         return this._propertyBuilder;
     }
 
+    get entityBuilder () {
+        return this._entityBuilder;
+    }
+
     /**
      * @returns {EffectProcessor}
      */
@@ -633,79 +637,6 @@ class Manager {
      */
     applyEffect (oEffect, oTarget, duration = 0, oSource = null) {
         return this._effectProcessor.applyEffect(oEffect, oTarget, duration, oSource);
-    }
-
-    /**
-     * @param oCreature {Creature}
-     * @param oProperty {object}
-     */
-    addProperty (oCreature, oProperty) {
-        const p = this.propertyBuilder.buildProperty(oProperty);
-        oCreature.mutations.addProperty({ property: p });
-        return p;
-    }
-
-    /**
-     * @param oCreature {Creature}
-     * @param oProperty {RBSProperty}
-     */
-    removeProperty (oCreature, oProperty) {
-        const idProperty = oProperty.id;
-        const p = oCreature.getters.getInnateProperties.find(({ id }) => id === idProperty);
-        if (p) {
-            oCreature.mutations.removeProperty({ property: p });
-        }
-    }
-
-    hasFeat (oCreature, sFeat) {
-        return !!oCreature
-            .getters
-            .getInnateProperties
-            .find(p => p.type === CONSTS.PROPERTY_FEAT && p.data.feat === sFeat);
-    }
-
-    getFeatRepository () {
-        return this._entityBuilder.data['FEATS'];
-    }
-
-    /**
-     * Adds a feat to a creature
-     * @param oCreature {Creature}
-     * @param sFeat {string}
-     */
-    addCreatureFeat (oCreature, sFeat) {
-        if (this.hasFeat(oCreature, sFeat)) {
-            return;
-        }
-        const oFeat = this.getFeatRepository()[sFeat];
-        const aFeatProperties = oFeat.properties;
-        if (aFeatProperties) {
-            const aPropIds = aFeatProperties.map(property => {
-                const p = this.addProperty(oCreature, property);
-                return p.id;
-            });
-            this.addProperty(oCreature, {
-                type: CONSTS.PROPERTY_FEAT,
-                feat: sFeat,
-                properties: aPropIds
-            });
-        }
-    }
-
-    /**
-     *
-     * @param oCreature {Creature}
-     * @param sFeat {string}
-     */
-    removeCreatureFeat (oCreature, sFeat) {
-        const aInnateProps = oCreature.getters.getInnateProperties;
-        const oProps = Object.fromEntries(aInnateProps.map(p => [p.id, p]));
-        aInnateProps
-            .filter(p => p.type === CONSTS.PROPERTY_FEAT && p.feat === sFeat)
-            .reduce((prev, idProp) => prev.concat(idProp), [])
-            .map(idProp => oProps[idProp])
-            .filter(p => !!p)
-            .forEach(p => this.removeProperty(oCreature, p));
     }
 
     increaseCreatureExperience (oCreature, nXP) {

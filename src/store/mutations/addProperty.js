@@ -5,5 +5,7 @@ const PropertyBuilder = require('../../PropertyBuilder');
  * @param property {RBSProperty}
  */
 module.exports = ({ state }, { property }) => {
-    state.properties.push(property);
+    if (!state.properties.some(p => p.id === property.id)) {
+        state.properties.push(property);
+    }
 };

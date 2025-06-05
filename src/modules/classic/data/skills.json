@@ -1,5 +1,5 @@
 {
-  "PROFICIENCY_SKILL_ATHLETICS": {
+  "SKILL_ATHLETICS": {
     "ability": "ABILITY_STRENGTH",
     "proficiency": "PROFICIENCY_SKILL_ATHLETICS"
   },

@@ -25,6 +25,105 @@ class EntityBuilder {
     }
 
     /**
+     * Add a property to a creature
+     * @param oEntity {Creature|RBSItem}
+     * @param oProperty {object}
+     */
+    addProperty (oEntity, oProperty) {
+        const p = this.propertyBuilder.buildProperty(oProperty);
+        if (oEntity instanceof Creature) {
+            oEntity.mutations.addProperty({ property: p });
+        } else {
+            if (!oEntity.properties.some(p => p.id === oProperty.id)) {
+                oEntity.properties.push(oProperty);
+            }
+        }
+        return p;
+    }
+
+    /**
+     * remove a property from a creature or item
+     * item must be unequipped first
+     * @param oEntity {Creature|RBSItem}
+     * @param oProperty {RBSProperty}
+     */
+    removeProperty (oEntity, oProperty) {
+        const idProperty = oProperty.id;
+        if (oEntity instanceof Creature) {
+            const p = oEntity.getters.getInnateProperties.find(({ id }) => id === idProperty);
+            if (p) {
+                oEntity.mutations.removeProperty({ property: p });
+            }
+        } else {
+            const iProp = oEntity.properties.findIndex(p => p.id === idProperty);
+            if (iProp >= 0) {
+                oEntity.properties.splice(iProp, 1);
+            }
+        }
+    }
+
+    /**
+     * Return true if the creature has the specified property
+     * @param oCreature {Creature}
+     * @param sFeat {string} feat identifier
+     * @returns {boolean}
+     */
+    hasFeat (oCreature, sFeat) {
+        return !!oCreature
+            .getters
+            .getInnateProperties
+            .find(p => p.type === CONSTS.PROPERTY_FEAT && p.data.feat === sFeat);
+    }
+
+    /**
+     * return feat repository
+     * @returns {{[idFeat: string]: object}}
+     */
+    getFeatRepository () {
+        return this.data['FEATS'];
+    }
+
+    /**
+     * Adds a feat to a creature
+     * @param oCreature {Creature}
+     * @param sFeat {string}
+     */
+    addCreatureFeat (oCreature, sFeat) {
+        if (this.hasFeat(oCreature, sFeat)) {
+            return;
+        }
+        const oFeat = this.getFeatRepository()[sFeat];
+        const aFeatProperties = oFeat.properties;
+        if (aFeatProperties) {
+            const aPropIds = aFeatProperties.map(property => {
+                const p = this.addProperty(oCreature, property);
+                return p.id;
+            });
+            this.addProperty(oCreature, {
+                type: CONSTS.PROPERTY_FEAT,
+                feat: sFeat,
+                properties: aPropIds
+            });
+        }
+    }
+
+    /**
+     *
+     * @param oCreature {Creature}
+     * @param sFeat {string}
+     */
+    removeCreatureFeat (oCreature, sFeat) {
+        const aInnateProps = oCreature.getters.getInnateProperties;
+        const oProps = Object.fromEntries(aInnateProps.map(p => [p.id, p]));
+        aInnateProps
+            .filter(p => p.type === CONSTS.PROPERTY_FEAT && p.feat === sFeat)
+            .reduce((prev, idProp) => prev.concat(idProp), [])
+            .map(idProp => oProps[idProp])
+            .filter(p => !!p)
+            .forEach(p => this.removeProperty(oCreature, p));
+    }
+
+    /**
      *
      * @returns {PropertyBuilder}
      */
@@ -163,6 +262,12 @@ class EntityBuilder {
         }
     }
 
+    /**
+     *
+     * @param aProperties
+     * @returns {RBSProperty[]}
+     * @private
+     */
     _buildProperties (aProperties) {
         return aProperties.map(p => this._propertyBuilder.buildProperty(p));
     }
@@ -177,7 +282,7 @@ class EntityBuilder {
      *
      * @param resref
      * @param id
-     * @returns {*|Date|Set<unknown>|Set<any>|{}}
+     * @returns {RBSItem}
      */
     createItemFromResRef (resref, id) {
         const oBlueprint = this._checkResRef(resref);
