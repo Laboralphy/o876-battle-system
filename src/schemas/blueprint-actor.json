@@ -89,6 +89,13 @@
       "description": "Speed of the creature",
       "type": "number"
     },
+    "feats": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^FEAT_"
+      }
+    },
     "properties": {
       "type": "array",
       "items": {
