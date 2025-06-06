@@ -1,0 +1,18 @@
+{
+  "entityType": "ENTITY_TYPE_PARTIAL",
+  "properties": [
+    {
+      "type": "PROPERTY_IMMUNITY",
+      "amp": 0,
+      "immunityType": "IMMUNITY_TYPE_DISEASE"
+    },
+    {
+      "type": "PROPERTY_IMMUNITY",
+      "amp": 0,
+      "immunityType": "IMMUNITY_TYPE_DEATH"
+    }
+  ],
+  "extends": [
+    "cp-poison-immunity"
+  ]
+}

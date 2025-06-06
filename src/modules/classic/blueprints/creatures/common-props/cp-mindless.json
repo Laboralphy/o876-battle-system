@@ -1,0 +1,20 @@
+{
+  "entityType": "ENTITY_TYPE_PARTIAL",
+  "properties": [
+    {
+      "type": "PROPERTY_IMMUNITY",
+      "amp": 0,
+      "immunityType": "IMMUNITY_TYPE_FEAR"
+    },
+    {
+      "type": "PROPERTY_IMMUNITY",
+      "amp": 0,
+      "immunityType": "IMMUNITY_TYPE_CHARM"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_IMMUNITY",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_PSYCHIC"
+    }
+  ]
+}

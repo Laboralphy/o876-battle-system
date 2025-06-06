@@ -1,0 +1,20 @@
+{
+  "entityType": "ENTITY_TYPE_PARTIAL",
+  "properties": [
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_SLASHING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_PIERCING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_CRUSHING"
+    }
+  ]
+}

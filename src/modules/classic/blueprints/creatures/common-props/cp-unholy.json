@@ -1,0 +1,15 @@
+{
+  "entityType": "ENTITY_TYPE_PARTIAL",
+  "properties": [
+    {
+      "type": "PROPERTY_DAMAGE_RESISTANCE",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_WITHERING"
+    },
+    {
+      "type": "PROPERTY_DAMAGE_VULNERABILITY",
+      "amp": 0,
+      "damageType": "DAMAGE_TYPE_RADIANT"
+    }
+  ]
+}

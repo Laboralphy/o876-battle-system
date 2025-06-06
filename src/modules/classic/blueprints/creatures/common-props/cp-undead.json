@@ -1,0 +1,13 @@
+{
+  "entityType": "ENTITY_TYPE_PARTIAL",
+  "properties": [
+    {
+      "type": "PROPERTY_DARKVISION",
+      "amp": 0
+    }
+  ],
+  "extends": [
+    "cp-lifeless",
+    "cp-unholy"
+  ]
+}
