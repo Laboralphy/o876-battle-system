@@ -41,38 +41,9 @@
   ],
   "properties": [
     {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
-    },
-    {
       "type": "PROPERTY_THINKER",
       "amp": 0,
       "combat": "thinker-succubus"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_SLASHING"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_CRUSHING"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_PIERCING"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_COLD"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_FIRE"
     },
     {
       "type": "PROPERTY_DAMAGE_RESISTANCE",
@@ -82,7 +53,7 @@
     {
       "type": "PROPERTY_DAMAGE_RESISTANCE",
       "amp": 0,
-      "damageType": "DAMAGE_TYPE_POISON"
+      "damageType": "DAMAGE_TYPE_COLD"
     }
   ],
   "actions": [
@@ -113,5 +84,8 @@
   "ac": 2,
   "level": 12,
   "hd": 8,
-  "speed": 30
+  "speed": 30,
+  "extends": [
+    "cp-fiend"
+  ]
 }

@@ -1,10 +1,29 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-06-04T15:08:07.389Z
+// Date : 2025-06-06T09:26:55.324Z
 // List of files in ./src/modules/classic/blueprints
 
 module.exports = {
     'class-type-fighter': require('./class-types/class-type-fighter.json'),
-    'c-base-skeleton': require('./creatures/monsters/c-base-skeleton.json'),
+    'cp-celestial': require('./creatures/common-props/cp-celestial.json'),
+    'cp-construct-armored': require('./creatures/common-props/cp-construct-armored.json'),
+    'cp-construct-metal': require('./creatures/common-props/cp-construct-metal.json'),
+    'cp-construct-mineral': require('./creatures/common-props/cp-construct-mineral.json'),
+    'cp-construct-organic': require('./creatures/common-props/cp-construct-organic.json'),
+    'cp-construct': require('./creatures/common-props/cp-construct.json'),
+    'cp-deflective-skin': require('./creatures/common-props/cp-deflective-skin.json'),
+    'cp-fiend': require('./creatures/common-props/cp-fiend.json'),
+    'cp-flawed-deflective-skin': require('./creatures/common-props/cp-flawed-deflective-skin.json'),
+    'cp-freedom': require('./creatures/common-props/cp-freedom.json'),
+    'cp-hard-skin': require('./creatures/common-props/cp-hard-skin.json'),
+    'cp-lifeless': require('./creatures/common-props/cp-lifeless.json'),
+    'cp-mindless': require('./creatures/common-props/cp-mindless.json'),
+    'cp-poison-immunity': require('./creatures/common-props/cp-poison-immunity.json'),
+    'cp-ultra-deflective-skin': require('./creatures/common-props/cp-ultra-deflective-skin.json'),
+    'cp-undead-corporeal': require('./creatures/common-props/cp-undead-corporeal.json'),
+    'cp-undead-ethereal': require('./creatures/common-props/cp-undead-ethereal.json'),
+    'cp-undead-skeleton': require('./creatures/common-props/cp-undead-skeleton.json'),
+    'cp-undead': require('./creatures/common-props/cp-undead.json'),
+    'cp-unholy': require('./creatures/common-props/cp-unholy.json'),
     'c-basilisk-greater': require('./creatures/monsters/c-basilisk-greater.json'),
     'c-basilisk': require('./creatures/monsters/c-basilisk.json'),
     'c-centaur': require('./creatures/monsters/c-centaur.json'),

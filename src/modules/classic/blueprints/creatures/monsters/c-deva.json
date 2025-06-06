@@ -28,35 +28,6 @@
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
       "amp": 1
-    },
-    {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_RADIANT"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_SLASHING"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_CRUSHING"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_PIERCING"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_FEAR"
     }
   ],
   "actions": [
@@ -75,5 +46,9 @@
   "ac": 3,
   "level": 16,
   "hd": 8,
-  "speed": 30
+  "speed": 30,
+  "extends": [
+    "cp-celestial",
+    "cp-hard-skin"
+  ]
 }

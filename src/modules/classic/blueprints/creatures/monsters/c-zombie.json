@@ -41,16 +41,6 @@
     {
       "type": "PROPERTY_DARKVISION",
       "amp": 0
-    },
-    {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_POISON"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_POISON"
     }
   ],
   "actions": [],
@@ -58,5 +48,9 @@
   "ac": 0,
   "level": 3,
   "hd": 8,
-  "speed": 20
+  "speed": 20,
+  "extends": [
+    "cp-undead-corporeal",
+    "cp-mindless"
+  ]
 }

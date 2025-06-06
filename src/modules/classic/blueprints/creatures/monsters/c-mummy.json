@@ -61,54 +61,13 @@
       "damageType": "DAMAGE_TYPE_FIRE"
     },
     {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_CRUSHING"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_SLASHING"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_PIERCING"
-    },
-    {
       "type": "PROPERTY_DAMAGE_IMMUNITY",
       "amp": 0,
       "damageType": "DAMAGE_TYPE_WITHERING"
     },
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_POISON"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_FEAR"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_PARALYSIS"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_PETRIFICATION"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_POISON"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_CHARM"
+      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
+      "amp": 1
     },
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
@@ -131,5 +90,8 @@
   "ac": 2,
   "level": 9,
   "hd": 8,
-  "speed": 20
+  "speed": 20,
+  "extends": [
+    "cp-undead-corporeal"
+  ]
 }

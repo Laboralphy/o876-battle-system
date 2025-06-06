@@ -51,6 +51,7 @@ doProcessModuleData () {
   url_var_gear=${URL_SHEET_PREFIX}_GEAR
   url_var_shields=${URL_SHEET_PREFIX}_SHIELDS
   url_var_monsters=${URL_SHEET_PREFIX}_MONSTERS
+  url_var_common_props=${URL_SHEET_PREFIX}_COMMON_PROPS
   doTransformDataTypes "$MODULE" types weapon-types "${!url_var_weapon_types}"
   doTransformDataTypes "$MODULE" types armor-types "${!url_var_armor_types}"
   doTransformDataTypes "$MODULE" types ammo-types "${!url_var_ammo_types}"
@@ -62,6 +63,7 @@ doProcessModuleData () {
   doTransformDataTypes "$MODULE" items gear "${!url_var_gear}"
   doTransformDataTypes "$MODULE" items shields "${!url_var_shields}"
   doTransformDataTypes "$MODULE" creatures monsters "${!url_var_monsters}"
+  doTransformDataTypes "$MODULE" creatures common-props "${!url_var_common_props}"
   echo "done with data transform, returning to previous directory"
   cd - || exit 1
 }

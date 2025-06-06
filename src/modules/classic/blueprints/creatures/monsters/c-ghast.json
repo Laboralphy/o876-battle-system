@@ -61,32 +61,7 @@
       ]
     }
   ],
-  "properties": [
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_WITHERING"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_POISON"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_CHARM"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_POISON"
-    },
-    {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
-    }
-  ],
+  "properties": [],
   "actions": [
     {
       "id": "act-stench",
@@ -103,5 +78,8 @@
   "ac": 0,
   "level": 8,
   "hd": 8,
-  "speed": 30
+  "speed": 30,
+  "extends": [
+    "cp-undead-corporeal"
+  ]
 }

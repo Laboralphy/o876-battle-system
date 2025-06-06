@@ -39,46 +39,6 @@
   ],
   "properties": [
     {
-      "type": "PROPERTY_DAMAGE_IMMUNITY",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_POISON"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_SLASHING"
-    },
-    {
-      "type": "PROPERTY_DAMAGE_RESISTANCE",
-      "amp": 0,
-      "damageType": "DAMAGE_TYPE_PIERCING"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_FEAR"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_PARALYSIS"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_PETRIFICATION"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_POISON"
-    },
-    {
-      "type": "PROPERTY_IMMUNITY",
-      "amp": 0,
-      "immunityType": "IMMUNITY_TYPE_CHARM"
-    },
-    {
       "type": "PROPERTY_DARKVISION",
       "amp": 0
     },
@@ -92,5 +52,8 @@
   "ac": 8,
   "level": 17,
   "hd": 10,
-  "speed": 30
+  "speed": 30,
+  "extends": [
+    "cp-construct-mineral"
+  ]
 }

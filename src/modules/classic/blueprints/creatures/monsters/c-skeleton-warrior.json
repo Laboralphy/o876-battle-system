@@ -10,7 +10,14 @@
     "PROFICIENCY_ARMOR_HEAVY",
     "PROFICIENCY_SHIELD"
   ],
-  "abilities": {},
+  "abilities": {
+    "strength": 10,
+    "dexterity": 14,
+    "constitution": 15,
+    "intelligence": 6,
+    "wisdom": 8,
+    "charisma": 5
+  },
   "equipment": [
     "arm-chain-shirt",
     "wpn-short-sword-hq",
@@ -19,8 +26,12 @@
   ],
   "properties": [],
   "actions": [],
+  "specie": "SPECIE_UNDEAD",
+  "ac": 0,
+  "level": 4,
+  "hd": 8,
+  "speed": 30,
   "extends": [
-    "c-base-skeleton"
-  ],
-  "level": 4
+    "cp-undead-skeleton"
+  ]
 }
