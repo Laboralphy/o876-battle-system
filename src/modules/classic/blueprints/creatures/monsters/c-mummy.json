@@ -68,10 +68,6 @@
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
       "amp": 1
-    },
-    {
-      "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
-      "amp": 1
     }
   ],
   "actions": [

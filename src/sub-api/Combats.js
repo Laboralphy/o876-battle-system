@@ -140,8 +140,6 @@ class Combats extends ServiceAbstract {
         const cm = this.services.core.manager.combatManager;
         cm.endCombat(oAttacker[BoxedCreature.SYMBOL_BOXED_OBJECT], bBothSide);
     }
-
-
 }
 
 module.exports = Combats;

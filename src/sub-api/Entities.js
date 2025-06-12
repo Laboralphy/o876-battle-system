@@ -102,6 +102,9 @@ class Entities extends ServiceAbstract {
      * @param data {Object<string, number | string>}
      */
     createProperty (sType, amp, data) {
+        /**
+         * @type {PropertyBuilder}
+         */
         const pb = this.services.core.manager.propertyBuilder;
         return pb.buildProperty({
             type: this.services.core.checkConstProperty(sType),
@@ -130,7 +133,7 @@ class Entities extends ServiceAbstract {
      * @param property {RBSProperty}
      */
     addProperty (oEntity, property) {
-        this.services.entities.switchEntityType(
+        this.switchEntityType(
             oEntity,
             {
                 creature: (oCreature) => {
@@ -147,7 +150,7 @@ class Entities extends ServiceAbstract {
      * @param property {RBSProperty}
      */
     removeProperty (oEntity, property) {
-        this.services.entities.switchEntityType(
+        this.switchEntityType(
             oEntity,
             {
                 creature: (oCreature) => oCreature.mutations.removeProperty({ property }),
@@ -159,6 +162,21 @@ class Entities extends ServiceAbstract {
                 }
             }
         );
+    }
+
+    /**
+     * Add some XP to a creature,
+     * Creature may gain level and trigger level up event
+     * @param oEntity {BoxedCreature}
+     * @param xp {number}
+     */
+    gainXP (oEntity, xp) {
+        if (oEntity.isCreature) {
+            const oCreature = oEntity[BoxedCreature.SYMBOL_BOXED_OBJECT];
+            this.services.core.manager.increaseCreatureExperience(oCreature, xp);
+        } else {
+            throw new TypeError('only available to creature');
+        }
     }
 }
 
