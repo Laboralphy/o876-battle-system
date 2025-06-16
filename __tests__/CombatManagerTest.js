@@ -1,4 +1,5 @@
 const CombatManager = require('../src/libs/combat/CombatManager');
+const Combat = require('../src/libs/combat/Combat');
 const Creature = require('../src/Creature');
 const CONSTS = require('../src/consts');
 const PropertyBuilder = require('../src/PropertyBuilder');
@@ -667,5 +668,32 @@ describe('combat vs monster with claws and fangs', function () {
 
         c2.dice.cheat(0.99);
         expect(oCombat.getMostSuitableSlot()).toBe(CONSTS.EQUIPMENT_SLOT_NATURAL_WEAPON_2);
+    });
+});
+
+describe('problème des zone d effet', function () {
+    it('distance should be 50 when starting combat', function () {
+        const cm = new CombatManager();
+        cm.defaultDistance = 50;
+        const c1 = new Creature({ blueprint: bpNormalActor });
+        const c2 = new Creature({ blueprint: bpNormalActor });
+        const c3 = new Creature({ blueprint: bpNormalActor });
+        const c4 = new Creature({ blueprint: bpNormalActor });
+        const c5 = new Creature({ blueprint: bpNormalActor });
+        const c6 = new Creature({ blueprint: bpNormalActor });
+
+        // c1 is fighting c2 .. c6
+        /**
+         * @type {Combat}
+         */
+        const cb2 = cm.startCombat(c2, c1);
+        const cb3 = cm.startCombat(c3, c1);
+        const cb4 = cm.startCombat(c4, c1);
+        const cb5 = cm.startCombat(c5, c1);
+        const cb6 = cm.startCombat(c6, c1);
+
+        expect(cb2).toBeInstanceOf(Combat);
+        expect(cb2).toHaveProperty('distance');
+        expect(cb2.distance).toBe(50);
     });
 });

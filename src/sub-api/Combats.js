@@ -108,6 +108,11 @@ class Combats extends ServiceAbstract {
         }
     }
 
+    /**
+     *
+     * @param oCreature {Creature}
+     * @returns {number}
+     */
     getTargetDistance (oCreature) {
         const oCombat = this.getCreatureCombat(oCreature);
         if (oCombat) {
