@@ -1,9 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
 
-const EXTENSION_JS = '.js';
-const EXTENSION_JSON = '.json';
-
 class TreeAsync {
     static async exists (sPath) {
         try {
@@ -37,53 +34,6 @@ class TreeAsync {
             }
         }
         return aEntries;
-    }
-
-    /**
-     * @typedef FormatTreeStruct {Map<string, Object>}
-     *
-     *
-     * @param aTree
-     * @param sBasePath
-     * @param bRemovePath
-     * @returns {Promise<FormatTreeStruct>}
-     */
-    static async formatTree (aTree, sBasePath = '', bRemovePath = false) {
-        const t1 = aTree.filter(x => x.endsWith(EXTENSION_JS) || x.endsWith(EXTENSION_JSON)).map(x => {
-            const filename = x;
-            const dir = path.dirname(x);
-            const oModule = require(path.resolve(sBasePath, filename));
-            const name = x.endsWith(EXTENSION_JS)
-                ? path.basename(filename, EXTENSION_JS)
-                : path.basename(filename, EXTENSION_JSON);
-            const id = bRemovePath ? name : path.posix.join(dir, name);
-            return {
-                id,
-                module: oModule
-            };
-        });
-        const t3 = new Map();
-        t1.forEach(({ id, module: m }) => {
-            t3.set(id, m);
-        });
-        return t3;
-    }
-
-    /**
-     *
-     * @param sBasePath
-     * @param bRemovePath
-     * @returns {Promise<FormatTreeStruct>[]|Promise<FormatTreeStruct>}
-     */
-    static async recursiveRequire (sBasePath = '.', bRemovePath = false) {
-        if (Array.isArray(sBasePath)) {
-            const prr = sBasePath
-                .map(s => TreeAsync.recursiveRequire(s, bRemovePath));
-            const rr = await Promise.all(prr);
-            return rr.flat();
-        }
-        const t1 = await TreeAsync.tree(sBasePath);
-        return TreeAsync.formatTree(t1, sBasePath, bRemovePath);
     }
 }
 
