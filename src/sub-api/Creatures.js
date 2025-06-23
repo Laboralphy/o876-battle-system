@@ -279,6 +279,20 @@ class Creatures extends Abstract {
                 oTarget[BoxedCreature.SYMBOL_BOXED_OBJECT]
             );
     }
+
+    /**
+     * Add some XP to a creature,
+     * Creature may gain level and trigger level up event
+     * @param oCreature {BoxedCreature}
+     * @param xp {number}
+     */
+    gainXP (oCreature, xp) {
+        if (oCreature.isCreature) {
+            this.services.core.manager.increaseCreatureExperience(oCreature[BoxedCreature.SYMBOL_BOXED_OBJECT], xp);
+        } else {
+            throw new TypeError('only available to creature');
+        }
+    }
 }
 
 module.exports = Creatures;

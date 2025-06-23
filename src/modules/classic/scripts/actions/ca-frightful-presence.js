@@ -1,3 +1,5 @@
+const {getAreaOfEffectTargets} = require('../../../../libs/helpers');
+
 /**
  * Frightful presence
  * Offenders failing at saving throw will be struck by fear
@@ -15,8 +17,7 @@
  */
 function main ({ manager, action, creature, target }) {
     const { range, duration = creature.getters.getVariables['DEFAULT_AILMENT_DURATION'] } = action;
-    const aOffenders = manager.combatManager.getOffenders(creature, range);
-    aOffenders.forEach(offender => {
+    getAreaOfEffectTargets(manager, creature, target, range).forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_WISDOM,
             creature.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],

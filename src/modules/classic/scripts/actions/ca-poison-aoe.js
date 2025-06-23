@@ -1,4 +1,4 @@
-const { doDamage, getThreatTypeFromDamageType} = require('../../../../libs/helpers');
+const { doDamage, getThreatTypeFromDamageType, getAreaOfEffectTargets} = require('../../../../libs/helpers');
 const { checkConst } = require('../../../../libs/check-const');
 
 /**
@@ -23,8 +23,7 @@ function main ({ manager, action, creature, target }) {
             amount
         }
     } = action;
-    const aOffenders = manager.combatManager.getOffenders(creature, range);
-    aOffenders.forEach(offender => {
+    getAreaOfEffectTargets(manager, creature, target, range).forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_CONSTITUTION,
             creature.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY],

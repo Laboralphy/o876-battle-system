@@ -1,3 +1,5 @@
+const {getAreaOfEffectTargets} = require('../../../../libs/helpers');
+
 /**
  * Petrifying gaze
  * an AOE version of petrification as extraordinary effect
@@ -16,8 +18,7 @@
  */
 function main ({ manager, action, creature, target }) {
     const { range } = action;
-    const aOffenders = manager.combatManager.getOffenders(creature, range);
-    aOffenders.forEach(oTarget => {
+    getAreaOfEffectTargets(manager, creature, target, range).forEach(oTarget => {
         const {success} = oTarget.rollSavingThrow(
             manager.CONSTS.ABILITY_CONSTITUTION,
             creature.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_DEXTERITY],

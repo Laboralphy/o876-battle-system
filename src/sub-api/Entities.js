@@ -163,21 +163,6 @@ class Entities extends ServiceAbstract {
             }
         );
     }
-
-    /**
-     * Add some XP to a creature,
-     * Creature may gain level and trigger level up event
-     * @param oEntity {BoxedCreature}
-     * @param xp {number}
-     */
-    gainXP (oEntity, xp) {
-        if (oEntity.isCreature) {
-            const oCreature = oEntity[BoxedCreature.SYMBOL_BOXED_OBJECT];
-            this.services.core.manager.increaseCreatureExperience(oCreature, xp);
-        } else {
-            throw new TypeError('only available to creature');
-        }
-    }
 }
 
 module.exports = Entities;

@@ -27,6 +27,7 @@ class CombatFighterState {
          * @private
          */
         this._actionTaken = false;
+        this._reactionTaken = false;
     }
 
     /**
@@ -82,6 +83,10 @@ class CombatFighterState {
         this._actionTaken = true;
     }
 
+    takeReaction () {
+        this._reactionTaken = true;
+    }
+
     /**
      * @param tick
      * @returns {number}
@@ -129,9 +134,14 @@ class CombatFighterState {
         return this._actionTaken;
     }
 
+    hasTakenReaction () {
+        return this._reactionTaken;
+    }
+
     computePlan (nTurnTickCount, reverseOrder = false) {
         // resiting action counters
         this._actionTaken = false;
+        this._reactionTaken = false;
         this._bonusActionDone = 0;
         const oWeapon = this._creature.getters.getSelectedWeapon;
         const bRanged = oWeapon

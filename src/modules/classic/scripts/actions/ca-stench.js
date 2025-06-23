@@ -1,4 +1,5 @@
 const {CONSTS} = require('../../../../../index');
+const {getAreaOfEffectTargets} = require('../../../../libs/helpers');
 
 /**
  * Stench
@@ -16,8 +17,7 @@ const {CONSTS} = require('../../../../../index');
  */
 function main ({ manager, action, creature, target }) {
     const { range, duration = creature.getters.getVariables['DEFAULT_AILMENT_DURATION'] } = action; // getActionDuration
-    const aOffenders = manager.combatManager.getOffenders(creature, range);
-    aOffenders.forEach(offender => {
+    getAreaOfEffectTargets(manager, creature, target, range).forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_CONSTITUTION,
             creature.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],

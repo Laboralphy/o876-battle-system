@@ -129,11 +129,33 @@ function getWorstDamageTypeVsAC (aDamageTypes, oArmorClasses) {
         .shift() ?? aDamageTypes[0];
 }
 
+/**
+ *
+ * @param oManager {Manager}
+ * @param oCreature {Creature}
+ * @param oTargetCenter {Creature}
+ * @param nRange {number}
+ */
+function getAreaOfEffectTargets (oManager, oCreature, oTargetCenter, nRange) {
+    const aAllOffenders = oManager.combatManager.getOffenders(oCreature, nRange);
+    if (!aAllOffenders.includes(oTargetCenter) && oTargetCenter !== null) {
+        aAllOffenders.push(oTargetCenter);
+    }
+    return aAllOffenders.filter(offender => {
+        if (oCreature.getCreatureVisibility(offender) !== CONSTS.CREATURE_VISIBILITY_VISIBLE) {
+            return oCreature.dice.random() >= 0.5;
+        } else {
+            return true;
+        }
+    });
+}
+
 module.exports = {
     getThreatTypeFromDamageType,
     doDamage,
     doHeal,
     getWeaponRange,
     getBestDamageTypeVsMitigation,
-    getWorstDamageTypeVsAC
+    getWorstDamageTypeVsAC,
+    getAreaOfEffectTargets
 };

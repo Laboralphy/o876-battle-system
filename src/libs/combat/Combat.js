@@ -302,6 +302,24 @@ class Combat {
         }
     }
 
+    strikeWithSelectedWeapon (nAttackCount, bPartingShot) {
+        if (this.attacker.getters.getSelectedWeapon) {
+            if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)) {
+                this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
+                    ...this.eventDefaultPayload,
+                    count: nAttackCount,
+                    opportunity: bPartingShot // if true, then no retaliation (start combat back)
+                });
+                return new CombatActionSuccess();
+            } else {
+                return new CombatActionFailure(CONSTS.ATTACK_FAILURE_CONDITION);
+            }
+        } else {
+            // neither action nor weapon equipped
+            return new CombatActionFailure(CONSTS.ATTACK_FAILURE_UNARMED);
+        }
+    }
+
     /**
      * trigger a combat action.
      * The system must repsond to this event in order to make a creature attack or take action
@@ -314,22 +332,10 @@ class Combat {
         const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick);
         if (bPartingShot || nAttackCount > 0) {
             const actionTaken = this._currentAction;
-            if (actionTaken) {
+            if (actionTaken && !bPartingShot) {
                 return this.playActionNow(actionTaken.action, actionTaken.parameters);
-            } else if (this.attacker.getters.getSelectedWeapon) {
-                if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)) {
-                    this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
-                        ...this.eventDefaultPayload,
-                        count: nAttackCount,
-                        opportunity: bPartingShot // if true, then no retaliation (start combat back)
-                    });
-                    return new CombatActionSuccess();
-                } else {
-                    return new CombatActionFailure(CONSTS.ATTACK_FAILURE_CONDITION);
-                }
             } else {
-                // neither action nor weapon equipped
-                return new CombatActionFailure(CONSTS.ATTACK_FAILURE_UNARMED);
+                return this.strikeWithSelectedWeapon(nAttackCount, bPartingShot);
             }
         } else {
             return new CombatActionFailure(CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK);
@@ -544,7 +550,8 @@ class Combat {
         ) {
             const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed;
             const previousDistance = this.distance;
-            const nMinRange = Math.max(this.getSelectedWeaponRange(), this.attacker.getters.getVariables['WEAPON_MELEE_MINIMUM_RANGE']);
+            const nMeleeRange = this.attacker.getters.getVariables['WEAPON_MELEE_MINIMUM_RANGE'];
+            const nMinRange = Math.max(this.getSelectedWeaponRange(), nMeleeRange);
             let nNewDistance = Math.max(nMinRange, this.distance - nRunSpeed);
             this._events.emit(CONSTS.EVENT_COMBAT_MOVE, {
                 ...this.eventDefaultPayload,
@@ -554,6 +561,12 @@ class Combat {
                     nNewDistance = parseFloat(d) || 0;
                 }
             });
+            // if current distance is at melee range and new distance is not at melee range,
+            // then an opportunity attack may be done, if reaction is available this turn.
+            if (previousDistance <= nMinRange && nNewDistance > nMinRange && !this.attackerState.hasTakenAction()) {
+                this.playFighterAction(true);
+                this.attackerState.takeReaction();
+            }
             this.distance = Math.max(0, Math.min(MAX_COMBAT_DISTANCE, nNewDistance));
         }
     }

@@ -1,4 +1,4 @@
-const { doDamage } = require('../../../../libs/helpers');
+const { doDamage, getAreaOfEffectTargets} = require('../../../../libs/helpers');
 
 /**
  * Wing buffet
@@ -17,8 +17,7 @@ const { doDamage } = require('../../../../libs/helpers');
  */
 function main ({ manager, action, creature, target }) {
     const { range } = action;
-    const aOffenders = manager.combatManager.getOffenders(creature, range);
-    aOffenders.forEach(offender => {
+    getAreaOfEffectTargets(manager, creature, target, range).forEach(offender => {
         const { savingThrow: success } = doDamage(manager, offender, creature, {
             amount: action.parameters.amount,
             damageType: manager.CONSTS.DAMAGE_TYPE_CRUSHING,

@@ -1,5 +1,6 @@
-const { doDamage } = require('../../../../libs/helpers');
+const { doDamage, getAreaOfEffectTargets } = require('../../../../libs/helpers');
 const { checkConst } = require('../../../../libs/check-const');
+const {CONSTS} = require('../../../../../index');
 
 /**
  * Elemental breath
@@ -16,10 +17,9 @@ const { checkConst } = require('../../../../libs/check-const');
  * @param creature {Creature}
  * @param target {Creature}
  */
-function main ({ manager, action, creature, target }) {
+function main ({ manager, action, creature, target = null }) {
     const { range } = action;
-    const aOffenders = manager.combatManager.getOffenders(creature, range);
-    aOffenders.forEach(offender => {
+    getAreaOfEffectTargets(manager, creature, target, range).forEach(offender => {
         doDamage(manager, offender, creature, {
             amount: action.parameters.amount,
             damageType: checkConst(action.parameters.damageType),
