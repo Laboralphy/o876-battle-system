@@ -416,6 +416,9 @@ class Manager {
     createEntity (resref, id = '') {
         const oEntity = this._entityBuilder.createEntity(resref, id);
         if (oEntity instanceof Creature) {
+            for (let i = 0; i < oEntity.getters.getUnmodifiedLevel; ++i) {
+                this.evolution.setupLevel(this, oEntity, i);
+            }
             this._horde.linkCreature(oEntity);
             oEntity.events.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => {
                 this._events.emit(CONSTS.EVENT_CREATURE_SELECT_WEAPON, new CreatureSelectWeaponEvent({
@@ -494,11 +497,14 @@ class Manager {
             if (this._horde.isCreatureActive(oEntity)) {
                 this._horde.setCreatureActive(oEntity);
             }
-            oEntity.events.on(CONSTS.EVENT_CREATURE_LEVEL_UP, evt => this._events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP, {
-                ...evt,
-                system: this._systemInstance,
-                creature: oEntity
-            }));
+            oEntity.events.on(CONSTS.EVENT_CREATURE_LEVEL_UP, evt => {
+                this.evolution.levelUp(this, oEntity);
+                this._events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP, {
+                    ...evt,
+                    system: this._systemInstance,
+                    creature: oEntity
+                });
+            });
         }
         return oEntity;
     }
@@ -639,11 +645,15 @@ class Manager {
         return this._effectProcessor.applyEffect(oEffect, oTarget, duration, oSource);
     }
 
-    increaseCreatureExperience (oCreature, nXP) {
+    get evolution () {
         if (!this._evolution) {
             this._evolution = new Evolution({ data: this.data });
         }
-        this._evolution.gainXP(oCreature, nXP);
+        return this._evolution;
+    }
+
+    increaseCreatureExperience (oCreature, nXP) {
+        this.evolution.gainXP(oCreature, nXP);
     };
 }
 

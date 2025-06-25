@@ -9,6 +9,7 @@ const { computeSavingThrowAdvantages } = require('./advantages');
 class Creature {
     constructor ({ blueprint = null, id = null, data = undefined } = {}) {
         this._store = buildStore({ externals: data });
+        this._events = new Events();
         if (blueprint) {
             this.blueprint = blueprint;
         } else {
@@ -19,7 +20,6 @@ class Creature {
         } else {
             this.mutations.setId({ value: getUniqueId() });
         }
-        this._events = new Events;
         this._dice = new Dice();
     }
 

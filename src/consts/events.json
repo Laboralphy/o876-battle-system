@@ -16,6 +16,7 @@
   "EVENT_CREATURE_EQUIP_ITEM_FAILED": "creature.equip-item.failed",
   "EVENT_CREATURE_ACTION": "creature.action",
   "EVENT_CREATURE_LEVEL_UP": "creature.level-up",
+  "EVENT_CREATURE_CREATED": "creature.created",
   "EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY": "effect-immunity",
   "EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED": "effect-applied",
   "EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED": "effect-disposed",

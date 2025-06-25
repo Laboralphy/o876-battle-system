@@ -1,4 +1,5 @@
 const Manager = require('../src/Manager');
+const Creature = require('../src/Creature');
 const CONSTS = require('../src/consts');
 const PropertyBuilder = require('../src/PropertyBuilder');
 
@@ -1294,5 +1295,93 @@ describe('normal & bonus action test', function () {
             m.process(); // t4
             expect(logs).toHaveLength(1);
         });
+    });
+    it('should do one action per turn, but may attack several times if got extra attack', function () {
+        const m = new Manager();
+        m.loadModule('classic');
+        const cm = m.combatManager;
+        m.defineModule({
+            scripts: {
+                'normal-action-1': ({ action, creature, target }) => {
+                },
+                'normal-action-2': ({ action, creature, target }) => {
+                },
+                'bonus-action-1': ({ action, creature, target }) => {
+                }
+            },
+            blueprints: {
+                thisFighter: {
+                    'entityType': CONSTS.ENTITY_TYPE_ACTOR,
+                    'extends': ['class-type-fighter'],
+                    'ac': 0,
+                    'abilities': {
+                        'strength': 16,
+                        'dexterity': 12,
+                        'constitution': 16,
+                        'intelligence': 10,
+                        'wisdom': 10,
+                        'charisma': 10
+                    },
+                    'level': 5,
+                    'specie': CONSTS.SPECIE_HUMANOID,
+                    'race': CONSTS.RACE_HUMAN,
+                    'speed': 30,
+                    'equipment': ['wpn-short-sword', 'arm-breast-plate']
+                }
+            }
+        });
+        cm.defaultDistance = 50;
+        // define new fighter level 5
+        const c1 = m.createEntity('thisFighter');
+        const nBreastPlateArmorClass = 4;
+        const nDexBonus = 1;
+        expect(c1).toBeInstanceOf(Creature);
+        expect(c1.getters.getLevel).toBe(5);
+        expect(c1.getters.getArmorClass[CONSTS.ATTACK_TYPE_RANGED]).toBe(10 + nBreastPlateArmorClass + nDexBonus);
+
+        const c2 = m.createEntity('thisFighter');
+        c1.dice.cheat(0.9);
+        c1.dice.cheat(0.5);
+
+        const combat = m.startCombat(c1, c2);
+
+        const aLog = [];
+
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, (evt) => {
+            if (evt.creature === c1) {
+                aLog.push({
+                    type: CONSTS.EVENT_COMBAT_ATTACK,
+                    count: evt.count
+                });
+            }
+        });
+
+        m.events.on(CONSTS.EVENT_COMBAT_MOVE, (evt) => {
+            if (evt.creature === c1) {
+                aLog.push({
+                    type: CONSTS.EVENT_COMBAT_MOVE,
+                    distance: evt.distance
+                });
+            }
+        });
+
+        m.events.on(CONSTS.EVENT_COMBAT_ACTION, (evt) => {
+            if (evt.creature === c1) {
+                aLog.push({
+                    type: CONSTS.EVENT_COMBAT_ACTION,
+                    action: evt.action.id
+                });
+            }
+        });
+
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+
+        console.log(aLog);
+        console.log(combat);
     });
 });

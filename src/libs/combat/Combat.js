@@ -466,24 +466,6 @@ class Combat {
         } else {
             return '';
         }
-        // if (oAttacker.getters.isRangedWeaponLoaded) {
-        //     return CONSTS.EQUIPMENT_SLOT_WEAPON_RANGED
-        // }
-        //
-        // const bHasMeleeWeapon = oAttacker.getters.getEquipment[CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE] !== null
-        // const aSuitableSlots = Object.entries(this
-        //     .getTargetInCreatureWeaponRange())
-        //     .filter(([slot, bInRange]) => bInRange && NATURAL_SLOTS.has(slot))
-        //     .map(([slot]) => slot)
-        // // Only if equipped with melee weapon, or not having any natural weapons
-        // if (aSuitableSlots.length === 0) {
-        //     if (bHasMeleeWeapon) {
-        //         aSuitableSlots.push(CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE)
-        //     } else {
-        //         return ''
-        //     }
-        // }
-        // return aSuitableSlots[Math.floor(this.attacker.dice.random() * aSuitableSlots.length)]
     }
 
     selectMostSuitableWeapon () {
@@ -586,26 +568,6 @@ class Combat {
     retreatFromTarget (nUseSpeed = undefined) {
         const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed;
         this.approachTarget(-nRunSpeed);
-    }
-
-    /**
-     * @param value {String}
-     */
-    set nextAction (value) {
-        // if ((value === '') || (value in this._attackerState.actions)) {
-        //     this._nextAction = value;
-        // } else {
-        //     throw new Error(`Unknown action ${value}`);
-        // }
-        throw new Error('ERR_DEPRECATED');
-    }
-
-    /**
-     * @returns {string}
-     */
-    get nextAction () {
-        // return this._nextAction;
-        throw new Error('ERR_DEPRECATED');
     }
 }
 

@@ -54,16 +54,9 @@ class Evolution {
         return cteld;
     }
 
-
-    /**
-     *
-     * @param oManager {Manager}
-     * @param oCreature {Creature}
-     */
-    levelUp (oManager, oCreature) {
+    setupLevel (oManager, oCreature, nLevel) {
         // retrieve evolution data
         const sClassType = oCreature.getters.getClassType;
-        const nLevel = oCreature.getters.getUnmodifiedLevel;
         if (nLevel >= 20) {
             return;
         }
@@ -73,14 +66,23 @@ class Evolution {
             abilityPoints = 0
         } = this.getClassTypeEvolutionLevelData(sClassType, nLevel);
         // remove feats
-        removeFeats.forEach(feat => oManager.removeCreatureFeat(oCreature, feat));
+        removeFeats.forEach(feat => oManager.entityBuilder.removeCreatureFeat(oCreature, feat));
         // add auto feats
-        feats.forEach(feat => oManager.addCreatureFeat(oCreature, feat));
+        feats.forEach(feat => oManager.entityBuilder.addCreatureFeat(oCreature, feat));
         // ability points
         oCreature.mutations.setPoolValue({
             pool: CONSTS.POOL_ABILITY_POINTS,
             value: oCreature.getters.getPoolValues[CONSTS.POOL_ABILITY_POINTS] + abilityPoints
         });
+    }
+
+    /**
+     *
+     * @param oManager {Manager}
+     * @param oCreature {Creature}
+     */
+    levelUp (oManager, oCreature) {
+        this.setupLevel(oManager, oCreature, oCreature.getters.getUnmodifiedLevel);
     }
 
     get experienceLevelTable () {
@@ -107,10 +109,9 @@ class Evolution {
                 : Infinity;
     }
 
-    creatureEnterNewLevel (oCreature) {
-        const nCurrentLevel = oCreature.getters.getUnmodifiedLevel;
+    creatureTriggerLevel (oCreature, nLevel) {
         const sClassType = oCreature.getters.getClassType;
-        const oClassTypeEvolutionData = this.getClassTypeEvolutionLevelData(sClassType, nCurrentLevel);
+        const oClassTypeEvolutionData = this.getClassTypeEvolutionLevelData(sClassType, nLevel);
         if (oClassTypeEvolutionData) {
             const { feats, removeFeats, abilityPoints = 0 } = oClassTypeEvolutionData;
             const oCreatureLevelUpEvent = new CreatureLevelUpEvent({
@@ -135,8 +136,9 @@ class Evolution {
             const nNewXP = oCreature.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS] + nXP;
             oCreature.mutations.setPoolValue({ pool: CONSTS.POOL_EXPERIENCE_POINTS, value: nNewXP });
             while (nNewXP >= this.getLevelUpRequiredXP(oCreature.getters.getUnmodifiedLevel)) {
-                oCreature.mutations.setLevel({ value: oCreature.getters.getUnmodifiedLevel + 1 });
-                this.creatureEnterNewLevel(oCreature);
+                const nNewLevel = oCreature.getters.getUnmodifiedLevel + 1;
+                oCreature.mutations.setLevel({ value: nNewLevel });
+                this.creatureTriggerLevel(oCreature, nNewLevel);
             }
         }
     }

@@ -169,7 +169,8 @@ class EntityBuilder {
 
     /**
      * @typedef RBSItemBlueprint {object}
-     * @property ref {string} blueprint reference
+     * @property [ref] {string}
+     * @property [extends] {string[]}
      * @property entityType {string} entity type : always ENTITY_TYPE_ITEM
      * @property itemType {string} item type
      * @property proficiencies {string[]} item proficiency (condition to use efficiently)
@@ -184,8 +185,26 @@ class EntityBuilder {
      * @property [maxDexterityBonus] {number}
      * @property properties {RBSProperty[]}
      *
-     * @param id
-     * @param blueprint
+     *
+     * @typedef RBSActorBlueprint {object}
+     * @property [extends] {string[]}
+     * @property ac {number}
+     * @property hd {number}
+     * @property entityType {string}
+     * @property [abilities] {{[ability: string]: number}}
+     * @property classType {string}
+     * @property level {number}
+     * @property specie {string}
+     * @property [race] {string}
+     * @property speed {number}
+     * @property properties
+     * @property feats {string[]}
+     * @property equipment {(string|RBSItemBlueprint)[]}
+     * @property proficiencies {string[]}
+     * @property actions {RBSAction[]}
+     *
+     * @param id {string}
+     * @param blueprint {RBSActorBlueprint|RBSItemBlueprint}
      * @returns {RBSItemBlueprint}
      */
     defineBlueprint (id, blueprint) {
@@ -222,6 +241,7 @@ class EntityBuilder {
             }
             }
         } catch (e) {
+            console.error(e.message);
             throw new Error(`Schema validation error on blueprint : ${id}`, { cause: e });
         }
         const oFinalBP = deepFreeze(oBuiltBlueprint);
@@ -243,8 +263,8 @@ class EntityBuilder {
 
     /**
      * Register a blueprint without identifier, builds an identifier out of blueprint serialisation
-     * @param blueprint {RBSItemBlueprint}
-     * @returns {Object|*}
+     * @param blueprint {RBSItemBlueprint|string}
+     * @returns {RBSItemBlueprint|RBSActorBlueprint|string}
      */
     _registerUnidentifiedBlueprint (blueprint) {
         if (typeof blueprint === 'string') {
