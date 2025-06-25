@@ -272,7 +272,8 @@ class Combat {
         const bActionInRange = action.range >= this.distance;
         const bCanDoBonusAction = (action.bonus ? attackerState.hasBonusAction() : true);
         const bCanUseAction = bCanAct && bActionReady && bActionInRange && bCanDoBonusAction;
-        if (bCanUseAction) {
+        const bAtkCharmer = this._isTargetCharming() && action.hostile;
+        if (bCanUseAction && !bAtkCharmer) {
             this._events.emit(CONSTS.EVENT_COMBAT_ACTION, {
                 ...this.eventDefaultPayload,
                 action: action,
@@ -289,7 +290,9 @@ class Combat {
             return new CombatActionSuccess();
         } else {
             let reason = '';
-            if (!bActionReady) {
+            if (bAtkCharmer) {
+                reason = CONSTS.ACTION_FAILURE_REASON_CHARMED;
+            } else if (!bActionReady) {
                 reason = CONSTS.ACTION_FAILURE_REASON_NOT_READY;
             } else if (!bActionInRange) {
                 reason = CONSTS.ACTION_FAILURE_REASON_RANGE;
@@ -302,17 +305,25 @@ class Combat {
         }
     }
 
-    strikeWithSelectedWeapon (nAttackCount, bPartingShot) {
+    /**
+     * Strike target with weapon, unless attacker is charmed by target
+     * @param nAttackCount {number}
+     * @param bPartingShot {boolean}
+     * @returns {CombatActionOutcome}
+     */
+    strikeWithSelectedWeapon (nAttackCount, bPartingShot = false) {
         if (this.attacker.getters.getSelectedWeapon) {
-            if (this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)) {
+            if (!this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)) {
+                return new CombatActionFailure(CONSTS.ATTACK_FAILURE_CONDITION);
+            } else if (this._isTargetCharming()) {
+                return new CombatActionFailure(CONSTS.ATTACK_FAILURE_CHARMED);
+            } else  {
                 this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
                     ...this.eventDefaultPayload,
                     count: nAttackCount,
                     opportunity: bPartingShot // if true, then no retaliation (start combat back)
                 });
                 return new CombatActionSuccess();
-            } else {
-                return new CombatActionFailure(CONSTS.ATTACK_FAILURE_CONDITION);
             }
         } else {
             // neither action nor weapon equipped
@@ -322,7 +333,7 @@ class Combat {
 
     /**
      * trigger a combat action.
-     * The system must repsond to this event in order to make a creature attack or take action
+     * The system must respond to this event in order to make a creature attack or take action
      * @param bPartingShot {boolean} si true alors attaque d'opportunité
      * @return {CombatActionOutcome}
      */
@@ -515,7 +526,7 @@ class Combat {
     }
 
     /**
-     * Returns true if the current target has applied a EFFECT_FEAR on self
+     * Returns true if the this.target has applied a EFFECT_FEAR on this.attacker
      * @private
      * @return {boolean}
      */
@@ -525,7 +536,8 @@ class Combat {
     }
 
     /**
-     * Returns true if the current target has applied a EFFECT_CHARM on self
+     * Returns true if the current target has applied a EFFECT_CHARM on this.attacker
+     * This could prevent this.attacker from attacking this.target
      * @private
      * @return {boolean}
      */
