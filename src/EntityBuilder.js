@@ -241,8 +241,7 @@ class EntityBuilder {
             }
             }
         } catch (e) {
-            console.error(e.message);
-            throw new Error(`Schema validation error on blueprint : ${id}`, { cause: e });
+            throw new Error(`Schema validation error on blueprint : ${id}\n${e.message}`);
         }
         const oFinalBP = deepFreeze(oBuiltBlueprint);
         this._blueprints.set(id, oFinalBP);

@@ -19,6 +19,7 @@ function attack ({ property, manager, attackOutcome }) {
     const sScript = property.data.attack;
     if (sScript) {
         manager.runScript(sScript, {
+            manager,
             attack: attackOutcome
         });
     }

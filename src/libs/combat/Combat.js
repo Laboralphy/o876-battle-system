@@ -312,6 +312,9 @@ class Combat {
      * @returns {CombatActionOutcome}
      */
     strikeWithSelectedWeapon (nAttackCount, bPartingShot = false) {
+        if (isNaN(nAttackCount)) {
+            throw new TypeError('First parameters AttackCount must be a number');
+        }
         if (this.attacker.getters.getSelectedWeapon) {
             if (!this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT)) {
                 return new CombatActionFailure(CONSTS.ATTACK_FAILURE_CONDITION);

@@ -1335,9 +1335,11 @@ describe('normal & bonus action test', function () {
         const c1 = m.createEntity('thisFighter');
         const nBreastPlateArmorClass = 4;
         const nDexBonus = 1;
+        const nDefenceExpertise = 2;
         expect(c1).toBeInstanceOf(Creature);
         expect(c1.getters.getLevel).toBe(5);
-        expect(c1.getters.getArmorClass[CONSTS.ATTACK_TYPE_RANGED]).toBe(10 + nBreastPlateArmorClass + nDexBonus);
+        expect(c1.getters.getArmorClass[CONSTS.ATTACK_TYPE_RANGED])
+            .toBe(10 + nBreastPlateArmorClass + nDexBonus + nDefenceExpertise);
 
         const c2 = m.createEntity('thisFighter');
         c1.dice.cheat(0.9);
@@ -1347,17 +1349,20 @@ describe('normal & bonus action test', function () {
 
         const aLog = [];
 
-        m.events.on(CONSTS.EVENT_COMBAT_ATTACK, (evt) => {
-            if (evt.creature === c1) {
-                aLog.push({
-                    type: CONSTS.EVENT_COMBAT_ATTACK,
-                    count: evt.count
-                });
-            }
-        });
+        m.events.on(CONSTS.EVENT_COMBAT_ATTACK,
+            /**
+             * @param evt {CombatAttackEvent}
+             */
+            (evt) => {
+                if (evt.attacker === c1) {
+                    aLog.push({
+                        type: CONSTS.EVENT_COMBAT_ATTACK
+                    });
+                }
+            });
 
         m.events.on(CONSTS.EVENT_COMBAT_MOVE, (evt) => {
-            if (evt.creature === c1) {
+            if (evt.attacker === c1) {
                 aLog.push({
                     type: CONSTS.EVENT_COMBAT_MOVE,
                     distance: evt.distance
@@ -1366,7 +1371,7 @@ describe('normal & bonus action test', function () {
         });
 
         m.events.on(CONSTS.EVENT_COMBAT_ACTION, (evt) => {
-            if (evt.creature === c1) {
+            if (evt.attacker === c1) {
                 aLog.push({
                     type: CONSTS.EVENT_COMBAT_ACTION,
                     action: evt.action.id
@@ -1381,7 +1386,10 @@ describe('normal & bonus action test', function () {
         m.process();
         m.process();
 
-        console.log(aLog);
-        console.log(combat);
+        expect(aLog).toEqual([
+            { type: 'combat.move', distance: 50 },
+            { type: 'combat.attack' },
+            { type: 'combat.attack' }
+        ]);
     });
 });

@@ -213,12 +213,14 @@ class Manager {
             action: oAction
         });
         this._events.emit(CONSTS.EVENT_CREATURE_ACTION, oActionEvent);
-        this.runScript(oAction.script, {
-            manager: this,
-            action: oAction,
-            creature: oCreature,
-            target: oTarget
-        });
+        if (oActionEvent.isScriptEnabled) {
+            this.runScript(oAction.script, {
+                manager: this,
+                creature: oCreature,
+                target: oTarget,
+                action: oAction
+            });
+        }
         const bIsActionCoolingDown = oAction.cooldownTimer > 0;
         if (bIsActionCoolingDown) {
             this._horde.setCreatureActive(oCreature);
@@ -416,7 +418,7 @@ class Manager {
     createEntity (resref, id = '') {
         const oEntity = this._entityBuilder.createEntity(resref, id);
         if (oEntity instanceof Creature) {
-            for (let i = 0; i < oEntity.getters.getUnmodifiedLevel; ++i) {
+            for (let i = 1; i <= oEntity.getters.getUnmodifiedLevel; ++i) {
                 this.evolution.setupLevel(this, oEntity, i);
             }
             this._horde.linkCreature(oEntity);

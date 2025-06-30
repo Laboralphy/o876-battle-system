@@ -7,6 +7,15 @@ class CreatureActionEvent extends GenericEvent {
         this.creature = this.boxCreature(creature);
         this.target = target ? this.boxCreature(target) : null;
         this.action = action;
+        this._doRunScript = true;
+    }
+
+    cancelScript () {
+        this._doRunScript = false;
+    }
+
+    get isScriptEnabled () {
+        return this._doRunScript;
     }
 }
 
