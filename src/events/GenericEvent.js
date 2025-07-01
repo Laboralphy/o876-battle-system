@@ -1,5 +1,8 @@
 const BoxedCreature = require('../sub-api/classes/BoxedCreature');
 const BoxedItem = require('../sub-api/classes/BoxedItem');
+const Creature = require('../Creature');
+const CONSTS = require('../consts');
+const {checkEntityCreature, checkEntityItem} = require('../check-entity');
 
 /**
  * The parent of al events
@@ -19,6 +22,14 @@ class GenericEvent {
          * notify their event
          */
         this.system = system;
+    }
+
+    validateCreature (oEntity) {
+        return checkEntityCreature(oEntity);
+    }
+
+    validateItem (oEntity) {
+        return checkEntityItem(oEntity);
     }
 
     /**
