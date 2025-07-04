@@ -1,22 +1,4 @@
-/**
- *
- * @param nDieFaceCount {number}
- * @param nLevel {number}
- * @returns {string}
- */
-function getCantripDamageDice (nDieFaceCount, nLevel) {
-    let nDamage = 1;
-    if (nLevel >= 5) {
-        ++nDamage;
-    }
-    if (nLevel >= 11) {
-        ++nDamage;
-    }
-    if (nLevel >= 17) {
-        ++nDamage;
-    }
-    return nDamage.toString() + 'd' + nDieFaceCount.toString();
-}
+const { getCantripDamageDice, createSpellDirectDamageEffect } = require('../helper/spell-helper');
 
 /**
  * @param manager {Manager}
@@ -24,8 +6,19 @@ function getCantripDamageDice (nDieFaceCount, nLevel) {
  * @param target {Creature}
  */
 function main ({ manager, caster, target }) {
-    // compute 1d6 acid damage
+    // compute 1d6 acid damage (+1d6 at levels 5, 11, 17)
     const nCasterLevel = manager.getCreatureLevel(caster);
     const sDamage = getCantripDamageDice(6, nCasterLevel);
-
+    // Checks if dexterity saving throw is success
+    const eDamage = createSpellDirectDamageEffect({
+        manager,
+        caster,
+        amount: sDamage,
+        damageType: manager.CONSTS.DAMAGE_TYPE_ACID,
+        savingThrowAbility: manager.CONSTS.ABILITY_DEXTERITY,
+        savingFactor: 0
+    });
+    if (eDamage) {
+        manager.applySpellEffectGroup('spell-acid-splash', [eDamage], target, 0, caster);
+    }
 }

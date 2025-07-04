@@ -949,6 +949,9 @@ class Manager {
      * @return {number}
      */
     getCreatureDistance (oCreature1, oCreature2) {
+        if (oCreature2 === oCreature1) {
+            return 0;
+        }
         const cm = this.combatManager;
         if (cm.isCreatureFighting(oCreature1, oCreature2)) {
             return cm.getCombat(oCreature1).distance;
@@ -1073,8 +1076,35 @@ class Manager {
      * @return {RBSSpellData}
      */
     getSpellData (sSpellId) {
-        const sSpellDataConstName = sSpellId.toUpperCase().replace(/-/g, '_');
+        const sSpellDataConstName = 'SPELL_' + sSpellId.toUpperCase().replace(/-/g, '_');
         return this.data['SPELLS'][sSpellDataConstName];
+    }
+
+    castSpell (sSpellId, caster, target = null, parameters = {}) {
+        const sd = this.getSpellData(sSpellId);
+        target = sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_SELF
+            ? caster
+            : (target ?? caster);
+        this.runScript(sSpellId, parameters);
+        const nDistance = this.getCreatureDistance(caster, target);
+        const cc = caster.getters.getCapabilities;
+        if (cc.has(CONSTS.CAPABILITY_CAST_SELF) && target === caster) {
+            // Cannot cast spell because targeting self is disabled at the time
+            return CONSTS.ACTION_FAILURE_REASON_CAPABILITY;
+        }
+        if (cc.has(CONSTS.CAPABILITY_CAST_TARGET) && target !== caster) {
+            // Cannot cast spell because targeting a creature is disabled at the time
+            return CONSTS.ACTION_FAILURE_REASON_CAPABILITY;
+        }
+        if (sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_HOSTILE) {
+            if (sd.range < nDistance) {
+                // spell casting out of range
+                return CONSTS.ACTION_FAILURE_REASON_RANGE;
+            }
+        }
+        if (sd.hostile && !this.combatManager.isCreatureFighting(target)) {
+            this.startCombat(caster, target);
+        }
     }
 }
 
