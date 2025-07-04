@@ -42,8 +42,6 @@ const CreatureDamagedEvent = require('./events/CreatureDamagedEvent');
 const CreatureDeathEvent = require('./events/CreatureDeathEvent');
 const CreatureActionEvent = require('./events/CreatureActionEvent');
 const {checkEntityCreature, checkEntityItem} = require('./check-entity');
-const BoxedCreature = require('./sub-api/classes/BoxedCreature');
-const BoxedObject = require('./sub-api/classes/BoxedObject');
 
 class Manager {
     constructor () {
@@ -64,7 +62,6 @@ class Manager {
         this._scripts = {};
         this._time = 0;
         this._systemInstance = this;
-        this._entities = new Map();
         cm.events.on(CONSTS.EVENT_COMBAT_TURN, evt => this._combatManagerEventTurn(evt));
         cm.events.on(CONSTS.EVENT_COMBAT_START, evt => this._combatManagerEventStart(evt));
         cm.events.on(CONSTS.EVENT_COMBAT_END, evt => this._combatManagerEventEnd(evt));
@@ -311,13 +308,23 @@ class Manager {
     }
 
     /**
-     * Add experience points to a creature, this will trigger EVENT_CREATURE_LEVEL_UP if creature reach next level.
-     * @param oCreature {Creature}
-     * @param nXP {number}
+     * Adds experience points to a creature, this will trigger EVENT_CREATURE_LEVEL_UP if creature reaches next level.
+     * @param oCreature {Creature} Instance of creature whose experience needs to be increased
+     * @param nXP {number} Number of experience point gained
+     * @return {void}
      */
     increaseCreatureExperience (oCreature, nXP) {
         this.evolution.gainXP(oCreature, nXP);
     };
+
+    /**
+     * Returns a creature spell casting ability (according to its class type)
+     * @param oCreature {Creature} instance of creature
+     * @returns {string} ABILITY_*
+     */
+    getCreatureSpellCastingAbility (oCreature) {
+        return this.evolution.getClassTypeData(oCreature.getters.getClassType)['spellCastingAbility'];
+    }
 
 
     // ▗▄▄▖  ▄▖  ▄▖         ▗▖
@@ -326,48 +333,49 @@ class Manager {
     // ▝▀▀▘ ▝▘  ▝▘  ▀▀  ▀▀   ▀▘▝▀▀
 
     /**
-     * Creates an effect
-     * @param sEffect {string}
-     * @param amp {number|string}
-     * @param data {Object<string, *>}
+     * Creates an effect that can be applied to a creature.
+     * @param sEffect {string} Effect type (constant group EFFECT_*)
+     * @param amp {number|string} Effect amplitude, can be a number or a die expression (1d6, 2d8 ....)
+     * @param data {Object<string, *>} a set of parameter transmitted to effect.
+     * @return {RBSEffect} Instance of effect newly created
      */
     createEffect (sEffect, amp = 0, data = {}) {
         return this._effectProcessor.createEffect(sEffect, amp, data);
     }
 
     /**
-     * Create an effect with subtype preset to SUPERNATURAL
+     * Creates an effect with subtype preset to SUPERNATURAL
      * This effect is not magical and not produced by natural means of creatures.
      * It can't be removed by 'dispel magic'
      * It must be removed by specific means like 'remove curse' or 'restoration'
-     * @param sEffect {string}
-     * @param amp {number|string}
-     * @param data {Object<string, *>}
-     * @return {RBSEffect}
+     * @param sEffect {string} Effect type (constant group EFFECT_*)
+     * @param amp {number|string} Effect amplitude, can be a number or a die expression (1d6, 2d8 ....)
+     * @param data {Object<string, *>} a set of parameter transmitted to effect.
+     * @return {RBSEffect} Instance of supernatural effect newly created
      */
     createSupernaturalEffect (sEffect, amp = 0, data = {}) {
         return this.createEffect(sEffect, amp, { ...data, subtype: CONSTS.EFFECT_SUBTYPE_SUPERNATURAL });
     }
 
     /**
-     * Create an effect with subtype preset to EXTRAORDINARY
+     * Creates an effect with subtype preset to EXTRAORDINARY
      * This effect is neither magical nor supernatural.
      * This effect is typically produced by creature with some extraordinary natural abilities.
      * As impressive as it may be, this effect is nevertheless natural, and cannot be dispelled by any mean.
      * Just like supernatural effect, extraordinary effects can only be removed by specialized means.
-     * @param sEffect {string}
-     * @param amp {number|string}
-     * @param data {Object<string, *>}
-     * @return {RBSEffect}
+     * @param sEffect {string} Effect type (constant group EFFECT_*)
+     * @param amp {number|string} Effect amplitude, can be a number or a die expression (1d6, 2d8 ....)
+     * @param data {Object<string, *>} a set of parameter transmitted to effect.
+     * @return {RBSEffect} Instance of extraordianry effect newly created
      */
     createExtraordinaryEffect (sEffect, amp = 0, data = {}) {
         return this.createEffect(sEffect, amp, { ...data, subtype: CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY });
     }
 
     /**
-     * Returns a list of effect applied on the specified creature
-     * @param oCreature {Creature} creature identifier
-     * @returns {RBSEffect[]}
+     * Returns a list of effects applied on the specified creature
+     * @param oCreature {Creature} instance of creature
+     * @returns {RBSEffect[]} list of effects applied on creature
      */
     getEffects (oCreature) {
         return oCreature
@@ -377,8 +385,8 @@ class Manager {
 
     /**
      * Get effect duration
-     * @param oEffect {RBSEffect}
-     * @returns {number}
+     * @param oEffect {RBSEffect} instance of effect
+     * @returns {number} duration (turns)
      */
     getEffectDuration (oEffect) {
         return oEffect.duration;
@@ -386,8 +394,8 @@ class Manager {
 
     /**
      * Get effect type
-     * @param oEffect {RBSEffect}
-     * @returns {string} EFFECT_*
+     * @param oEffect {RBSEffect} instance of effect
+     * @returns {string} effect type EFFECT_*
      */
     getEffectType (oEffect) {
         return oEffect.type;
@@ -395,8 +403,9 @@ class Manager {
 
     /**
      * Returns true if effect is extraordinary
-     * @param oEffect {RBSEffect}
-     * @returns {boolean}
+     * @see createExtraordinaryEffect()
+     * @param oEffect {RBSEffect} instance of effect
+     * @returns {boolean} true = effect is indeed an extraordinary effect
      */
     isEffectExtraordinary (oEffect) {
         return oEffect.subtype === CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY;
@@ -404,6 +413,7 @@ class Manager {
 
     /**
      * Returns true if effect is supernatural
+     * @see createExtraordinaryEffect()
      * @param oEffect {RBSEffect}
      * @returns {boolean}
      */
@@ -413,12 +423,12 @@ class Manager {
 
     /**
      * Returns the creature identifier who created this effect
-     * @param oEffect {RBSEffect}
-     * @returns {Creature}
+     * @param oEffect {RBSEffect} effect
+     * @returns {Creature} instance of creature that has created the effect
      */
     getEffectCreator (oEffect) {
         const idCreature = oEffect.source;
-        const ent = this._entities;
+        const ent = this._horde.creatures;
         if (ent.has(idCreature)) {
             return ent.get(idCreature);
         } else {
@@ -428,12 +438,12 @@ class Manager {
 
     /**
      * Returns the creature whose effect is applied on
-     * @param oEffect {RBSEffect}
-     * @returns {Creature}
+     * @param oEffect {RBSEffect} effect
+     * @returns {Creature} instance of creature whose effect is applied on
      */
     getEffectTarget (oEffect) {
         const idCreature = oEffect.target;
-        const ent = this._entities;
+        const ent = this._horde.creatures;
         if (ent.has(idCreature)) {
             return ent.get(idCreature);
         } else {
@@ -462,8 +472,8 @@ class Manager {
     }
 
     /**
-     * Removes an effect
-     * @param effect {RBSEffect}
+     * Removes an effect from the creature it is applied on
+     * @param effect {RBSEffect} instance of effect to be removed
      */
     dispellEffect (effect) {
         const oCreature = this.getEffectTarget(effect);
@@ -471,6 +481,12 @@ class Manager {
         this.effectProcessor.removeEffect(oAppliedEffect);
     }
 
+    /**
+     * Find all effect of a certain type applied on a given creature
+     * @param oCreature {Creature}
+     * @param sType {string}
+     * @returns {RBSEffect[]}
+     */
     findEffects (oCreature, sType) {
         this.checkConst.effect(sType);
         return oCreature.getters.getEffects.filter(effect => effect.type === sType);
@@ -478,11 +494,11 @@ class Manager {
 
     /**
      * Applies an effect to a creature
-     * @param oEffect {RBSEffect}
-     * @param oTarget {Creature}
-     * @param duration {number}
-     * @param oSource {Creature|null}
-     * @returns {RBSEffect}
+     * @param oEffect {RBSEffect} instance of effec tto be applied
+     * @param oTarget {Creature} instance of creature to apply effect on
+     * @param duration {number} duration of effect application
+     * @param oSource {Creature|null} instance of creature who created the effect
+     * @returns {RBSEffect} instance of applied effect
      */
     applyEffect (oEffect, oTarget, duration = 0, oSource = null) {
         return this._effectProcessor.applyEffect(oEffect, oTarget, duration, oSource);
@@ -496,19 +512,19 @@ class Manager {
 
 
     /**
-     * Starts a combat between c1 & c2
-     * @param oAttacker {Creature}
-     * @param oTarget {Creature}
-     * @returns {Combat}
+     * Starts a combat between two creatures
+     * @param oAttacker {Creature} instance of attacking creature
+     * @param oTarget {Creature} instance of targetted creature
+     * @returns {Combat} instance of combat
      */
     startCombat (oAttacker, oTarget) {
         return this._combatManager.startCombat(oAttacker, oTarget);
     }
 
     /**
-     * Ends a combat
-     * @param oAttacker {Creature}
-     * @param bBothSide {boolean}
+     * Ends a combat.
+     * @param oAttacker {Creature} stops a creature from attacking its target
+     * @param bBothSide {boolean} makes target creature stops combat as well
      */
     endCombat  (oAttacker, bBothSide = false) {
         const cm = this.combatManager;
@@ -516,15 +532,19 @@ class Manager {
     }
 
     /**
-     * Do an attack between attacker and target
-     * @param attacker {Creature}
-     * @param target {Creature}
-     * @param opportunity {boolean}
-     * @param additionalWeaponDamage {number|string}
+     * Makes an attacker attacking another creature using currently wielding weapon.
+     * Target will fight back unless it is an opportunity attack
+     * @param attacker {Creature} instance of attacker
+     * @param target {Creature} instance of target
+     * @param opportunity {boolean} this is an attack of opportunity, this will not make target, fighting back
+     * @param additionalWeaponDamage {number|string} will apply a damage bonus on this attack
+     * @param additionalAttackBonus {number|string} will apply an attack bonus on this attack
+     * @return {AttackOutcome}
      */
     deliverAttack (attacker, target, {
         opportunity = false,
-        additionalWeaponDamage = 0
+        additionalWeaponDamage = 0,
+        additionalAttackBonus = 0
     } = {}) {
         const oAttackOutcome = new AttackOutcome({ manager: this });
         oAttackOutcome.attacker = attacker;
@@ -533,7 +553,7 @@ class Manager {
         oAttackOutcome.computeAttackParameters();
         oAttackOutcome.computeDefenseParameters();
         oAttackOutcome.rush = additionalWeaponDamage !== 0;
-        oAttackOutcome.attack();
+        oAttackOutcome.attack(attacker.dice.roll(additionalAttackBonus));
         this.runPropEffectScript(attacker, 'attack', {
             attack: oAttackOutcome,
             manager: this
@@ -568,9 +588,9 @@ class Manager {
     }
 
     /**
-     *
-     * @param oCreature {Creature}
-     * @returns {number}
+     * returns the distance between attacker and its target
+     * @param oCreature {Creature} instance of attacking creature
+     * @returns {number} distance
      */
     getTargetDistance (oCreature) {
         const oCombat = this.getCreatureCombat(oCreature);

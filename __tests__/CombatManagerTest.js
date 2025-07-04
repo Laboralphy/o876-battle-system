@@ -697,3 +697,27 @@ describe('problème des zone d effet', function () {
         expect(cb2.distance).toBe(50);
     });
 });
+
+describe('combat distance', function () {
+    it('target fighting back should create a combat with same distance', function () {
+        const cm = new CombatManager();
+        cm.defaultDistance = 50;
+        const c1 = new Creature({ blueprint: bpNormalActor });
+        const c2 = new Creature({ blueprint: bpNormalActor });
+        const c3 = new Creature({ blueprint: bpNormalActor });
+
+        const cb2 = cm.startCombat(c2, c3);
+        const cb1 = cm.startCombat(c1, c2);
+
+        expect(cb1.distance).toBe(50);
+        expect(cb2.distance).toBe(50);
+
+        cb1.distance = 30;
+        cm.endCombat(c2, true);
+
+        expect(cm.isCreatureFighting(c2)).toBeFalsy();
+        expect(cm.isCreatureFighting(c3)).toBeFalsy();
+
+
+    });
+});

@@ -248,6 +248,10 @@ class CombatManager {
         const oCombat = this._fighters[oCreature.id] = this._createCombat(oCreature, oTarget, nStartingDistance);
         oCombat.selectMostSuitableWeapon();
         if (!this.isCreatureFighting(oTarget) && oTarget.getCreatureVisibility(oCreature) === CONSTS.CREATURE_VISIBILITY_VISIBLE) {
+            const oAtkCombat = this.getCombat(oCreature);
+            if (oAtkCombat && nStartingDistance === null) {
+                nStartingDistance = oAtkCombat.distance;
+            }
             this._fighters[oTarget.id] = this._createCombat(oTarget, oCreature, nStartingDistance);
         }
         this._events.emit(CONSTS.EVENT_COMBAT_START, this._addManagerToObject({

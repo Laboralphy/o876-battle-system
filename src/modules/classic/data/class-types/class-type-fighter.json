@@ -1,4 +1,5 @@
 {
+  "spellCastingAbility": "ABILITY_INTELLIGENCE",
   "evolution": {
     "levels": [
       {

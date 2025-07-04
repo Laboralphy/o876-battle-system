@@ -5,10 +5,27 @@ class Horde {
         this._activeCreatures = new Set();
     }
 
+    /**
+     *
+     * @param id {string} creature identified
+     * @returns {Creature|undefined} creature instance if found, undeifned if not found
+     */
     getCreature (id) {
         return this._creatures.get(id);
     }
 
+    /**
+     * return true if creature identifier exists in horde
+     * @param id {string} searched identifier
+     * @returns {boolean}
+     */
+    hasCreature (id) {
+        return this._creatures.has(id);
+    }
+
+    /**
+     * @returns {Map<string, Creature>}
+     */
     get creatures () {
         return this._creatures;
     }

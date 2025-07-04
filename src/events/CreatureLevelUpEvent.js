@@ -11,7 +11,7 @@ class CreatureLevelUpEvent extends GenericEvent {
      */
     constructor ({ system, creature, feats: { added = [], removed = [] } = {}, abilityPoints = 0 }) {
         super(CONSTS.EVENT_CREATURE_LEVEL_UP, system);
-        this.creature = this.boxCreature(creature);
+        this.creature = this.validateCreature(creature);
         this.feats = {
             added,
             removed

@@ -6,7 +6,6 @@ const { checkConst } = require('../../../../libs/check-const');
  * A huge area of elemental damage is breath att all offenders
  * This is an extraordinary attack
  * If target succeed in saving throw, damage is halved
- * DEXTERITY for offensive and defensive ability
  *
  * @this {Manager}
  * @param manager {Manager}
@@ -22,9 +21,9 @@ function main ({ manager, action, creature, target = null }) {
         doDamage(manager, offender, creature, {
             amount: action.parameters.amount,
             damageType: checkConst(action.parameters.damageType),
-            offensiveAbility: manager.CONSTS.ABILITY_DEXTERITY,
+            offensiveAbility: manager.getCreatureSpellCastingAbility(creature),
             defensiveAbility: manager.CONSTS.ABILITY_DEXTERITY,
-            extraordinary: true
+            extraordinary: false
         });
     });
 }
