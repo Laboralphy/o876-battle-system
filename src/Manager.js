@@ -940,6 +940,35 @@ class Manager {
         this._horde.shrinkActiveCreatureRegistry();
     }
 
+    /**
+     * Returns the distance between two entities
+     * - Creature not in combat is at defaultDistance
+     * - Creature in combat is at combat.distance
+     * @param oCreature1 {Creature}
+     * @param oCreature2 {Creature}
+     * @return {number}
+     */
+    getCreatureDistance (oCreature1, oCreature2) {
+        const cm = this.combatManager;
+        if (cm.isCreatureFighting(oCreature1, oCreature2)) {
+            return cm.getCombat(oCreature1).distance;
+        }
+        if (cm.isCreatureFighting(oCreature2, oCreature1)) {
+            return cm.getCombat(oCreature2).distance;
+        }
+        // creatures are not fighting each other
+        return cm.defaultDistance;
+    }
+
+    /**
+     * Returns a creature level
+     * @param oCreature {Creature}
+     * @return {number}
+     */
+    getCreatureLevel (oCreature) {
+        return oCreature.getters.getLevel;
+    }
+
     //  ▄▄          ▗▖      ▗▖
     // ▝▙▄ ▗▛▀ ▐▛▜▖ ▄▖ ▐▛▜▖▝▜▛▘▗▛▀▘
     //   ▐▌▐▌  ▐▌   ▐▌ ▐▙▟▘ ▐▌  ▀▜▖
@@ -1022,6 +1051,30 @@ class Manager {
      */
     isItem (oEntity) {
         return checkEntityItem(oEntity);
+    }
+
+
+    // ▗▖ ▄         ▗▖          ▟▜▖     ▄▄          ▄▖  ▄▖                  ▗▖  ▗▖
+    // ▐█▟█ ▀▜▖▗▛▜▌ ▄▖ ▗▛▀      ▟▛     ▝▙▄ ▐▛▜▖▗▛▜▖ ▐▌  ▐▌     ▗▛▀  ▀▜▖▗▛▀▘▝▜▛▘ ▄▖ ▐▛▜▖▗▛▜▌
+    // ▐▌▘█▗▛▜▌▝▙▟▌ ▐▌ ▐▌      ▐▌▜▛      ▐▌▐▙▟▘▐▛▀▘ ▐▌  ▐▌     ▐▌  ▗▛▜▌ ▀▜▖ ▐▌  ▐▌ ▐▌▐▌▝▙▟▌
+    // ▝▘ ▀ ▀▀▘▗▄▟▘ ▀▀  ▀▀      ▀▘▀     ▀▀ ▐▌   ▀▀  ▀▀  ▀▀      ▀▀  ▀▀▘▝▀▀   ▀▘ ▀▀ ▝▘▝▘▗▄▟▘
+
+    /**
+     * @typedef RBSSpellData {object}
+     * @property school {string}
+     * @property level {number}
+     * @property description {string}
+     * @property range {number}
+     * @property hostile {boolean}
+     * @property target {string}
+     *
+     * Retrieve spell associated data
+     * @param sSpellId {string}
+     * @return {RBSSpellData}
+     */
+    getSpellData (sSpellId) {
+        const sSpellDataConstName = sSpellId.toUpperCase().replace(/-/g, '_');
+        return this.data['SPELLS'][sSpellDataConstName];
     }
 }
 
