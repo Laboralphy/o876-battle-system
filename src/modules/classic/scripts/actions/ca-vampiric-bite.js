@@ -2,10 +2,6 @@
  * Vampiric bite
  * Will do damage to a non acting creature, the damage dealt will heal the source
  *
- * combat dependencies :
- * - attacker
- * - target
- *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

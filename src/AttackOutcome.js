@@ -413,7 +413,7 @@ class AttackOutcome {
     /**
      * Proceed to an attack against target, using melee or ranged weapon
      */
-    attack () {
+    attack (nAdditionalBonus = 0) {
         this._failed = false;
         this._failure = '';
         if (this.target.getters.isDead) {
@@ -442,6 +442,7 @@ class AttackOutcome {
 
         // compute target defense
         this.computeAttackParameters();
+        this._attackBonus += nAdditionalBonus;
         this.computeDefenseParameters();
 
         if (!this.isTargetInSelectedWeaponRange()) {

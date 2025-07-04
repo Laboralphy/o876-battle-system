@@ -5,10 +5,6 @@ const {getAreaOfEffectTargets} = require('../../../../libs/helpers');
  * Stench
  * Applies disadvantage on attack for anybody within action range.
  *
- * combat dependencies :
- * - attacker
- *
- *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

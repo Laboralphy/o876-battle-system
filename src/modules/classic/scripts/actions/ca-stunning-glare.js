@@ -2,10 +2,6 @@
  * Stunning glare
  * Target failing at saving throw will be stunned
  *
- * combat dependencies :
- * - attacker
- * - target
- *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

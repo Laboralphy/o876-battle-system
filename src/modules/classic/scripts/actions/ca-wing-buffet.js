@@ -5,13 +5,11 @@ const { doDamage, getAreaOfEffectTargets} = require('../../../../libs/helpers');
  * A wing attack that deals damage to all offender.
  * If target fails saving throw it will be stunned until the end of the turn
  *
- * combat dependencies :
- * -attacker
- *
  * @this {Manager}
  * @param manager {Manager}
  * @param CONSTS {*}
  * @param action {RBSAction}
+ * @param action.parameters.amount {number|string} amount of damage deliverer by attack
  * @param creature {Creature}
  * @param target {Creature}
  */

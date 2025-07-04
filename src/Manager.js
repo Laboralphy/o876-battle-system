@@ -11,10 +11,20 @@ const Creature = require('./Creature');
 const path = require('path');
 const AttackOutcome = require('./AttackOutcome');
 const CONSTS = require('./consts');
+const TAG_SPELL_GROUP = 'SPELL_GROUP::';
+
 const { aggregateModifiers } = require('./libs/aggregator');
 const PropertyBuilder = require('./PropertyBuilder');
 const baseModule = require('./modules/base');
 const Evolution = require('./Evolution');
+const {
+    checkConstCapability,
+    checkConstAbility,
+    checkConstCondition,
+    checkConstEffect,
+    checkConstProperty,
+    checkConstEquipmentSlot
+} = require('./check-const');
 
 const CombatStartEvent = require('./events/CombatStartEvent');
 const CombatMoveEvent = require('./events/CombatMoveEvent');
@@ -31,6 +41,7 @@ const CreatureSavingThrowEvent = require('./events/CreatureSavingThrowEvent');
 const CreatureDamagedEvent = require('./events/CreatureDamagedEvent');
 const CreatureDeathEvent = require('./events/CreatureDeathEvent');
 const CreatureActionEvent = require('./events/CreatureActionEvent');
+const {checkEntityCreature, checkEntityItem} = require('./check-entity');
 
 class Manager {
     constructor () {
@@ -85,7 +96,9 @@ class Manager {
      * @returns {EffectProcessor}
      */
     get effectProcessor () {
-        if(!this._effectProcessor) throw new Error('EffectProcessor not found');
+        if (!this._effectProcessor) {
+            throw new Error('EffectProcessor not found');
+        }
         return this._effectProcessor;
     }
 
@@ -109,12 +122,25 @@ class Manager {
     }
 
     /**
+     * @returns {Map<string, any>}
+     */
+    get blueprints () {
+        return this._entityBuilder.blueprints;
+    }
+
+    /**
      * return instance of combat manager
      * @returns {CombatManager}
      */
     get combatManager () {
         return this._combatManager;
     }
+
+
+    // ▗▄▄▖             ▗▖     ▗▖            ▗▖ ▄▖
+    // ▐▙▄ ▐▌▐▌▗▛▜▖▐▛▜▖▝▜▛▘    ▐▙▄  ▀▜▖▐▛▜▖ ▄▟▌ ▐▌ ▗▛▜▖▐▛▜▖▗▛▀▘
+    // ▐▌  ▝▙▟▘▐▛▀▘▐▌▐▌ ▐▌     ▐▌▐▌▗▛▜▌▐▌▐▌▐▌▐▌ ▐▌ ▐▛▀▘▐▌   ▀▜▖
+    // ▝▀▀▘ ▝▘  ▀▀ ▝▘▝▘  ▀▘    ▝▘▝▘ ▀▀▘▝▘▝▘ ▀▀▘ ▀▀  ▀▀ ▝▘  ▝▀▀
 
     /**
      * A new effect has been applied on a creatures. The manager must keep track of this effect if duration is > 0
@@ -200,6 +226,482 @@ class Manager {
     }
 
     /**
+     * Initiate a combat action.
+     * Must run the script associated with this action
+     * @param evt
+     * @private
+     */
+    _combatManagerAction (evt) {
+        const combat = evt.combat;
+        const attacker = combat.attacker;
+        const target = combat.target;
+        // combat.selectCurrentAction(evt.action.id);
+        const action = evt.action;
+        // Lancement de l'action
+        if (action) {
+            this.executeAction(attacker, action, target);
+        }
+    }
+
+    /**
+     * combat.attack listener
+     * @param evt
+     * @private
+     */
+    _combatManagerAttack (evt) {
+        const {
+            combat,
+            count,
+            opportunity
+        } = evt;
+        const oAttacker = combat.attacker;
+        const oTarget = combat.target;
+        const aOffenders = this
+            .combatManager
+            .getOffenders(oAttacker)
+            .filter(o => o !== oTarget);
+        const bCouldMultiAttack = oAttacker.getters.getPropertySet.has(CONSTS.PROPERTY_MULTI_ATTACK) && aOffenders.length > 0;
+        for (let i = 0; i < count; ++i) {
+            if (bCouldMultiAttack) {
+                const nMultiAttackCount = Math.min(
+                    aggregateModifiers([
+                        CONSTS.PROPERTY_MULTI_ATTACK
+                    ], oAttacker.getters).sum,
+                    aOffenders.length
+                );
+                let iRank = Math.floor(oAttacker.dice.random() * aOffenders.length);
+                for (let iMultiAttack = 0; iMultiAttack < nMultiAttackCount; ++iMultiAttack) {
+                    this.deliverAttack(oAttacker, aOffenders[iRank]);
+                    iRank = (iRank + 1) % aOffenders.length;
+                }
+            }
+            this.deliverAttack(oAttacker, oTarget, { opportunity });
+        }
+    }
+
+    /****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ******/
+    /****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ******/
+    /****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ******/
+
+    get checkConst () {
+        return {
+            capability: checkConstCapability,
+            ability: checkConstAbility,
+            condition: checkConstCondition,
+            effect: checkConstEffect,
+            property: checkConstProperty,
+            equipmentSlot: checkConstEquipmentSlot
+        };
+    }
+
+
+    // ▗▄▄▖         ▄▖      ▗▖  ▗▖
+    // ▐▙▄ ▐▌▐▌▗▛▜▖ ▐▌ ▐▌▐▌▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖
+    // ▐▌  ▝▙▟▘▐▌▐▌ ▐▌ ▐▌▐▌ ▐▌  ▐▌ ▐▌▐▌▐▌▐▌
+    // ▝▀▀▘ ▝▘  ▀▀  ▀▀  ▀▀▘  ▀▘ ▀▀  ▀▀ ▝▘▝▘
+
+    get evolution () {
+        if (!this._evolution) {
+            this._evolution = new Evolution({ data: this.data });
+        }
+        return this._evolution;
+    }
+
+    /**
+     * Adds experience points to a creature, this will trigger EVENT_CREATURE_LEVEL_UP if creature reaches next level.
+     * @param oCreature {Creature} Instance of creature whose experience needs to be increased
+     * @param nXP {number} Number of experience point gained
+     * @return {void}
+     */
+    increaseCreatureExperience (oCreature, nXP) {
+        this.evolution.gainXP(oCreature, nXP);
+    };
+
+    /**
+     * Returns a creature spell casting ability (according to its class type)
+     * @param oCreature {Creature} instance of creature
+     * @returns {string} ABILITY_*
+     */
+    getCreatureSpellCastingAbility (oCreature) {
+        return this.evolution.getClassTypeData(oCreature.getters.getClassType)['spellCastingAbility'];
+    }
+
+
+    // ▗▄▄▖  ▄▖  ▄▖         ▗▖
+    // ▐▙▄  ▟▙▖ ▟▙▖▗▛▜▖▗▛▀ ▝▜▛▘▗▛▀▘
+    // ▐▌   ▐▌  ▐▌ ▐▛▀▘▐▌   ▐▌  ▀▜▖
+    // ▝▀▀▘ ▝▘  ▝▘  ▀▀  ▀▀   ▀▘▝▀▀
+
+    /**
+     * Creates an effect that can be applied to a creature.
+     * @param sEffect {string} Effect type (constant group EFFECT_*)
+     * @param amp {number|string} Effect amplitude, can be a number or a die expression (1d6, 2d8 ....)
+     * @param data {Object<string, *>} a set of parameter transmitted to effect.
+     * @return {RBSEffect} Instance of effect newly created
+     */
+    createEffect (sEffect, amp = 0, data = {}) {
+        return this._effectProcessor.createEffect(sEffect, amp, data);
+    }
+
+    /**
+     * Creates an effect with subtype preset to SUPERNATURAL
+     * This effect is not magical and not produced by natural means of creatures.
+     * It can't be removed by 'dispel magic'
+     * It must be removed by specific means like 'remove curse' or 'restoration'
+     * @param sEffect {string} Effect type (constant group EFFECT_*)
+     * @param amp {number|string} Effect amplitude, can be a number or a die expression (1d6, 2d8 ....)
+     * @param data {Object<string, *>} a set of parameter transmitted to effect.
+     * @return {RBSEffect} Instance of supernatural effect newly created
+     */
+    createSupernaturalEffect (sEffect, amp = 0, data = {}) {
+        return this.createEffect(sEffect, amp, { ...data, subtype: CONSTS.EFFECT_SUBTYPE_SUPERNATURAL });
+    }
+
+    /**
+     * Creates an effect with subtype preset to EXTRAORDINARY
+     * This effect is neither magical nor supernatural.
+     * This effect is typically produced by creature with some extraordinary natural abilities.
+     * As impressive as it may be, this effect is nevertheless natural, and cannot be dispelled by any mean.
+     * Just like supernatural effect, extraordinary effects can only be removed by specialized means.
+     * @param sEffect {string} Effect type (constant group EFFECT_*)
+     * @param amp {number|string} Effect amplitude, can be a number or a die expression (1d6, 2d8 ....)
+     * @param data {Object<string, *>} a set of parameter transmitted to effect.
+     * @return {RBSEffect} Instance of extraordianry effect newly created
+     */
+    createExtraordinaryEffect (sEffect, amp = 0, data = {}) {
+        return this.createEffect(sEffect, amp, { ...data, subtype: CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY });
+    }
+
+    /**
+     * Returns a list of effects applied on the specified creature
+     * @param oCreature {Creature} instance of creature
+     * @returns {RBSEffect[]} list of effects applied on creature
+     */
+    getEffects (oCreature) {
+        return oCreature
+            .getters
+            .getEffects;
+    }
+
+    /**
+     * Get effect duration
+     * @param oEffect {RBSEffect} instance of effect
+     * @returns {number} duration (turns)
+     */
+    getEffectDuration (oEffect) {
+        return oEffect.duration;
+    }
+
+    /**
+     * Get effect type
+     * @param oEffect {RBSEffect} instance of effect
+     * @returns {string} effect type EFFECT_*
+     */
+    getEffectType (oEffect) {
+        return oEffect.type;
+    }
+
+    /**
+     * Returns true if effect is extraordinary
+     * @see createExtraordinaryEffect()
+     * @param oEffect {RBSEffect} instance of effect
+     * @returns {boolean} true = effect is indeed an extraordinary effect
+     */
+    isEffectExtraordinary (oEffect) {
+        return oEffect.subtype === CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY;
+    }
+
+    /**
+     * Returns true if effect is supernatural
+     * @see createExtraordinaryEffect()
+     * @param oEffect {RBSEffect}
+     * @returns {boolean}
+     */
+    isEffectSupernatural (oEffect) {
+        return oEffect.subtype === CONSTS.EFFECT_SUBTYPE_SUPERNATURAL;
+    }
+
+    /**
+     * Returns the creature identifier who created this effect
+     * @param oEffect {RBSEffect} effect
+     * @returns {Creature} instance of creature that has created the effect
+     */
+    getEffectCreator (oEffect) {
+        const idCreature = oEffect.source;
+        const ent = this._horde.creatures;
+        if (ent.has(idCreature)) {
+            return ent.get(idCreature);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the creature whose effect is applied on
+     * @param oEffect {RBSEffect} effect
+     * @returns {Creature} instance of creature whose effect is applied on
+     */
+    getEffectTarget (oEffect) {
+        const idCreature = oEffect.target;
+        const ent = this._horde.creatures;
+        if (ent.has(idCreature)) {
+            return ent.get(idCreature);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gather several effects in a "spell effect". These spells are siblings, removing one effect removes all effects
+     * @param idSpell {string} spell identifier
+     * @param target {Creature} identifier of target creature
+     * @param duration {number} duration of all effects
+     * @param source {Creature} identifier of source creature
+     * @param aEffects {RBSEffect[]} list of all effects
+     */
+    applySpellEffectGroup (idSpell, aEffects, target, duration = 0, source = undefined) {
+        this
+            .effectProcessor
+            .applyEffectGroup(
+                aEffects,
+                TAG_SPELL_GROUP + idSpell,
+                target,
+                duration,
+                source
+            );
+    }
+
+    /**
+     * Removes an effect from the creature it is applied on
+     * @param effect {RBSEffect} instance of effect to be removed
+     */
+    dispellEffect (effect) {
+        const oCreature = this.getEffectTarget(effect);
+        const oAppliedEffect = oCreature.getters.getEffectRegistry[effect.id];
+        this.effectProcessor.removeEffect(oAppliedEffect);
+    }
+
+    /**
+     * Find all effect of a certain type applied on a given creature
+     * @param oCreature {Creature}
+     * @param sType {string}
+     * @returns {RBSEffect[]}
+     */
+    findEffects (oCreature, sType) {
+        this.checkConst.effect(sType);
+        return oCreature.getters.getEffects.filter(effect => effect.type === sType);
+    }
+
+    /**
+     * Applies an effect to a creature
+     * @param oEffect {RBSEffect} instance of effec tto be applied
+     * @param oTarget {Creature} instance of creature to apply effect on
+     * @param duration {number} duration of effect application
+     * @param oSource {Creature|null} instance of creature who created the effect
+     * @returns {RBSEffect} instance of applied effect
+     */
+    applyEffect (oEffect, oTarget, duration = 0, oSource = null) {
+        return this._effectProcessor.applyEffect(oEffect, oTarget, duration, oSource);
+    }
+
+
+    //  ▄▄         ▗▖       ▗▖
+    // ▐▌▝▘▗▛▜▖▐▙▟▙▐▙▄  ▀▜▖▝▜▛▘▗▛▀▘
+    // ▐▌▗▖▐▌▐▌▐▛▛█▐▌▐▌▗▛▜▌ ▐▌  ▀▜▖
+    //  ▀▀  ▀▀ ▝▘ ▀▝▀▀  ▀▀▘  ▀▘▝▀▀
+
+
+    /**
+     * Starts a combat between two creatures
+     * @param oAttacker {Creature} instance of attacking creature
+     * @param oTarget {Creature} instance of targetted creature
+     * @returns {Combat} instance of combat
+     */
+    startCombat (oAttacker, oTarget) {
+        return this._combatManager.startCombat(oAttacker, oTarget);
+    }
+
+    /**
+     * Ends a combat.
+     * @param oAttacker {Creature} stops a creature from attacking its target
+     * @param bBothSide {boolean} makes target creature stops combat as well
+     */
+    endCombat  (oAttacker, bBothSide = false) {
+        const cm = this.combatManager;
+        cm.endCombat(oAttacker, bBothSide);
+    }
+
+    /**
+     * Makes an attacker attacking another creature using currently wielding weapon.
+     * Target will fight back unless it is an opportunity attack
+     * @param attacker {Creature} instance of attacker
+     * @param target {Creature} instance of target
+     * @param opportunity {boolean} this is an attack of opportunity, this will not make target, fighting back
+     * @param additionalWeaponDamage {number|string} will apply a damage bonus on this attack
+     * @param additionalAttackBonus {number|string} will apply an attack bonus on this attack
+     * @return {AttackOutcome}
+     */
+    deliverAttack (attacker, target, {
+        opportunity = false,
+        additionalWeaponDamage = 0,
+        additionalAttackBonus = 0
+    } = {}) {
+        const oAttackOutcome = new AttackOutcome({ manager: this });
+        oAttackOutcome.attacker = attacker;
+        oAttackOutcome.opportunity = opportunity;
+        oAttackOutcome.target = target;
+        oAttackOutcome.computeAttackParameters();
+        oAttackOutcome.computeDefenseParameters();
+        oAttackOutcome.rush = additionalWeaponDamage !== 0;
+        oAttackOutcome.attack(attacker.dice.roll(additionalAttackBonus));
+        this.runPropEffectScript(attacker, 'attack', {
+            attack: oAttackOutcome,
+            manager: this
+        });
+        if (oAttackOutcome.hit) {
+            if (oAttackOutcome.rush) {
+                const sWeaponDamageType = oAttackOutcome.weapon.blueprint.damageType;
+                const nAmount = attacker.dice.roll(additionalWeaponDamage) + attacker.getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH];
+                oAttackOutcome.rollDamages(nAmount, sWeaponDamageType);
+            }
+            oAttackOutcome.createDamageEffects();
+            this.runPropEffectScript(target, 'attacked', {
+                attack: oAttackOutcome,
+                manager: this
+            });
+        }
+        this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, new CombatAttackEvent({
+            system: this._systemInstance,
+            attack: oAttackOutcome
+        }));
+        if (oAttackOutcome.hit) {
+            oAttackOutcome.applyDamages();
+        }
+        return oAttackOutcome;
+    }
+
+    /**
+     * Processes all registered combats
+     */
+    processCombats () {
+        this._combatManager.processCombats();
+    }
+
+    /**
+     * returns the distance between attacker and its target
+     * @param oCreature {Creature} instance of attacking creature
+     * @returns {number} distance
+     */
+    getTargetDistance (oCreature) {
+        const oCombat = this.getCreatureCombat(oCreature);
+        if (oCombat) {
+            return oCombat.distance;
+        } else {
+            throw new Error(`This creature is not in combat : ${oCreature.id}`);
+        }
+    }
+
+    /**
+     * return combat instance of a creature, if involved
+     * @param oCreature {Creature}
+     * @returns {Combat|null}
+     */
+    getCreatureCombat (oCreature) {
+        return this
+            .combatManager
+            .getCombat(oCreature);
+    }
+
+    /**
+     * return true if creature is involved in a combat
+     * @param oCreature {Creature}
+     * @returns {boolean}
+     */
+    isCreatureFighting (oCreature) {
+        return this.getCreatureCombat(oCreature) !== null;
+    }
+
+    /**
+     * Returns a list of creatures currently having specified creature as target during a combat
+     * This can be limited in a specified range (default : infinity)
+     * @param oCreature {Creature} Creature being attacked
+     * @param [nRange] {number} maximum range considered (default infinity)
+     * @returns {Creature[]} all creature attacking the specified creature
+     */
+    getCreatureOffenders (oCreature, nRange = Infinity) {
+        return this
+            .combatManager
+            .getOffenders(oCreature, nRange);
+    }
+
+    /**
+     * Makes a creature approaching it's target by a certain distance
+     * @param oCreature {Creature}
+     * @param [nSpeed] {number} number of units of displacement toward target (default is creature speed)
+     */
+    approachTarget (oCreature, nSpeed = undefined) {
+        const oCombat = this.getCreatureCombat(oCreature);
+        if (oCombat) {
+            oCombat.approachTarget(nSpeed);
+        }
+    }
+
+    /**
+     * Sames as approach but retreat from target instead of approaching
+     * @param oCreature {Creature}
+     * @param [nSpeed] {number} default is creature natural speed
+     */
+    retreatFromTarget (oCreature, nSpeed = undefined) {
+        const oCombat = this.getCreatureCombat(oCreature);
+        if (oCombat) {
+            oCombat.retreatFromTarget(nSpeed);
+        }
+    }
+
+    /**
+     * Return the number of currently active combats
+     * @return {number}
+     */
+    getCombatCount () {
+        this
+            .combatManager
+            .combats
+            .length;
+    }
+
+    /**
+     * Selects a new action during fight. After the action finished, creature goes back to weapon fighting
+     * @param oCreature {Creature}
+     * @param idAction {string}
+     */
+    selectAction (oCreature, idAction) {
+        const oCombat = this.getCreatureCombat(oCreature);
+        if (oCombat) {
+            oCombat.selectAction(idAction);
+        }
+    }
+
+    /**
+     * Returns the creature current action
+     * @param oCreature {Creature}
+     * @returns {CombatActionTaken|null}
+     */
+    getSelectedAction (oCreature) {
+        const oCombat = this.getCreatureCombat(oCreature);
+        if (oCombat) {
+            return oCombat._currentAction;
+        } else {
+            return null;
+        }
+    }
+
+
+    //  ▗▖      ▗▖  ▗▖
+    // ▗▛▜▖▗▛▀ ▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖▗▛▀▘
+    // ▐▙▟▌▐▌   ▐▌  ▐▌ ▐▌▐▌▐▌▐▌ ▀▜▖
+    // ▝▘▝▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▘▝▘▝▀▀
+
+    /**
      * Execute an action when not involved in a combat
      * @param oCreature {Creature}
      * @param oAction {RBSAction}
@@ -267,104 +769,11 @@ class Manager {
         }
     }
 
-    /**
-     * Initiate a combat action.
-     * Must run the script associated with this action
-     * @param evt
-     * @private
-     */
-    _combatManagerAction (evt) {
-        const combat = evt.combat;
-        const attacker = combat.attacker;
-        const target = combat.target;
-        // combat.selectCurrentAction(evt.action.id);
-        const action = evt.action;
-        // Lancement de l'action
-        if (action) {
-            this.executeAction(attacker, action, target);
-        }
-    }
 
-    /**
-     * combat.attack listener
-     * @param evt
-     * @private
-     */
-    _combatManagerAttack (evt) {
-        const {
-            combat,
-            count,
-            opportunity
-        } = evt;
-        const oAttacker = combat.attacker;
-        const oTarget = combat.target;
-        const aOffenders = this
-            .combatManager
-            .getOffenders(oAttacker)
-            .filter(o => o !== oTarget);
-        const bCouldMultiAttack = oAttacker.getters.getPropertySet.has(CONSTS.PROPERTY_MULTI_ATTACK) && aOffenders.length > 0;
-        for (let i = 0; i < count; ++i) {
-            if (bCouldMultiAttack) {
-                const nMultiAttackCount = Math.min(
-                    aggregateModifiers([
-                        CONSTS.PROPERTY_MULTI_ATTACK
-                    ], oAttacker.getters).sum,
-                    aOffenders.length
-                );
-                let iRank = Math.floor(oAttacker.dice.random() * aOffenders.length);
-                for (let iMultiAttack = 0; iMultiAttack < nMultiAttackCount; ++iMultiAttack) {
-                    this.deliverAttack(oAttacker, aOffenders[iRank]);
-                    iRank = (iRank + 1) % aOffenders.length;
-                }
-            }
-            this.deliverAttack(oAttacker, oTarget, { opportunity });
-        }
-    }
-
-    /**
-     * Do an attack between attacker and target
-     * @param attacker {Creature}
-     * @param target {Creature}
-     * @param opportunity {boolean}
-     * @param additionalWeaponDamage {number|string}
-     */
-    deliverAttack (attacker, target, {
-        opportunity = false,
-        additionalWeaponDamage = 0
-    } = {}) {
-        const oAttackOutcome = new AttackOutcome({ manager: this });
-        oAttackOutcome.attacker = attacker;
-        oAttackOutcome.opportunity = opportunity;
-        oAttackOutcome.target = target;
-        oAttackOutcome.computeAttackParameters();
-        oAttackOutcome.computeDefenseParameters();
-        oAttackOutcome.rush = additionalWeaponDamage !== 0;
-        oAttackOutcome.attack();
-        this.runPropEffectScript(attacker, 'attack', {
-            attack: oAttackOutcome,
-            manager: this
-        });
-        if (oAttackOutcome.hit) {
-            if (oAttackOutcome.rush) {
-                const sWeaponDamageType = oAttackOutcome.weapon.blueprint.damageType;
-                const nAmount = attacker.dice.roll(additionalWeaponDamage) + attacker.getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH];
-                oAttackOutcome.rollDamages(nAmount, sWeaponDamageType);
-            }
-            oAttackOutcome.createDamageEffects();
-            this.runPropEffectScript(target, 'attacked', {
-                attack: oAttackOutcome,
-                manager: this
-            });
-        }
-        this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, new CombatAttackEvent({
-            system: this._systemInstance,
-            attack: oAttackOutcome
-        }));
-        if (oAttackOutcome.hit) {
-            oAttackOutcome.applyDamages();
-        }
-        return oAttackOutcome;
-    }
+    // ▗▖ ▄      ▗▖     ▄▖
+    // ▐█▟█▗▛▜▖ ▄▟▌▐▌▐▌ ▐▌ ▗▛▜▖▗▛▀▘
+    // ▐▌▘█▐▌▐▌▐▌▐▌▐▌▐▌ ▐▌ ▐▛▀▘ ▀▜▖
+    // ▝▘ ▀ ▀▀  ▀▀▘ ▀▀▘ ▀▀  ▀▀ ▝▀▀
 
     /**
      * Adds a module
@@ -386,21 +795,6 @@ class Manager {
         this._entityBuilder.addData(data);
     }
 
-    runScript (sScript, ...params) {
-        if (sScript in this._scripts) {
-            this._scripts[sScript](...params);
-        } else {
-            throw new Error(`script ${sScript} not found.`);
-        }
-    }
-
-    /**
-     * @returns {Map<string, any>}
-     */
-    get blueprints () {
-        return this._entityBuilder.blueprints;
-    }
-
     /**
      * Loads a module
      * @param sModuleId {string}
@@ -408,6 +802,12 @@ class Manager {
     loadModule (sModuleId) {
         this.defineModule(require(path.resolve(__dirname, 'modules', sModuleId)));
     }
+
+
+    // ▗▄▄▖     ▗▖  ▗▖  ▗▖  ▗▖
+    // ▐▙▄ ▐▛▜▖▝▜▛▘ ▄▖ ▝▜▛▘ ▄▖ ▗▛▜▖▗▛▀▘
+    // ▐▌  ▐▌▐▌ ▐▌  ▐▌  ▐▌  ▐▌ ▐▛▀▘ ▀▜▖
+    // ▝▀▀▘▝▘▝▘  ▀▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▀▀
 
     /**
      * Creates a new Entity
@@ -540,18 +940,10 @@ class Manager {
         this._horde.shrinkActiveCreatureRegistry();
     }
 
-    processCombats () {
-        this._combatManager.processCombats();
-    }
-
-    process () {
-        if ((this._time % this._combatManager.defaultTickCount) === 0) {
-            // Processing entities each turn begin
-            this.processEntities();
-        }
-        this.processCombats();
-        ++this._time;
-    }
+    //  ▄▄          ▗▖      ▗▖
+    // ▝▙▄ ▗▛▀ ▐▛▜▖ ▄▖ ▐▛▜▖▝▜▛▘▗▛▀▘
+    //   ▐▌▐▌  ▐▌   ▐▌ ▐▙▟▘ ▐▌  ▀▜▖
+    //  ▀▀  ▀▀ ▝▘   ▀▀ ▐▌    ▀▘▝▀▀
 
     runPropertyScript(oCreature, sScript, oParams) {
         const pb = this._entityBuilder.propertyBuilder;
@@ -587,76 +979,50 @@ class Manager {
     }
 
     /**
-     * Starts a combat between c1 & c2
-     * @param c1 {Creature}
-     * @param c2 {Creature}
-     * @returns {Combat}
+     * Runs a registered script
+     * @param sScript {string}
+     * @param params {{}}
      */
-    startCombat (c1, c2) {
-        return this._combatManager.startCombat(c1, c2);
-    }
-
-    /**
-     * Creates an effect
-     * @param sEffect {string}
-     * @param amp {number|string}
-     * @param data {Object<string, *>}
-     */
-    createEffect (sEffect, amp = 0, data = {}) {
-        return this._effectProcessor.createEffect(sEffect, amp, data);
-    }
-
-    /**
-     * Create an effect with subtype preset to SUPERNATURAL
-     * This effect is not magical and not produced by natural means of creatures.
-     * It can't be removed by 'dispel magic'
-     * It must be removed by specific means like 'remove curse' or 'restoration'
-     * @param sEffect {string}
-     * @param amp {number|string}
-     * @param data {Object<string, *>}
-     * @return {RBSEffect}
-     */
-    createSupernaturalEffect (sEffect, amp = 0, data = {}) {
-        return this.createEffect(sEffect, amp, { ...data, subtype: CONSTS.EFFECT_SUBTYPE_SUPERNATURAL });
-    }
-
-    /**
-     * Create an effect with subtype preset to EXTRAORDINARY
-     * This effect is neither magical nor supernatural.
-     * This effect is typically produced by creature with some extraordinary natural abilities.
-     * As impressive as it may be, this effect is nevertheless natural, and cannot be dispelled by any mean.
-     * Just like supernatural effect, extraordinary effects can only be removed by specialized means.
-     * @param sEffect {string}
-     * @param amp {number|string}
-     * @param data {Object<string, *>}
-     * @return {RBSEffect}
-     */
-    createExtraordinaryEffect (sEffect, amp = 0, data = {}) {
-        return this.createEffect(sEffect, amp, { ...data, subtype: CONSTS.EFFECT_SUBTYPE_EXTRAORDINARY });
-    }
-
-    /**
-     * Applies an effect to a creature
-     * @param oEffect {RBSEffect}
-     * @param oTarget {Creature}
-     * @param duration {number}
-     * @param oSource {Creature|null}
-     * @returns {RBSEffect}
-     */
-    applyEffect (oEffect, oTarget, duration = 0, oSource = null) {
-        return this._effectProcessor.applyEffect(oEffect, oTarget, duration, oSource);
-    }
-
-    get evolution () {
-        if (!this._evolution) {
-            this._evolution = new Evolution({ data: this.data });
+    runScript (sScript, ...params) {
+        if (sScript in this._scripts) {
+            this._scripts[sScript](...params);
+        } else {
+            throw new Error(`script ${sScript} not found.`);
         }
-        return this._evolution;
     }
 
-    increaseCreatureExperience (oCreature, nXP) {
-        this.evolution.gainXP(oCreature, nXP);
-    };
+
+    //  ▄▄
+    // ▐▌▝▘▗▛▜▖▐▛▜▖▗▛▜▖
+    // ▐▌▗▖▐▌▐▌▐▌  ▐▛▀▘
+    //  ▀▀  ▀▀ ▝▘   ▀▀
+
+    process () {
+        if ((this._time % this._combatManager.defaultTickCount) === 0) {
+            // Processing entities each turn begin
+            this.processEntities();
+        }
+        this.processCombats();
+        ++this._time;
+    }
+
+    /**
+     * Returns parameter if is a Creature
+     * @param oEntity {Creature|RBSItem|null}
+     * @returns {Creature}
+     */
+    isCreature (oEntity) {
+        return checkEntityCreature(oEntity);
+    }
+
+    /**
+     * Returns parameter if is a RBSItem
+     * @param oEntity {Creature|RBSItem|null}
+     * @returns {RBSItem}
+     */
+    isItem (oEntity) {
+        return checkEntityItem(oEntity);
+    }
 }
 
 module.exports = Manager;

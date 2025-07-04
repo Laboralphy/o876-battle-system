@@ -2,10 +2,6 @@
  * Frightful glare
  * Target failing at saving throw will be struck by fear
  *
- * combat dependdencies :
- * - attacker
- * - target
- *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

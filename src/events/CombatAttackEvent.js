@@ -9,10 +9,10 @@ class CombatAttackEvent extends GenericEvent {
      */
     constructor ({ system, attack }) {
         super(CONSTS.EVENT_COMBAT_ATTACK, system);
-        this.attacker = this.boxCreature(attack.attacker);
-        this.target = this.boxCreature(attack.target);
-        this.weapon = this.boxItem(attack.weapon);
-        this.ammo = this.boxItem(attack.ammo);
+        this.attacker = this.validateCreature(attack.attacker);
+        this.target = this.validateCreature(attack.target);
+        this.weapon = this.validateItem(attack.weapon);
+        this.ammo = this.validateItem(attack.ammo);
         this.hit = attack.hit;
         this.ac = attack.ac;
         this.sneak = attack.sneak;

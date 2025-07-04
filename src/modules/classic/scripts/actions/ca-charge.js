@@ -3,15 +3,10 @@
  * If target within range : reduce combat distance at mélée weapon range and do damage
  * This is an ordinary attack
  *
- * combat dependencies :
- * - attacker
- * - target
- * - distance
- * - approachTarget
- *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
+ * @param action.parameters.amount {number|string} amount of damage done by this attack
  * @param creature {Creature}
  * @param target {Creature}
  */

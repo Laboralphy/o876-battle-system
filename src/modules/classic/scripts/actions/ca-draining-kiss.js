@@ -12,6 +12,7 @@ const { doDamage } = require('../../../../libs/helpers');
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
+ * @param action.parameters.amount {number|string} amount of damage done by the attack
  * @param creature {Creature}
  * @param target {Creature}
  */

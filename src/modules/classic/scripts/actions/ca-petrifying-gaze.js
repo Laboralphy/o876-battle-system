@@ -5,10 +5,6 @@
  * Target failing at saving throw will be turned to stone (and dead)
  * This effect is cancelled if the source creature dies.
  *
- * combat dependencies :
- * - attacker
- * - target
- *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}

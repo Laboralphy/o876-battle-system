@@ -4,8 +4,8 @@ const GenericEvent = require('./GenericEvent');
 class CreatureActionEvent extends GenericEvent {
     constructor ({ system, creature, target = null, action }) {
         super(CONSTS.EVENT_CREATURE_ACTION, system);
-        this.creature = this.boxCreature(creature);
-        this.target = target ? this.boxCreature(target) : null;
+        this.creature = this.validateCreature(creature);
+        this.target = target ? this.validateCreature(target) : null;
         this.action = action;
         this._doRunScript = true;
     }

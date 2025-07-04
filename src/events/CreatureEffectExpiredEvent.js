@@ -4,7 +4,7 @@ const GenericEvent = require('./GenericEvent');
 class CreatureEffectExpiredEvent extends GenericEvent {
     constructor ({ system, effect, target }) {
         super(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, system);
-        this.creature = this.boxCreature(target);
+        this.creature = this.validateCreature(target);
         this.effect = effect;
     }
 }

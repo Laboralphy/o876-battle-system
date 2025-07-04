@@ -1,9 +1,10 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-06-23T12:14:03.565Z
+// Date : 2025-07-04T07:35:29.734Z
 // List of files in ./src/data
 
 module.exports = {
     'AILMENT_TO_THREAT_TYPES': require('./ailment-to-threat-types.json'),
+    'CASTER_TYPE_ABILITIES': require('./caster-type-abilities.json'),
     'CONDITIONS': require('./conditions.json'),
     'DAMAGE_FACTORS': require('./damage-factors.json'),
     'DISEASES': require('./diseases.json'),

@@ -15,13 +15,10 @@ function getDamagePoints (oCreature) {
  * Heal
  * Will heal one of target's primary target, if this creature is full hp, will heal another offender
  *
- * combat dependencies :
- * - attacker
- * - target
- *
  * @this {Manager}
  * @param manager {Manager}
  * @param action {RBSAction}
+ * @param action.parameters.amount {number|string} amount of healing
  * @param creature {Creature}
  * @param target {Creature}
  */
