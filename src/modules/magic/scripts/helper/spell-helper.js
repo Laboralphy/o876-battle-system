@@ -18,10 +18,11 @@ function getCantripDamageDice (nDieFaceCount, nLevel) {
     return nDamage.toString() + 'd' + nDieFaceCount.toString();
 }
 
-function createSpellDirectDamageEffect ({ manager, caster, amount, damageType, savingThrowAbility, savingFactor }) {
+function createSpellDirectDamageEffect ({ manager, caster, target, amount, damageType, savingThrowAbility, savingFactor }) {
     manager.checkConst.ability(savingThrowAbility);
-    const dc = manager.getCreatureSpellCastingAbility(caster);
-    const { success } = caster.rollSavingThrow(savingThrowAbility, dc, { threat: [
+    const sSpellCastAbility = manager.getCreatureSpellCastingAbility(caster);
+    const dc = caster.getters.getSpellDifficultyClass[sSpellCastAbility];
+    const { success } = target.rollSavingThrow(savingThrowAbility, dc, { threat: [
         damageType,
         manager.CONSTS.THREAT_TYPE_SPELL
     ]});

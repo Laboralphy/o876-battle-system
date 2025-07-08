@@ -723,7 +723,7 @@ class Manager {
                 action: oAction
             });
         }
-        const bIsActionCoolingDown = oAction.cooldownTimer > 0;
+        const bIsActionCoolingDown = oAction.cooldown > 0;
         if (bIsActionCoolingDown) {
             this._horde.setCreatureActive(oCreature);
         }
@@ -1070,6 +1070,7 @@ class Manager {
      * @property range {number}
      * @property hostile {boolean}
      * @property target {string}
+     * @property script {string}
      *
      * Retrieve spell associated data
      * @param sSpellId {string}
@@ -1082,29 +1083,57 @@ class Manager {
 
     castSpell (sSpellId, caster, target = null, parameters = {}) {
         const sd = this.getSpellData(sSpellId);
+        if (!sd) {
+            // Spell not found : error
+            throw new Error(`ERR_CAST_SPELL_NOT_FOUND: ${sSpellId}`);
+        }
+        // check if spell can be cast
+        // const oCastingAction = caster.getters.getActions[]
+
+
+        // force target to caster if spell is self cast only
         target = sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_SELF
             ? caster
             : (target ?? caster);
-        this.runScript(sSpellId, parameters);
-        const nDistance = this.getCreatureDistance(caster, target);
-        const cc = caster.getters.getCapabilities;
-        if (cc.has(CONSTS.CAPABILITY_CAST_SELF) && target === caster) {
+
+        const cc = caster.getters.getCapabilitySet;
+        if (!cc.has(CONSTS.CAPABILITY_CAST_SELF) && target === caster) {
             // Cannot cast spell because targeting self is disabled at the time
-            return CONSTS.ACTION_FAILURE_REASON_CAPABILITY;
+            return {
+                success: false,
+                reason: CONSTS.ACTION_FAILURE_REASON_CAPABILITY
+            };
         }
-        if (cc.has(CONSTS.CAPABILITY_CAST_TARGET) && target !== caster) {
+        if (!cc.has(CONSTS.CAPABILITY_CAST_TARGET) && target !== caster) {
             // Cannot cast spell because targeting a creature is disabled at the time
-            return CONSTS.ACTION_FAILURE_REASON_CAPABILITY;
+            return {
+                success: false,
+                reason: CONSTS.ACTION_FAILURE_REASON_CAPABILITY
+            };
         }
+        const nDistance = this.getCreatureDistance(caster, target);
         if (sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_HOSTILE) {
             if (sd.range < nDistance) {
                 // spell casting out of range
-                return CONSTS.ACTION_FAILURE_REASON_RANGE;
+                return {
+                    success: false,
+                    reason: CONSTS.ACTION_FAILURE_REASON_RANGE
+                };
             }
         }
+        this.runScript(sd.script, {
+            manager: this,
+            caster,
+            target,
+            ...parameters
+        });
         if (sd.hostile && !this.combatManager.isCreatureFighting(target)) {
             this.startCombat(caster, target);
         }
+        return {
+            success: true,
+            reason: ''
+        };
     }
 }
 

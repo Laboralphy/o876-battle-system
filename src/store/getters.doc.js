@@ -44,6 +44,7 @@
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getSpellDifficultyClass {Object<string, number>}
+ * @property getSpellSlots {{level: number, slotCount: number, usedSlotCount: number, remainingSlotCount: number}[]}
  * @property getUnmodifiedLevel {number}
  * @property getVariables {Object<string, number|string>}
  * @property getWeaponRanges {Object<string, number>}

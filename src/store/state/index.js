@@ -4,12 +4,18 @@ const CONSTS = require('../../consts');
  * @typedef RBSStoreStateCombatAction {object}
  * @property attackType {string}
  * @property cooldown {number}
- * @property cooldownTimer {number}
+ * @property cooldownTimer {number[]}
  * @property charges {number}
  * @property dailyCharges {number}
  * @property range {number}
  * @property script {string}
  * @property parameters {{}}
+ *
+ * @typedef RBSStoreStateSpellSlot {object}
+ * @property level {number}
+ * @property cooldown {number}
+ * @property cooldownTimer {number[]}
+ * @property count {number}
  *
  * @typedef RBSStoreState {object}
  * @property id {string}
@@ -31,7 +37,8 @@ const CONSTS = require('../../consts');
  * @property proficiencies {string[]}
  * @property environment {Object<string, boolean >}
  * @property selectedOffensiveSlot {string}
- * @property actions {Object<string, RBSStoreStateCombatAction >}
+ * @property actions {Object<string, RBSStoreStateCombatAction>}
+ * @property spellSlots {RBSStoreStateSpellSlot[]}
  *
  *
  * @returns {RBSStoreState}
@@ -89,5 +96,56 @@ module.exports = () => ({
         [CONSTS.ENVIRONMENT_UNDERWATER]: false
     },
     selectedOffensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
-    actions: {}
+    actions: {},
+    spellSlots: [{
+        level: 0,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }, {
+        level: 1,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }, {
+        level: 2,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }, {
+        level: 3,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }, {
+        level: 4,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }, {
+        level: 5,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }, {
+        level: 6,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }, {
+        level: 7,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }, {
+        level: 8,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }, {
+        level: 9,
+        cooldown: 0,
+        cooldownTimer: 0,
+        count: 0
+    }]
 });

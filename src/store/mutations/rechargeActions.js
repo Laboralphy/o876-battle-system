@@ -1,5 +1,5 @@
 /**
- * @param action {RBSAction}
+ * @param action {RBSStoreStateCombatAction}
  */
 function cooldownAction (action) {
     if (action.cooldown > 0 && action.cooldown !== Infinity) {

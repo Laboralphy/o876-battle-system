@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-04T12:44:22.953Z
+// Date : 2025-07-08T15:27:56.605Z
 // List of files in ./src/store/mutations
 
 module.exports = {
@@ -10,6 +10,7 @@ module.exports = {
     'definePool': require('./definePool.js'),
     'equipItem': require('./equipItem.js'),
     'rechargeActions': require('./rechargeActions.js'),
+    'rechargeSpellSlots': require('./rechargeSpellSlots.js'),
     'removeEffect': require('./removeEffect.js'),
     'removeProperty': require('./removeProperty.js'),
     'restoreAction': require('./restoreAction.js'),
@@ -29,5 +30,7 @@ module.exports = {
     'setRace': require('./setRace.js'),
     'setSpecie': require('./setSpecie.js'),
     'setSpeed': require('./setSpeed.js'),
-    'useAction': require('./useAction.js')
+    'setSpellSlotCount': require('./setSpellSlotCount.js'),
+    'useAction': require('./useAction.js'),
+    'useSpellSlot': require('./useSpellSlot.js')
 };

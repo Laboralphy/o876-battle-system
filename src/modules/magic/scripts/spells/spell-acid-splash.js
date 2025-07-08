@@ -13,6 +13,7 @@ function main ({ manager, caster, target }) {
     const eDamage = createSpellDirectDamageEffect({
         manager,
         caster,
+        target,
         amount: sDamage,
         damageType: manager.CONSTS.DAMAGE_TYPE_ACID,
         savingThrowAbility: manager.CONSTS.ABILITY_DEXTERITY,
@@ -22,3 +23,5 @@ function main ({ manager, caster, target }) {
         manager.applySpellEffectGroup('spell-acid-splash', [eDamage], target, 0, caster);
     }
 }
+
+module.exports = main;

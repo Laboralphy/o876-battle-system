@@ -7,6 +7,7 @@
  * @property definePool {function({ pool: string })}
  * @property equipItem {function({ item: RBSItem, slot: string, bypassCurse: boolean }): *}
  * @property rechargeActions {function({  })}
+ * @property rechargeSpellSlots {function({  })}
  * @property removeEffect {function({ effect: RBSEffect })}
  * @property removeProperty {function({ property: RBSProperty })}
  * @property restoreAction {function({ idAction: string })}
@@ -26,7 +27,9 @@
  * @property setRace {function({ value: string RACE_* })}
  * @property setSpecie {function({ value: string SPECIE_* })}
  * @property setSpeed {function({ value: number })}
+ * @property setSpellSlotCount {function({ level: number, count: number })}
  * @property useAction {function({ idAction: string })}
+ * @property useSpellSlot {function({ level: number })}
  */
 
 module.exports = {}
