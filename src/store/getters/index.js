@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-08T15:27:56.545Z
+// Date : 2025-07-09T12:52:52.576Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -51,6 +51,7 @@ module.exports = {
     'getUnmodifiedLevel': require('./getUnmodifiedLevel.js'),
     'getVariables': require('./getVariables.js'),
     'getWeaponRanges': require('./getWeaponRanges.js'),
+    'hasSpellSlotCoolingDown': require('./hasSpellSlotCoolingDown.js'),
     'isDead': require('./isDead.js'),
     'isEquipmentProficient': require('./isEquipmentProficient.js'),
     'isRangedWeaponLoaded': require('./isRangedWeaponLoaded.js'),

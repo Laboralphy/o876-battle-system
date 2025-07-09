@@ -27,7 +27,7 @@
  * @property setRace {function({ value: string RACE_* })}
  * @property setSpecie {function({ value: string SPECIE_* })}
  * @property setSpeed {function({ value: number })}
- * @property setSpellSlotCount {function({ level: number, count: number })}
+ * @property setSpellSlot {function({ level: number, count: number|undefined, cooldown: number|undefined })}
  * @property useAction {function({ idAction: string })}
  * @property useSpellSlot {function({ level: number })}
  */

@@ -23,7 +23,8 @@ describe('Acid Splash', function () {
         const c2 = m.createEntity('c-orc', 'orc2');
         c1.dice.cheat(0.9);
         c2.dice.cheat(0.1);
-        const r = m.castSpell('acid-splash', c1, c2, {});
+        const r = m.castSpell('acid-splash', c1, c2, { freeCast: true });
+        expect(r.reason).toBe('');
         expect(r.success).toBeTruthy();
         expect(aLog).toEqual([
             'creature orc2 saving throw against ABILITY_DEXTERITY roll 3 vs. 10',

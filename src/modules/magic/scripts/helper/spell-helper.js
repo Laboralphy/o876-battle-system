@@ -18,17 +18,34 @@ function getCantripDamageDice (nDieFaceCount, nLevel) {
     return nDamage.toString() + 'd' + nDieFaceCount.toString();
 }
 
-function createSpellDirectDamageEffect ({ manager, caster, target, amount, damageType, savingThrowAbility, savingFactor }) {
+function createSpellDirectDamageEffect ({
+    manager,
+    caster,
+    target,
+    amount,
+    damageType,
+    savingThrowAbility = '',
+    attack = false,
+    savingFactor = 1
+}) {
     manager.checkConst.ability(savingThrowAbility);
     const sSpellCastAbility = manager.getCreatureSpellCastingAbility(caster);
-    const dc = caster.getters.getSpellDifficultyClass[sSpellCastAbility];
-    const { success } = target.rollSavingThrow(savingThrowAbility, dc, { threat: [
-        damageType,
-        manager.CONSTS.THREAT_TYPE_SPELL
-    ]});
     let nDamage = caster.dice.roll(amount);
-    if (success) {
-        nDamage = Math.ceil(savingFactor * nDamage);
+    if (savingThrowAbility) {
+        const dc = caster.getters.getSpellDifficultyClass[sSpellCastAbility];
+        const { success } = target.rollSavingThrow(savingThrowAbility, dc, { threat: [
+            damageType,
+            manager.CONSTS.THREAT_TYPE_SPELL
+        ]});
+        if (success) {
+            nDamage = Math.ceil(savingFactor * nDamage);
+        }
+    }
+    if (attack) {
+        const ao = manager.deliverAttack(caster, target, { virtualAttack: true });
+        if (!ao.hit) {
+
+        }
     }
     return nDamage > 0
         ? manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, nDamage, { damageType })

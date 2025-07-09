@@ -8,16 +8,18 @@ module.exports = ({ state, getters }, { level }) => {
     /**
      * @var {RBSStoreStateSpellSlot}
      */
-    const oSpellSlot = state.spellSlots[level];
-    if (oSpellSlot) {
-        const ready = oSpellSlot.cooldownTimer.length < oSpellSlot.count;
-        if (ready) {
-            oSpellSlot.cooldownTimer.push(oSpellSlot.cooldown);
-            return true;
-        } else {
-            return false;
-        }
+    if (level < 0 || level >= state.spellSlots.length) {
+        throw new Error(`Invalid spell slot level ${level}`);
+    }
+    const { count, cooldownTimer, cooldown } = state.spellSlots[level];
+    if (count === Infinity) {
+        return true;
+    }
+    const ready = cooldownTimer.length < count;
+    if (ready) {
+        cooldownTimer.push(cooldown);
+        return true;
     } else {
-        throw new Error(`No spell slot available at level ${level}`);
+        return false;
     }
 };

@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-08T15:27:56.605Z
+// Date : 2025-07-09T12:52:52.629Z
 // List of files in ./src/store/mutations
 
 module.exports = {
@@ -30,7 +30,7 @@ module.exports = {
     'setRace': require('./setRace.js'),
     'setSpecie': require('./setSpecie.js'),
     'setSpeed': require('./setSpeed.js'),
-    'setSpellSlotCount': require('./setSpellSlotCount.js'),
+    'setSpellSlot': require('./setSpellSlot.js'),
     'useAction': require('./useAction.js'),
     'useSpellSlot': require('./useSpellSlot.js')
 };

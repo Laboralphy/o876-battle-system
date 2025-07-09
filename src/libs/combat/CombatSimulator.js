@@ -1,12 +1,12 @@
 const Events = require('events');
-const API = require('../../API');
+const {Manager} = require('../../../index');
 
 class CombatSimulator {
     constructor () {
         this._events = new Events();
-        this._api = new API();
-        this.services = this._api.services;
-        this.services.core.loadModule('classic');
+        this._manager = new Manager();
+        this._manager.combatManager.defaultDistance = 50;
+        this._manager.loadModule('classic');
         this.pluginCombatEvents();
         this._bVerbose = true;
     }
@@ -20,7 +20,7 @@ class CombatSimulator {
      * @param evt {CombatStartEvent}
      */
     eventCombatStart (evt) {
-        const distance = this._api.services.combats.getTargetDistance(evt.attacker);
+        const distance = this._manager.getCreatureDistance(evt.attacker, evt.target);
         this.sendTextEvent(evt.attacker.id, 'engages', evt.target.id, 'at distance', distance);
     }
 
@@ -49,7 +49,8 @@ class CombatSimulator {
      * @param evt {CombatTurnEvent}
      */
     eventCombatTurn (evt) {
-        const currentAction = this.services.combats.getSelectedActionTaken(evt.attacker)?.action;
+        const oCurrentCombat = this._manager.getCreatureCombat(evt.attacker);
+        const currentAction = oCurrentCombat.currentAction;
         if (currentAction) {
             this.sendTextEvent(evt.attacker.id, 'prepares action', currentAction.id);
         }
@@ -69,7 +70,7 @@ class CombatSimulator {
      */
     eventCreatureSelectWeapon (evt) {
         const weapon = evt.weapon;
-        const tag = this._api.services.items.getItemTag(weapon);
+        const tag = weapon.blueprint.ref;
         const sWeaponTechName = tag ?? '(nothing)';
         this.sendTextEvent(evt.creature.id, 'switches to', sWeaponTechName);
     }
@@ -92,7 +93,7 @@ class CombatSimulator {
             this.sendTextEvent(
                 evt.attacker.id, 'attacks', evt.target.id, bias, '**CRITICAL HIT**'
             );
-            this.sendTextEvent(evt.target.id, 'hp left:', this.services.creatures.getHitPoints(evt.target));
+            this.sendTextEvent(evt.target.id, 'hp left:', evt.target.getters.getHitPoints);
         } else if (evt.fumble) {
             this.sendTextEvent(
                 evt.attacker.id, 'attacks', evt.target.id, bias, '**CRITICAL MISS**'
@@ -100,7 +101,7 @@ class CombatSimulator {
         } else {
             this.sendTextEvent(
                 evt.attacker.id, 'attacks', evt.target.id,
-                'with', this.services.items.getItemTag(evt.weapon),
+                'with', evt.weapon.blueprint.ref,
                 bias,
                 evt.roll, '+', evt.bonus, '=', evt.roll + evt.bonus, 'vs', evt.ac,
                 evt.hit ? '**HIT**' : '**MISS**',
@@ -120,7 +121,7 @@ class CombatSimulator {
         } = evt;
         this.sendTextEvent(
             creature.id, 'takes', amount, 'damages (' + damageType + ')' +
-            ' - hp left:', this.services.creatures.getHitPoints(creature)
+            ' - hp left:', creature.getters.getHitPoints
         );
     }
 
@@ -161,7 +162,7 @@ class CombatSimulator {
      * @param evt {CreatureEffectAppliedEvent|CreatureEffectExpiredEvent|CreatureEffectImmunityEvent}
      */
     eventCreatureEffectUpdate (evt) {
-        const CONSTS = this.services.core.CONSTS;
+        const CONSTS = this._manager.CONSTS;
         let s = '';
         switch (evt.type) {
         case CONSTS.EVENT_CREATURE_EFFECT_APPLIED: {
@@ -181,8 +182,8 @@ class CombatSimulator {
     }
 
     pluginCombatEvents () {
-        const CONSTS = this.services.core.CONSTS;
-        const e = this.services.core.events;
+        const CONSTS = this._manager.CONSTS;
+        const e = this._manager.events;
         e.on(CONSTS.EVENT_COMBAT_START, evt => {
             this.eventCombatStart(evt);
         });
@@ -229,14 +230,14 @@ class CombatSimulator {
 
     /**
      *
-     * @param resref1
-     * @param resref2
-     * @returns {{ attacker: BoxedCreature, target: BoxedCreature }}
+     * @param resref1 {string}
+     * @param resref2 {string}
+     * @returns {{ attacker: Creature, target: Creature }}
      */
     startCombat (resref1, resref2) {
-        const c1 = this.services.entities.createEntity(resref1, resref1 + '-1');
-        const c2 = this.services.entities.createEntity(resref2, resref2 + '-2');
-        this.services.combats.startCombat(c1, c2);
+        const c1 = this._manager.createEntity(resref1, resref1 + '-1');
+        const c2 = this._manager.createEntity(resref2, resref2 + '-2');
+        this._manager.startCombat(c1, c2);
         return {
             attacker: c1,
             target: c2
@@ -244,11 +245,11 @@ class CombatSimulator {
     }
 
     doomloop () {
-        this.services.core.process();
+        this._manager.process();
     }
 
     get activeCombatCount () {
-        return this.services.core.manager.combatManager.combats.length;
+        return this._manager.combatManager.combats.length;
     }
 
     playCombat (ref1, ref2) {
@@ -259,7 +260,7 @@ class CombatSimulator {
             const sc = this.startCombat(ref1, ref2);
             attacker = sc.attacker;
             target = sc.target;
-            combat = this._api.services.combats.getCreatureCombat(attacker);
+            combat = this._manager.getCreatureCombat(attacker);
             for (let i = 0; i < DOOM_LOOP_IT_COUNT; ++i) {
                 this.doomloop();
                 if (this.activeCombatCount === 0) {
@@ -272,14 +273,14 @@ class CombatSimulator {
                 time: process.hrtime(time),
                 stats: [
                     {
-                        dead: this.services.creatures.getHitPoints(attacker) <= 0,
-                        hp: this.services.creatures.getHitPoints(attacker),
-                        maxhp: this.services.creatures.getMaxHitPoints(attacker)
+                        dead: attacker.getters.getHitPoints <= 0,
+                        hp: attacker.getters.getHitPoints,
+                        maxhp: attacker.getters.getMaxHitPoints
                     },
                     {
-                        dead: this.services.creatures.getHitPoints(target) <= 0,
-                        hp: this.services.creatures.getHitPoints(target),
-                        maxhp: this.services.creatures.getMaxHitPoints(target)
+                        dead: target.getters.getHitPoints <= 0,
+                        hp: target.getters.getHitPoints,
+                        maxhp: target.getters.getMaxHitPoints
                     }
                 ]
             };
@@ -287,8 +288,8 @@ class CombatSimulator {
             throw e;
         } finally {
             if (combat) {
-                this.services.entities.destroyEntity(attacker);
-                this.services.entities.destroyEntity(target);
+                this._manager.destroyEntity(attacker);
+                this._manager.destroyEntity(target);
             }
         }
     }

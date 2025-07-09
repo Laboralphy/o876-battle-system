@@ -44,10 +44,11 @@
  * @property getSpecie {string}
  * @property getSpeed {number}
  * @property getSpellDifficultyClass {Object<string, number>}
- * @property getSpellSlots {{level: number, slotCount: number, usedSlotCount: number, remainingSlotCount: number}[]}
+ * @property getSpellSlots {{level: number, count: number, used: number, remaining: number, ready: boolean, cooldown: number}[]}
  * @property getUnmodifiedLevel {number}
  * @property getVariables {Object<string, number|string>}
  * @property getWeaponRanges {Object<string, number>}
+ * @property hasSpellSlotCoolingDown {boolean}
  * @property isDead {boolean}
  * @property isEquipmentProficient {Object<string, boolean>}
  * @property isRangedWeaponLoaded {boolean}

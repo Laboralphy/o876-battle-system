@@ -12,6 +12,9 @@ class CombatActionOutcome {
         return !this._success;
     }
 
+    /**
+     * @returns {string}
+     */
     get reason () {
         return this._reason;
     }

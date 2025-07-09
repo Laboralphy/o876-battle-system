@@ -357,7 +357,7 @@ class Combat {
     }
 
     advance () {
-        let bHasMoved = false;
+        const bHasMoved = false;
         if (this._tick === 0) {
             this.selectMostSuitableAction(); // this will select current action for this turn
             // can be attack with weapon, or casting spell, or using spell like ability
@@ -367,10 +367,9 @@ class Combat {
             // if target is in weapon range
             if (!this.isTargetInRange()) {
                 this.approachTarget();
-                bHasMoved = true;
             }
         }
-        if (!bHasMoved && this.isTargetInRange()) {
+        if (this.isTargetInRange()) {
             const outcome = this.playFighterAction();
             if (outcome.failure && outcome.reason !== CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK) {
                 this._events.emit(CONSTS.EVENT_COMBAT_ACTION_FAILURE, {

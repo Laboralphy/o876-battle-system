@@ -93,6 +93,8 @@ class AttackOutcome {
          */
         this._rush = false;
 
+        this._virtual = false;
+
 
         /// NON BOOLEANS INDICATORS ///
 
@@ -233,6 +235,14 @@ class AttackOutcome {
         return this._hit;
     }
 
+    get virtual () {
+        return this._virtual;
+    }
+
+    set virtual (value) {
+        this._virtual = value;
+    }
+
     get range() {
         return this._range;
     }
@@ -347,6 +357,12 @@ class AttackOutcome {
         }
     }
 
+    computeSpellAttackParameters () {
+        const oAttacker = this._attacker;
+        const ag = oAttacker.getters;
+        this._ability =
+    }
+
     /**
      * Completes attack variables
      */
@@ -441,9 +457,9 @@ class AttackOutcome {
         }
 
         // compute target defense
-        this.computeAttackParameters();
+        // this.computeAttackParameters();
         this._attackBonus += nAdditionalBonus;
-        this.computeDefenseParameters();
+        // this.computeDefenseParameters();
 
         if (!this.isTargetInSelectedWeaponRange()) {
             // not in range, attack failed, must rush toward target

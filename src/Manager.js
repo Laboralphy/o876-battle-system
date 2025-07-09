@@ -531,6 +531,10 @@ class Manager {
         cm.endCombat(oAttacker, bBothSide);
     }
 
+    createAttackOutcome () {
+        return new AttackOutcome({ manager: this });
+    }
+
     /**
      * Makes an attacker attacking another creature using currently wielding weapon.
      * Target will fight back unless it is an opportunity attack
@@ -539,14 +543,16 @@ class Manager {
      * @param opportunity {boolean} this is an attack of opportunity, this will not make target, fighting back
      * @param additionalWeaponDamage {number|string} will apply a damage bonus on this attack
      * @param additionalAttackBonus {number|string} will apply an attack bonus on this attack
+     * @param virtualAttack {boolean} if true then damage will not apply... usefull to attack based spell
      * @return {AttackOutcome}
      */
     deliverAttack (attacker, target, {
         opportunity = false,
         additionalWeaponDamage = 0,
-        additionalAttackBonus = 0
+        additionalAttackBonus = 0,
+        virtualAttack = false
     } = {}) {
-        const oAttackOutcome = new AttackOutcome({ manager: this });
+        const oAttackOutcome = this.createAttackOutcome();
         oAttackOutcome.attacker = attacker;
         oAttackOutcome.opportunity = opportunity;
         oAttackOutcome.target = target;
@@ -574,7 +580,7 @@ class Manager {
             system: this._systemInstance,
             attack: oAttackOutcome
         }));
-        if (oAttackOutcome.hit) {
+        if (oAttackOutcome.hit && !virtualAttack) {
             oAttackOutcome.applyDamages();
         }
         return oAttackOutcome;
@@ -588,17 +594,14 @@ class Manager {
     }
 
     /**
-     * returns the distance between attacker and its target
-     * @param oCreature {Creature} instance of attacking creature
-     * @returns {number} distance
+     * Returns creature's current target, if in combat
+     * Returns null if not in combat
+     * @param oCreature {Creature}
+     * @returns {Creature|null}
      */
-    getTargetDistance (oCreature) {
+    getCombatTarget (oCreature) {
         const oCombat = this.getCreatureCombat(oCreature);
-        if (oCombat) {
-            return oCombat.distance;
-        } else {
-            throw new Error(`This creature is not in combat : ${oCreature.id}`);
-        }
+        return oCombat ? oCombat.target : null;
     }
 
     /**
@@ -928,6 +931,7 @@ class Manager {
             .activeCreatures
             .map(creature => {
                 creature.mutations.rechargeActions();
+                creature.mutations.rechargeSpellSlots();
                 creature.getters.getActiveProperties.forEach(property => {
                     this.runPropertyScript(creature, 'mutate', {});
                 });
@@ -1081,15 +1085,31 @@ class Manager {
         return this.data['SPELLS'][sSpellDataConstName];
     }
 
+    /**
+     * Casts a spell
+     * @param sSpellId {string} spell identifier
+     * @param caster {Creature} creature casting the spell
+     * @param target {Creature} spell primary target
+     * @param parameters {{}}
+     * @returns {{success: boolean, reason: string}}
+     */
     castSpell (sSpellId, caster, target = null, parameters = {}) {
+        const {
+            freeCast = false
+        } = parameters;
         const sd = this.getSpellData(sSpellId);
         if (!sd) {
             // Spell not found : error
             throw new Error(`ERR_CAST_SPELL_NOT_FOUND: ${sSpellId}`);
         }
         // check if spell can be cast
-        // const oCastingAction = caster.getters.getActions[]
-
+        const ssl = caster.getters.getSpellSlots[sd.level];
+        if (!ssl.ready && !freeCast) {
+            return {
+                success: false,
+                reason: CONSTS.ACTION_FAILURE_REASON_NOT_READY
+            };
+        }
 
         // force target to caster if spell is self cast only
         target = sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_SELF

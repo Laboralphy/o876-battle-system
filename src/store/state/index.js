@@ -100,52 +100,52 @@ module.exports = () => ({
     spellSlots: [{
         level: 0,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }, {
         level: 1,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }, {
         level: 2,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }, {
         level: 3,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }, {
         level: 4,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }, {
         level: 5,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }, {
         level: 6,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }, {
         level: 7,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }, {
         level: 8,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }, {
         level: 9,
         cooldown: 0,
-        cooldownTimer: 0,
+        cooldownTimer: [],
         count: 0
     }]
 });

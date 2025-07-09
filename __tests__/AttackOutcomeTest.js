@@ -107,6 +107,8 @@ describe('get ac', function () {
         const ao = new AttackOutcome();
         ao.attacker = c1;
         ao.target = c2;
+        ao.computeAttackParameters();
+        ao.computeDefenseParameters();
         ao.attack();
         expect(ao.ac).toBe(10);
     });
@@ -117,6 +119,8 @@ describe('get ac', function () {
         const ao = new AttackOutcome();
         ao.attacker = c1;
         ao.target = c2;
+        ao.computeAttackParameters();
+        ao.computeDefenseParameters();
         ao.attack();
         expect(ao.ac).toBe(12);
     });
@@ -134,6 +138,8 @@ describe('damages', function () {
         const ao = new AttackOutcome();
         ao.attacker = c1;
         ao.target = c2;
+        ao.computeAttackParameters();
+        ao.computeDefenseParameters();
         ao.attack();
         expect(ao.weapon).toEqual(oSword);
         expect(ao.roll).toBe(11);
@@ -477,6 +483,8 @@ describe('Polyvalent weapon', function () {
         ao.attacker = c1;
         c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE });
         ao.target = c2;
+        ao.computeAttackParameters();
+        ao.computeDefenseParameters();
         ao.attack();
         expect(ao.ac).toBe(15);
 
@@ -485,6 +493,8 @@ describe('Polyvalent weapon', function () {
         ao2.attacker = c1;
         c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE });
         ao2.target = c2;
+        ao2.computeAttackParameters();
+        ao2.computeDefenseParameters();
         ao2.attack();
         // longsword is slashing only
         expect(ao2.ac).toBe(17);
@@ -494,6 +504,8 @@ describe('Polyvalent weapon', function () {
         ao3.attacker = c1;
         c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE });
         ao3.target = c2;
+        ao3.computeAttackParameters();
+        ao3.computeDefenseParameters();
         ao3.attack();
         // mace is crushing only
         expect(ao3.ac).toBe(15);
@@ -503,6 +515,8 @@ describe('Polyvalent weapon', function () {
         ao4.attacker = c1;
         c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE });
         ao4.target = c2;
+        ao4.computeAttackParameters();
+        ao4.computeDefenseParameters();
         ao4.attack();
 
         // dagger = piercing ONLY
@@ -513,6 +527,8 @@ describe('Polyvalent weapon', function () {
         ao5.attacker = c1;
         c1.mutations.selectOffensiveSlot({ value: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE });
         ao5.target = c2;
+        ao5.computeAttackParameters();
+        ao5.computeDefenseParameters();
         ao5.attack();
         // dagger = piercing ONLY
         expect(ao5.ac).toBe(17);
