@@ -164,11 +164,11 @@ class Dice {
     }
 
     /**
-   * Evaluate an expression of type xDy+z
-   * effectively roll the dice
-   * @param value {number|string|object}
-   * @return {number}
-   */
+     * Evaluate an expression of type xDy+z
+     * effectively roll the dice
+     * @param value {number|string|object}
+     * @return {number}
+     */
     roll (value) {
         const t = typeof value;
         if (t === 'number') {

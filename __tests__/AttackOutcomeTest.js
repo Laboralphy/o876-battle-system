@@ -149,7 +149,7 @@ describe('damages', function () {
     });
 });
 
-describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
+describe('getDamageType/getAttackType/getBaseDamageAmount', function () {
     it('should return 1d3 Melee Crushing when having no weapon', function () {
         const c1 = eb.createEntity(bpNormalActor);
         c1.mutations.setLevel({ value: 5 });
@@ -161,9 +161,9 @@ describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
         ao.target = c2;
         ao.computeAttackParameters();
         ao.computeDefenseParameters();
-        expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_MELEE);
+        expect(ao.attackType).toBe(CONSTS.ATTACK_TYPE_MELEE);
         expect(ao.getDamageTypes()).toEqual([CONSTS.DAMAGE_TYPE_CRUSHING]);
-        expect(ao.getWeaponBaseDamageAmount()).toBe('1d3');
+        expect(ao.getBaseDamageAmount()).toBe('1d3');
     });
     it('should return 1D4 melee piercing when equipping dagguer', function () {
         const c1 = eb.createEntity(bpNormalActor);
@@ -178,9 +178,9 @@ describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
         ao.target = c2;
         ao.computeAttackParameters();
         ao.computeDefenseParameters();
-        expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_MELEE);
+        expect(ao.attackType).toBe(CONSTS.ATTACK_TYPE_MELEE);
         expect(ao.getDamageTypes()).toEqual([CONSTS.DAMAGE_TYPE_PIERCING]);
-        expect(ao.getWeaponBaseDamageAmount()).toBe('1d4');
+        expect(ao.getBaseDamageAmount()).toBe('1d4');
     });
     it('should return 1d6 piercing ranged when equipping bow with ammo', function () {
         const c1 = eb.createEntity(bpNormalActor);
@@ -203,9 +203,9 @@ describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
         ao.target = c2;
         ao.computeAttackParameters();
         ao.computeDefenseParameters();
-        expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_RANGED);
+        expect(ao.attackType).toBe(CONSTS.ATTACK_TYPE_RANGED);
         expect(ao.getDamageTypes()).toEqual([CONSTS.DAMAGE_TYPE_PIERCING]);
-        expect(ao.getWeaponBaseDamageAmount()).toBe('1d6');
+        expect(ao.getBaseDamageAmount()).toBe('1d6');
     });
     it('should throw error when equipping bow without ammo', function () {
         const c1 = eb.createEntity(bpNormalActor);
@@ -225,10 +225,11 @@ describe('getDamageType/getAttackType/getWeaponBaseDamageAmount', function () {
         ao.target = c2;
         ao.computeAttackParameters();
         ao.computeDefenseParameters();
-        expect(ao.getAttackType()).toBe(CONSTS.ATTACK_TYPE_RANGED);
+        expect(ao.ammo).toBeNull();
+        expect(ao.attackType).toBe(CONSTS.ATTACK_TYPE_RANGED); // no ammo -> using "default" ammo (like in bg3)
         expect(() => ao.getDamageTypes()).not.toThrow();
         expect(ao.getDamageTypes()).toEqual([CONSTS.DAMAGE_TYPE_PIERCING]);
-        expect(ao.getWeaponBaseDamageAmount()).toBe('1d6');
+        expect(ao.getBaseDamageAmount()).toBe('1d6');
     });
 });
 

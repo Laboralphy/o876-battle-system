@@ -356,6 +356,13 @@ class Creature {
         this.events.emit(CONSTS.EVENT_CREATURE_SKILL_CHECK, result);
         return result;
     }
+
+    /**
+     * @returns {{ spellCastingAbility: string, evolution: { level: number, feats: string[] }[] }}
+     */
+    get classTypeData () {
+        return this.data.CLASS_TYPES[this.getters.getClassType];
+    }
 }
 
 module.exports = Creature;

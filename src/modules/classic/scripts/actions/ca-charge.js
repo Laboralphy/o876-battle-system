@@ -16,7 +16,10 @@ function main ({ manager, action, creature, target }) {
     const { parameters: { amount } } = action;
     if (combat.distance <= range) {
         combat.approachTarget(range);
-        manager.deliverAttack(creature, target, { additionalWeaponDamage: amount });
+        manager.deliverAttack(creature, target, {
+            additionalWeaponDamage: amount,
+            applyDamage: true
+        });
     }
 }
 

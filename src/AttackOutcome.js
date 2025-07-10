@@ -44,13 +44,21 @@ class AttackOutcome {
          * @type {RBSItem | null}
          */
         this._ammo = null;
+
+        this._spell = {
+            id: '',
+            active: false,
+            damage: '',
+            damageType: '',
+            effects: []
+        };
+
+        /// NUMERIC VALUES ///
+
         /**
          * target armor class during this attack
          * @type {number}
          */
-
-        /// NUMERIC VALUES ///
-
         this._ac = 0;
 
         /**
@@ -93,7 +101,13 @@ class AttackOutcome {
          */
         this._rush = false;
 
-        this._virtual = false;
+        /**
+         * An improvised weapon is an object used as a weapon, but not primarly design for combat
+         * (piece of furniture, ranged weapon out of ammo)
+         * @type {boolean}
+         * @private
+         */
+        this._improvised = false;
 
 
         /// NON BOOLEANS INDICATORS ///
@@ -235,14 +249,6 @@ class AttackOutcome {
         return this._hit;
     }
 
-    get virtual () {
-        return this._virtual;
-    }
-
-    set virtual (value) {
-        this._virtual = value;
-    }
-
     get range() {
         return this._range;
     }
@@ -326,16 +332,13 @@ class AttackOutcome {
     }
 
     /**
-     * Return the attack type
-     * @returns {string}
+     * returns a list of damage types delivered by spell/weapon
+     * @returns {string[]}
      */
-    getAttackType () {
-        return this._weapon && this._weapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)
-            ? CONSTS.ATTACK_TYPE_RANGED
-            : CONSTS.ATTACK_TYPE_MELEE;
-    }
-
     getDamageTypes () {
+        if (this._spell.active) {
+            return [this._spell.damageType];
+        }
         const weapon = this._weapon;
         if (!weapon) {
             return [CONSTS.DAMAGE_TYPE_CRUSHING];
@@ -349,33 +352,64 @@ class AttackOutcome {
         return [...aTypes];
     }
 
-    getWeaponBaseDamageAmount () {
+    getBaseDamageAmount () {
+        if (this._improvised) {
+            return this._attacker.getters.getVariables['BASE_UNHARMED_DAMAGES'];
+        }
         if (this._weapon) {
             return this._weapon.blueprint.damages;
+        } else if (this._spell.active) {
+            return this._spell.damage;
         } else {
             return this._attacker.getters.getVariables['BASE_UNHARMED_DAMAGES'];
         }
     }
 
-    computeSpellAttackParameters () {
+    /**
+     * configure attack for using spell
+     * @param attackType
+     */
+    computeSpellParameters ({
+        spell,
+        damageType,
+        damage
+    }) {
+        if (typeof spell !== 'string') {
+            throw new TypeError('`spell` should be a string');
+        }
+        const sd = this._manager.getSpellData(spell);
         const oAttacker = this._attacker;
         const ag = oAttacker.getters;
-        this._ability =
+        this._ability = oAttacker.classTypeData.spellCastingAbility;
+        this._attackType = sd.range <= this._manager.data.VARIABLES.WEAPON_RANGE_MELEE
+            ? CONSTS.ATTACK_TYPE_MELEE
+            : CONSTS.ATTACK_TYPE_RANGED;
+        this._range = sd.range;
+        this._weapon = null;
+        this._ammo = null;
+        this._attackBonus = ag.getProficiencyBonus + ag.getAbilityModifiers[this._ability];
+        this._spell.active = true;
+        this._spell.id = spell;
+        this._spell.damage = damage;
+        this._spell.damageType = damageType;
     }
 
     /**
-     * Completes attack variables
+     * configure attack for using selected weapon
      */
-    computeAttackParameters () {
+    computeSelectedWeaponParameters () {
         const oAttacker = this._attacker;
         const ag = oAttacker.getters;
-        const w = ag.getSelectedWeapon;
-        const wa = ag.getSelectedWeaponAttributeSet;
-        this._weapon = w;
+        this._weapon = ag.getSelectedWeapon;
         this._ability = ag.getAttackAbility[ag.getSelectedOffensiveSlot];
-        if (wa.has(CONSTS.WEAPON_ATTRIBUTE_RANGED) && ag.isRangedWeaponLoaded) {
-            this._ammo = ag.getEquipment[CONSTS.EQUIPMENT_SLOT_AMMO];
-            this._attackType = CONSTS.ATTACK_TYPE_RANGED;
+        if (ag.getSelectedWeaponAttributeSet.has(CONSTS.WEAPON_ATTRIBUTE_RANGED)) {
+            if (ag.isRangedWeaponLoaded) {
+                this._ammo = ag.getEquipment[CONSTS.EQUIPMENT_SLOT_AMMO];
+                this._attackType = CONSTS.ATTACK_TYPE_RANGED;
+            } else {
+                this._ammo = null;
+                this._attackType = CONSTS.ATTACK_TYPE_RANGED;
+            }
         } else {
             this._ammo = null;
             this._attackType = CONSTS.ATTACK_TYPE_MELEE;
@@ -383,6 +417,13 @@ class AttackOutcome {
         const sSelectedSlot = ag.getSelectedOffensiveSlot;
         this._range = ag.getWeaponRanges[sSelectedSlot];
         this._attackBonus = ag.getAttackBonus[sSelectedSlot];
+    }
+
+    /**
+     * Completes attack variables
+     */
+    computeAttackParameters () {
+        this.computeSelectedWeaponParameters();
         this._visibility = this._target.getCreatureVisibility(this._attacker);
     }
 
@@ -390,7 +431,7 @@ class AttackOutcome {
         const oTarget = this._target;
         const oArmorClasses = oTarget.getters.getArmorClass;
         const sDamageTypeVsAC = getWorstDamageTypeVsAC(this.getDamageTypes(), oArmorClasses);
-        this._ac = oArmorClasses[this.getAttackType()] + oArmorClasses[sDamageTypeVsAC];
+        this._ac = oArmorClasses[this._attackType] + (oArmorClasses[sDamageTypeVsAC] ?? 0);
     }
 
     fail (sReason) {
@@ -502,11 +543,11 @@ class AttackOutcome {
         this._hit = bHit;
 
         if (bHit) {
-            const aWeaponDamageTypes = this.getDamageTypes();
-            const sDamageType = getBestDamageTypeVsMitigation(aWeaponDamageTypes, this.target.getters.getDamageMitigation);
-            this.rollDamages(this.getWeaponBaseDamageAmount(), sDamageType);
+            const aDamageTypes = this.getDamageTypes();
+            const sDamageType = getBestDamageTypeVsMitigation(aDamageTypes, this.target.getters.getDamageMitigation);
+            this.rollDamages(this.getBaseDamageAmount(), sDamageType);
             if (this._critical) {
-                this.rollDamages(this.getWeaponBaseDamageAmount(), sDamageType);
+                this.rollDamages(this.getBaseDamageAmount(), sDamageType);
             }
             if (this._rollBias.result > 0) {
                 this._sneak = aggregateModifiers([
@@ -519,19 +560,21 @@ class AttackOutcome {
             }
             const nOffensiveAbilityModifier = oAttacker.getters.getAbilityModifiers[this._ability];
             this.rollDamages(nOffensiveAbilityModifier, sDamageType);
-            aggregateModifiers([
-                CONSTS.PROPERTY_DAMAGE_MODIFIER,
-                CONSTS.EFFECT_DAMAGE_MODIFIER
-            ], oAttacker.getters, {
-                propAmpMapper: prop => oAttacker.dice.roll(prop.amp),
-                effectAmpMapper: effect => oAttacker.dice.roll(effect.amp),
-                propForEach: prop => {
-                    this.rollDamages(prop.amp, prop.data.damageType);
-                },
-                effectForEach: effect => {
-                    this.rollDamages(effect.amp, effect.data.damageType);
-                }
-            });
+            if (this._weapon) {
+                aggregateModifiers([
+                    CONSTS.PROPERTY_DAMAGE_MODIFIER,
+                    CONSTS.EFFECT_DAMAGE_MODIFIER
+                ], oAttacker.getters, {
+                    propAmpMapper: prop => oAttacker.dice.roll(prop.amp),
+                    effectAmpMapper: effect => oAttacker.dice.roll(effect.amp),
+                    propForEach: prop => {
+                        this.rollDamages(prop.amp, prop.data.damageType);
+                    },
+                    effectForEach: effect => {
+                        this.rollDamages(effect.amp, effect.data.damageType);
+                    }
+                });
+            }
         }
     }
 
@@ -545,13 +588,23 @@ class AttackOutcome {
             });
     }
 
+    addSpellEffect (effect, target, duration, effectSubtype = CONSTS.EFFECT_SUBTYPE_MAGICAL) {
+        this._spell.effects.push({
+            effect, target, duration, effectSubtype
+        });
+    }
+
     /**
      * Applies damage effects described in the attack outcome
      */
     applyDamages () {
-        const aDamages = this
-            .effectProcessor
-            .applyEffectGroup(this._damages.effects, '', this._target, 0, this._attacker);
+        const aDamages = this._spell.active ?
+            this
+                .manager
+                .applySpellEffectGroup(this._spell.id, this._damages.effects, this._target, 0, this._attacker)
+            : this
+                .effectProcessor
+                .applyEffectGroup(this._damages.effects, '', this._target, 0, this._attacker);
         const dam = this._damages;
         aDamages.forEach(({ amp, data: { damageType, resistedAmount } }) => {
             dam.amount += amp;

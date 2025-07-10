@@ -31,7 +31,7 @@ function main ({ manager, action, creature, target }) {
     } else {
         oHealedCreature = manager
             .combatManager
-            .getOffenders(target)
+            .getTargetingCreatures(target)
             .map(offender => ({
                 offender,
                 damagePoints: getDamagePoints(offender)

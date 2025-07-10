@@ -258,7 +258,7 @@ class Manager {
         const oTarget = combat.target;
         const aOffenders = this
             .combatManager
-            .getOffenders(oAttacker)
+            .getTargetingCreatures(oAttacker)
             .filter(o => o !== oTarget);
         const bCouldMultiAttack = oAttacker.getters.getPropertySet.has(CONSTS.PROPERTY_MULTI_ATTACK) && aOffenders.length > 0;
         for (let i = 0; i < count; ++i) {
@@ -271,11 +271,14 @@ class Manager {
                 );
                 let iRank = Math.floor(oAttacker.dice.random() * aOffenders.length);
                 for (let iMultiAttack = 0; iMultiAttack < nMultiAttackCount; ++iMultiAttack) {
-                    this.deliverAttack(oAttacker, aOffenders[iRank]);
+                    this.deliverAttack(oAttacker, aOffenders[iRank], { applyDamage: true });
                     iRank = (iRank + 1) % aOffenders.length;
                 }
             }
-            this.deliverAttack(oAttacker, oTarget, { opportunity });
+            this.deliverAttack(oAttacker, oTarget, {
+                opportunity,
+                applyDamage: true
+            });
         }
     }
 
@@ -316,16 +319,6 @@ class Manager {
     increaseCreatureExperience (oCreature, nXP) {
         this.evolution.gainXP(oCreature, nXP);
     };
-
-    /**
-     * Returns a creature spell casting ability (according to its class type)
-     * @param oCreature {Creature} instance of creature
-     * @returns {string} ABILITY_*
-     */
-    getCreatureSpellCastingAbility (oCreature) {
-        return this.evolution.getClassTypeData(oCreature.getters.getClassType)['spellCastingAbility'];
-    }
-
 
     // ▗▄▄▖  ▄▖  ▄▖         ▗▖
     // ▐▙▄  ▟▙▖ ▟▙▖▗▛▜▖▗▛▀ ▝▜▛▘▗▛▀▘
@@ -460,7 +453,7 @@ class Manager {
      * @param aEffects {RBSEffect[]} list of all effects
      */
     applySpellEffectGroup (idSpell, aEffects, target, duration = 0, source = undefined) {
-        this
+        return this
             .effectProcessor
             .applyEffectGroup(
                 aEffects,
@@ -535,6 +528,39 @@ class Manager {
         return new AttackOutcome({ manager: this });
     }
 
+    deliverSpellAttack (attacker, target, {
+        spell,
+        damage,
+        damageType
+    }) {
+        const oAttackOutcome = this.createAttackOutcome();
+        oAttackOutcome.attacker = attacker;
+        oAttackOutcome.target = target;
+        oAttackOutcome.computeSpellParameters({
+            spell,
+            damage,
+            damageType
+        });
+        oAttackOutcome.computeDefenseParameters();
+        oAttackOutcome.attack();
+        this.runPropEffectScript(attacker, 'attack', {
+            attack: oAttackOutcome,
+            manager: this
+        });
+        if (oAttackOutcome.hit) {
+            oAttackOutcome.createDamageEffects();
+            this.runPropEffectScript(target, 'attacked', {
+                attack: oAttackOutcome,
+                manager: this
+            });
+        }
+        this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, new CombatAttackEvent({
+            system: this._systemInstance,
+            attack: oAttackOutcome
+        }));
+        return oAttackOutcome;
+    }
+
     /**
      * Makes an attacker attacking another creature using currently wielding weapon.
      * Target will fight back unless it is an opportunity attack
@@ -543,14 +569,13 @@ class Manager {
      * @param opportunity {boolean} this is an attack of opportunity, this will not make target, fighting back
      * @param additionalWeaponDamage {number|string} will apply a damage bonus on this attack
      * @param additionalAttackBonus {number|string} will apply an attack bonus on this attack
-     * @param virtualAttack {boolean} if true then damage will not apply... usefull to attack based spell
+     * @param applyDamage {boolean} if true then damage will apply
      * @return {AttackOutcome}
      */
     deliverAttack (attacker, target, {
         opportunity = false,
         additionalWeaponDamage = 0,
-        additionalAttackBonus = 0,
-        virtualAttack = false
+        additionalAttackBonus = 0
     } = {}) {
         const oAttackOutcome = this.createAttackOutcome();
         oAttackOutcome.attacker = attacker;
@@ -580,7 +605,7 @@ class Manager {
             system: this._systemInstance,
             attack: oAttackOutcome
         }));
-        if (oAttackOutcome.hit && !virtualAttack) {
+        if (oAttackOutcome.hit) {
             oAttackOutcome.applyDamages();
         }
         return oAttackOutcome;
@@ -634,7 +659,7 @@ class Manager {
     getCreatureOffenders (oCreature, nRange = Infinity) {
         return this
             .combatManager
-            .getOffenders(oCreature, nRange);
+            .getTargetingCreatures(oCreature, nRange);
     }
 
     /**
@@ -698,6 +723,15 @@ class Manager {
         }
     }
 
+    /**
+     * Returns all creatures targeting the specified creature
+     * @param oCreature {Creature}
+     * @param nRange {number} maximum distance from the specified creature
+     * @returns {Creature[]}
+     */
+    getTargetingCreatures (oCreature, nRange = Infinity) {
+        return this.combatManager.getTargetingCreatures(oCreature, nRange);
+    }
 
     //  ▗▖      ▗▖  ▗▖
     // ▗▛▜▖▗▛▀ ▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖▗▛▀▘
@@ -1145,6 +1179,10 @@ class Manager {
             manager: this,
             caster,
             target,
+            spell: {
+                id: sSpellId,
+                ...this.getSpellData(sSpellId)
+            },
             ...parameters
         });
         if (sd.hostile && !this.combatManager.isCreatureFighting(target)) {

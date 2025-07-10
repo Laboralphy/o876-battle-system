@@ -21,7 +21,7 @@ function main ({ manager, action, creature, target = null }) {
         doDamage(manager, offender, creature, {
             amount: action.parameters.amount,
             damageType: checkConst(action.parameters.damageType),
-            offensiveAbility: manager.getCreatureSpellCastingAbility(creature),
+            offensiveAbility: creature.classTypeData.spellCastingAbility,
             defensiveAbility: manager.CONSTS.ABILITY_DEXTERITY,
             extraordinary: false
         });

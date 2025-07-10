@@ -18,7 +18,8 @@ function getCantripDamageDice (nDieFaceCount, nLevel) {
     return nDamage.toString() + 'd' + nDieFaceCount.toString();
 }
 
-function createSpellDirectDamageEffect ({
+function castDirectDamageSpell ({
+    spell,
     manager,
     caster,
     target,
@@ -26,12 +27,13 @@ function createSpellDirectDamageEffect ({
     damageType,
     savingThrowAbility = '',
     attack = false,
-    savingFactor = 1
+    savingFactor = 1,
+    onHit = null,
 }) {
-    manager.checkConst.ability(savingThrowAbility);
-    const sSpellCastAbility = manager.getCreatureSpellCastingAbility(caster);
+    const sSpellCastAbility = caster.classTypeData.spellCastingAbility;
     let nDamage = caster.dice.roll(amount);
     if (savingThrowAbility) {
+        manager.checkConst.ability(savingThrowAbility);
         const dc = caster.getters.getSpellDifficultyClass[sSpellCastAbility];
         const { success } = target.rollSavingThrow(savingThrowAbility, dc, { threat: [
             damageType,
@@ -42,17 +44,30 @@ function createSpellDirectDamageEffect ({
         }
     }
     if (attack) {
-        const ao = manager.deliverAttack(caster, target, { virtualAttack: true });
-        if (!ao.hit) {
-
+        const ao = manager.deliverSpellAttack(caster, target, {
+            spell,
+            damage: amount,
+            damageType,
+        });
+        if (ao.hit) {
+            if (typeof onHit === 'function') {
+                onHit(ao);
+            }
+            ao.applyDamages();
+        }
+        return ao.hit;
+    } else {
+        if (nDamage > 0) {
+            const eDamage = manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, nDamage, { damageType });
+            manager.applySpellEffectGroup(spell, [eDamage], target, 0, caster);
+            return true;
+        } else {
+            return false;
         }
     }
-    return nDamage > 0
-        ? manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, nDamage, { damageType })
-        : null;
 }
 
 module.exports = {
     getCantripDamageDice,
-    createSpellDirectDamageEffect
+    castDirectDamageSpell
 };

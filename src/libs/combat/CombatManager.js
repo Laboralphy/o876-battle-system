@@ -114,7 +114,7 @@ class CombatManager {
             const { combat } = ev;
             const { attacker, target: target, distance } = combat;
             this._events.emit(CONSTS.EVENT_COMBAT_DISTANCE, this._addManagerToObject(ev));
-            if (this.isCreatureFighting(attacker, target)) {
+            if (this.isCreatureFighting(target, attacker)) {
                 // also change target distance with attacker if different
                 const oTargetCombat = this.getCombat(oTarget);
                 if (oTargetCombat && oTargetCombat.distance !== distance) {
@@ -122,7 +122,9 @@ class CombatManager {
                 }
             }
         });
-        combat.events.on(CONSTS.EVENT_COMBAT_MOVE, ev => this._events.emit(CONSTS.EVENT_COMBAT_MOVE, this._addManagerToObject(ev)));
+        combat.events.on(CONSTS.EVENT_COMBAT_MOVE, ev => {
+            this._events.emit(CONSTS.EVENT_COMBAT_MOVE, this._addManagerToObject(ev));
+        });
         combat.setFighters(oCreature, oTarget);
         combat.distance = nStartingDistance === null ? this.defaultDistance : nStartingDistance;
         return combat;
@@ -161,7 +163,7 @@ class CombatManager {
      * @param nRange {number} maximum range
      * @return {Creature[]}
      */
-    getOffenders (oCreature, nRange = Infinity) {
+    getTargetingCreatures (oCreature, nRange = Infinity) {
         return this.combats
             .filter(combat => combat.target === oCreature && combat.distance <= nRange)
             .map(combat => combat.attacker);
@@ -182,7 +184,7 @@ class CombatManager {
     removeFighter (oCreature) {
         if (this.isCreatureAttacked(oCreature)) {
             this
-                .getOffenders(oCreature)
+                .getTargetingCreatures(oCreature)
                 .forEach(creature => {
                     this.endCombat(creature, true);
                 });
@@ -220,7 +222,7 @@ class CombatManager {
     fleeCombat (oCoward) {
         this.endCombat(oCoward);
         this
-            .getOffenders(oCoward)
+            .getTargetingCreatures(oCoward)
             .forEach(offender => {
                 const combat = this.getCombat(offender);
                 combat.playFighterAction(true);

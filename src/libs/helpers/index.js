@@ -137,7 +137,7 @@ function getWorstDamageTypeVsAC (aDamageTypes, oArmorClasses) {
  * @param nRange {number}
  */
 function getAreaOfEffectTargets (oManager, oCreature, oTargetCenter, nRange) {
-    const aAllOffenders = oManager.combatManager.getOffenders(oCreature, nRange);
+    const aAllOffenders = oManager.combatManager.getTargetingCreatures(oCreature, nRange);
     if (!aAllOffenders.includes(oTargetCenter) && oTargetCenter !== null) {
         aAllOffenders.push(oTargetCenter);
     }

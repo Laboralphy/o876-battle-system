@@ -457,7 +457,7 @@ class Combat {
             .filter(({ range, weaponAttr }) => {
                 const nRangeMax = range;
                 const nRangeMin = weaponAttr.has(CONSTS.WEAPON_ATTRIBUTE_RANGED)
-                    ? oAttacker.getters.getVariables['WEAPON_RANGED_MINIMUM_RANGE']
+                    ? oAttacker.getters.getVariables['WEAPON_RANGE_BLANK_SHOT']
                     : 0;
                 // distance of target must be between nRangeMin and nRangeMax
                 // or else this weapon cannot be used
@@ -546,7 +546,7 @@ class Combat {
         ) {
             const nRunSpeed = nUseSpeed ?? this.attacker.getters.getSpeed;
             const previousDistance = this.distance;
-            const nMeleeRange = this.attacker.getters.getVariables['WEAPON_MELEE_MINIMUM_RANGE'];
+            const nMeleeRange = this.attacker.getters.getVariables['WEAPON_RANGE_MELEE'];
             const nMinRange = Math.max(this.getSelectedWeaponRange(), nMeleeRange);
             let nNewDistance = Math.max(nMinRange, this.distance - nRunSpeed);
             this._events.emit(CONSTS.EVENT_COMBAT_MOVE, {
