@@ -1,3 +1,5 @@
+const {CONSTS} = require('../../../../../index');
+
 /**
  * Returns a dice expression for a cantrip damage
  * @param nDieFaceCount {number}
@@ -18,52 +20,90 @@ function getCantripDamageDice (nDieFaceCount, nLevel) {
     return nDamage.toString() + 'd' + nDieFaceCount.toString();
 }
 
+function _castDirectDamageSpellSavingThrow ({
+    spell,
+    manager,
+    caster,
+    target,
+    damage,
+    damageType,
+    savingThrowAbility = '',
+    damageMitigation = 0,
+    threat = []
+}) {
+    const sSpellCastAbility = caster.classTypeData.spellCastingAbility;
+    let nDamage = caster.dice.roll(damage);
+    manager.checkConst.ability(savingThrowAbility);
+    const dc = caster.getters.getSpellDifficultyClass[sSpellCastAbility];
+    const { success } = target.rollSavingThrow(savingThrowAbility, dc, { threat: [
+        damageType,
+        manager.CONSTS.THREAT_TYPE_SPELL,
+        ...threat
+    ]});
+    if (success) {
+        nDamage = Math.ceil(damageMitigation * nDamage);
+    }
+    if (nDamage > 0) {
+        const eDamage = manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, nDamage, { damageType });
+        manager.applySpellEffectGroup(spell, [eDamage], target, 0, caster);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function _castDirectDamageSpellRangedAttack ({
+    spell,
+    manager,
+    caster,
+    target,
+    damage,
+    damageType
+}) {
+    const nDamage = caster.dice.roll(damage);
+    const ao = manager.deliverSpellAttack(caster, target, {
+        spell,
+        damage,
+        damageType,
+    });
+    return ao.hit;
+}
+
 function castDirectDamageSpell ({
     spell,
     manager,
     caster,
     target,
-    amount,
+    damage,
     damageType,
     savingThrowAbility = '',
+    threat = [],
     attack = false,
-    savingFactor = 1,
-    onHit = null,
+    damageMitigation = 0
 }) {
-    const sSpellCastAbility = caster.classTypeData.spellCastingAbility;
-    let nDamage = caster.dice.roll(amount);
     if (savingThrowAbility) {
-        manager.checkConst.ability(savingThrowAbility);
-        const dc = caster.getters.getSpellDifficultyClass[sSpellCastAbility];
-        const { success } = target.rollSavingThrow(savingThrowAbility, dc, { threat: [
-            damageType,
-            manager.CONSTS.THREAT_TYPE_SPELL
-        ]});
-        if (success) {
-            nDamage = Math.ceil(savingFactor * nDamage);
-        }
-    }
-    if (attack) {
-        const ao = manager.deliverSpellAttack(caster, target, {
+        return _castDirectDamageSpellSavingThrow({
             spell,
-            damage: amount,
+            manager,
+            caster,
+            target,
+            damage,
             damageType,
+            savingThrowAbility,
+            threat,
+            damageMitigation
         });
-        if (ao.hit) {
-            if (typeof onHit === 'function') {
-                onHit(ao);
-            }
-            ao.applyDamages();
-        }
-        return ao.hit;
+    } else if (attack) {
+        return _castDirectDamageSpellRangedAttack({
+            spell,
+            manager,
+            caster,
+            target,
+            damage,
+            damageType
+        });
     } else {
-        if (nDamage > 0) {
-            const eDamage = manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, nDamage, { damageType });
-            manager.applySpellEffectGroup(spell, [eDamage], target, 0, caster);
-            return true;
-        } else {
-            return false;
-        }
+        throw new Error('either `savingThrowAbility` or `attack: true` must be specified');
     }
 }
 

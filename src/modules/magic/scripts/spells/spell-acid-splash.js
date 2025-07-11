@@ -1,5 +1,12 @@
 const { getCantripDamageDice, castDirectDamageSpell } = require('../helper/spell-helper');
 
+/*
+You hurl a bubble of acid. Choose one creature within range, or choose two creatures within range that are within 5 feet of each other.
+A target must succeed on a Dexterity saving throw or take 1d6 acid damage.
+
+This spell’s damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).
+ */
+
 /**
  * Splashes a target with acid damage
  * @param manager {Manager}
@@ -14,10 +21,10 @@ function splash (manager, caster, target) {
         manager,
         caster,
         target,
-        amount: sDamage,
+        damage: sDamage,
         damageType: manager.CONSTS.DAMAGE_TYPE_ACID,
         savingThrowAbility: manager.CONSTS.ABILITY_DEXTERITY,
-        savingFactor: 0
+        damageMitigation: 0
     });
 }
 
@@ -28,30 +35,13 @@ function splash (manager, caster, target) {
  * @param spellData {{}}
  */
 function main ({ manager, caster, target }) {
-    // what is target distance
-    const nTargetDistance = manager.getCreatureDistance(caster, target);
-
     // get all caster's offenders
     // filter creatures by distance
-    const aAdditionalOffenders = manager
-        .getTargetingCreatures(caster)
-        // exclude primary target
-        .filter(offender => offender !== target)
-        // offender => [offender, distance to primary target]
-        .map((offender) => [
-            offender,
-            Math.abs(nTargetDistance - manager.getCreatureDistance(caster, offender))
-        ])
-        // sort by distance to primary target
-        .sort(([, distance1], [, distance2]) => distance1 - distance2)
-        .filter(([, distance]) => {
-            return distance <= 5;
-        })
-        .map(([offender]) => offender);
+    const aAdditionalOffenders = manager.getCreatureGroup(target);
 
     // pick the closest additional target
-    const oAdditionalTarget = aAdditionalOffenders.length > 0
-        ? aAdditionalOffenders[0]
+    const oAdditionalTarget = aAdditionalOffenders.length > 1
+        ? aAdditionalOffenders[1]
         : null;
 
     splash(manager, caster, target);

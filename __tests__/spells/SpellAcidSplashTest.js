@@ -101,11 +101,13 @@ describe('Acid Splash', function () {
         c1.dice.cheat(0.9);
         c2.dice.cheat(0.1);
         c3.dice.cheat(0.1);
+
         const r = m.castSpell('acid-splash', c1, c2, { freeCast: true });
         expect(r.reason).toBe('');
         expect(r.success).toBeTruthy();
         expect(aLog).toEqual([
-            'creature orc2 damaged by orc1: 6 DAMAGE_TYPE_ACID'
+            'creature orc2 damaged by orc1: 6 DAMAGE_TYPE_ACID',
+            'creature orc3 damaged by orc1: 6 DAMAGE_TYPE_ACID'
         ]);
     });
 });

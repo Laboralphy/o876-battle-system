@@ -16,6 +16,7 @@ const Horde = require('./Horde');
  * @property data {object}
  * @property siblings {string[]}
  * @property tag {string}
+ * @property depletionDelay {number}
  */
 
 class EffectProcessor {
@@ -91,7 +92,8 @@ class EffectProcessor {
             target: '',
             source: '',
             siblings: [],
-            tag: ''
+            tag: '',
+            depletionDelay: 0 // delays auto remove when duration reaches 0
         };
         this.invokeEffectMethod(oEffect, 'init', null, null, effectData);
         return oEffect;
@@ -185,14 +187,15 @@ class EffectProcessor {
      * change an effect duration
      * @param oEffect {RBSEffect}
      * @param nDuration {number} new duration
+     * @param [depletionDelay] {number} new depletionDelay
      */
-    setEffectDuration (oEffect, nDuration) {
+    setEffectDuration (oEffect, nDuration, depletionDelay = undefined) {
         const nPreviousEffectDuration = oEffect.duration;
         if (nPreviousEffectDuration === nDuration) {
             return;
         }
         const { target, source } = this.getEffectTargetSource(oEffect);
-        target.mutations.setEffectDuration({ effect: oEffect, duration: Math.max(0, nDuration) });
+        target.mutations.setEffectDuration({ effect: oEffect, duration: Math.max(0, nDuration), depletionDelay });
         if (nDuration <= 0) {
             this.invokeEffectMethod(oEffect, 'dispose', target, source);
             this._events.emit(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, {
@@ -220,10 +223,10 @@ class EffectProcessor {
                 )
                 .filter(eff => eff !== null)
                 .forEach(eff => {
-                    this.setEffectDuration(eff, 0);
+                    this.setEffectDuration(eff, 0, 0);
                 });
         } else {
-            this.setEffectDuration(oEffect, 0);
+            this.setEffectDuration(oEffect, 0, 0);
         }
     }
 
@@ -236,7 +239,7 @@ class EffectProcessor {
         const oSource = this._horde.getCreature(oEffect.source);
         this.invokeEffectMethod(oEffect, 'mutate', oTarget, oSource);
         const nCurrentDuration = oTarget.getters.getEffectRegistry[oEffect.id].duration;
-        oTarget.mutations.setEffectDuration({ effect: oEffect, duration: nCurrentDuration - 1 });
+        this.setEffectDuration(oEffect, nCurrentDuration - 1);
     }
 }
 

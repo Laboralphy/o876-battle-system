@@ -19,9 +19,9 @@ function init ({ property, damageTypeVulnerabilities = [], threshold = 1, useCon
  * @param property {RBSProperty}
  * @param item {RBSItem}
  * @param creature {Creature}
- * @param manager {Manager}
+ * @param effectProcessor {EffectProcessor}
  */
-function mutate ({ property, item, creature, manager }) {
+function mutate ({ manager, property, item, creature }) {
     if (creature.getters.isDead) {
         return;
     }
@@ -29,16 +29,15 @@ function mutate ({ property, item, creature, manager }) {
         (property.data.useConstitutionModifier ? creature.getters.getAbilityModifiers[CONSTS.ABILITY_CONSTITUTION] : 0);
     if (property.data.shutdown === 0) {
         if (creature.hitPoints < (property.data.threshold * creature.getters.getMaxHitPoints)) {
-            const effectProcessor = manager.effectProcessor;
-            const eHeal = effectProcessor.createEffect(CONSTS.EFFECT_HEAL, amount);
-            effectProcessor.applyEffect(eHeal, creature);
+            const eHeal = manager.effectProcessor.createEffect(CONSTS.EFFECT_HEAL, amount);
+            manager.effectProcessor.applyEffect(eHeal, creature);
         }
     } else {
         property.data.shutdown = Math.max(0, property.data.shutdown - amount);
     }
 }
 
-function damaged ({ property, damageType, amount, resisted, manager, creature, source }) {
+function damaged ({ property, damageType, amount, resisted, creature, source }) {
     if (amount > 0 && property.data.vulnerabilities.includes(damageType)) {
         property.data.shutdown += amount;
     }

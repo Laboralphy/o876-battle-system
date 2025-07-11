@@ -102,6 +102,10 @@ class Manager {
         return this._effectProcessor;
     }
 
+    get time () {
+        return this._time;
+    }
+
     /**
      * @returns {Horde}
      */
@@ -494,6 +498,9 @@ class Manager {
      * @returns {RBSEffect} instance of applied effect
      */
     applyEffect (oEffect, oTarget, duration = 0, oSource = null) {
+        if (duration > 0) {
+            oEffect.depletionDelay = this._time % this.combatManager.defaultTickCount;
+        }
         return this._effectProcessor.applyEffect(oEffect, oTarget, duration, oSource);
     }
 
@@ -558,6 +565,9 @@ class Manager {
             system: this._systemInstance,
             attack: oAttackOutcome
         }));
+        if (oAttackOutcome.hit) {
+            oAttackOutcome.applyDamages();
+        }
         return oAttackOutcome;
     }
 
@@ -650,19 +660,6 @@ class Manager {
     }
 
     /**
-     * Returns a list of creatures currently having specified creature as target during a combat
-     * This can be limited in a specified range (default : infinity)
-     * @param oCreature {Creature} Creature being attacked
-     * @param [nRange] {number} maximum range considered (default infinity)
-     * @returns {Creature[]} all creature attacking the specified creature
-     */
-    getCreatureOffenders (oCreature, nRange = Infinity) {
-        return this
-            .combatManager
-            .getTargetingCreatures(oCreature, nRange);
-    }
-
-    /**
      * Makes a creature approaching it's target by a certain distance
      * @param oCreature {Creature}
      * @param [nSpeed] {number} number of units of displacement toward target (default is creature speed)
@@ -724,13 +721,33 @@ class Manager {
     }
 
     /**
-     * Returns all creatures targeting the specified creature
+     * Returns all creatures targeting the specified creature.
      * @param oCreature {Creature}
      * @param nRange {number} maximum distance from the specified creature
      * @returns {Creature[]}
      */
     getTargetingCreatures (oCreature, nRange = Infinity) {
         return this.combatManager.getTargetingCreatures(oCreature, nRange);
+    }
+
+    /**
+     * Returns all creatures that are targeting the same creature as the one specified
+     * @param oCreature {Creature}
+     * @return {Creature[]}
+     */
+    getCreatureGroup (oCreature) {
+        if (this.combatManager.isCreatureFighting(oCreature)) {
+            const oTarget = this.getCreatureCombat(oCreature).target;
+            const aGroup = this.getTargetingCreatures(oTarget);
+            const iPrimary = aGroup.indexOf(oCreature);
+            if (iPrimary >= 0) {
+                aGroup.splice(iPrimary, 1);
+                aGroup.unshift(oCreature);
+            }
+            return aGroup;
+        } else {
+            return [oCreature];
+        }
     }
 
     //  ▗▖      ▗▖  ▗▖
@@ -979,6 +996,24 @@ class Manager {
     }
 
     /**
+     * Will remove dead effects (effects with duration <= 0 && depletionDelay <= 0)
+     */
+    processDeadEffects () {
+        this
+            ._horde
+            .activeCreatures
+            .forEach(creature => {
+                const cm = creature.mutations;
+                const cg = creature.getters;
+                cm.depleteEffects();
+                cg.getDeadEffects.forEach(effect => {
+                    cm.removeEffect({ effect });
+                });
+            });
+
+    }
+
+    /**
      * Returns the distance between two entities
      * - Creature not in combat is at defaultDistance
      * - Creature in combat is at combat.distance
@@ -1073,6 +1108,7 @@ class Manager {
             this.processEntities();
         }
         this.processCombats();
+        this.processDeadEffects();
         ++this._time;
     }
 

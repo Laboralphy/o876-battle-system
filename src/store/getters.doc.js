@@ -12,6 +12,7 @@
  * @property getClassType {string} CLASS_TYPE_*
  * @property getConditionSet {Set<string>}
  * @property getDamageMitigation {Object<string, RBSOneDamageMitigation>}}
+ * @property getDeadEffects {RBSEffect[]}
  * @property getDefensiveSlots {string[]}
  * @property getEffectRegistry {Object<string, RBSEffect>}
  * @property getEffectSet {Set<string>}

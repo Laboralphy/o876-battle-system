@@ -1393,3 +1393,122 @@ describe('normal & bonus action test', function () {
         ]);
     });
 });
+
+describe('depletionDelay', function () {
+    it('should not remove effect until depletionDelay is 0', function () {
+        const m = new Manager();
+        m.loadModule('classic');
+        m.defineModule({
+            blueprints: {
+                thisFighter: {
+                    'entityType': CONSTS.ENTITY_TYPE_ACTOR,
+                    'extends': ['class-type-fighter'],
+                    'ac': 0,
+                    'abilities': {
+                        'strength': 16,
+                        'dexterity': 12,
+                        'constitution': 16,
+                        'intelligence': 10,
+                        'wisdom': 10,
+                        'charisma': 10
+                    },
+                    'level': 5,
+                    'specie': CONSTS.SPECIE_HUMANOID,
+                    'race': CONSTS.RACE_HUMAN,
+                    'speed': 30,
+                    'equipment': ['wpn-short-sword', 'arm-breast-plate']
+                }
+            }
+        });
+        const c1 = m.createEntity('thisFighter');
+        expect(m.time).toBe(0);
+        m.process();
+        expect(m.time).toBe(1);
+        m.process();
+        expect(m.time).toBe(2);
+        const eBlind = m.createEffect(m.CONSTS.EFFECT_BLINDNESS);
+        let eAppliedBlind = m.applyEffect(eBlind, c1, 4);
+
+        expect(eAppliedBlind.duration).toBe(4);
+        expect(eAppliedBlind.depletionDelay).toBe(2);
+
+        m.process();
+        expect(m.time).toBe(3);
+
+        m.process();
+        expect(m.time).toBe(4);
+
+        m.process();
+        expect(m.time).toBe(5);
+
+        eAppliedBlind = m.getEffects(c1)[0];
+        expect(eAppliedBlind.duration).toBe(4);
+        expect(eAppliedBlind.depletionDelay).toBe(2);
+
+        m.process();
+        expect(m.time).toBe(6);
+
+        eAppliedBlind = m.getEffects(c1)[0];
+        expect(eAppliedBlind.duration).toBe(4);
+        expect(eAppliedBlind.depletionDelay).toBe(2);
+
+        m.process();
+        expect(m.time).toBe(7); // t + 1
+
+        eAppliedBlind = m.getEffects(c1)[0];
+        expect(eAppliedBlind.duration).toBe(3);
+        expect(eAppliedBlind.depletionDelay).toBe(2);
+
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+
+        eAppliedBlind = m.getEffects(c1)[0];
+        expect(eAppliedBlind.duration).toBe(3);
+        expect(eAppliedBlind.depletionDelay).toBe(2);
+
+        m.process(); // first tick of 3rd turn
+
+        eAppliedBlind = m.getEffects(c1)[0];
+        expect(eAppliedBlind.duration).toBe(2);
+        expect(eAppliedBlind.depletionDelay).toBe(2);
+
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+
+        eAppliedBlind = m.getEffects(c1)[0];
+        expect(eAppliedBlind.duration).toBe(2);
+        expect(eAppliedBlind.depletionDelay).toBe(2);
+
+        m.process(); // first tick of 4th turn
+
+        eAppliedBlind = m.getEffects(c1)[0];
+        expect(eAppliedBlind.duration).toBe(1);
+        expect(eAppliedBlind.depletionDelay).toBe(2);
+
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+        m.process();
+
+        eAppliedBlind = m.getEffects(c1)[0];
+        expect(eAppliedBlind.duration).toBe(1);
+        expect(eAppliedBlind.depletionDelay).toBe(2);
+
+        m.process(); // first tick of 5th turn
+
+        eAppliedBlind = m.getEffects(c1)[0];
+        expect(eAppliedBlind.duration).toBe(0);
+        expect(eAppliedBlind.depletionDelay).toBe(1);
+
+        m.process(); // first tick of 5th turn
+
+        expect(m.getEffects(c1)).toHaveLength(0); // effect naturally depleted
+    });
+});
