@@ -261,7 +261,6 @@ class Manager {
         const oAttacker = combat.attacker;
         const oTarget = combat.target;
         const aOffenders = this
-            .combatManager
             .getTargetingCreatures(oAttacker)
             .filter(o => o !== oTarget);
         const bCouldMultiAttack = oAttacker.getters.getPropertySet.has(CONSTS.PROPERTY_MULTI_ATTACK) && aOffenders.length > 0;
@@ -731,23 +730,19 @@ class Manager {
     }
 
     /**
-     * Returns all creatures that are targeting the same creature as the one specified
-     * @param oCreature {Creature}
+     * @param oSubject {Creature}
      * @return {Creature[]}
      */
-    getCreatureGroup (oCreature) {
-        if (this.combatManager.isCreatureFighting(oCreature)) {
-            const oTarget = this.getCreatureCombat(oCreature).target;
-            const aGroup = this.getTargetingCreatures(oTarget);
-            const iPrimary = aGroup.indexOf(oCreature);
-            if (iPrimary >= 0) {
-                aGroup.splice(iPrimary, 1);
-                aGroup.unshift(oCreature);
-            }
-            return aGroup;
-        } else {
-            return [oCreature];
-        }
+    getHostileCreatures (oSubject) {
+        return this._horde.getSubjectHostileCreatures(oSubject);
+    }
+
+    /**
+     * @param oSubject {Creature}
+     * @returns {Creature[]}
+     */
+    getFriendlyCreatures (oSubject) {
+        return this._horde.getSubjectFriendlyCreatures(oSubject);
     }
 
     //  ▗▖      ▗▖  ▗▖
@@ -1138,6 +1133,7 @@ class Manager {
 
     /**
      * @typedef RBSSpellData {object}
+     * @property [id] {string}
      * @property school {string}
      * @property level {number}
      * @property description {string}

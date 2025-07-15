@@ -134,20 +134,35 @@ function getWorstDamageTypeVsAC (aDamageTypes, oArmorClasses) {
  * @param oManager {Manager}
  * @param oCreature {Creature}
  * @param oTargetCenter {Creature}
- * @param nRange {number}
+ * @param nCount {number}
+ * @param range {number}
+ * @return {Creature[]}
  */
-function getAreaOfEffectTargets (oManager, oCreature, oTargetCenter, nRange) {
-    const aAllOffenders = oManager.combatManager.getTargetingCreatures(oCreature, nRange);
-    if (!aAllOffenders.includes(oTargetCenter) && oTargetCenter !== null) {
-        aAllOffenders.push(oTargetCenter);
+function getAreaOfEffectTargets (oManager, oCreature, oTargetCenter, range, nCount = Infinity) {
+    if (nCount === 0) {
+        return [];
     }
-    return aAllOffenders.filter(offender => {
-        if (oCreature.getCreatureVisibility(offender) !== CONSTS.CREATURE_VISIBILITY_VISIBLE) {
-            return oCreature.dice.random() >= 0.5;
-        } else {
-            return true;
-        }
-    });
+    if (nCount === 1) {
+        return [oTargetCenter];
+    }
+    --nCount;
+    // get all caster's offenders
+    // filter creatures by distance
+    const aAdditionalOffenders = oManager
+        .getHostileCreatures(oCreature)
+        .filter(creature => creature !== oTargetCenter && oManager.getCreatureDistance(oCreature, creature) <= range);
+    // pick the closest additional target
+    if (nCount >= aAdditionalOffenders.length) {
+        aAdditionalOffenders.unshift(oTargetCenter);
+        return aAdditionalOffenders;
+    }
+    const aChosen = [oTargetCenter];
+    for (let i = 0; i < nCount; ++i) {
+        const iChosen = Math.floor(oCreature.dice.random() * aAdditionalOffenders.length);
+        aChosen.push(aAdditionalOffenders[iChosen]);
+        aAdditionalOffenders.splice(iChosen, 1);
+    }
+    return aChosen;
 }
 
 module.exports = {

@@ -23,7 +23,7 @@ function getLastReturnTagOfFile (sFile) {
 function generateGetterReturnType (aPaths) {
     const aProperties = aPaths.map(sPath => {
         return TreeSync.ls(sPath)
-            .filter(f => f.name !== 'index.js')
+            .filter(f => f.name !== 'GroupMemberRegistry.js')
             .map(f => path.basename(f.name, '.js'))
             .map(f => {
                 const sFile = path.join(sPath, f) + '.js';

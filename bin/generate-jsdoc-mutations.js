@@ -31,7 +31,7 @@ function getAllParams (sFile) {
 function generateMutationReturnType (aPaths) {
     const p = aPaths.map(sPath => {
         return TreeSync.ls(sPath)
-            .filter(f => f.name !== 'index.js')
+            .filter(f => f.name !== 'GroupMemberRegistry.js')
             .map(f => path.basename(f.name, '.js'))
             .map(f => {
                 const sFile = path.join(sPath, f) + '.js';

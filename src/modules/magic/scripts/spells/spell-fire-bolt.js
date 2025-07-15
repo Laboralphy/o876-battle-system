@@ -12,7 +12,7 @@ This spell's damage increases by 1d10 when you reach 5th level (2d10), 11th leve
  * @param manager {Manager}
  * @param caster {Creature}
  * @param target {Creature}
- * @param spell {{}}
+ * @param spell {RBSSpellData}
  */
 function main ({ manager, caster, target, spell }) {
     // compute 1d10 acid damage (+1d10 at levels 5, 11, 17)

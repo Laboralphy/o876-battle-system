@@ -1,4 +1,5 @@
 const { getCantripDamageDice, castDirectDamageSpell } = require('../helper/spell-helper');
+const {getAreaOfEffectTargets} = require('../../../../libs/helpers');
 
 /*
 You hurl a bubble of acid. Choose one creature within range, or choose two creatures within range that are within 5 feet of each other.
@@ -32,18 +33,13 @@ function splash (manager, caster, target) {
  * @param manager {Manager}
  * @param caster {Creature}
  * @param target {Creature}
- * @param spellData {{}}
+ * @param spell {RBSSpellData}
  */
-function main ({ manager, caster, target }) {
+function main ({ manager, caster, target, spell }) {
     // get all caster's offenders
     // filter creatures by distance
-    const aAdditionalOffenders = manager.getCreatureGroup(target);
-
-    // pick the closest additional target
-    const oAdditionalTarget = aAdditionalOffenders.length > 1
-        ? aAdditionalOffenders[1]
-        : null;
-
+    const aAdditionalOffenders = getAreaOfEffectTargets(manager, caster, target, spell.range, 2);
+    const oAdditionalTarget = aAdditionalOffenders[1] ?? null;
     splash(manager, caster, target);
     if (oAdditionalTarget) {
         splash(manager, caster, oAdditionalTarget);

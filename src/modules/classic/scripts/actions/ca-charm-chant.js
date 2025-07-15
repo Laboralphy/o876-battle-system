@@ -13,7 +13,7 @@ const {getAreaOfEffectTargets} = require('../../../../libs/helpers');
  */
 function main ({ manager, action, creature, target }) {
     const { range, duration = creature.getters.getVariables['DEFAULT_AILMENT_DURATION'] } = action;
-    getAreaOfEffectTargets(manager, creature, target, range).forEach(offender => {
+    getAreaOfEffectTargets(manager, creature, target, Infinity).forEach(offender => {
         const { success } = offender.rollSavingThrow(
             manager.CONSTS.ABILITY_WISDOM,
             creature.getters.getSpellDifficultyClass[manager.CONSTS.ABILITY_CHARISMA],

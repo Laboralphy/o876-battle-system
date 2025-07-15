@@ -66,12 +66,17 @@ describe('Acid Splash', function () {
         const c3 = m.createEntity('c-orc', 'orc3');
         m.startCombat(c1, c2);
         m.startCombat(c3, c1);
+        m.combatManager.getCombat(c1).approachTarget(30);
+        m.combatManager.getCombat(c3).approachTarget(30);
         c1.dice.cheat(0.9);
         c2.dice.cheat(0.1);
         c3.dice.cheat(0.1);
         const r = m.castSpell('acid-splash', c1, c2, { freeCast: true });
         expect(r.reason).toBe('');
         expect(r.success).toBeTruthy();
+        expect(m.getCreatureDistance(c1, c3)).toBe(5);
+        expect(m.getCreatureDistance(c1, c2)).toBe(5);
+        expect(m.getHostileCreatures(c1)).toEqual([]);
         expect(aLog).toEqual([
             'creature orc2 damaged by orc1: 6 DAMAGE_TYPE_ACID',
             'creature orc3 damaged by orc1: 6 DAMAGE_TYPE_ACID'
@@ -90,6 +95,37 @@ describe('Acid Splash', function () {
         const c1 = m.createEntity('c-orc', 'orc1');
         const c2 = m.createEntity('c-orc', 'orc2');
         const c3 = m.createEntity('c-orc', 'orc3');
+        m.horde.setCreatureLocation(c1, 'r1');
+        m.horde.setCreatureLocation(c2, 'r1');
+        m.horde.setCreatureLocation(c3, 'r1');
+        m.horde.factionManager.defineFactions([
+            {
+                id: 'player',
+                relations: {
+                    'hostile': -1
+                }
+            },
+            {
+                id: 'hostile',
+                relations: {
+                    'player': -1
+                }
+            }
+        ]);
+        expect(m.horde.factionManager.getFaction('player')).not.toBeNull();
+        expect(m.horde.factionManager.getFaction('hostile')).not.toBeNull();
+
+
+        m.horde.setCreatureFaction(c1, 'player');
+        expect(m.horde.factionManager._gmr.getGroupMembers('player')).toEqual(['orc1']);
+        expect(m.horde.getCreatureFaction(c1).id).toBe('player');
+
+        m.horde.setCreatureFaction(c2, 'hostile');
+        m.horde.setCreatureFaction(c3, 'hostile');
+
+        expect(m.getHostileCreatures(c1).indexOf(c2)).toBeGreaterThanOrEqual(0);
+        expect(m.getHostileCreatures(c1).indexOf(c3)).toBeGreaterThanOrEqual(0);
+
         m.startCombat(c1, c2);
         m.startCombat(c3, c1);
         //expect(m.getCreatureDistance(c1, c2)).toBe(50);

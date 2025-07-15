@@ -33,7 +33,7 @@ describe('forEach', function () {
         h.linkCreature(c2);
         h.linkCreature(c3);
         let n = 0;
-        h.forEach(() => {
+        h.creatures.forEach(() => {
             ++n;
         });
         expect(n).toBe(3);
@@ -41,7 +41,7 @@ describe('forEach', function () {
     it('should iterate 0 times when not adding creatures', function () {
         const h = new Horde();
         let n = 0;
-        h.forEach(() => {
+        h.creatures.forEach(() => {
             ++n;
         });
         expect(n).toBe(0);

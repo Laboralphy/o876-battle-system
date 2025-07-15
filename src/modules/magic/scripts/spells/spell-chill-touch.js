@@ -15,7 +15,7 @@ This spell’s damage increases by 1d8 when you reach 5th level (2d8), 11th leve
  * @param manager {Manager}
  * @param caster {Creature}
  * @param target {Creature}
- * @param spell {{}}
+ * @param spell {RBSSpellData}
  */
 function main ({ manager, caster, target, spell }) {
     // compute 1d8 withering damage (+1d8 at levels 5, 11, 17)
