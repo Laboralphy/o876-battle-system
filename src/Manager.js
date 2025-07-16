@@ -1176,7 +1176,6 @@ class Manager {
                 reason: CONSTS.ACTION_FAILURE_REASON_NOT_READY
             };
         }
-
         // force target to caster if spell is self cast only
         target = sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_SELF
             ? caster

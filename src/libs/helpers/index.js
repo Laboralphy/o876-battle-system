@@ -151,13 +151,12 @@ function getAreaOfEffectTargets (oManager, oCreature, oTargetCenter, range, nCou
     const aAdditionalOffenders = oManager
         .getHostileCreatures(oCreature)
         .filter(creature => creature !== oTargetCenter && oManager.getCreatureDistance(oCreature, creature) <= range);
-    // pick the closest additional target
     if (nCount >= aAdditionalOffenders.length) {
         aAdditionalOffenders.unshift(oTargetCenter);
         return aAdditionalOffenders;
     }
     const aChosen = [oTargetCenter];
-    for (let i = 0; i < nCount; ++i) {
+    for (let i = 0; i < Math.min(nCount, aAdditionalOffenders.length); ++i) {
         const iChosen = Math.floor(oCreature.dice.random() * aAdditionalOffenders.length);
         aChosen.push(aAdditionalOffenders[iChosen]);
         aAdditionalOffenders.splice(iChosen, 1);

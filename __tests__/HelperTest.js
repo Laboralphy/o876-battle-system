@@ -1,4 +1,5 @@
 const { getBestDamageTypeVsMitigation, getWorstDamageTypeVsAC } = require('../src/libs/helpers');
+const Manager = require('../src/Manager');
 const CONSTS = require('../src/consts');
 
 describe('getBestDamageVsMitigation', function () {
