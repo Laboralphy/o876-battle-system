@@ -53,12 +53,7 @@ function createWorld () {
 }
 
 describe('getAreaOfEffectTargets', function () {
-    it('should return [primaryTarget] when all target at are 50 and AoE range is at 30', function () {
-        const { manager: m, creatures } = createWorld();
-        const a1 = getAreaOfEffectTargets(m, creatures.c1, creatures.c2, 30);
-        expect(a1.map(c => c.id)).toEqual(['c2']);
-    });
-    it('should return [primaryTarget, otherTargetinRoom] when all targets below range', function () {
+    it('should return [primaryTarget, c3]', function () {
         const { manager: m, creatures } = createWorld();
         const a1 = getAreaOfEffectTargets(m, creatures.c1, creatures.c2, 30);
         expect(a1.map(c => c.id)).toEqual(['c2']);

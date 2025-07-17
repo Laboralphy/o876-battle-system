@@ -1198,6 +1198,10 @@ class Manager {
         }
         const nDistance = this.getCreatureDistance(caster, target);
         if (sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_HOSTILE) {
+            if (!this.combatManager.isCreatureFighting(caster, target)) {
+                this.combatManager.endCombat(caster);
+                this.combatManager.startCombat(caster, target);
+            }
             if (sd.range < nDistance) {
                 // spell casting out of range
                 return {

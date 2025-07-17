@@ -55,6 +55,7 @@ describe('Acid Splash', function () {
 
     it('should hit more than one creature when they are fighting caster', function () {
         const m = new Manager();
+        m.combatManager.defaultDistance = 50;
         const aLog = [];
         m.events.on(CONSTS.EVENT_CREATURE_DAMAGED, (evt) => {
             aLog.push(`creature ${evt.creature.id} damaged by ${evt.source.id}: ${evt.amount} ${evt.damageType}`);
@@ -74,8 +75,8 @@ describe('Acid Splash', function () {
         const r = m.castSpell('acid-splash', c1, c2, { freeCast: true });
         expect(r.reason).toBe('');
         expect(r.success).toBeTruthy();
-        expect(m.getCreatureDistance(c1, c3)).toBe(5);
-        expect(m.getCreatureDistance(c1, c2)).toBe(5);
+        expect(m.getCreatureDistance(c1, c3)).toBe(20);
+        expect(m.getCreatureDistance(c1, c2)).toBe(20);
         expect(m.getHostileCreatures(c1)).toEqual([]);
         expect(aLog).toEqual([
             'creature orc2 damaged by orc1: 6 DAMAGE_TYPE_ACID',

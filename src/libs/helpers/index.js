@@ -139,6 +139,9 @@ function getWorstDamageTypeVsAC (aDamageTypes, oArmorClasses) {
  * @return {Creature[]}
  */
 function getAreaOfEffectTargets (oManager, oCreature, oTargetCenter, range, nCount = Infinity) {
+    if (typeof nCount === 'string') {
+        nCount = oCreature.dice.roll(nCount);
+    }
     if (nCount === 0) {
         return [];
     }
