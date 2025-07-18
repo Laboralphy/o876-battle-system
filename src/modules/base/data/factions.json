@@ -1,0 +1,47 @@
+{
+  "player": {
+    "parent": "",
+    "relations": {
+      "hostile": -1,
+      "commoner": 0,
+      "guard": 1,
+      "merchant": 0
+    }
+  },
+  "hostile": {
+    "parent": "",
+    "relations": {
+      "player": -1,
+      "commoner": -1,
+      "guard": -1,
+      "merchant": -1
+    }
+  },
+  "commoner": {
+    "parent": "",
+    "relations": {
+      "player": 0,
+      "hostile": -1,
+      "guard": 0,
+      "merchant": 0
+    }
+  },
+  "guard": {
+    "parent": "",
+    "relations": {
+      "player": 1,
+      "hostile": 0,
+      "commoner": 1,
+      "merchant": 1
+    }
+  },
+  "merchant": {
+    "parent": "",
+    "relations": {
+      "player": 0,
+      "hostile": -1,
+      "commoner": 0,
+      "guard": 0
+    }
+  }
+}

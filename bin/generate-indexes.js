@@ -89,7 +89,7 @@ function renderSections (oSections) {
 }
 
 /**
- * This function build an `GroupMemberRegistry.js` file requiring all other files in directory
+ * This function build an `index.js` file requiring all other files in directory
  * @param sPath
  * @param sType
  * @param sPrefix
@@ -98,7 +98,7 @@ function buildRequireIndex (sPath, sType, sPrefix) {
     // all files in directory
     const aRequires = TreeSync
         .tree(sPath)
-        .filter(sFile => !sFile.endsWith('GroupMemberRegistry.js') && path.extname(sFile).match(/\.js(on)?$/));
+        .filter(sFile => !sFile.endsWith('index.js') && path.extname(sFile).match(/\.js(on)?$/));
     const d = new Date();
     const aOutput = [
         '// AUTOMATIC GENERATION : DO NOT MODIFY !',

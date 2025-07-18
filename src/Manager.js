@@ -140,7 +140,6 @@ class Manager {
         return this._combatManager;
     }
 
-
     // ▗▄▄▖             ▗▖     ▗▖            ▗▖ ▄▖
     // ▐▙▄ ▐▌▐▌▗▛▜▖▐▛▜▖▝▜▛▘    ▐▙▄  ▀▜▖▐▛▜▖ ▄▟▌ ▐▌ ▗▛▜▖▐▛▜▖▗▛▀▘
     // ▐▌  ▝▙▟▘▐▛▀▘▐▌▐▌ ▐▌     ▐▌▐▌▗▛▜▌▐▌▐▌▐▌▐▌ ▐▌ ▐▛▀▘▐▌   ▀▜▖
@@ -300,6 +299,27 @@ class Manager {
         };
     }
 
+
+    // ▗▄▄▖         ▗▖  ▗▖
+    // ▐▙▄  ▀▜▖▗▛▀ ▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖▗▛▀▘
+    // ▐▌  ▗▛▜▌▐▌   ▐▌  ▐▌ ▐▌▐▌▐▌▐▌ ▀▜▖
+    // ▝▘   ▀▀▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▘▝▘▝▀▀
+
+    /**
+     * Define factions
+     * @param oFactions
+     */
+    defineFactions (oFactions) {
+        const aFactions = Object
+            .entries(oFactions)
+            .map(([idFaction, f]) => {
+                return {
+                    id: idFaction,
+                    ...f
+                };
+            });
+        this.horde.factionManager.defineFactions(aFactions);
+    }
 
     // ▗▄▄▖         ▄▖      ▗▖  ▗▖
     // ▐▙▄ ▐▌▐▌▗▛▜▖ ▐▌ ▐▌▐▌▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖

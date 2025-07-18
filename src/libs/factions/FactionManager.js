@@ -24,6 +24,23 @@ class FactionManager {
         }
     }
 
+    defineFactionRelations (idFaction, oRelations) {
+        /**
+         * @var {Faction}
+         */
+        const oFaction = this.getFaction(idFaction);
+        if (!oFaction) {
+            console.error(idFaction, 'does not exist');
+            throw 'wtf';
+        }
+        Object
+            .entries(oRelations)
+            .forEach(([idOtherFaction, nValue]) => {
+                const oOtherFaction = this.getFaction(idOtherFaction);
+                oFaction.setFactionDisposition(oOtherFaction, nValue);
+            });
+    }
+
     /**
      * @typedef FactionDefinition {object}
      * @property id {string}
@@ -40,20 +57,7 @@ class FactionManager {
         });
         aDep.forEach(d => {
             const idThisFaction = d.id;
-            /**
-             * @var {Faction}
-             */
-            const oThisFaction = this.getFaction(idThisFaction);
-            if (!oThisFaction) {
-                console.error(idThisFaction, 'does not exist');
-                throw 'wtf';
-            }
-            Object
-                .entries(d.relations)
-                .forEach(([idOtherFaction, nValue]) => {
-                    const oOtherFaction = this.getFaction(idOtherFaction);
-                    oThisFaction.setFactionDisposition(oOtherFaction, nValue);
-                });
+            this.defineFactionRelations(idThisFaction, d.relations);
         });
     }
 
