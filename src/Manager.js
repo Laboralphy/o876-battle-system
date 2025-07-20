@@ -4,6 +4,7 @@ const Horde = require('./Horde');
 const CombatManager = require('./libs/combat/CombatManager');
 const CombatActionFailure = require('./libs/combat/CombatActionFailure');
 const CombatActionSuccess = require('./libs/combat/CombatActionSuccess');
+const CombatActionTaken = require('./libs/combat/CombatActionTaken');
 const Events = require('events');
 const SCHEMAS = require('./schemas');
 const SchemaValidator = require('./SchemaValidator');
@@ -238,11 +239,12 @@ class Manager {
         const combat = evt.combat;
         const attacker = combat.attacker;
         const target = combat.target;
+        const parameters = evt.parameters;
         // combat.selectCurrentAction(evt.action.id);
         const action = evt.action;
         // Lancement de l'action
         if (action) {
-            this.executeAction(attacker, action, target);
+            this.executeAction(attacker, action, target, parameters);
         }
     }
 
@@ -319,6 +321,10 @@ class Manager {
                 };
             });
         this.horde.factionManager.defineFactions(aFactions);
+    }
+
+    initFactions () {
+        this.defineFactions(this.data['FACTIONS']);
     }
 
     // ▗▄▄▖         ▄▖      ▗▖  ▗▖
@@ -775,13 +781,15 @@ class Manager {
      * @param oCreature {Creature}
      * @param oAction {RBSAction}
      * @param oTarget {Creature|null}
+     * @param parameters {{}} action parameters
      */
-    executeAction (oCreature, oAction, oTarget = null) {
+    executeAction (oCreature, oAction, oTarget = null, parameters = {}) {
         const oActionEvent = new CreatureActionEvent({
             system: this._systemInstance,
             creature: oCreature,
             target: oTarget,
-            action: oAction
+            action: oAction,
+            parameters
         });
         this._events.emit(CONSTS.EVENT_CREATURE_ACTION, oActionEvent);
         if (oActionEvent.isScriptEnabled) {
@@ -789,7 +797,8 @@ class Manager {
                 manager: this,
                 creature: oCreature,
                 target: oTarget,
-                action: oAction
+                action: oAction,
+                parameters
             });
         }
         const bIsActionCoolingDown = oAction.cooldown > 0;
@@ -838,7 +847,6 @@ class Manager {
         }
     }
 
-
     // ▗▖ ▄      ▗▖     ▄▖
     // ▐█▟█▗▛▜▖ ▄▟▌▐▌▐▌ ▐▌ ▗▛▜▖▗▛▀▘
     // ▐▌▘█▐▌▐▌▐▌▐▌▐▌▐▌ ▐▌ ▐▛▀▘ ▀▜▖
@@ -859,7 +867,11 @@ class Manager {
         Object
             .entries(scripts)
             .forEach(([id, script]) => {
-                this._scripts[id] = script;
+                if (id === 'init') {
+                    script({manager: this});
+                } else {
+                    this._scripts[id] = script;
+                }
             });
         this._entityBuilder.addData(data);
     }
@@ -869,7 +881,7 @@ class Manager {
      * @param sModuleId {string}
      */
     loadModule (sModuleId) {
-        this.defineModule(require(path.resolve(__dirname, 'modules', sModuleId)));
+        return this.defineModule(require(path.resolve(__dirname, 'modules', sModuleId)));
     }
 
 
@@ -1168,7 +1180,10 @@ class Manager {
      */
     getSpellData (sSpellId) {
         const sSpellDataConstName = 'SPELL_' + sSpellId.toUpperCase().replace(/-/g, '_');
-        return this.data['SPELLS'][sSpellDataConstName];
+        return {
+            id: sSpellId,
+            ...this.data['SPELLS'][sSpellDataConstName]
+        };
     }
 
     /**
@@ -1218,9 +1233,11 @@ class Manager {
         }
         const nDistance = this.getCreatureDistance(caster, target);
         if (sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_HOSTILE) {
-            if (!this.combatManager.isCreatureFighting(caster, target)) {
-                this.combatManager.endCombat(caster);
-                this.combatManager.startCombat(caster, target);
+            if (this.combatManager.isCreatureFighting(caster)) {
+                this
+                    .combatManager
+                    .getCombat(caster)
+                    .pause(this.combatManager.defaultTickCount);
             }
             if (sd.range < nDistance) {
                 // spell casting out of range
@@ -1234,10 +1251,7 @@ class Manager {
             manager: this,
             caster,
             target,
-            spell: {
-                id: sSpellId,
-                ...this.getSpellData(sSpellId)
-            },
+            spell: this.getSpellData(sSpellId),
             ...parameters
         });
         if (sd.hostile && !this.combatManager.isCreatureFighting(target)) {

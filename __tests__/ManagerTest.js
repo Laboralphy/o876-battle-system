@@ -1162,8 +1162,14 @@ describe('normal & bonus action test', function () {
             const oCombat = m.startCombat(c1, c2);
 
             expect(oCombat.currentAction).toBeNull();
+            expect(oCombat.distance).toBe(50);
+            expect(oCombat.tick).toBe(0);
 
             m.process(); // t0
+
+            expect(oCombat.distance).toBe(20);
+            expect(c1.getters.getActions['na1']).toBeDefined();
+            expect(c1.getters.getActions['na1'].range).toBe(500);
 
             expect(oCombat.currentAction).not.toBeNull();
             expect(oCombat.currentAction.id).toBe('na1');
@@ -1195,6 +1201,7 @@ describe('normal & bonus action test', function () {
                 script: 'normal-action-1',
                 bonus: false
             });
+            expect(oCombat.currentAction).not.toBeNull(); // now this is normal-action-2
             expect(oCombat.currentAction.id).toBe('na2'); // now this is normal-action-2
         });
         it('should not run several bonus action', function () {

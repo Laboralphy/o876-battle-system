@@ -53,6 +53,13 @@ class Combat {
          * @private
          */
         this._currentAction = null;
+
+        /**
+         * Number of ticks before resuming combat
+         * @type {number}
+         * @private
+         */
+        this._pauseTick = 0; // while > 0 don't do anything
     }
 
     get id () {
@@ -179,20 +186,24 @@ class Combat {
         return this._nextAction?.action ?? null;
     }
 
+    pause (nTicks) {
+        this._pauseTick = nTicks;
+    }
+
     /**
      *
-     * @param idAction {string}
+     * @param action {string|RBSAction}
      * @param parameters {{}}
      * @returns {CombatActionOutcome}
      */
-    selectAction (idAction, parameters = {}) {
-        if (idAction === '') {
+    selectAction (action, parameters = {}) {
+        if (action === '') {
             this._currentAction = null;
             return new CombatActionSuccess();
         }
         const oAction = new CombatActionTaken({
             creature: this.attacker,
-            action: idAction,
+            action: action,
             target: this.target,
             ...parameters
         });
@@ -250,6 +261,9 @@ class Combat {
      * Advance one tick
      */
     nextTick () {
+        if (this._pauseTick > 0) {
+            --this._pauseTick;
+        }
         ++this._tick;
         const ttc = this._tickCount;
         if (this._tick >= ttc) {
@@ -357,32 +371,39 @@ class Combat {
     }
 
     advance () {
-        const bHasMoved = false;
-        if (this._tick === 0) {
-            this.selectMostSuitableAction(); // this will select current action for this turn
-            // can be attack with weapon, or casting spell, or using spell like ability
-            // Start of turn
-            // attack-types planning
-            this._attackerState.computePlan(this._tickCount, true);
-            // if target is in weapon range
-            if (!this.isTargetInRange()) {
-                this.approachTarget();
+        const bInitialTick = this._tick === 0;
+        let bDiscardCurrentAction = true;
+        if (this._pauseTick <= 0) {
+            // combat is not in pause
+            if (bInitialTick) {
+                this.selectMostSuitableAction(); // this will select current action for this turn
+                // can be attack with weapon, or casting spell, or using spell like ability
+                // Start of turn
+                // attack-types planning
+                this._attackerState.computePlan(this._tickCount, true);
+                // if target is in weapon range
+                if (!this.isTargetInRange()) {
+                    this.approachTarget();
+                }
             }
-        }
-        if (this.isTargetInRange()) {
-            const outcome = this.playFighterAction();
-            if (outcome.failure && outcome.reason !== CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK) {
-                this._events.emit(CONSTS.EVENT_COMBAT_ACTION_FAILURE, {
-                    ...this.eventDefaultPayload,
-                    reason: outcome.reason
-                });
+            if (this.isTargetInRange()) {
+                const outcome = this.playFighterAction();
+                if (outcome.failure && outcome.reason === CONSTS.ACTION_FAILURE_REASON_RANGE) {
+                    // do not discard current action if action did not success because of range
+                    bDiscardCurrentAction = false;
+                } else if (outcome.failure && outcome.reason !== CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK) {
+                    this._events.emit(CONSTS.EVENT_COMBAT_ACTION_FAILURE, {
+                        ...this.eventDefaultPayload,
+                        reason: outcome.reason
+                    });
+                }
             }
         }
         this._events.emit(CONSTS.EVENT_COMBAT_TICK_END, {
             ...this.eventDefaultPayload
         });
         this.nextTick();
-        if (this._tick === 0) {
+        if (this._pauseTick <= 0 && this._tick === 0 && bDiscardCurrentAction) {
             // start of next turn
             this._currentAction = this._nextAction;
             this._nextAction = null;
