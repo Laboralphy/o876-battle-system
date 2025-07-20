@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-20T15:51:06.582Z
+// Date : 2025-07-20T22:44:29.029Z
 // List of files in ./src/modules/base/data
 
 module.exports = {

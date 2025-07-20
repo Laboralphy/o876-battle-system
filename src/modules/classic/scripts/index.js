@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-20T15:51:06.815Z
+// Date : 2025-07-20T22:44:29.262Z
 // List of files in ./src/modules/classic/scripts
 
 module.exports = {
@@ -23,7 +23,6 @@ module.exports = {
     'sb-ffs-duelling-weapon-dmg-bonus': require('./on-attack/sb-ffs-duelling-weapon-dmg-bonus.js'),
     'sb-ffs-great-weapon-second-chance': require('./on-attack/sb-ffs-great-weapon-second-chance.js'),
     'sa-elemental-aoe': require('./spells/sa-elemental-aoe.js'),
-    'spell-dispel': require('./spells/spell-dispel.js'),
     'thinker-succubus': require('./thinkers/thinker-succubus.js'),
     'thinker-vampire': require('./thinkers/thinker-vampire.js')
 };

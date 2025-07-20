@@ -1196,7 +1196,9 @@ class Manager {
      */
     castSpell (sSpellId, caster, target = null, parameters = {}) {
         const {
-            freeCast = false
+            freeCast = false,
+            grenade = false,
+            potion = false
         } = parameters;
         const sd = this.getSpellData(sSpellId);
         if (!sd) {
@@ -1217,19 +1219,21 @@ class Manager {
             : (target ?? caster);
 
         const cc = caster.getters.getCapabilitySet;
-        if (!cc.has(CONSTS.CAPABILITY_CAST_SELF) && target === caster) {
-            // Cannot cast spell because targeting self is disabled at the time
-            return {
-                success: false,
-                reason: CONSTS.ACTION_FAILURE_REASON_CAPABILITY
-            };
-        }
-        if (!cc.has(CONSTS.CAPABILITY_CAST_TARGET) && target !== caster) {
-            // Cannot cast spell because targeting a creature is disabled at the time
-            return {
-                success: false,
-                reason: CONSTS.ACTION_FAILURE_REASON_CAPABILITY
-            };
+        if (!potion && !grenade) {
+            if (!cc.has(CONSTS.CAPABILITY_CAST_SELF) && target === caster) {
+                // Cannot cast spell because targeting self is disabled at the time
+                return {
+                    success: false,
+                    reason: CONSTS.ACTION_FAILURE_REASON_CAPABILITY
+                };
+            }
+            if (!cc.has(CONSTS.CAPABILITY_CAST_TARGET) && target !== caster) {
+                // Cannot cast spell because targeting a creature is disabled at the time
+                return {
+                    success: false,
+                    reason: CONSTS.ACTION_FAILURE_REASON_CAPABILITY
+                };
+            }
         }
         const nDistance = this.getCreatureDistance(caster, target);
         if (sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_HOSTILE) {
