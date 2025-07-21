@@ -126,5 +126,4 @@ describe('Acid Splash', function () {
             'creature orc2 damaged by orc1: 6 DAMAGE_TYPE_ACID'
         ]);
     });
-
 });

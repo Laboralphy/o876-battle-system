@@ -75,6 +75,7 @@ class Manager {
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_DISPOSED, evt => this._effectDisposed(evt));
         this.defineModule(baseModule);
         this._evolution = null;
+        this._factionsInitialized = false;
     }
 
     get CONSTS () {
@@ -324,7 +325,18 @@ class Manager {
     }
 
     initFactions () {
-        this.defineFactions(this.data['FACTIONS']);
+        if (!this._factionsInitialized) {
+            this.defineFactions(this.data['FACTIONS']);
+            this._factionsInitialized = true;
+        }
+    }
+
+    getCreatureFaction (oCreature) {
+        return this._horde.getCreatureFaction(oCreature.id);
+    }
+
+    setCreatureFaction (oCreature, idFaction) {
+        this._horde.setCreatureFaction(oCreature.id, idFaction);
     }
 
     // ▗▄▄▖         ▄▖      ▗▖  ▗▖
@@ -1251,6 +1263,9 @@ class Manager {
                 };
             }
         }
+        if (sd.hostile && !this.combatManager.isCreatureFighting(target)) {
+            this.startCombat(caster, target);
+        }
         this.runScript(sd.script, {
             manager: this,
             caster,
@@ -1258,9 +1273,6 @@ class Manager {
             spell: this.getSpellData(sSpellId),
             ...parameters
         });
-        if (sd.hostile && !this.combatManager.isCreatureFighting(target)) {
-            this.startCombat(caster, target);
-        }
         return {
             success: true,
             reason: ''
