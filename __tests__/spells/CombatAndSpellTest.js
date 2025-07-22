@@ -3,6 +3,7 @@ const CONSTS = require('../../src/consts');
 
 function getNewManager () {
     const m = new Manager();
+    m.combatManager.defaultDistance = 50;
     m.loadModule('classic');
     m.loadModule('magic');
     m.initFactions();
@@ -26,8 +27,60 @@ function getNewManager () {
 }
 
 describe('should initiate combat when casting firebolt', function () {
-    const { manager: m, creatures: { c1, c2, c3 }} = getNewManager();
-    m.castSpell('acid-splash', c1, c2);
-    m.process();
-
+    it ('fire-bolt should be considered as hostile', function () {
+        const { manager: m, creatures: { c1, c2, c3 }} = getNewManager();
+        const oSpellData = m.getSpellData('fire-bolt');
+        expect(oSpellData.hostile).toBeTruthy();
+    });
+    it ('should initiate combat when casting firebolt', function () {
+        const { manager: m, creatures: { c1, c2, c3 }} = getNewManager();
+        c1.dice.cheat(0.99);
+        c2.dice.cheat(0.1);
+        m.doAction(c1, 'fire-bolt', c2);
+        m.process();
+        // c1 should be in combat targetting c2
+        expect(m.combatManager.isCreatureFighting(c1, c2)).toBeTruthy();
+    });
+    it ('spell casting should occurs at turn 1 tick 0', function () {
+        const { manager: m, creatures: { c1, c2, c3 }} = getNewManager();
+        const aLog = [];
+        m.events.on(CONSTS.EVENT_CREATURE_ACTION, (evt) => {
+            const { creature, target, action } = evt;
+            aLog.push({
+                event: CONSTS.EVENT_CREATURE_ACTION,
+                creature: creature.id,
+                target: target.id,
+                spell: action.parameters.spell.id
+            });
+        });
+        const r = m.doAction(c1, 'fire-bolt', c2);
+        expect(r.success).toBeTruthy();
+        const oCombat = m.getCreatureCombat(c1);
+        // current action should be cast spell fire bol
+        expect(oCombat).toBeDefined();
+        expect(oCombat.currentAction).not.toBeNull();
+        expect(oCombat.currentAction.id).toBe('cast-spell');
+        expect(oCombat.currentAction.range).toBe(120);
+        expect(oCombat.currentAction.parameters?.spell?.id).toBe('fire-bolt');
+        // should not cast spell yet
+        expect(aLog.length).toBe(0);
+        m.process();
+        expect(aLog.length).toBe(0);
+        expect(oCombat.tick).toBe(1);
+        m.process();
+        expect(oCombat.tick).toBe(2);
+        m.process();
+        expect(oCombat.tick).toBe(3);
+        m.process();
+        expect(oCombat.tick).toBe(4);
+        m.process();
+        expect(oCombat.tick).toBe(5);
+        expect(aLog.length).toBe(0);
+        m.process();
+        // should have cast spell when new turn
+        expect(aLog.length).toBe(1);
+        expect(oCombat.turn).toBe(1);
+        expect(oCombat.tick).toBe(0);
+        console.log(aLog);
+    });
 });

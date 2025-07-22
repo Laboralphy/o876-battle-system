@@ -14,6 +14,8 @@ const AttackOutcome = require('./AttackOutcome');
 const CONSTS = require('./consts');
 const TAG_SPELL_GROUP = 'SPELL_GROUP::';
 
+const SPECIAL_ACTION_CAST_SPELL = 'cast-spell';
+
 const { aggregateModifiers } = require('./libs/aggregator');
 const PropertyBuilder = require('./PropertyBuilder');
 const baseModule = require('./modules/base');
@@ -817,7 +819,35 @@ class Manager {
         if (bIsActionCoolingDown) {
             this._horde.setCreatureActive(oCreature);
         }
-        oCreature.mutations.useAction({ action: oAction.id });
+    }
+
+    _createSpellAction (oCreature, sSpell, oTarget = null) {
+        if (oTarget === null) {
+            oTarget = oCreature;
+        }
+        const oSpellData = this.getSpellData(sSpell);
+        return {
+            id: SPECIAL_ACTION_CAST_SPELL,
+            requirements: null,
+            limited: false,
+            attackType: CONSTS.ATTACK_TYPE_HOMING,
+            cooldown: 0,
+            charges: Infinity,
+            recharging: false,
+            range: oSpellData.range,
+            script: () => this.runScript(oSpellData.script, {
+                manager: this,
+                caster: oCreature,
+                target: oTarget,
+                spell: oSpellData
+            }),
+            parameters: {
+                spell: oSpellData
+            },
+            ready: true,
+            bonus: false,
+            hostile: oSpellData.hostile
+        };
     }
 
     /**
@@ -830,30 +860,38 @@ class Manager {
     doAction (oCreature, sAction, oTarget = null) {
         // check if creature is in combat
         const oCombat = this.combatManager.getCombat(oCreature);
+        const bIsSpell = this.getSpellData(sAction);
         // if in combat, and same target as combat target, then use combat action mechanism
         if (oCombat) {
+            const oAction = bIsSpell
+                ? this._createSpellAction(oCreature, sAction, oTarget)
+                : sAction;
             if (oTarget === null || oCombat.target === oTarget) {
                 // no target or same target in combat : use combat action mechanism
-                return oCombat.selectAction(sAction);
+                return oCombat.selectAction(oAction);
             } else {
                 // different target, disengage from combat
                 const combat = this.combatManager.startCombat(oCreature, oTarget);
-                return combat.selectAction(sAction);
+                return combat.selectAction(oAction);
             }
         } else {
-            const oAction = oCreature.getters.getActions[sAction];
+            const oAction = bIsSpell
+                ? this._createSpellAction(oCreature, sAction, oTarget)
+                : oCreature.getters.getActions[sAction];
             // Check if action can be cast
             if (!oAction.ready) {
                 // Action fails if not ready
                 return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_NOT_READY);
+            } else {
             }
             if (oAction.hostile) {
                 // Hostile action are only cast during combat
                 const combat = this.combatManager.startCombat(oCreature, oTarget);
-                return combat.selectAction(sAction);
+                return combat.selectAction(oAction);
             } else {
                 // non hostile action : go ahead
                 this.executeAction(oCreature, oAction, oTarget);
+                oCreature.mutations.useAction({ idAction: oAction.id });
                 return new CombatActionSuccess();
             }
         }
@@ -1124,14 +1162,16 @@ class Manager {
 
     /**
      * Runs a registered script
-     * @param sScript {string}
+     * @param script {string|function}
      * @param params {{}}
      */
-    runScript (sScript, ...params) {
-        if (sScript in this._scripts) {
-            this._scripts[sScript](...params);
+    runScript (script, ...params) {
+        if (typeof script === 'function') {
+            script(...params);
+        } else if (script in this._scripts) {
+            this._scripts[script](...params);
         } else {
-            throw new Error(`script ${sScript} not found.`);
+            throw new Error(`script ${script} not found.`);
         }
     }
 
@@ -1192,9 +1232,17 @@ class Manager {
      */
     getSpellData (sSpellId) {
         const sSpellDataConstName = 'SPELL_' + sSpellId.toUpperCase().replace(/-/g, '_');
+        const oSpellDataRegistry = this.data['SPELLS'];
+        if (!oSpellDataRegistry) {
+            return null;
+        }
+        const oSpellData = this.data['SPELLS'][sSpellDataConstName];
+        if (!oSpellData) {
+            return null;
+        }
         return {
             id: sSpellId,
-            ...this.data['SPELLS'][sSpellDataConstName]
+            ...oSpellData
         };
     }
 
@@ -1249,12 +1297,6 @@ class Manager {
         }
         const nDistance = this.getCreatureDistance(caster, target);
         if (sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_HOSTILE) {
-            if (this.combatManager.isCreatureFighting(caster)) {
-                this
-                    .combatManager
-                    .getCombat(caster)
-                    .pause(this.combatManager.defaultTickCount);
-            }
             if (sd.range < nDistance) {
                 // spell casting out of range
                 return {

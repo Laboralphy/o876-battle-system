@@ -17,7 +17,5 @@ module.exports = ({ state, getters }, { action: idAction }) => {
         } else {
             return false;
         }
-    } else {
-        throw new Error(`Unknown action ${idAction}`);
     }
 };

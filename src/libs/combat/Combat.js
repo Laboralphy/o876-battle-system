@@ -376,7 +376,13 @@ class Combat {
         if (this._pauseTick <= 0) {
             // combat is not in pause
             if (bInitialTick) {
-                this.selectMostSuitableAction(); // this will select current action for this turn
+                if (!this._currentAction) {
+                    this.selectMostSuitableAction(); // this will select current action for this turn
+                }
+                this._events.emit(CONSTS.EVENT_COMBAT_TURN, {
+                    ...this.eventDefaultPayload,
+                    action: action => this.selectAction(action)
+                });
                 // can be attack with weapon, or casting spell, or using spell like ability
                 // Start of turn
                 // attack-types planning
@@ -508,10 +514,6 @@ class Combat {
             ? aAvailableActions[Math.floor(attacker.dice.random() * aAvailableActions.length)].id
             : '';
         this.selectAction(sSelectAction);
-        this._events.emit(CONSTS.EVENT_COMBAT_TURN, {
-            ...this.eventDefaultPayload,
-            action: action => this.selectAction(action)
-        });
         if (!this._currentAction) {
             this.selectMostSuitableWeapon();
         }
