@@ -1,6 +1,6 @@
-const Manager = require('../../../src/Manager');
+const Manager = require('../../Manager');
 
-function getNewManager () {
+function index () {
     const m = new Manager();
     m.combatManager.defaultDistance = 50;
     m.loadModule('classic');
@@ -26,5 +26,5 @@ function getNewManager () {
 }
 
 module.exports = {
-    getNewManager
+    getNewManager: index
 };

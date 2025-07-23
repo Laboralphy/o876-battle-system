@@ -1,7 +1,7 @@
 {
   "school": "SCHOOL_CONJURATION",
   "level": 0,
-  "range": 30,
+  "range": 120,
   "hostile": true,
   "target": "SPELL_CAST_TARGET_TYPE_HOSTILE",
   "script": "spell-acid-splash"

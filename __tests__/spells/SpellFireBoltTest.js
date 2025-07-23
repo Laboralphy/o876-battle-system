@@ -1,6 +1,5 @@
-const Manager = require('../../src/Manager');
 const CONSTS = require('../../src/consts');
-const { getNewManager } = require('./tools/get-new-manager');
+const { getNewManager } = require('../../src/libs/test-tools');
 
 describe('Fire Bolt', function () {
     it('should cast fire bolt spell and deal 10 fire damage on unaware target', function () {
