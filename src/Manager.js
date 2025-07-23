@@ -247,7 +247,7 @@ class Manager {
         const action = evt.action;
         // Lancement de l'action
         if (action) {
-            this.executeAction(attacker, action, target, parameters);
+            this.executeAction(attacker, action, target);
         }
     }
 
@@ -802,8 +802,7 @@ class Manager {
             system: this._systemInstance,
             creature: oCreature,
             target: oTarget,
-            action: oAction,
-            parameters
+            action: oAction
         });
         this._events.emit(CONSTS.EVENT_CREATURE_ACTION, oActionEvent);
         if (oActionEvent.isScriptEnabled) {
@@ -811,8 +810,7 @@ class Manager {
                 manager: this,
                 creature: oCreature,
                 target: oTarget,
-                action: oAction,
-                parameters
+                action: oAction
             });
         }
         const bIsActionCoolingDown = oAction.cooldown > 0;
@@ -821,7 +819,22 @@ class Manager {
         }
     }
 
-    _createSpellAction (oCreature, sSpell, oTarget = null) {
+    /**
+     *
+     * @param oCreature
+     * @param sSpell
+     * @param oTarget
+     * @param freeCast {boolean} if true, and sAction is a spell id, the spell is cast without consuming spell slot
+     * @param potion {boolean} if true, and sAction is a spell, the spell is free cast on caster. / should be a non offensive spell
+     * @param grenade {boolean} if true, and sAction is a spell, the spell is free cast on target. / should be an offensive spell
+     * @private
+     * @returns {RBSAction}
+     */
+    _createSpellAction (oCreature, sSpell, oTarget = null, {
+        freeCast = false,
+        potion = false,
+        grenade = false
+    } = {}) {
         if (oTarget === null) {
             oTarget = oCreature;
         }
@@ -830,19 +843,26 @@ class Manager {
             id: SPECIAL_ACTION_CAST_SPELL,
             requirements: null,
             limited: false,
-            attackType: CONSTS.ATTACK_TYPE_HOMING,
+            actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL,
             cooldown: 0,
             charges: Infinity,
             recharging: false,
             range: oSpellData.range,
-            script: () => this.runScript(oSpellData.script, {
-                manager: this,
-                caster: oCreature,
-                target: oTarget,
-                spell: oSpellData
-            }),
+            script: () => this.castSpell(
+                oSpellData.id,
+                oCreature,
+                oTarget,
+                {
+                    freeCast,
+                    potion,
+                    grenade
+                }
+            ),
             parameters: {
-                spell: oSpellData
+                spell: oSpellData,
+                freeCast,
+                potion,
+                grenade
             },
             ready: true,
             bonus: false,
@@ -855,16 +875,27 @@ class Manager {
      * @param oCreature {Creature}
      * @param sAction {string}
      * @param oTarget {Creature}
+     * @param freeCast {boolean} if true, and sAction is a spell id, the spell is cast without consuming spell slot
+     * @param potion {boolean} if true, and sAction is a spell, the spell is free cast on caster. / should be a non offensive spell
+     * @param grenade {boolean} if true, and sAction is a spell, the spell is free cast on target. / should be an offensive spell
      * @return {CombatActionOutcome}
      */
-    doAction (oCreature, sAction, oTarget = null) {
+    doAction (oCreature, sAction, oTarget = null, {
+        freeCast = false,
+        potion = false,
+        grenade = false
+    } = {}) {
         // check if creature is in combat
         const oCombat = this.combatManager.getCombat(oCreature);
         const bIsSpell = this.getSpellData(sAction);
         // if in combat, and same target as combat target, then use combat action mechanism
         if (oCombat) {
             const oAction = bIsSpell
-                ? this._createSpellAction(oCreature, sAction, oTarget)
+                ? this._createSpellAction(oCreature, sAction, oTarget, {
+                    freeCast,
+                    potion,
+                    grenade
+                })
                 : sAction;
             if (oTarget === null || oCombat.target === oTarget) {
                 // no target or same target in combat : use combat action mechanism
@@ -876,7 +907,11 @@ class Manager {
             }
         } else {
             const oAction = bIsSpell
-                ? this._createSpellAction(oCreature, sAction, oTarget)
+                ? this._createSpellAction(oCreature, sAction, oTarget, {
+                    freeCast,
+                    potion,
+                    grenade
+                })
                 : oCreature.getters.getActions[sAction];
             // Check if action can be cast
             if (!oAction.ready) {

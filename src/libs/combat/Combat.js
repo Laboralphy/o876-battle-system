@@ -334,7 +334,7 @@ class Combat {
                 attackerState.takeAction();
                 this._currentAction = null;
             }
-            this.logEntry(CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY, action.id, action.bonus);
+            this.logEntry(action.actionType, action.id, action.bonus);
             return new CombatActionSuccess();
         } else {
             let reason = '';

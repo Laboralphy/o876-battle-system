@@ -7,7 +7,7 @@
  * @property id {string} id of action
  * @property requirements {RBSActionRequirement}
  * @property limited {boolean} if true, then this action has limited use
- * @property attackType {string} attack type
+ * @property actionType {string} action type
  * @property cooldown {number} if > 0 then the action cannot be used until 0
  * @property charges {number} number of uses left
  * @property recharging {boolean} if true then this action is recharging (need to call rechargeActions regularly
