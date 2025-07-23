@@ -8,6 +8,18 @@ const CONSTS = require('../../consts');
 
 const MAX_COMBAT_DISTANCE = 60;
 
+/**
+ * @typedef CombatLogEntry {object}
+ * @property turn {number}
+ * @property tick {number}
+ * @property actionType {string}
+ * @property bonus {boolean}
+ * @property action {string} action id done this tick, if empty then it is a regular attack with equipped weapon
+ */
+
+/**
+ * @class
+ */
 class Combat {
     constructor ({ distance = 0, tickCount }) {
         this._id = getUniqueId();
@@ -60,6 +72,27 @@ class Combat {
          * @private
          */
         this._pauseTick = 0; // while > 0 don't do anything
+
+        /**
+         *
+         * @type {CombatLogEntry[]}
+         * @private
+         */
+        this._log = [];
+    }
+
+    logEntry (sType, sAction = '', bonus = false) {
+        this._log.push({
+            turn: this._turn,
+            tick: this._tick,
+            actionType: sType,
+            action: sAction,
+            bonus
+        });
+    }
+
+    get log () {
+        return this._log;
     }
 
     get id () {
@@ -301,6 +334,7 @@ class Combat {
                 attackerState.takeAction();
                 this._currentAction = null;
             }
+            this.logEntry(CONSTS.COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY, action.id, action.bonus);
             return new CombatActionSuccess();
         } else {
             let reason = '';
@@ -335,6 +369,7 @@ class Combat {
             } else if (this._isTargetCharming()) {
                 return new CombatActionFailure(CONSTS.ATTACK_FAILURE_CHARMED);
             } else  {
+                this.logEntry(CONSTS.COMBAT_ACTION_TYPE_ATTACK);
                 this._events.emit(CONSTS.EVENT_COMBAT_ATTACK, {
                     ...this.eventDefaultPayload,
                     count: nAttackCount,
@@ -349,6 +384,14 @@ class Combat {
     }
 
     /**
+     * Selects next action in row
+     */
+    selectNextAction () {
+        this._currentAction = this._nextAction;
+        this._nextAction = null;
+    }
+
+    /**
      * trigger a combat action.
      * The system must respond to this event in order to make a creature attack or take action
      * @param bPartingShot {boolean} si true alors attaque d'opportunité
@@ -356,15 +399,34 @@ class Combat {
      */
     playFighterAction (bPartingShot = false) {
         const attackerState = this._attackerState;
-        // If no current action then we are attacking during this turn
-        const nAttackCount = bPartingShot ? 1 : attackerState.getAttackCount(this._tick);
-        if (bPartingShot || nAttackCount > 0) {
-            const actionTaken = this._currentAction;
-            if (actionTaken && !bPartingShot) {
-                return this.playActionNow(actionTaken.action, actionTaken.parameters);
+        if (bPartingShot && !attackerState.hasTakenReaction()) {
+            if (attackerState.hasTakenAction()) {
+                // Parting shot but reaction has already occurs this turn : nothing to do
+                return new CombatActionFailure(CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK);
             } else {
-                return this.strikeWithSelectedWeapon(nAttackCount, bPartingShot);
+                // Parting shot + reaction available = immediately strike opponent
+                attackerState.takeReaction();
+                return this.strikeWithSelectedWeapon(nAttackCount, true);
             }
+        }
+        if (attackerState.hasTakenAction() && !attackerState.attackDedicatedTurn) {
+            // Already have taken action, and it was not attack
+            return new CombatActionFailure(CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK);
+        }
+        // immediately play action if available this turn
+        if (this._currentAction) {
+            const ao = this.playActionNow(this._currentAction.action, this._currentAction.parameters);
+            attackerState.takeAction();
+            this._currentAction = null;
+            return ao;
+        }
+        // If no current action then we are attacking during this turn
+        const nAttackCount =  attackerState.getAttackCount(this._tick);
+        if (nAttackCount > 0) {
+            this.attackerState.takeAction();
+            // this turn is now dedicated to attack only
+            this.attackerState.attackDedicatedTurn = true;
+            return this.strikeWithSelectedWeapon(nAttackCount, false);
         } else {
             return new CombatActionFailure(CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK);
         }
@@ -372,7 +434,6 @@ class Combat {
 
     advance () {
         const bInitialTick = this._tick === 0;
-        let bDiscardCurrentAction = true;
         if (this._pauseTick <= 0) {
             // combat is not in pause
             if (bInitialTick) {
@@ -394,10 +455,7 @@ class Combat {
             }
             if (this.isTargetInRange()) {
                 const outcome = this.playFighterAction();
-                if (outcome.failure && outcome.reason === CONSTS.ACTION_FAILURE_REASON_RANGE) {
-                    // do not discard current action if action did not success because of range
-                    bDiscardCurrentAction = false;
-                } else if (outcome.failure && outcome.reason !== CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK) {
+                if (outcome.failure && outcome.reason !== CONSTS.ATTACK_FAILURE_DID_NOT_ATTACK) {
                     this._events.emit(CONSTS.EVENT_COMBAT_ACTION_FAILURE, {
                         ...this.eventDefaultPayload,
                         reason: outcome.reason
@@ -409,10 +467,8 @@ class Combat {
             ...this.eventDefaultPayload
         });
         this.nextTick();
-        if (this._pauseTick <= 0 && this._tick === 0 && bDiscardCurrentAction) {
-            // start of next turn
-            this._currentAction = this._nextAction;
-            this._nextAction = null;
+        if (this._tick === 0) {
+            this.selectNextAction();
         }
     }
 

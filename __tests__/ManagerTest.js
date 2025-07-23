@@ -1171,38 +1171,48 @@ describe('normal & bonus action test', function () {
             expect(c1.getters.getActions['na1']).toBeDefined();
             expect(c1.getters.getActions['na1'].range).toBe(500);
 
-            expect(oCombat.currentAction).not.toBeNull();
-            expect(oCombat.currentAction.id).toBe('na1');
+            expect(oCombat.log).toHaveLength(1);
+            expect(oCombat.log[0].action).toBe('na1');
 
-            m.doAction(c1, 'na2', c2); // will be put in nextTurn
+            m.doAction(c1, 'na2', c2); // na2 will be put in nextTurn
+            // let's check if na2 is in next action
+            expect(oCombat.currentAction).toBeNull();
+            expect(oCombat.nextTurnAction).not.toBeNull();
+            expect(oCombat.nextTurnAction.id).toBe('na2');
 
-            expect(logs).toHaveLength(0);
             m.process(); // t1
+            expect(oCombat.nextTurnAction).not.toBeNull();
+            expect(oCombat.nextTurnAction.id).toBe('na2');
+            // bonus action will be run immediately
             m.doAction(c1, 'ba1', c2);
+            expect(oCombat.nextTurnAction).not.toBeNull();
+            expect(oCombat.nextTurnAction.id).toBe('na2');
+
+
             m.process(); // t2
-            expect(logs).toHaveLength(1);
-            expect(logs[0]).toMatchObject({
-                event: 'creature.action',
-                attacker: c1.id,
-                target: c2.id,
-                script: 'bonus-action-1',
-                bonus: true
-            });
+            expect(oCombat.log).toHaveLength(2);
+            expect(oCombat.log[1].action).toBe('ba1');
+            expect(oCombat.log[1].bonus).toBeTruthy();
+            expect(oCombat.nextTurnAction).not.toBeNull();
+            expect(oCombat.nextTurnAction.id).toBe('na2');
+
+
             m.process(); // t3
+            expect(oCombat.nextTurnAction).not.toBeNull();
+            expect(oCombat.nextTurnAction.id).toBe('na2');
             m.process(); // t4
             // still no action at t4
-            expect(oCombat.currentAction.id).toBe('na1'); // normal-action-1 still active this turn
+            expect(oCombat.currentAction).toBeNull(); // normal-action-1 still active this turn
+            expect(oCombat.nextTurnAction).not.toBeNull();
+            expect(oCombat.nextTurnAction.id).toBe('na2');
             m.process(); // t5 -> at the end, action is run
-            expect(logs).toHaveLength(2);
-            expect(logs[1]).toMatchObject({
-                event: 'creature.action',
-                attacker: c1.id,
-                target: c2.id,
-                script: 'normal-action-1',
-                bonus: false
-            });
-            expect(oCombat.currentAction).not.toBeNull(); // now this is normal-action-2
-            expect(oCombat.currentAction.id).toBe('na2'); // now this is normal-action-2
+            expect(oCombat.log).toHaveLength(2);
+
+            expect(oCombat.nextTurnAction).toBeNull();
+            m.process(); // t0
+            // action na2 should have been processed at the start of this turn
+            expect(oCombat.log).toHaveLength(3);
+            expect(oCombat.log[2].action).toBe('na2');
         });
         it('should not run several bonus action', function () {
             const m = new Manager();
@@ -1282,13 +1292,15 @@ describe('normal & bonus action test', function () {
             m.process(); // t0
 
             m.doAction(c1, 'na2', c2);
-            expect(logs).toHaveLength(0);
+            // action are done immediately
+            expect(logs).toHaveLength(1);
             m.process(); // t1
             const actionOutcome = m.doAction(c1, 'ba1', c2);
             expect(actionOutcome.success).toBeTruthy();
             m.process(); // t2
-            expect(logs).toHaveLength(1);
-            expect(logs[0]).toMatchObject({
+            // bonus action are done immediately
+            expect(logs).toHaveLength(2);
+            expect(logs[1]).toMatchObject({
                 event: 'creature.action',
                 attacker: c1.id,
                 target: c2.id,
@@ -1298,9 +1310,10 @@ describe('normal & bonus action test', function () {
             });
             m.doAction(c1, 'ba1', c2);
             m.process(); // t3
-            expect(logs).toHaveLength(1);
+            // cannot do another bonus action this turn : it will be discarded
+            expect(logs).toHaveLength(2);
             m.process(); // t4
-            expect(logs).toHaveLength(1);
+            expect(logs).toHaveLength(2);
         });
     });
     it('should do one action per turn, but may attack several times if got extra attack', function () {

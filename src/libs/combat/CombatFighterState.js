@@ -28,6 +28,7 @@ class CombatFighterState {
          */
         this._actionTaken = false;
         this._reactionTaken = false;
+        this._attackDedicatedTurn = false; // if true, then this turn is dedicated to attack
     }
 
     /**
@@ -54,6 +55,14 @@ class CombatFighterState {
 
     get attackCount () {
         return this._attackCount;
+    }
+
+    get attackDedicatedTurn () {
+        return this._attackDedicatedTurn;
+    }
+
+    set attackDedicatedTurn (value) {
+        return this._attackDedicatedTurn = value;
     }
 
     /**
@@ -143,6 +152,7 @@ class CombatFighterState {
         this._actionTaken = false;
         this._reactionTaken = false;
         this._bonusActionDone = 0;
+        this._attackDedicatedTurn = false;
         const oWeapon = this._creature.getters.getSelectedWeapon;
         const bRanged = oWeapon
             ? oWeapon.blueprint.attributes.includes(CONSTS.WEAPON_ATTRIBUTE_RANGED)

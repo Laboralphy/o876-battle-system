@@ -81,6 +81,5 @@ describe('should initiate combat when casting firebolt', function () {
         expect(aLog.length).toBe(1);
         expect(oCombat.turn).toBe(1);
         expect(oCombat.tick).toBe(0);
-        console.log(aLog);
     });
 });
