@@ -399,6 +399,7 @@ class Combat {
      */
     playFighterAction (bPartingShot = false) {
         const attackerState = this._attackerState;
+        const nAttackCount =  attackerState.getAttackCount(this._tick);
         if (bPartingShot && !attackerState.hasTakenReaction()) {
             if (attackerState.hasTakenAction()) {
                 // Parting shot but reaction has already occurs this turn : nothing to do
@@ -406,7 +407,7 @@ class Combat {
             } else {
                 // Parting shot + reaction available = immediately strike opponent
                 attackerState.takeReaction();
-                return this.strikeWithSelectedWeapon(nAttackCount, true);
+                return this.strikeWithSelectedWeapon(1, true); // parting shot counts as 1 attack
             }
         }
         if (attackerState.hasTakenAction() && !attackerState.attackDedicatedTurn) {
@@ -421,7 +422,6 @@ class Combat {
             return ao;
         }
         // If no current action then we are attacking during this turn
-        const nAttackCount =  attackerState.getAttackCount(this._tick);
         if (nAttackCount > 0) {
             this.attackerState.takeAction();
             // this turn is now dedicated to attack only

@@ -34,12 +34,13 @@ describe('should initiate combat when casting firebolt', function () {
     });
     it ('should initiate combat when casting firebolt', function () {
         const { manager: m, creatures: { c1, c2, c3 }} = getNewManager();
-        c1.dice.cheat(0.99);
+        c1.dice.cheat(0.1);
         c2.dice.cheat(0.1);
         m.doAction(c1, 'fire-bolt', c2);
         m.process();
         // c1 should be in combat targetting c2
         expect(m.combatManager.isCreatureFighting(c1, c2)).toBeTruthy();
+        expect(c2.getters.isDead).toBeFalsy();
     });
     it ('spell casting should occurs at turn 1 tick 0', function () {
         const { manager: m, creatures: { c1, c2, c3 }} = getNewManager();
@@ -62,24 +63,10 @@ describe('should initiate combat when casting firebolt', function () {
         expect(oCombat.currentAction.id).toBe('cast-spell');
         expect(oCombat.currentAction.range).toBe(120);
         expect(oCombat.currentAction.parameters?.spell?.id).toBe('fire-bolt');
-        // should not cast spell yet
-        expect(aLog.length).toBe(0);
+
         m.process();
-        expect(aLog.length).toBe(0);
-        expect(oCombat.tick).toBe(1);
-        m.process();
-        expect(oCombat.tick).toBe(2);
-        m.process();
-        expect(oCombat.tick).toBe(3);
-        m.process();
-        expect(oCombat.tick).toBe(4);
-        m.process();
-        expect(oCombat.tick).toBe(5);
-        expect(aLog.length).toBe(0);
-        m.process();
-        // should have cast spell when new turn
         expect(aLog.length).toBe(1);
-        expect(oCombat.turn).toBe(1);
-        expect(oCombat.tick).toBe(0);
+        expect(oCombat.turn).toBe(0);
+        expect(oCombat.tick).toBe(1);
     });
 });

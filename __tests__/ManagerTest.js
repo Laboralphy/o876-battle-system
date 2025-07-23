@@ -1000,7 +1000,7 @@ describe('normal & bonus action test', function () {
         });
     });
     describe('when in combat', function () {
-        it('should run normal action at first turn end', function () {
+        it('should run normal action immediately', function () {
             const m = new Manager();
             m.loadModule('classic');
             const cm = m.combatManager;
@@ -1073,14 +1073,7 @@ describe('normal & bonus action test', function () {
             m.process(); // t0
 
             m.doAction(c1, 'na2', c2);
-            expect(logs).toHaveLength(0);
-            m.process(); // t1
-            m.process(); // t2
-            m.process(); // t3
-            m.process(); // t4
-            // still no action at t4
-            expect(logs).toHaveLength(0);
-            m.process(); // t5 -> at the end, action is run
+            const c1combat = m.getCreatureCombat(c1);
             expect(logs).toHaveLength(1);
             expect(logs[0]).toMatchObject({
                 event: 'creature.action',

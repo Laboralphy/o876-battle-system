@@ -882,7 +882,6 @@ class Manager {
             if (!oAction.ready) {
                 // Action fails if not ready
                 return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_NOT_READY);
-            } else {
             }
             if (oAction.hostile) {
                 // Hostile action are only cast during combat
