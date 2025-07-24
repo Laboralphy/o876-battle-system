@@ -11,7 +11,7 @@ function checkEntityCreature (oEntity) {
         throw new ReferenceError('Undefined entity ; required creature');
     } else if (oEntity === null) {
         return null;
-    } else if (oEntity instanceof Creature) {
+    } else if (isEntityCreature(oEntity)) {
         return oEntity;
     } else {
         throw new TypeError('Creature instance expected');
@@ -28,14 +28,24 @@ function checkEntityItem (oEntity) {
         throw new ReferenceError('Undefined entity : required item');
     } else if (oEntity === null) {
         return null;
-    } else if (oEntity?.blueprint?.entityType === CONSTS.ENTITY_TYPE_ITEM) {
+    } else if (isEntityItem(oEntity)) {
         return oEntity;
     } else {
         throw new TypeError('Item instance expected');
     }
 }
 
+function isEntityCreature (oEntity) {
+    return oEntity instanceof Creature;
+}
+
+function isEntityItem (oEntity) {
+    return oEntity?.blueprint?.entityType === CONSTS.ENTITY_TYPE_ITEM;
+}
+
 module.exports = {
     checkEntityCreature,
-    checkEntityItem
+    checkEntityItem,
+    isEntityCreature,
+    isEntityItem
 };

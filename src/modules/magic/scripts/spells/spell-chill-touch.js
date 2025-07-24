@@ -19,7 +19,7 @@ This spell’s damage increases by 1d8 when you reach 5th level (2d8), 11th leve
  */
 function main ({ manager, caster, target, spell }) {
     // compute 1d8 withering damage (+1d8 at levels 5, 11, 17)
-    const nCasterLevel = manager.getCreatureLevel(caster);
+    const nCasterLevel = caster.getters.getLevel;
     const sDamage = getCantripDamageDice(10, nCasterLevel);
     // Checks if dexterity saving throw is success
     if (castDirectDamageSpell({

@@ -5,26 +5,17 @@ describe('Fire Bolt', function () {
     it('should cast fire bolt spell and deal 10 fire damage on unaware target', function () {
         const { manager: m, creatures: { c1, c2 }} = getNewManager();
         const aLog = [];
-        m.events.on(CONSTS.EVENT_CREATURE_ACTION, (evt) => {
+        m.events.on(CONSTS.EVENT_CREATURE_CAST_SPELL, (evt) => {
             /**
              * @var evt {CombatActionEvent}
              */
             const {
                 creature,
                 target,
-                action
+                spell,
+                freeCast
             } = evt;
-            switch (action.actionType) {
-            case CONSTS.COMBAT_ACTION_TYPE_SPELL: {
-                if (action.parameters.potion) {
-                    aLog.push(`${creature.id} drinks potion of ${action.id}`);
-                } else if (action.parameters.grenade) {
-                    aLog.push(`${creature.id} throws grenade of ${action.id} at ${target.id}`);
-                } else {
-                    aLog.push(`${creature.id} casts ${action.parameters.spell.id} ${action.parameters.freeCast ? '(free) ' : ''}at ${target.id}`);
-                }
-            }
-            }
+            aLog.push(`${creature.id} casts ${spell} ${freeCast ? '(free) ' : ''}at ${target.id}`);
         });
         m.events.on(CONSTS.EVENT_CREATURE_DAMAGED, (evt) => {
             aLog.push(`${evt.creature.id} damaged by ${evt.source.id}: ${evt.amount} ${evt.damageType}`);

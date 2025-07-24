@@ -45,13 +45,13 @@ describe('should initiate combat when casting firebolt', function () {
     it ('spell casting should occurs at turn 1 tick 0', function () {
         const { manager: m, creatures: { c1, c2, c3 }} = getNewManager();
         const aLog = [];
-        m.events.on(CONSTS.EVENT_CREATURE_ACTION, (evt) => {
-            const { creature, target, action } = evt;
+        m.events.on(CONSTS.EVENT_CREATURE_CAST_SPELL, (evt) => {
+            const { creature, target, spell } = evt;
             aLog.push({
-                event: CONSTS.EVENT_CREATURE_ACTION,
+                event: CONSTS.EVENT_CREATURE_CAST_SPELL,
                 creature: creature.id,
                 target: target.id,
-                spell: action.parameters.spell.id
+                spell
             });
         });
         const r = m.doAction(c1, 'fire-bolt', c2);

@@ -15,7 +15,7 @@ This spell’s damage increases by 1d6 when you reach 5th level (2d6), 11th leve
  * @param target {Creature}
  */
 function splash (manager, caster, target) {
-    const nCasterLevel = manager.getCreatureLevel(caster);
+    const nCasterLevel = caster.getters.getLevel;
     const sDamage = getCantripDamageDice(6, nCasterLevel);
     // Checks if dexterity saving throw is success
     castDirectDamageSpell({

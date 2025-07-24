@@ -47,6 +47,15 @@ class Horde {
         this._locationRegistry.setEntityLocation(oCreature.id, idLocation);
     }
 
+    /**
+     *
+     * @param oCreature {Creature}
+     * @return {string}
+     */
+    getCreatureLocation (oCreature) {
+        this._locationRegistry.getEntityLocation(oCreature.id);
+    }
+
     setCreatureFaction (oCreature, idFaction) {
         this._factionManager.setEntityFaction(oCreature.id, this._factionManager.getFaction(idFaction));
     }

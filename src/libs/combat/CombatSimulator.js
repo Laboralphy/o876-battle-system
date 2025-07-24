@@ -1,5 +1,6 @@
 const Events = require('events');
 const {Manager} = require('../../../index');
+const CONSTS = require('../../consts');
 
 class CombatSimulator {
     constructor () {
@@ -61,6 +62,23 @@ class CombatSimulator {
      * @param evt {CreatureActionEvent}
      */
     eventCombatAction (evt) {
+        const {
+            creature,
+            target,
+            action
+        } = evt;
+        switch (action.actionType) {
+        case CONSTS.COMBAT_ACTION_TYPE_SPELL: {
+            if (action.parameters.potion) {
+                this.sendTextEvent(creature.id, 'drinks potion of', action.parameters.spell.id);
+            } else if (action.parameters.grenade) {
+                this.sendTextEvent(creature.id, 'throws grenade of', action.parameters.spell.id, 'at', target.id);
+            } else {
+                this.sendTextEvent(creature.id, 'casts', action.parameters.spell.id, 'at', target.id);
+            }
+            break;
+        }
+        }
         this.sendTextEvent(evt.creature.id, 'used action', evt.action.id);
     }
 

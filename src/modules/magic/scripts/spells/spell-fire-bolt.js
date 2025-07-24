@@ -16,7 +16,7 @@ This spell's damage increases by 1d10 when you reach 5th level (2d10), 11th leve
  */
 function main ({ manager, caster, target, spell }) {
     // compute 1d10 acid damage (+1d10 at levels 5, 11, 17)
-    const nCasterLevel = manager.getCreatureLevel(caster);
+    const nCasterLevel = caster.getters.getLevel;
     const sDamage = getCantripDamageDice(10, nCasterLevel);
     // Checks if dexterity saving throw is success
     castDirectDamageSpell({

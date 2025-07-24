@@ -127,13 +127,22 @@ class Evolution {
     }
 
     /**
+     * return xp
+     * @param oCreature {Creature}
+     * @returns {number}
+     */
+    getXP (oCreature) {
+        return oCreature.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS];
+    }
+
+    /**
      * Increase experience points, if xp is higher than next level required xp, then increase level
      * @param oCreature {Creature}
      * @param nXP {number}
      */
     gainXP (oCreature, nXP) {
         if (nXP > 0) {
-            const nNewXP = oCreature.getters.getPoolValues[CONSTS.POOL_EXPERIENCE_POINTS] + nXP;
+            const nNewXP = this.getXP(oCreature) + nXP;
             oCreature.mutations.setPoolValue({ pool: CONSTS.POOL_EXPERIENCE_POINTS, value: nNewXP });
             while (nNewXP >= this.getLevelUpRequiredXP(oCreature.getters.getUnmodifiedLevel)) {
                 const nNewLevel = oCreature.getters.getUnmodifiedLevel + 1;

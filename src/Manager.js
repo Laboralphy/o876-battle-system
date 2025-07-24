@@ -1,3 +1,4 @@
+const { version: sRBSVersion } = require('./version');
 const EntityBuilder = require('./EntityBuilder');
 const EffectProcessor = require('./EffectProcessor');
 const Horde = require('./Horde');
@@ -44,12 +45,16 @@ const CreatureSavingThrowEvent = require('./events/CreatureSavingThrowEvent');
 const CreatureDamagedEvent = require('./events/CreatureDamagedEvent');
 const CreatureDeathEvent = require('./events/CreatureDeathEvent');
 const CreatureActionEvent = require('./events/CreatureActionEvent');
-const {checkEntityCreature, checkEntityItem} = require('./check-entity');
+const CreatureCastSpellEvent = require('./events/CreatureCastSpellEvent');
+const CreatureDrinkPotionEvent = require('./events/CreatureDrinkPotionEvent');
+const CreatureThrowGrenadeEvent = require('./events/CreatureThrowGrenadeEvent');
+const {isEntityCreature, isEntityItem, checkEntityCreature, checkEntityItem} = require('./check-entity');
 
 class Manager {
     constructor () {
         this._events = new Events();
         this._horde = new Horde();
+        this._items = new Map();
         const eb = new EntityBuilder();
         const sv = new SchemaValidator();
         sv.schemaIndex = SCHEMAS;
@@ -142,6 +147,10 @@ class Manager {
      */
     get combatManager () {
         return this._combatManager;
+    }
+
+    get version () {
+        return sRBSVersion;
     }
 
     // ▗▄▄▖             ▗▖     ▗▖            ▗▖ ▄▖
@@ -293,6 +302,24 @@ class Manager {
     /****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ******/
     /****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ****** PUBLIC API ******/
 
+
+
+    //  ▄▄
+    // ▐▌▝▘▗▛▜▖▐▛▜▖▗▛▜▖
+    // ▐▌▗▖▐▌▐▌▐▌  ▐▛▀▘
+    //  ▀▀  ▀▀ ▝▘   ▀▀
+    // Core
+
+    process () {
+        if ((this._time % this._combatManager.defaultTickCount) === 0) {
+            // Processing entities each turn begin
+            this.processEntities();
+        }
+        this.processCombats();
+        this.processDeadEffects();
+        ++this._time;
+    }
+
     get checkConst () {
         return {
             capability: checkConstCapability,
@@ -304,11 +331,239 @@ class Manager {
         };
     }
 
+    checkEntityCreature (oEntity) {
+        checkEntityCreature(oEntity);
+    }
+
+    checkEntityItem (oEntity) {
+        checkEntityItem(oEntity);
+    }
+
+    /**
+     *
+     * @param id {string}
+     * @returns {RBSItem|Creature}
+     */
+    getEntity (id) {
+        if (this._horde.creatures.has(id)) {
+            return this._horde.getCreature(id);
+        } else if (this._items.has(id)) {
+            return this._items.get(id);
+        } else {
+            throw new Error(`entity ${id} does net exist`);
+        }
+    }
+
+    // ▗▖ ▄      ▗▖     ▄▖
+    // ▐█▟█▗▛▜▖ ▄▟▌▐▌▐▌ ▐▌ ▗▛▜▖▗▛▀▘
+    // ▐▌▘█▐▌▐▌▐▌▐▌▐▌▐▌ ▐▌ ▐▛▀▘ ▀▜▖
+    // ▝▘ ▀ ▀▀  ▀▀▘ ▀▀▘ ▀▀  ▀▀ ▝▀▀
+    // Modules
+
+    /**
+     * Adds a module
+     * @param blueprints
+     * @param scripts
+     * @param data
+     */
+    defineModule ({
+        blueprints = {},
+        scripts = {},
+        data = {}
+    }) {
+        this._entityBuilder.blueprints = blueprints;
+        Object
+            .entries(scripts)
+            .forEach(([id, script]) => {
+                if (id === 'init') {
+                    script({manager: this});
+                } else {
+                    this._scripts[id] = script;
+                }
+            });
+        this._entityBuilder.addData(data);
+    }
+
+    /**
+     * Loads a module
+     * @param sModuleId {string}
+     */
+    loadModule (sModuleId) {
+        return this.defineModule(require(path.resolve(__dirname, 'modules', sModuleId)));
+    }
+
+
+    // ▗▄▄▖     ▗▖  ▗▖  ▗▖  ▗▖
+    // ▐▙▄ ▐▛▜▖▝▜▛▘ ▄▖ ▝▜▛▘ ▄▖ ▗▛▜▖▗▛▀▘
+    // ▐▌  ▐▌▐▌ ▐▌  ▐▌  ▐▌  ▐▌ ▐▛▀▘ ▀▜▖
+    // ▝▀▀▘▝▘▝▘  ▀▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▀▀
+    // Entities
+
+    /**
+     * Creates a new Entity
+     * @param resref {string}
+     * @param id {string}
+     * @returns {Creature|RBSItem}
+     */
+    createEntity (resref, id = '') {
+        const oEntity = this._entityBuilder.createEntity(resref, id);
+        if (oEntity instanceof Creature) {
+            for (let i = 1; i <= oEntity.getters.getUnmodifiedLevel; ++i) {
+                this.evolution.setupLevel(this, oEntity, i);
+            }
+            this._horde.linkCreature(oEntity);
+            oEntity.events.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => {
+                this._events.emit(CONSTS.EVENT_CREATURE_SELECT_WEAPON, new CreatureSelectWeaponEvent({
+                    system: this._systemInstance,
+                    creature: oEntity
+                }));
+            });
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REVIVE, evt => {
+                this._events.emit(CONSTS.EVENT_CREATURE_REVIVE, new CreatureReviveEvent({
+                    system: this._systemInstance,
+                    creature: oEntity
+                }));
+            });
+            oEntity.events.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => {
+                this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, new CreatureSavingThrowEvent({
+                    system: this._systemInstance,
+                    creature: oEntity,
+                    roll: evt.roll,
+                    dc: evt.dc,
+                    success: evt.success,
+                    bonus: evt.bonus,
+                    ability: evt.ability
+                }));
+            });
+            oEntity.events.on(CONSTS.EVENT_CREATURE_DAMAGED, evt => {
+                const {
+                    source,
+                    amount,
+                    resisted,
+                    damageType
+                } = evt;
+                this._events.emit(CONSTS.EVENT_CREATURE_DAMAGED, new CreatureDamagedEvent({
+                    system: this._systemInstance,
+                    creature: oEntity,
+                    source,
+                    amount,
+                    resisted,
+                    damageType
+                }));
+                this.runPropEffectScript(oEntity, 'damaged', {
+                    damageType,
+                    amount,
+                    resisted,
+                    manager: this,
+                    creature: oEntity,
+                    source
+                });
+            });
+            oEntity.events.on(CONSTS.EVENT_CREATURE_DEATH, evt => {
+                this._events.emit(CONSTS.EVENT_CREATURE_DEATH, new CreatureDeathEvent({
+                    system: this._systemInstance,
+                    creature: oEntity,
+                    killer: evt.killer
+                }));
+            });
+            oEntity.events.on(CONSTS.EVENT_CREATURE_EQUIP_ITEM, evt => {
+                this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
+                    system: this._systemInstance,
+                    creature: oEntity,
+                    ...evt
+                });
+                if (this._horde.isCreatureActive(oEntity)) {
+                    this._horde.setCreatureActive(oEntity);
+                }
+            });
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
+                system: this._systemInstance,
+                creature: oEntity,
+                ...evt
+            }));
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM_FAILED, {
+                system: this._systemInstance,
+                creature: oEntity,
+                ...evt
+            }));
+            if (this._horde.isCreatureActive(oEntity)) {
+                this._horde.setCreatureActive(oEntity);
+            }
+            oEntity.events.on(CONSTS.EVENT_CREATURE_LEVEL_UP, evt => {
+                this.evolution.levelUp(this, oEntity);
+                this._events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP, {
+                    ...evt,
+                    system: this._systemInstance,
+                    creature: oEntity
+                });
+            });
+        } else {
+            this._items.set(oEntity.id, oEntity);
+        }
+        return oEntity;
+    }
+
+    /**
+     * Destroy an entity
+     * @param oEntity
+     */
+    destroyEntity (oEntity) {
+        if (oEntity instanceof Creature) {
+            this._combatManager.removeFighter(oEntity);
+            this._horde.unlinkCreature(oEntity);
+        } else  {
+            this._items.delete(checkEntityItem(oEntity).id);
+        }
+    }
+
+    processEntities () {
+        this
+            ._horde
+            .activeCreatures
+            .map(creature => {
+                creature.mutations.rechargeActions();
+                creature.mutations.rechargeSpellSlots();
+                creature.getters.getActiveProperties.forEach(property => {
+                    this.runPropertyScript(creature, 'mutate', {});
+                });
+                return creature.getters.getEffects;
+            })
+            .flat()
+            .forEach(effect => {
+                this._effectProcessor.processEffect(effect);
+            });
+        this._horde.shrinkActiveCreatureRegistry();
+    }
+
+    /**
+     * Returns the distance between two entities
+     * - Creature not in combat is at defaultDistance
+     * - Creature in combat is at combat.distance
+     * @param oCreature1 {Creature}
+     * @param oCreature2 {Creature}
+     * @return {number}
+     */
+    getCreatureDistance (oCreature1, oCreature2) {
+        if (oCreature2 === oCreature1) {
+            return 0;
+        }
+        const cm = this.combatManager;
+        if (cm.isCreatureFighting(oCreature1, oCreature2)) {
+            return cm.getCombat(oCreature1).distance;
+        }
+        if (cm.isCreatureFighting(oCreature2, oCreature1)) {
+            return cm.getCombat(oCreature2).distance;
+        }
+        // creatures are not fighting each other
+        return cm.defaultDistance;
+    }
+
 
     // ▗▄▄▖         ▗▖  ▗▖
     // ▐▙▄  ▀▜▖▗▛▀ ▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖▗▛▀▘
     // ▐▌  ▗▛▜▌▐▌   ▐▌  ▐▌ ▐▌▐▌▐▌▐▌ ▀▜▖
     // ▝▘   ▀▀▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▘▝▘▝▀▀
+    // Factions
 
     /**
      * Define factions
@@ -333,10 +588,20 @@ class Manager {
         }
     }
 
+    /**
+     * returns a creature faction
+     * @param oCreature {Creature}
+     * @returns {Faction}
+     */
     getCreatureFaction (oCreature) {
         return this._horde.getCreatureFaction(oCreature.id);
     }
 
+    /**
+     * Modify a creature faction
+     * @param oCreature {Creature}
+     * @param idFaction {string} creature new faction
+     */
     setCreatureFaction (oCreature, idFaction) {
         this._horde.setCreatureFaction(oCreature.id, idFaction);
     }
@@ -345,6 +610,7 @@ class Manager {
     // ▐▙▄ ▐▌▐▌▗▛▜▖ ▐▌ ▐▌▐▌▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖
     // ▐▌  ▝▙▟▘▐▌▐▌ ▐▌ ▐▌▐▌ ▐▌  ▐▌ ▐▌▐▌▐▌▐▌
     // ▝▀▀▘ ▝▘  ▀▀  ▀▀  ▀▀▘  ▀▘ ▀▀  ▀▀ ▝▘▝▘
+    // Evolution
 
     get evolution () {
         if (!this._evolution) {
@@ -367,6 +633,7 @@ class Manager {
     // ▐▙▄  ▟▙▖ ▟▙▖▗▛▜▖▗▛▀ ▝▜▛▘▗▛▀▘
     // ▐▌   ▐▌  ▐▌ ▐▛▀▘▐▌   ▐▌  ▀▜▖
     // ▝▀▀▘ ▝▘  ▝▘  ▀▀  ▀▀   ▀▘▝▀▀
+    // Effects
 
     /**
      * Creates an effect that can be applied to a creature.
@@ -543,12 +810,30 @@ class Manager {
         return this._effectProcessor.applyEffect(oEffect, oTarget, duration, oSource);
     }
 
+    /**
+     * Will remove dead effects (effects with duration <= 0 && depletionDelay <= 0)
+     */
+    processDeadEffects () {
+        this
+            ._horde
+            .activeCreatures
+            .forEach(creature => {
+                const cm = creature.mutations;
+                const cg = creature.getters;
+                cm.depleteEffects();
+                cg.getDeadEffects.forEach(effect => {
+                    cm.removeEffect({ effect });
+                });
+            });
+
+    }
+
 
     //  ▄▄         ▗▖       ▗▖
     // ▐▌▝▘▗▛▜▖▐▙▟▙▐▙▄  ▀▜▖▝▜▛▘▗▛▀▘
     // ▐▌▗▖▐▌▐▌▐▛▛█▐▌▐▌▗▛▜▌ ▐▌  ▀▜▖
     //  ▀▀  ▀▀ ▝▘ ▀▝▀▀  ▀▀▘  ▀▘▝▀▀
-
+    // Combats
 
     /**
      * Starts a combat between two creatures
@@ -723,43 +1008,6 @@ class Manager {
     }
 
     /**
-     * Return the number of currently active combats
-     * @return {number}
-     */
-    getCombatCount () {
-        this
-            .combatManager
-            .combats
-            .length;
-    }
-
-    /**
-     * Selects a new action during fight. After the action finished, creature goes back to weapon fighting
-     * @param oCreature {Creature}
-     * @param idAction {string}
-     */
-    selectAction (oCreature, idAction) {
-        const oCombat = this.getCreatureCombat(oCreature);
-        if (oCombat) {
-            oCombat.selectAction(idAction);
-        }
-    }
-
-    /**
-     * Returns the creature current action
-     * @param oCreature {Creature}
-     * @returns {CombatActionTaken|null}
-     */
-    getSelectedAction (oCreature) {
-        const oCombat = this.getCreatureCombat(oCreature);
-        if (oCombat) {
-            return oCombat._currentAction;
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Returns all creatures targeting the specified creature.
      * @param oCreature {Creature}
      * @param nRange {number} maximum distance from the specified creature
@@ -795,16 +1043,35 @@ class Manager {
      * @param oCreature {Creature}
      * @param oAction {RBSAction}
      * @param oTarget {Creature|null}
-     * @param parameters {{}} action parameters
      */
-    executeAction (oCreature, oAction, oTarget = null, parameters = {}) {
+    executeAction (oCreature, oAction, oTarget = null) {
         const oActionEvent = new CreatureActionEvent({
             system: this._systemInstance,
             creature: oCreature,
             target: oTarget,
             action: oAction
         });
-        this._events.emit(CONSTS.EVENT_CREATURE_ACTION, oActionEvent);
+        const oActionEventPayload = {
+            system: this._systemInstance,
+            creature: oCreature,
+            target: oTarget,
+            action: oAction
+        };
+        if (oAction.actionType === CONSTS.COMBAT_ACTION_TYPE_SPELL) {
+            if (oAction.parameters.potion) {
+                // creature drinks a potion, consume a medicine, etc...
+                this._events.emit(CONSTS.EVENT_CREATURE_DRINK_POTION, new CreatureDrinkPotionEvent(oActionEventPayload));
+            } else if (oAction.parameters.grenade) {
+                // creature throws a grenade, uses a magic wand, uses a magical or technical item, etc...
+                this._events.emit(CONSTS.EVENT_CREATURE_THROW_GRENADE, new CreatureThrowGrenadeEvent(oActionEventPayload));
+            } else {
+                // this is a spell
+                this._events.emit(CONSTS.EVENT_CREATURE_CAST_SPELL, new CreatureCastSpellEvent(oActionEventPayload));
+            }
+        } else {
+            // This is another type of action
+            this._events.emit(CONSTS.EVENT_CREATURE_ACTION, oActionEvent);
+        }
         if (oActionEvent.isScriptEnabled) {
             this.runScript(oAction.script, {
                 manager: this,
@@ -931,231 +1198,6 @@ class Manager {
         }
     }
 
-    // ▗▖ ▄      ▗▖     ▄▖
-    // ▐█▟█▗▛▜▖ ▄▟▌▐▌▐▌ ▐▌ ▗▛▜▖▗▛▀▘
-    // ▐▌▘█▐▌▐▌▐▌▐▌▐▌▐▌ ▐▌ ▐▛▀▘ ▀▜▖
-    // ▝▘ ▀ ▀▀  ▀▀▘ ▀▀▘ ▀▀  ▀▀ ▝▀▀
-
-    /**
-     * Adds a module
-     * @param blueprints
-     * @param scripts
-     * @param data
-     */
-    defineModule ({
-        blueprints = {},
-        scripts = {},
-        data = {}
-    }) {
-        this._entityBuilder.blueprints = blueprints;
-        Object
-            .entries(scripts)
-            .forEach(([id, script]) => {
-                if (id === 'init') {
-                    script({manager: this});
-                } else {
-                    this._scripts[id] = script;
-                }
-            });
-        this._entityBuilder.addData(data);
-    }
-
-    /**
-     * Loads a module
-     * @param sModuleId {string}
-     */
-    loadModule (sModuleId) {
-        return this.defineModule(require(path.resolve(__dirname, 'modules', sModuleId)));
-    }
-
-
-    // ▗▄▄▖     ▗▖  ▗▖  ▗▖  ▗▖
-    // ▐▙▄ ▐▛▜▖▝▜▛▘ ▄▖ ▝▜▛▘ ▄▖ ▗▛▜▖▗▛▀▘
-    // ▐▌  ▐▌▐▌ ▐▌  ▐▌  ▐▌  ▐▌ ▐▛▀▘ ▀▜▖
-    // ▝▀▀▘▝▘▝▘  ▀▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▀▀
-
-    /**
-     * Creates a new Entity
-     * @param resref {string}
-     * @param id {string}
-     * @returns {Creature|RBSItem}
-     */
-    createEntity (resref, id = '') {
-        const oEntity = this._entityBuilder.createEntity(resref, id);
-        if (oEntity instanceof Creature) {
-            for (let i = 1; i <= oEntity.getters.getUnmodifiedLevel; ++i) {
-                this.evolution.setupLevel(this, oEntity, i);
-            }
-            this._horde.linkCreature(oEntity);
-            oEntity.events.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => {
-                this._events.emit(CONSTS.EVENT_CREATURE_SELECT_WEAPON, new CreatureSelectWeaponEvent({
-                    system: this._systemInstance,
-                    creature: oEntity
-                }));
-            });
-            oEntity.events.on(CONSTS.EVENT_CREATURE_REVIVE, evt => {
-                this._events.emit(CONSTS.EVENT_CREATURE_REVIVE, new CreatureReviveEvent({
-                    system: this._systemInstance,
-                    creature: oEntity
-                }));
-            });
-            oEntity.events.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => {
-                this._events.emit(CONSTS.EVENT_CREATURE_SAVING_THROW, new CreatureSavingThrowEvent({
-                    system: this._systemInstance,
-                    creature: oEntity,
-                    roll: evt.roll,
-                    dc: evt.dc,
-                    success: evt.success,
-                    bonus: evt.bonus,
-                    ability: evt.ability
-                }));
-            });
-            oEntity.events.on(CONSTS.EVENT_CREATURE_DAMAGED, evt => {
-                const {
-                    source,
-                    amount,
-                    resisted,
-                    damageType
-                } = evt;
-                this._events.emit(CONSTS.EVENT_CREATURE_DAMAGED, new CreatureDamagedEvent({
-                    system: this._systemInstance,
-                    creature: oEntity,
-                    source,
-                    amount,
-                    resisted,
-                    damageType
-                }));
-                this.runPropEffectScript(oEntity, 'damaged', {
-                    damageType,
-                    amount,
-                    resisted,
-                    manager: this,
-                    creature: oEntity,
-                    source
-                });
-            });
-            oEntity.events.on(CONSTS.EVENT_CREATURE_DEATH, evt => {
-                this._events.emit(CONSTS.EVENT_CREATURE_DEATH, new CreatureDeathEvent({
-                    system: this._systemInstance,
-                    creature: oEntity,
-                    killer: evt.killer
-                }));
-            });
-            oEntity.events.on(CONSTS.EVENT_CREATURE_EQUIP_ITEM, evt => {
-                this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
-                    system: this._systemInstance,
-                    creature: oEntity,
-                    ...evt
-                });
-                if (this._horde.isCreatureActive(oEntity)) {
-                    this._horde.setCreatureActive(oEntity);
-                }
-            });
-            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
-                system: this._systemInstance,
-                creature: oEntity,
-                ...evt
-            }));
-            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM_FAILED, {
-                system: this._systemInstance,
-                creature: oEntity,
-                ...evt
-            }));
-            if (this._horde.isCreatureActive(oEntity)) {
-                this._horde.setCreatureActive(oEntity);
-            }
-            oEntity.events.on(CONSTS.EVENT_CREATURE_LEVEL_UP, evt => {
-                this.evolution.levelUp(this, oEntity);
-                this._events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP, {
-                    ...evt,
-                    system: this._systemInstance,
-                    creature: oEntity
-                });
-            });
-        }
-        return oEntity;
-    }
-
-    /**
-     * Destroy an entity
-     * @param oEntity
-     */
-    destroyEntity (oEntity) {
-        if (oEntity instanceof Creature) {
-            this._combatManager.removeFighter(oEntity);
-            this._horde.unlinkCreature(oEntity);
-        }
-    }
-
-    processEntities () {
-        this
-            ._horde
-            .activeCreatures
-            .map(creature => {
-                creature.mutations.rechargeActions();
-                creature.mutations.rechargeSpellSlots();
-                creature.getters.getActiveProperties.forEach(property => {
-                    this.runPropertyScript(creature, 'mutate', {});
-                });
-                return creature.getters.getEffects;
-            })
-            .flat()
-            .forEach(effect => {
-                this._effectProcessor.processEffect(effect);
-            });
-        this._horde.shrinkActiveCreatureRegistry();
-    }
-
-    /**
-     * Will remove dead effects (effects with duration <= 0 && depletionDelay <= 0)
-     */
-    processDeadEffects () {
-        this
-            ._horde
-            .activeCreatures
-            .forEach(creature => {
-                const cm = creature.mutations;
-                const cg = creature.getters;
-                cm.depleteEffects();
-                cg.getDeadEffects.forEach(effect => {
-                    cm.removeEffect({ effect });
-                });
-            });
-
-    }
-
-    /**
-     * Returns the distance between two entities
-     * - Creature not in combat is at defaultDistance
-     * - Creature in combat is at combat.distance
-     * @param oCreature1 {Creature}
-     * @param oCreature2 {Creature}
-     * @return {number}
-     */
-    getCreatureDistance (oCreature1, oCreature2) {
-        if (oCreature2 === oCreature1) {
-            return 0;
-        }
-        const cm = this.combatManager;
-        if (cm.isCreatureFighting(oCreature1, oCreature2)) {
-            return cm.getCombat(oCreature1).distance;
-        }
-        if (cm.isCreatureFighting(oCreature2, oCreature1)) {
-            return cm.getCombat(oCreature2).distance;
-        }
-        // creatures are not fighting each other
-        return cm.defaultDistance;
-    }
-
-    /**
-     * Returns a creature level
-     * @param oCreature {Creature}
-     * @return {number}
-     */
-    getCreatureLevel (oCreature) {
-        return oCreature.getters.getLevel;
-    }
-
     //  ▄▄          ▗▖      ▗▖
     // ▝▙▄ ▗▛▀ ▐▛▜▖ ▄▖ ▐▛▜▖▝▜▛▘▗▛▀▘
     //   ▐▌▐▌  ▐▌   ▐▌ ▐▙▟▘ ▐▌  ▀▜▖
@@ -1207,40 +1249,6 @@ class Manager {
         } else {
             throw new Error(`script ${script} not found.`);
         }
-    }
-
-
-    //  ▄▄
-    // ▐▌▝▘▗▛▜▖▐▛▜▖▗▛▜▖
-    // ▐▌▗▖▐▌▐▌▐▌  ▐▛▀▘
-    //  ▀▀  ▀▀ ▝▘   ▀▀
-
-    process () {
-        if ((this._time % this._combatManager.defaultTickCount) === 0) {
-            // Processing entities each turn begin
-            this.processEntities();
-        }
-        this.processCombats();
-        this.processDeadEffects();
-        ++this._time;
-    }
-
-    /**
-     * Returns parameter if is a Creature
-     * @param oEntity {Creature|RBSItem|null}
-     * @returns {Creature}
-     */
-    isCreature (oEntity) {
-        return checkEntityCreature(oEntity);
-    }
-
-    /**
-     * Returns parameter if is a RBSItem
-     * @param oEntity {Creature|RBSItem|null}
-     * @returns {RBSItem}
-     */
-    isItem (oEntity) {
-        return checkEntityItem(oEntity);
     }
 
 

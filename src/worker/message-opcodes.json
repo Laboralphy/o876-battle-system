@@ -1,0 +1,15 @@
+{
+  "OPCODE_INIT": "Init",
+  "OPCODE_SHUTDOWN": "Shutdown",
+  "OPCODE_CREATE_ENTITY": "CreateEntity",
+  "OPCODE_DESTROY_ENTITY": "DestroyEntity",
+  "OPCODE_GET_CREATURE_VITALS": "GetCreatureVitals",
+  "OPCODE_GET_DISTANCE_BETWEEN_CREATURES": "GetDistanceBetweenCreatures",
+  "OPCODE_GET_CREATURE_FACTION": "GetCreatureFaction",
+  "OPCODE_SET_CREATURE_FACTION": "SetCreatureFaction",
+  "OPCODE_GET_CREATURE_LOCATION": "GetCreatureLocation",
+  "OPCODE_SET_CREATURE_LOCATION": "SetCreatureLocation",
+  "OPCODE_GET_CREATURE_LOCATION_OCCUPANTS": "GetCreatureRoomOccupants",
+  "OPCODE_INCREASE_CREATURE_XP": "IncreaseCreatureXP",
+  "OPCODE_GET_VERSION": "GetVersion"
+}
