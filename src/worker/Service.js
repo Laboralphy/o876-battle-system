@@ -43,6 +43,13 @@ class Service {
         });
     }
 
+    sendEventMessage (sEvent, oPayload) {
+        this.parentPort.postMessage({
+            event: sEvent,
+            ...oPayload
+        });
+    }
+
     defineHandlers () {
         this.parentPort.on('message', ({ requestId, opcode, request}) => {
             const sMeth = 'opcode' + opcode;
@@ -52,6 +59,67 @@ class Service {
             }
         });
     }
+
+    defineCombatHandler () {
+        const CONSTS = this._manager.CONSTS;
+        const e = this._manager.events;
+        e.on(CONSTS.EVENT_COMBAT_START, evt => {
+            const { attacker, target } = evt;
+            this.sendEventMessage(CONSTS.EVENT_COMBAT_START, {
+                attacker: attacker.id,
+                target: target.id
+            });
+        });
+        e.on(CONSTS.EVENT_COMBAT_MOVE, evt => {
+            const {
+                speed,
+                attacker,
+                target,
+                distance
+            } = evt;
+            this.sendEventMessage(CONSTS.EVENT_COMBAT_MOVE, {
+                attacker: attacker.id,
+                target: target.id,
+                speed,
+                distance
+            });
+        });
+        e.on(CONSTS.EVENT_COMBAT_TURN, evt => {
+            const {
+                combat
+            } = evt;
+            this.sendEventMessage(CONSTS.EVENT_COMBAT_TURN, {
+                attacker: combat.attacker.id,
+                target: combat.target.id,
+                turn: combat.turn
+            });
+        });
+        e.on(CONSTS.EVENT_CREATURE_ACTION, evt => {
+            this.eventCombatAction(evt);
+        });
+        e.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => {
+            this.eventCreatureSelectWeapon(evt);
+        });
+        e.on(CONSTS.EVENT_COMBAT_ATTACK, evt => {
+            this.eventCombatAttack(evt);
+        });
+        e.on(CONSTS.EVENT_CREATURE_DAMAGED, (evt) => {
+            this.eventCreatureDamaged(evt);
+        });
+        e.on(CONSTS.EVENT_CREATURE_DEATH, (evt) => {
+            this.eventCreatureDeath(evt);
+        });
+        e.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => {
+            this.eventCreatureSavingThrow(evt);
+        });
+        e.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, (evt) => {
+            this.eventCreatureEffectUpdate(evt);
+        });
+        e.on(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, (evt) => {
+            this.eventCreatureEffectUpdate(evt);
+        });
+    }
+
 
     startDoomLoop () {
         this.stopDoomLoop();

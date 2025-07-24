@@ -633,7 +633,7 @@ class Combat {
                 speed: nRunSpeed,
                 previousDistance,
                 distance: d => {
-                    nNewDistance = parseFloat(d) || 0;
+                    nNewDistance = parseInt(d) || 0;
                 }
             });
             // if current distance is at melee range and new distance is not at melee range,

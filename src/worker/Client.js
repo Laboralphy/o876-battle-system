@@ -44,6 +44,11 @@ class Client {
     // ▐▌▗▖▐▌▐▌▐▌  ▐▛▀▘
     //  ▀▀  ▀▀ ▝▘   ▀▀
 
+    /**
+     * Initialize manager worker and start doom loop
+     * @param modules {string[]} list of modules to load
+     * @returns {Promise<unknown>}
+     */
     init ({ modules = [] }) {
         this._worker = new Worker(path.resolve(__dirname, 'Service.js'));
         return this.transaction(MESSAGE_OPCODES.OPCODE_INIT, {
@@ -51,11 +56,19 @@ class Client {
         });
     }
 
+    /**
+     * Stop doom loop and unload manager worker
+     * @returns {Promise<number>}
+     */
     async shutdown() {
         await this.transaction(MESSAGE_OPCODES.OPCODE_SHUTDOWN, {});
         return this._worker.terminate();
     }
 
+    /**
+     * Returns manager version
+     * @returns {Promise<{ version: string }>}
+     */
     getVersion () {
         return this.transaction(MESSAGE_OPCODES.OPCODE_GET_VERSION);
     }
@@ -68,9 +81,10 @@ class Client {
     // ▝▀▀▘▝▘▝▘  ▀▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▀▀
 
     /**
+     * Create a new entity
      * @see Manager.createEntity()
-     * @param resref {string}
-     * @param id {string}
+     * @param resref {string} reference of blueprint
+     * @param id {string} identifier of new entity
      * @returns {Promise<unknown>}
      */
     createEntity (resref, id = '') {
@@ -79,7 +93,7 @@ class Client {
 
     /**
      * Destroys an entity
-     * @param id {string}
+     * @param id {string} identifier of entity to destroy
      * @returns {Promise<unknown>}
      */
     destroyEntity (id) {
