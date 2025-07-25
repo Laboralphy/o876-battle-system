@@ -18,6 +18,7 @@
   "EVENT_CREATURE_CAST_SPELL": "creature.cast-spell",
   "EVENT_CREATURE_DRINK_POTION": "creature.drink-potion",
   "EVENT_CREATURE_THROW_GRENADE": "creature.throw-grenade",
+  "EVENT_CREATURE_USE_ITEM": "creature.use-item",
   "EVENT_CREATURE_LEVEL_UP": "creature.level-up",
   "EVENT_CREATURE_CREATED": "creature.created",
   "EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY": "effect-immunity",

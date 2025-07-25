@@ -50,7 +50,7 @@ class Client {
      * @returns {Promise<unknown>}
      */
     init ({ modules = [] }) {
-        this._worker = new Worker(path.resolve(__dirname, 'Service.js'));
+        this._worker = new Worker(path.resolve(__dirname, 'worker.js'));
         return this.transaction(MESSAGE_OPCODES.OPCODE_INIT, {
             modules
         });
@@ -121,6 +121,16 @@ class Client {
         });
     }
 
+    /**
+     * Returns an item's statistics
+     * @param id {string}
+     */
+    getItemData (id) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_GET_ITEM_DATA, {
+            item: id
+        });
+    }
+
     // ▗▄▄▖         ▗▖  ▗▖
     // ▐▙▄  ▀▜▖▗▛▀ ▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖▗▛▀▘
     // ▐▌  ▗▛▜▌▐▌   ▐▌  ▐▌ ▐▌▐▌▐▌▐▌ ▀▜▖
@@ -155,6 +165,72 @@ class Client {
 
     increaseCreatureXP (id, xp) {
         return this.transaction(MESSAGE_OPCODES.OPCODE_INCREASE_CREATURE_XP, { creature: id, xp });
+    }
+
+    //  ▄▄         ▗▖       ▗▖
+    // ▐▌▝▘▗▛▜▖▐▙▟▙▐▙▄  ▀▜▖▝▜▛▘▗▛▀▘
+    // ▐▌▗▖▐▌▐▌▐▛▛█▐▌▐▌▗▛▜▌ ▐▌  ▀▜▖
+    //  ▀▀  ▀▀ ▝▘ ▀▝▀▀  ▀▀▘  ▀▘▝▀▀
+    // Combats
+
+    startCombat (idAttacker, idTarget) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_START_COMBAT, { attacker: idAttacker, target: idTarget });
+    }
+
+    endCombat (idAttacker, bothSides) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_END_COMBAT, { attacker: idAttacker, bothSides });
+    }
+
+    getCombatInfo (idAttacker) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_GET_COMBAT_INFO, { attacker: idAttacker });
+    }
+
+    combatApproach (idAttacker) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_COMBAT_APPROACH, { attacker: idAttacker });
+    }
+
+    combatRetreat (idAttacker) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_COMBAT_RETREAT, { attacker: idAttacker });
+    }
+
+
+    //  ▗▖      ▗▖  ▗▖
+    // ▗▛▜▖▗▛▀ ▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖▗▛▀▘
+    // ▐▙▟▌▐▌   ▐▌  ▐▌ ▐▌▐▌▐▌▐▌ ▀▜▖
+    // ▝▘▝▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▘▝▘▝▀▀
+
+    doAction (idCreature, idAction, idTarget = '') {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_DO_ACTION, { creature: idCreature, target: idTarget, action: idAction });
+    }
+
+    // ▗▖ ▄         ▗▖          ▟▜▖     ▄▄          ▄▖  ▄▖                  ▗▖  ▗▖
+    // ▐█▟█ ▀▜▖▗▛▜▌ ▄▖ ▗▛▀      ▟▛     ▝▙▄ ▐▛▜▖▗▛▜▖ ▐▌  ▐▌     ▗▛▀  ▀▜▖▗▛▀▘▝▜▛▘ ▄▖ ▐▛▜▖▗▛▜▌
+    // ▐▌▘█▗▛▜▌▝▙▟▌ ▐▌ ▐▌      ▐▌▜▛      ▐▌▐▙▟▘▐▛▀▘ ▐▌  ▐▌     ▐▌  ▗▛▜▌ ▀▜▖ ▐▌  ▐▌ ▐▌▐▌▝▙▟▌
+    // ▝▘ ▀ ▀▀▘▗▄▟▘ ▀▀  ▀▀      ▀▘▀     ▀▀ ▐▌   ▀▀  ▀▀  ▀▀      ▀▀  ▀▀▘▝▀▀   ▀▘ ▀▀ ▝▘▝▘▗▄▟▘
+
+    castSpell (idCreature, idSpell, idTarget = '') {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_CAST_SPELL, { creature: idCreature, target: idTarget, spell: idSpell });
+    }
+
+    getSpellData (idSpell) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_GET_SPELL_DATA, { spell: idSpell });
+    }
+
+    // ▗▄▄▖ ▗▖                  ▟▜▖                 ▗▖                  ▗▖
+    //  ▐▌ ▝▜▛▘▗▛▜▖▐▙▟▙▗▛▀▘     ▟▛     ▗▛▜▖▗▛▜▌▐▌▐▌ ▄▖ ▐▛▜▖▐▙▟▙▗▛▜▖▐▛▜▖▝▜▛▘
+    //  ▐▌  ▐▌ ▐▛▀▘▐▛▛█ ▀▜▖    ▐▌▜▛    ▐▛▀▘▝▙▟▌▐▌▐▌ ▐▌ ▐▙▟▘▐▛▛█▐▛▀▘▐▌▐▌ ▐▌
+    // ▝▀▀▘  ▀▘ ▀▀ ▝▘ ▀▝▀▀      ▀▘▀     ▀▀   ▐▌ ▀▀▘ ▀▀ ▐▌  ▝▘ ▀ ▀▀ ▝▘▝▘  ▀▘
+
+    useItem (idCreature, idItem, idTarget = '') {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_CAST_SPELL, { creature: idCreature, target: idTarget, item: idItem });
+    }
+
+    equipItem (idCreature, idItem, bypassCurse = false) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_EQUIP_ITEM, { creature: idCreature, item: idItem, bypassCurse });
+    }
+
+    unequipItem (idCreature, idItem, bypassCurse = false) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_UNEQUIP_ITEM, { creature: idCreature, item: idItem, bypassCurse });
     }
 }
 

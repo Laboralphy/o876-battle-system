@@ -1,13 +1,14 @@
 const GenericEvent = require('./GenericEvent');
 const CONSTS = require('../consts');
 
-class CreatureThrowGrenadeEvent extends GenericEvent {
+class CreatureUseItemEvent extends GenericEvent {
     constructor ({ system, creature, target = null, action }) {
-        super(CONSTS.EVENT_CREATURE_THROW_GRENADE, system);
+        super(CONSTS.EVENT_CREATURE_USE_ITEM, system);
         this.creature = this.validateCreature(creature);
         this.target = target ? this.validateCreature(target) : null;
-        this.spell = action.parameters.spell.id;
+        this.item = action.parameters.item;
+        this.spell = action.parameters.spell;
     }
 }
 
-module.exports = CreatureThrowGrenadeEvent;
+module.exports = CreatureUseItemEvent;

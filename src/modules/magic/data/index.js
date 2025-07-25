@@ -1,12 +1,12 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-20T22:44:29.324Z
+// Date : 2025-07-25T16:58:52.224Z
 // List of files in ./src/modules/magic/data
 
 module.exports = {
     'SPELLS': {
-        'SPELL_ACID_SPLASH': require('./spells/spell-acid-splash.json'),
-        'SPELL_CHILL_TOUCH': require('./spells/spell-chill-touch.json'),
-        'SPELL_FIRE_BOLT': require('./spells/spell-fire-bolt.json'),
-        'SPELL_LIGHT': require('./spells/spell-light.json')
+        'ACID_SPLASH': require('./spells/acid-splash.json'),
+        'CHILL_TOUCH': require('./spells/chill-touch.json'),
+        'FIRE_BOLT': require('./spells/fire-bolt.json'),
+        'LIGHT': require('./spells/light.json')
     }
 };

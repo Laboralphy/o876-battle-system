@@ -15,7 +15,7 @@ describe('Fire Bolt', function () {
                 spell,
                 freeCast
             } = evt;
-            aLog.push(`${creature.id} casts ${spell} ${freeCast ? '(free) ' : ''}at ${target.id}`);
+            aLog.push(`${creature.id} casts ${spell.id} ${freeCast ? '(free) ' : ''}at ${target.id}`);
         });
         m.events.on(CONSTS.EVENT_CREATURE_DAMAGED, (evt) => {
             aLog.push(`${evt.creature.id} damaged by ${evt.source.id}: ${evt.amount} ${evt.damageType}`);

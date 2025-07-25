@@ -34,6 +34,7 @@ const CONSTS = require('../../consts');
  * @property effects {RBSEffect[]}
  * @property equipment {[slot: string]: RBSItem}
  * @property encumbrance {number}
+ * @property environment {{ [env: string]: boolean }}
  * @property proficiencies {string[]}
  * @property environment {Object<string, boolean >}
  * @property selectedOffensiveSlot {string}

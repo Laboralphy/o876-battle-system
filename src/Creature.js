@@ -105,8 +105,8 @@ class Creature {
         return this._blueprint;
     }
 
-    equipItem (oItem) {
-        const r = this.mutations.equipItem({ item: oItem });
+    equipItem (oItem, bypassCurse = false) {
+        const r = this.mutations.equipItem({ item: oItem, bypassCurse });
         const {
             previousItem,
             newItem,
@@ -149,11 +149,14 @@ class Creature {
     /**
      * Removes an equipped item from equipment
      * @param oItem {RBSItem}
+     * @param bypassCurse
      */
-    removeItem (oItem) {
+    removeItem (oItem, bypassCurse = false) {
         const sSlot = this.getItemSlot(oItem);
         if (sSlot) {
-            this.mutations.equipItem({ item: oItem, slot: sSlot });
+            return this.mutations.equipItem({ item: null, slot: sSlot, bypassCurse });
+        } else {
+            throw new Error(`item ${oItem.id} is not equipped`);
         }
     }
 

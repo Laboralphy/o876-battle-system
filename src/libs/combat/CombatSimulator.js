@@ -69,10 +69,8 @@ class CombatSimulator {
         } = evt;
         switch (action.actionType) {
         case CONSTS.COMBAT_ACTION_TYPE_SPELL: {
-            if (action.parameters.potion) {
-                this.sendTextEvent(creature.id, 'drinks potion of', action.parameters.spell.id);
-            } else if (action.parameters.grenade) {
-                this.sendTextEvent(creature.id, 'throws grenade of', action.parameters.spell.id, 'at', target.id);
+            if (action.parameters.item) {
+                this.sendTextEvent(creature.id, 'uses item', action.parameters.item, 'that produces spell-like effect', action.parameters.spell.id, 'at', target.id);
             } else {
                 this.sendTextEvent(creature.id, 'casts', action.parameters.spell.id, 'at', target.id);
             }
@@ -80,6 +78,26 @@ class CombatSimulator {
         }
         }
         this.sendTextEvent(evt.creature.id, 'used action', evt.action.id);
+    }
+
+
+    /**
+     * Event handler : a creature is using an action
+     * @param evt {CreatureUseItemEvent}
+     */
+    eventCombatUseItem (evt) {
+        const {
+            creature,
+            target,
+            spell,
+            item
+        } = evt;
+        // if (action.parameters.item) {
+        //     this.sendTextEvent(creature.id, 'uses item', action.parameters.item, 'that produces spell-like effect', action.parameters.spell.id, 'at', target.id);
+        // } else {
+        //     this.sendTextEvent(creature.id, 'casts', action.parameters.spell.id, 'at', target.id);
+        // }
+        // this.sendTextEvent(evt.creature.id, 'used action', evt.action.id);
     }
 
     /**
@@ -216,6 +234,9 @@ class CombatSimulator {
         });
         e.on(CONSTS.EVENT_CREATURE_ACTION, evt => {
             this.eventCombatAction(evt);
+        });
+        e.on(CONSTS.EVENT_CREATURE_USE_ITEM, evt => {
+            this.eventCombatUseItem(evt);
         });
         e.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => {
             this.eventCreatureSelectWeapon(evt);

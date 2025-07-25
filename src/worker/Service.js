@@ -1,34 +1,17 @@
-const { parentPort } = require('worker_threads');
 const { Manager } = require('../../index');
 
 class Service {
-    constructor () {
+    /**
+     * @param parentPort {MessagePort}
+     */
+    constructor (parentPort) {
         /**
          * @type {Manager}
          * @private
          */
         this._manager = null;
-        if (!parentPort) {
-            throw new Error('parent port is not defined');
-        }
         this._parentPort = parentPort;
         this._doomLoopId = 0;
-    }
-
-    /**
-     * return instance of the message port
-     * @returns {MessagePort}
-     */
-    get parentPort () {
-        return this._parentPort;
-    }
-
-    /**
-     * return instance of the manager
-     * @returns {Manager}
-     */
-    get manager () {
-        return this._manager;
     }
 
     /**
@@ -37,30 +20,42 @@ class Service {
      * @param result {{}}
      */
     sendResponse (requestId,  result) {
-        this.parentPort.postMessage({
-            result,
-            requestId
-        });
+        if (this._parentPort) {
+            this._parentPort.postMessage({
+                result,
+                requestId
+            });
+        }
     }
 
     sendEventMessage (sEvent, oPayload) {
-        this.parentPort.postMessage({
-            event: sEvent,
-            ...oPayload
-        });
+        if (this._parentPort) {
+            this._parentPort.postMessage({
+                event: sEvent,
+                ...oPayload
+            });
+        }
     }
 
     defineHandlers () {
-        this.parentPort.on('message', ({ requestId, opcode, request}) => {
-            const sMeth = 'opcode' + opcode;
-            if (sMeth in this) {
-                const result = this[sMeth](requestId, request);
-                this.sendResponse(requestId, result);
-            }
-        });
+        this._parentPort.on('message', ({ requestId, opcode, request }) => this.query(requestId, opcode, request));
     }
 
-    defineCombatHandler () {
+    query (requestId, opcode, request) {
+        const sMeth = 'opcode' + opcode;
+        if (sMeth in this) {
+            const result = this[sMeth](request);
+            if (this._parentPort) {
+                return this.sendResponse(requestId, result);
+            } else {
+                return result;
+            }
+        } else {
+            throw new Error(`opcode ${opcode} is unknown`);
+        }
+    }
+
+    defineManagerHandler () {
         const CONSTS = this._manager.CONSTS;
         const e = this._manager.events;
         e.on(CONSTS.EVENT_COMBAT_START, evt => {
@@ -94,32 +89,220 @@ class Service {
                 turn: combat.turn
             });
         });
-        e.on(CONSTS.EVENT_CREATURE_ACTION, evt => {
-            this.eventCombatAction(evt);
+        e.on(CONSTS.EVENT_CREATURE_ACTION, ({
+            creature,
+            target,
+            action
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_ACTION, {
+                creature: creature.id,
+                target: target.id,
+                action: action.id
+            });
         });
-        e.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, evt => {
-            this.eventCreatureSelectWeapon(evt);
+        e.on(CONSTS.EVENT_CREATURE_DRINK_POTION, ({
+            creature,
+            spell
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_DRINK_POTION, {
+                creature: creature.id,
+                spell: spell.id
+            });
         });
-        e.on(CONSTS.EVENT_COMBAT_ATTACK, evt => {
-            this.eventCombatAttack(evt);
+        e.on(CONSTS.EVENT_CREATURE_THROW_GRENADE, ({
+            creature,
+            target,
+            spell
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_THROW_GRENADE, {
+                creature: creature.id,
+                target: target.id,
+                spell: spell.id
+            });
         });
-        e.on(CONSTS.EVENT_CREATURE_DAMAGED, (evt) => {
-            this.eventCreatureDamaged(evt);
+        e.on(CONSTS.EVENT_CREATURE_CAST_SPELL, ({
+            creature,
+            target,
+            spell,
+            freeCast
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_THROW_GRENADE, {
+                creature: creature.id,
+                target: target.id,
+                spell: spell.id,
+                freeCast
+            });
         });
-        e.on(CONSTS.EVENT_CREATURE_DEATH, (evt) => {
-            this.eventCreatureDeath(evt);
+        e.on(CONSTS.EVENT_CREATURE_SELECT_WEAPON, ({
+            creature,
+            weapon
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_SELECT_WEAPON, {
+                creature: creature.id,
+                weapon: weapon.id
+            });
         });
-        e.on(CONSTS.EVENT_CREATURE_SAVING_THROW, evt => {
-            this.eventCreatureSavingThrow(evt);
+        e.on(CONSTS.EVENT_COMBAT_ATTACK, ({ attack }) => {
+            /**
+             * @var {AttackOutcome}
+             */
+            const oAttackOutcome = attack;
+            const {
+                attacker,
+                target,
+                weapon,
+                ammo,
+                spell,
+                ac,
+                roll,
+                hit,
+                attackBonus,
+                range,
+                sneak,
+                opportunity,
+                rush,
+                improvised,
+                visibility,
+                ability,
+                rollBias,
+                attackType,
+                critical,
+                lethal,
+                failed,
+                failure,
+                damages
+            } = attack;
+            this.sendEventMessage(CONSTS.EVENT_COMBAT_ATTACK, {
+                // who is concerned
+                attacker: attacker.id,
+                target: target.id,
+                // mean of attack
+                weapon: weapon?.id ?? null,
+                ammo: ammo?.id ?? null,
+                spell: spell?.id ?? null,
+                // Hit calculation
+                ac,
+                ability,
+                attackType,
+                attackBonus,
+                roll,
+                rollBias: {
+                    advantages: Array.from(rollBias.advantages),
+                    disadvantages: Array.from(rollBias.disadvantages),
+                    result: rollBias.result
+                },
+                hit,
+                // Some context
+                range,
+                sneak,
+                opportunity,
+                rush,
+                improvised,
+                visibility,
+                critical,
+                lethal,
+                failed,
+                failure,
+                damages
+            });
         });
-        e.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, (evt) => {
-            this.eventCreatureEffectUpdate(evt);
+        e.on(CONSTS.EVENT_CREATURE_DAMAGED, ({
+            creature,
+            source,
+            amount,
+            resisted,
+            damageType
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_DAMAGED, {
+                creature: creature.id,
+                source : source.id,
+                amount,
+                resisted,
+                damageType
+            });
         });
-        e.on(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, (evt) => {
-            this.eventCreatureEffectUpdate(evt);
+        e.on(CONSTS.EVENT_CREATURE_DEATH, ({
+            creature,
+            killer
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_DAMAGED, {
+                creature: creature.id,
+                killer : killer.id
+            });
+        });
+        e.on(CONSTS.EVENT_CREATURE_SAVING_THROW, ({
+            creature,
+            roll,
+            rollBias,
+            dc,
+            success,
+            ability,
+            bonus
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_SAVING_THROW, {
+                creature: creature.id,
+                roll,
+                rollBias,
+                dc,
+                success,
+                ability,
+                bonus
+            });
+        });
+        e.on(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, ({
+            creature,
+            effect
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_EFFECT_APPLIED, {
+                creature: creature.id,
+                effect
+            });
+        });
+        e.on(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, ({
+            creature,
+            effect
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_EFFECT_EXPIRED, {
+                creature: creature.id,
+                effect
+            });
+        });
+        e.on(CONSTS.EVENT_CREATURE_EQUIP_ITEM, ({
+            creature,
+            item,
+            slot
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
+                creature: creature.id,
+                item: item?.id ?? '',
+                slot
+            });
+        });
+        e.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM, ({
+            creature,
+            item,
+            slot
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_REMOVE_ITEM, {
+                creature: creature.id,
+                item: item?.id ?? '',
+                slot
+            });
+        });
+        e.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, ({
+            creature,
+            item,
+            slot,
+            cursedItem
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, {
+                creature: creature.id,
+                item: item?.id ?? '',
+                slot,
+                cursedItem: cursedItem?.id ?? ''
+            });
         });
     }
-
 
     startDoomLoop () {
         this.stopDoomLoop();
@@ -133,22 +316,25 @@ class Service {
         }
     }
 
-    _outcome (sError = false) {
-        return { error: sError};
-    }
-
     _success () {
-        return this._outcome();
+        return { error: false };
     }
 
     _error (sError) {
-        return this._outcome(sError);
+        return { error: sError };
     }
+
 
     _getCreature (idCreature) {
         const oCreature = this._manager.getEntity(idCreature);
         this._manager.checkEntityCreature(oCreature);
         return oCreature;
+    }
+
+    _getItem (idItem) {
+        const oItem = this._manager.getEntity(idItem);
+        this._manager.checkEntityItem(oItem);
+        return oItem;
     }
 
 
@@ -183,6 +369,10 @@ class Service {
         return this._success();
     }
 
+    /**
+     * Returns manager version
+     * @returns {{version: string}}
+     */
     opcodeGetVersion () {
         return {
             version: this._manager.version
@@ -228,14 +418,37 @@ class Service {
                 base: abilityBaseValues[sAbility],
                 value: nValue,
                 modifier: abilityModifiers[sAbility]
-            }))
+            })),
+            equipment: g.getEquipment
         };
     }
 
+    /**
+     * Returns distance between two creatures
+     * @param creature1 {Creature}
+     * @param creature2 {Creature}
+     * @returns {{distance: number}}
+     */
     opcodeGetDistanceBetweenCreatures ({ creature1, creature2 }) {
         const oCreature1 = this._getCreature(creature1);
         const oCreature2 = this._getCreature(creature2);
         return { distance: this._manager.getCreatureDistance(oCreature1, oCreature2) };
+    }
+
+    /**
+     * Return data about an item
+     * @param item {string}
+     * @returns {{item: RBSItem}}
+     */
+    opcodeGetItemData ({ item }) {
+        /**
+         * @type {RBSItem}
+         */
+        const oItem = this._manager.getEntity(item);
+        this._manager.checkEntityItem(oItem);
+        return {
+            item
+        };
     }
 
     // ▗▄▄▖         ▗▖  ▗▖
@@ -254,7 +467,7 @@ class Service {
 
     opcodeSetCreatureFaction ({ creature, faction }) {
         const oCreature = this._getCreature(creature);
-        this._manager.setCreatureFaction(oCreature);
+        this._manager.setCreatureFaction(oCreature, faction);
         return {
             faction
         };
@@ -302,12 +515,148 @@ class Service {
     // ▐▌▗▖▐▌▐▌▐▛▛█▐▌▐▌▗▛▜▌ ▐▌  ▀▜▖
     //  ▀▀  ▀▀ ▝▘ ▀▝▀▀  ▀▀▘  ▀▘▝▀▀
     // Combats
+
+    opcodeStartCombat ({ attacker, target }) {
+        const oAttacker = this._getCreature(attacker);
+        const oTarget = this._getCreature(target);
+        const oCombat = this._manager.startCombat(oAttacker, oTarget);
+        return {
+            combat: oCombat.id,
+            distance: oCombat.distance
+        };
+    }
+
+    opcodeEndCombat ({ attacker, bothSides = false }) {
+        const oAttacker = this._getCreature(attacker);
+        this._manager.endCombat(oAttacker, bothSides);
+        return this._success();
+    }
+
+    opcodeGetCreatureCombatInfo ({ attacker }) {
+        const oAttacker = this._getCreature(attacker);
+        const oCombat = this._manager.getCreatureCombat(oAttacker);
+        if (oCombat) {
+            return {
+                id: oCombat.id,
+                attacker: oAttacker.id,
+                target: oCombat.target.id,
+                turn: oCombat.turn,
+                tick: oCombat.tick,
+                distance: oCombat.distance
+            };
+        } else {
+            return this._error('ERR_NOT_IN_COMBAT');
+        }
+    }
+
+    opcodeCombatApproach ({ attacker }) {
+        const oAttacker = this._getCreature(attacker);
+        const oCombat = this._manager.getCreatureCombat(oAttacker);
+        const speed = oAttacker.getters.getSpeed;
+        this._manager.approachTarget(oAttacker, speed);
+        return {
+            attacker,
+            target: oCombat.target.id,
+            distance: oCombat.distance,
+            speed
+        };
+    }
+
+    opcodeCombatRetreat ({ attacker }) {
+        const oAttacker = this._getCreature(attacker);
+        const oCombat = this._manager.getCreatureCombat(oAttacker);
+        const speed = oAttacker.getters.getSpeed;
+        this._manager.approachTarget(oAttacker, speed);
+        return {
+            attacker,
+            target: oCombat.target.id,
+            distance: oCombat.distance,
+            speed
+        };
+    }
+
+    //  ▗▖      ▗▖  ▗▖
+    // ▗▛▜▖▗▛▀ ▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖▗▛▀▘
+    // ▐▙▟▌▐▌   ▐▌  ▐▌ ▐▌▐▌▐▌▐▌ ▀▜▖
+    // ▝▘▝▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▘▝▘▝▀▀
+
+    opcodeDoAction ({ creature, target, action }) {
+        const oCreature = this._getCreature(creature);
+        const oTarget = this._getCreature(target);
+        const oOutcome = this._manager.doAction(oCreature, action, oTarget);
+        if (oOutcome.failure) {
+            return this._error(oOutcome.reason);
+        } else {
+            return this._success();
+        }
+    }
+
+    // ▗▖ ▄         ▗▖          ▟▜▖     ▄▄          ▄▖  ▄▖                  ▗▖  ▗▖
+    // ▐█▟█ ▀▜▖▗▛▜▌ ▄▖ ▗▛▀      ▟▛     ▝▙▄ ▐▛▜▖▗▛▜▖ ▐▌  ▐▌     ▗▛▀  ▀▜▖▗▛▀▘▝▜▛▘ ▄▖ ▐▛▜▖▗▛▜▌
+    // ▐▌▘█▗▛▜▌▝▙▟▌ ▐▌ ▐▌      ▐▌▜▛      ▐▌▐▙▟▘▐▛▀▘ ▐▌  ▐▌     ▐▌  ▗▛▜▌ ▀▜▖ ▐▌  ▐▌ ▐▌▐▌▝▙▟▌
+    // ▝▘ ▀ ▀▀▘▗▄▟▘ ▀▀  ▀▀      ▀▘▀     ▀▀ ▐▌   ▀▀  ▀▀  ▀▀      ▀▀  ▀▀▘▝▀▀   ▀▘ ▀▀ ▝▘▝▘▗▄▟▘
+
+    opcodeCastSpell ({ creature, target, spell }) {
+        const oCreature = this._getCreature(creature);
+        const oTarget = this._getCreature(target);
+        const oOutcome = this._manager.doAction(oCreature, spell, oTarget);
+        if (oOutcome.failure) {
+            return this._error(oOutcome.reason);
+        } else {
+            return this._success();
+        }
+    }
+
+    opcodeGetSpellData ({ spell }) {
+        const oSpellData = this._manager.getSpellData(spell);
+        if (oSpellData) {
+            return {
+                oSpellData
+            };
+        } else {
+            return this._error('ERR_UNKNOWN_SPELL');
+        }
+    }
+
+    // ▗▄▄▖ ▗▖                  ▟▜▖                 ▗▖                  ▗▖
+    //  ▐▌ ▝▜▛▘▗▛▜▖▐▙▟▙▗▛▀▘     ▟▛     ▗▛▜▖▗▛▜▌▐▌▐▌ ▄▖ ▐▛▜▖▐▙▟▙▗▛▜▖▐▛▜▖▝▜▛▘
+    //  ▐▌  ▐▌ ▐▛▀▘▐▛▛█ ▀▜▖    ▐▌▜▛    ▐▛▀▘▝▙▟▌▐▌▐▌ ▐▌ ▐▙▟▘▐▛▛█▐▛▀▘▐▌▐▌ ▐▌
+    // ▝▀▀▘  ▀▘ ▀▀ ▝▘ ▀▝▀▀      ▀▘▀     ▀▀   ▐▌ ▀▀▘ ▀▀ ▐▌  ▝▘ ▀ ▀▀ ▝▘▝▘  ▀▘
+
+    opcodeUseItem ({ creature, target, item }) {
+        const oCreature = this._getCreature(creature);
+        const oTarget = this._getCreature(target);
+        const oItem = this._getItem(item);
+        const oOutcome = this._manager.useItem(oCreature, oItem, oTarget);
+        if (oOutcome.failure) {
+            return this._error(oOutcome.reason);
+        } else {
+            return this._success();
+        }
+    }
+
+    opcodeEquipItem ({ creature, item, bypassCurse = false }) {
+        const oCreature = this._getCreature(creature);
+        const oItem = this._getItem(item);
+        const r = oCreature.equipItem(oItem, bypassCurse);
+        return {
+            previousItem: r.previousItem?.id ?? '',
+            item: r.newItem?.id ?? '',
+            slot: r.slot,
+            cursed: r.cursed
+        };
+    }
+
+    opcodeUnequipItem ({ creature, item, bypassCurse = false }) {
+        const oCreature = this._getCreature(creature);
+        const oItem = this._getItem(item);
+        const r = oCreature.removeItem(oItem, bypassCurse);
+        return {
+            item: r.previousItem?.id ?? '',
+            slot: r.slot,
+            cursed: r.cursed
+        };
+    }
 }
 
-function main() {
-    const oService = new Service();
-    oService.defineHandlers();
-    return oService;
-}
-
-main();
+module.exports = Service;

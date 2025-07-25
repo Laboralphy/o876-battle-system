@@ -11,5 +11,17 @@
   "OPCODE_SET_CREATURE_LOCATION": "SetCreatureLocation",
   "OPCODE_GET_CREATURE_LOCATION_OCCUPANTS": "GetCreatureRoomOccupants",
   "OPCODE_INCREASE_CREATURE_XP": "IncreaseCreatureXP",
-  "OPCODE_GET_VERSION": "GetVersion"
+  "OPCODE_GET_VERSION": "GetVersion",
+  "OPCODE_GET_ITEM_DATA": "GetItemData",
+  "OPCODE_START_COMBAT": "StartCombat",
+  "OPCODE_END_COMBAT": "EndCombat",
+  "OPCODE_GET_COMBAT_INFO": "GetCombatInfo",
+  "OPCODE_COMBAT_APPROACH": "CombatApproach",
+  "OPCODE_COMBAT_RETREAT": "CombatRetreat",
+  "OPCODE_DO_ACTION": "DoAction",
+  "OPCODE_CAST_SPELL": "CastSpell",
+  "OPCODE_USE_ITEM": "UseItem",
+  "OPCODE_GET_SPELL_DATA": "GetSpellData",
+  "OPCODE_EQUIP_ITEM": "OPCODE_EQUIP_ITEM",
+  "OPCODE_UNEQUIP_ITEM": "OPCODE_EQUIP_ITEM"
 }

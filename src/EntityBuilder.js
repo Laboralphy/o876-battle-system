@@ -184,6 +184,7 @@ class EntityBuilder {
      * @property [ac] {number}
      * @property [maxDexterityBonus] {number}
      * @property properties {RBSProperty[]}
+     * @property [spell] {string} spell cast when used
      *
      *
      * @typedef RBSActorBlueprint {object}
@@ -339,6 +340,13 @@ class EntityBuilder {
         }
     }
 
+    /**
+     * Returns a fully instanciated Item or Creature according to blueprint
+     * Returns null in case of a partial blueprint
+     * @param blueprint {RBSActorBlueprint|RBSItemBlueprint}
+     * @param id {string}
+     * @returns {Creature|RBSItem|null}
+     */
     createEntity (blueprint, id = '') {
         const bp = this._registerUnidentifiedBlueprint(blueprint);
         const idbp = bp.ref;
@@ -355,7 +363,7 @@ class EntityBuilder {
         }
 
         case CONSTS.ENTITY_TYPE_PARTIAL: {
-            break;
+            return null;
         }
 
         default: {

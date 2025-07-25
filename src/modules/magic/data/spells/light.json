@@ -1,7 +1,7 @@
 {
   "school": "SCHOOL_EVOCATION",
   "level": 0,
-  "range": 120,
+  "range": 0,
   "hostile": false,
   "target": "SPELL_CAST_TARGET_TYPE_SELF",
   "script": "spell-light"

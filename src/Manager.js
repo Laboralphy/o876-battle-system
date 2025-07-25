@@ -46,8 +46,11 @@ const CreatureDamagedEvent = require('./events/CreatureDamagedEvent');
 const CreatureDeathEvent = require('./events/CreatureDeathEvent');
 const CreatureActionEvent = require('./events/CreatureActionEvent');
 const CreatureCastSpellEvent = require('./events/CreatureCastSpellEvent');
-const CreatureDrinkPotionEvent = require('./events/CreatureDrinkPotionEvent');
-const CreatureThrowGrenadeEvent = require('./events/CreatureThrowGrenadeEvent');
+const CreatureUseItemEvent = require('./events/CreatureUseItemEvent');
+const CreatureEquipItemEvent = require('./events/CreatureEquipItemEvent');
+const CreatureRemoveItemEvent = require('./events/CreatureRemoveItemEvent');
+const CreatureRemoveItemFailedEvent = require('./events/CreatureRemoveItemFailedEvent');
+const CreatureLevelUp = require('./events/CreatureLevelUpEvent');
 const {isEntityCreature, isEntityItem, checkEntityCreature, checkEntityItem} = require('./check-entity');
 
 class Manager {
@@ -340,7 +343,7 @@ class Manager {
     }
 
     /**
-     *
+     * Returns an entity instance (Creature or RBSItem) by specifying identifier
      * @param id {string}
      * @returns {RBSItem|Creature}
      */
@@ -407,6 +410,9 @@ class Manager {
      */
     createEntity (resref, id = '') {
         const oEntity = this._entityBuilder.createEntity(resref, id);
+        if (!oEntity) {
+            return null;
+        }
         if (oEntity instanceof Creature) {
             for (let i = 1; i <= oEntity.getters.getUnmodifiedLevel; ++i) {
                 this.evolution.setupLevel(this, oEntity, i);
@@ -429,6 +435,7 @@ class Manager {
                     system: this._systemInstance,
                     creature: oEntity,
                     roll: evt.roll,
+                    rollBias: evt.rollBias,
                     dc: evt.dc,
                     success: evt.success,
                     bonus: evt.bonus,
@@ -467,35 +474,36 @@ class Manager {
                 }));
             });
             oEntity.events.on(CONSTS.EVENT_CREATURE_EQUIP_ITEM, evt => {
-                this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
+                this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, new CreatureEquipItemEvent({
                     system: this._systemInstance,
                     creature: oEntity,
-                    ...evt
-                });
+                    item: evt.item,
+                    slot: evt.slot
+                }));
                 if (this._horde.isCreatureActive(oEntity)) {
                     this._horde.setCreatureActive(oEntity);
                 }
             });
-            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, {
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM, new CreatureRemoveItemEvent({
                 system: this._systemInstance,
                 creature: oEntity,
                 ...evt
-            }));
-            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM_FAILED, {
+            })));
+            oEntity.events.on(CONSTS.EVENT_CREATURE_REMOVE_ITEM_FAILED, evt => this._events.emit(CONSTS.EVENT_CREATURE_EQUIP_ITEM_FAILED, new CreatureRemoveItemFailedEvent({
                 system: this._systemInstance,
                 creature: oEntity,
                 ...evt
-            }));
+            })));
             if (this._horde.isCreatureActive(oEntity)) {
                 this._horde.setCreatureActive(oEntity);
             }
             oEntity.events.on(CONSTS.EVENT_CREATURE_LEVEL_UP, evt => {
                 this.evolution.levelUp(this, oEntity);
-                this._events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP, {
+                this._events.emit(CONSTS.EVENT_CREATURE_LEVEL_UP, new CreatureLevelUp({
                     ...evt,
                     system: this._systemInstance,
                     creature: oEntity
-                });
+                }));
             });
         } else {
             this._items.set(oEntity.id, oEntity);
@@ -828,6 +836,10 @@ class Manager {
 
     }
 
+    convertTimeToTurns (nHours, nMinutes = 0) {
+        return (nHours * 60 + nMinutes) * 10;
+    }
+
 
     //  ▄▄         ▗▖       ▗▖
     // ▐▌▝▘▗▛▜▖▐▙▟▙▐▙▄  ▀▜▖▝▜▛▘▗▛▀▘
@@ -953,17 +965,6 @@ class Manager {
     }
 
     /**
-     * Returns creature's current target, if in combat
-     * Returns null if not in combat
-     * @param oCreature {Creature}
-     * @returns {Creature|null}
-     */
-    getCombatTarget (oCreature) {
-        const oCombat = this.getCreatureCombat(oCreature);
-        return oCombat ? oCombat.target : null;
-    }
-
-    /**
      * return combat instance of a creature, if involved
      * @param oCreature {Creature}
      * @returns {Combat|null}
@@ -1058,12 +1059,10 @@ class Manager {
             action: oAction
         };
         if (oAction.actionType === CONSTS.COMBAT_ACTION_TYPE_SPELL) {
-            if (oAction.parameters.potion) {
-                // creature drinks a potion, consume a medicine, etc...
-                this._events.emit(CONSTS.EVENT_CREATURE_DRINK_POTION, new CreatureDrinkPotionEvent(oActionEventPayload));
-            } else if (oAction.parameters.grenade) {
+            if (oAction.parameters.item) {
                 // creature throws a grenade, uses a magic wand, uses a magical or technical item, etc...
-                this._events.emit(CONSTS.EVENT_CREATURE_THROW_GRENADE, new CreatureThrowGrenadeEvent(oActionEventPayload));
+                // drinks a potion, consume food, apply medicine...
+                this._events.emit(CONSTS.EVENT_CREATURE_USE_ITEM, new CreatureUseItemEvent(oActionEventPayload));
             } else {
                 // this is a spell
                 this._events.emit(CONSTS.EVENT_CREATURE_CAST_SPELL, new CreatureCastSpellEvent(oActionEventPayload));
@@ -1072,14 +1071,12 @@ class Manager {
             // This is another type of action
             this._events.emit(CONSTS.EVENT_CREATURE_ACTION, oActionEvent);
         }
-        if (oActionEvent.isScriptEnabled) {
-            this.runScript(oAction.script, {
-                manager: this,
-                creature: oCreature,
-                target: oTarget,
-                action: oAction
-            });
-        }
+        this.runScript(oAction.script, {
+            manager: this,
+            creature: oCreature,
+            target: oTarget,
+            action: oAction
+        });
         const bIsActionCoolingDown = oAction.cooldown > 0;
         if (bIsActionCoolingDown) {
             this._horde.setCreatureActive(oCreature);
@@ -1092,15 +1089,13 @@ class Manager {
      * @param sSpell
      * @param oTarget
      * @param freeCast {boolean} if true, and sAction is a spell id, the spell is cast without consuming spell slot
-     * @param potion {boolean} if true, and sAction is a spell, the spell is free cast on caster. / should be a non offensive spell
-     * @param grenade {boolean} if true, and sAction is a spell, the spell is free cast on target. / should be an offensive spell
+     * @param item {RBSItem|null} item used to support spell casting
      * @private
      * @returns {RBSAction}
      */
     _createSpellAction (oCreature, sSpell, oTarget = null, {
         freeCast = false,
-        potion = false,
-        grenade = false
+        item = null
     } = {}) {
         if (oTarget === null) {
             oTarget = oCreature;
@@ -1109,10 +1104,10 @@ class Manager {
         return {
             id: SPECIAL_ACTION_CAST_SPELL,
             requirements: null,
-            limited: false,
+            limited: true,
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL,
             cooldown: 0,
-            charges: Infinity,
+            charges: 1,
             recharging: false,
             range: oSpellData.range,
             script: () => this.castSpell(
@@ -1121,15 +1116,13 @@ class Manager {
                 oTarget,
                 {
                     freeCast,
-                    potion,
-                    grenade
+                    item
                 }
             ),
             parameters: {
                 spell: oSpellData,
                 freeCast,
-                potion,
-                grenade
+                item
             },
             ready: true,
             bonus: false,
@@ -1138,19 +1131,33 @@ class Manager {
     }
 
     /**
+     * Use an item special power
+     * @param oCreature {Creature}
+     * @param oItem {RBSItem}
+     * @param oTarget {Creature|null}
+     */
+    useItem (oCreature, oItem, oTarget = null) {
+        if (!oTarget) {
+            oTarget = oCreature;
+        }
+        const sSpell = oItem.blueprint.spell;
+        return sSpell
+            ? this.doAction(oCreature, sSpell, oTarget, { item: oItem })
+            : new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_ITEM_NO_USE);
+    }
+
+    /**
      * Run an action
      * @param oCreature {Creature}
      * @param sAction {string}
      * @param oTarget {Creature}
      * @param freeCast {boolean} if true, and sAction is a spell id, the spell is cast without consuming spell slot
-     * @param potion {boolean} if true, and sAction is a spell, the spell is free cast on caster. / should be a non offensive spell
-     * @param grenade {boolean} if true, and sAction is a spell, the spell is free cast on target. / should be an offensive spell
+     * @param item {RBSItem|null} items used to assist action (scroll, potion, grenade, wand...)
      * @return {CombatActionOutcome}
      */
     doAction (oCreature, sAction, oTarget = null, {
         freeCast = false,
-        potion = false,
-        grenade = false
+        item = null
     } = {}) {
         // check if creature is in combat
         const oCombat = this.combatManager.getCombat(oCreature);
@@ -1160,8 +1167,7 @@ class Manager {
             const oAction = bIsSpell
                 ? this._createSpellAction(oCreature, sAction, oTarget, {
                     freeCast,
-                    potion,
-                    grenade
+                    item
                 })
                 : sAction;
             if (oTarget === null || oCombat.target === oTarget) {
@@ -1176,8 +1182,7 @@ class Manager {
             const oAction = bIsSpell
                 ? this._createSpellAction(oCreature, sAction, oTarget, {
                     freeCast,
-                    potion,
-                    grenade
+                    item
                 })
                 : oCreature.getters.getActions[sAction];
             // Check if action can be cast
@@ -1273,7 +1278,7 @@ class Manager {
      * @return {RBSSpellData}
      */
     getSpellData (sSpellId) {
-        const sSpellDataConstName = 'SPELL_' + sSpellId.toUpperCase().replace(/-/g, '_');
+        const sSpellDataConstName = sSpellId.toUpperCase().replace(/-/g, '_');
         const oSpellDataRegistry = this.data['SPELLS'];
         if (!oSpellDataRegistry) {
             return null;
@@ -1299,8 +1304,7 @@ class Manager {
     castSpell (sSpellId, caster, target = null, parameters = {}) {
         const {
             freeCast = false,
-            grenade = false,
-            potion = false
+            item = null
         } = parameters;
         const sd = this.getSpellData(sSpellId);
         if (!sd) {
@@ -1321,7 +1325,9 @@ class Manager {
             : (target ?? caster);
 
         const cc = caster.getters.getCapabilitySet;
-        if (!potion && !grenade) {
+        if (!item) {
+            // Does not use item to support casting
+            // Must relay on self only, thus, depends on capabilities
             if (!cc.has(CONSTS.CAPABILITY_CAST_SELF) && target === caster) {
                 // Cannot cast spell because targeting self is disabled at the time
                 return {
@@ -1337,6 +1343,12 @@ class Manager {
                 };
             }
         }
+        if (item && item.dailyCharges === 0) {
+            return {
+                success: false,
+                reason: CONSTS.ACTION_FAILURE_REASON_ITEM_CHARGES_DEPLETED
+            };
+        }
         const nDistance = this.getCreatureDistance(caster, target);
         if (sd.target === CONSTS.SPELL_CAST_TARGET_TYPE_HOSTILE) {
             if (sd.range < nDistance) {
@@ -1349,6 +1361,9 @@ class Manager {
         }
         if (sd.hostile && !this.combatManager.isCreatureFighting(target)) {
             this.startCombat(caster, target);
+        }
+        if (item) {
+            --item.dailyCharges;
         }
         this.runScript(sd.script, {
             manager: this,

@@ -6,7 +6,7 @@ class CreatureCastSpellEvent extends GenericEvent {
         super(CONSTS.EVENT_CREATURE_CAST_SPELL, system);
         this.creature = this.validateCreature(creature);
         this.target = target ? this.validateCreature(target) : null;
-        this.spell = action.parameters.spell.id;
+        this.spell = action.parameters.spell;
         this.freeCast = action.parameters.freeCast;
     }
 }

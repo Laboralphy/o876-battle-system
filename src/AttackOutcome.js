@@ -108,6 +108,20 @@ class AttackOutcome {
          * @private
          */
         this._improvised = false;
+        /**
+         * auto hit and extra damage
+         * @type {boolean}
+         */
+        this._critical = false;
+        /**
+         * Auto miss
+         */
+        this._fumble = false;
+        /**
+         * target hit by attack
+         * @type {boolean}
+         */
+        this._hit = false;
 
 
         /// NON BOOLEANS INDICATORS ///
@@ -143,20 +157,6 @@ class AttackOutcome {
          * @type {string}
          */
         this._attackType = CONSTS.ATTACK_TYPE_ANY;
-        /**
-         * auto hit and extra damage
-         * @type {boolean}
-         */
-        this._critical = false;
-        /**
-         * Auto miss
-         */
-        this._fumble = false;
-        /**
-         * target hit by attack
-         * @type {boolean}
-         */
-        this._hit = false;
         /**
          * attack roll
          * @type {number}
@@ -271,6 +271,10 @@ class AttackOutcome {
 
     get ammo() {
         return this._ammo;
+    }
+
+    get spell () {
+        return this._spell;
     }
 
     get action() {

@@ -26,6 +26,7 @@
       "type": "number"
     },
     "charges": {
+      "description": "number of times the item can be used. (see 'spell' property)",
       "type": "number"
     },
     "extends": {
@@ -43,6 +44,9 @@
     "tag": {
       "description": "A non-unique technical reference. Useful for identifying an item",
       "type": "string"
+    },
+    "spell": {
+      "description": "Spell cast when item is used"
     }
   }
 }
