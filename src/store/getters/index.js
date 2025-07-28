@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-25T16:58:52.519Z
+// Date : 2025-07-26T23:11:09.620Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -31,9 +31,11 @@ module.exports = {
     'getInnateProperties': require('./getInnateProperties.js'),
     'getLevel': require('./getLevel.js'),
     'getMaxHitPoints': require('./getMaxHitPoints.js'),
+    'getMaxPreparedSpells': require('./getMaxPreparedSpells.js'),
     'getMeleeAttackBonus': require('./getMeleeAttackBonus.js'),
     'getOffensiveSlots': require('./getOffensiveSlots.js'),
     'getPoolValues': require('./getPoolValues.js'),
+    'getPreparedSpells': require('./getPreparedSpells.js'),
     'getProficiencyBonus': require('./getProficiencyBonus.js'),
     'getProficiencySet': require('./getProficiencySet.js'),
     'getProperties': require('./getProperties.js'),
@@ -47,6 +49,7 @@ module.exports = {
     'getSlotProperties': require('./getSlotProperties.js'),
     'getSpecie': require('./getSpecie.js'),
     'getSpeed': require('./getSpeed.js'),
+    'getSpellCastingAbility': require('./getSpellCastingAbility.js'),
     'getSpellDifficultyClass': require('./getSpellDifficultyClass.js'),
     'getSpellSlots': require('./getSpellSlots.js'),
     'getUnmodifiedLevel': require('./getUnmodifiedLevel.js'),

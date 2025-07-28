@@ -1,4 +1,3 @@
-const CONSTS = require('../../src/consts');
 const { getNewManager } = require('../../src/libs/test-tools');
 
 describe('Spell light', function () {

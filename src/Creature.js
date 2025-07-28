@@ -364,7 +364,7 @@ class Creature {
      * @returns {{ spellCastingAbility: string, evolution: { level: number, feats: string[] }[] }}
      */
     get classTypeData () {
-        return this.data.CLASS_TYPES[this.getters.getClassType];
+        return this.getters.getSpellCastingAbility;
     }
 }
 

@@ -28,9 +28,11 @@
  * @property getInnateProperties {RBSProperty[]}
  * @property getLevel {number}
  * @property getMaxHitPoints {number}
+ * @property getMaxPreparedSpells {number}
  * @property getMeleeAttackBonus {number}
  * @property getOffensiveSlots {string[]}
  * @property getPoolValues {{ [idPool: string]: number }}
+ * @property getPreparedSpells {string[]}
  * @property getProficiencyBonus {number}
  * @property getProficiencySet {Set<string>}
  * @property getProperties {RBSProperty[]}
@@ -44,6 +46,7 @@
  * @property getSlotProperties {Object<string, RBSProperty[]>}
  * @property getSpecie {string}
  * @property getSpeed {number}
+ * @property getSpellCastingAbility {string}
  * @property getSpellDifficultyClass {Object<string, number>}
  * @property getSpellSlots {{level: number, count: number, used: number, remaining: number, ready: boolean, cooldown: number}[]}
  * @property getUnmodifiedLevel {number}
