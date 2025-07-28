@@ -1,5 +1,6 @@
 {
   "ENVIRONMENT_DARKNESS": "darkness",
+  "ENVIRONMENT_FOG": "fog",
   "ENVIRONMENT_UNDERWATER": "underwater",
   "ENVIRONMENT_WINDY": "windy",
   "ENVIRONMENT_DIFFICULT_TERRAIN": "difficultTerrain"

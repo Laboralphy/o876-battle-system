@@ -191,7 +191,7 @@ class Creature {
         const myProps = mg.getPropertySet;
         const targetEffects = tg.getEffectSet;
         const targetProps = tg.getPropertySet;
-        if (myConditions.has(CONSTS.CONDITION_BLINDED)) {
+        if (myConditions.has(CONSTS.CONDITION_BLINDED) || mg.getEnvironment[CONSTS.ENVIRONMENT_FOG]) {
             return CONSTS.CREATURE_VISIBILITY_BLINDED;
         }
         if (targetEffects.has(CONSTS.EFFECT_INVISIBILITY) && !myEffects.has(CONSTS.EFFECT_SEE_INVISIBILITY)) {

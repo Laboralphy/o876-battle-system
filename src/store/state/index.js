@@ -93,6 +93,7 @@ module.exports = () => ({
     encumbrance: 0,
     environment: {
         [CONSTS.ENVIRONMENT_DARKNESS]: false,
+        [CONSTS.ENVIRONMENT_FOG]: false,
         [CONSTS.ENVIRONMENT_WINDY]: false,
         [CONSTS.ENVIRONMENT_DIFFICULT_TERRAIN]: false,
         [CONSTS.ENVIRONMENT_UNDERWATER]: false
