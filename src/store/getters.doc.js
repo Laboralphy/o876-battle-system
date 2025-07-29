@@ -56,6 +56,8 @@
  * @property isDead {boolean}
  * @property isEquipmentProficient {Object<string, boolean>}
  * @property isRangedWeaponLoaded {boolean}
+ * @property isSpecieEvil {boolean}
+ * @property isSpecieGood {boolean}
  * @property isWieldingShield {boolean}
  * @property isWieldingTwoHandedWeapon {boolean}
  */

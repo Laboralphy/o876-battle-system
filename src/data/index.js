@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-28T08:54:31.471Z
+// Date : 2025-07-29T13:51:55.900Z
 // List of files in ./src/data
 
 module.exports = {
@@ -11,6 +11,7 @@ module.exports = {
     'EXPERIENCE_LEVELS': require('./experience-levels.json'),
     'PROFICIENCY_BONUS': require('./proficiency-bonus.json'),
     'SKILLS': require('./skills.json'),
+    'SPECIE_ALIGNMENT': require('./specie-alignment.json'),
     'VARIABLES': require('./variables.json'),
     'WEAPON_RANGES': require('./weapon-ranges.json')
 };

@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-28T08:54:31.343Z
+// Date : 2025-07-29T13:51:55.789Z
 // List of files in ./src/advantages/functions/attack-rolls/dis
 
 module.exports = {
@@ -8,6 +8,7 @@ module.exports = {
     'DIS_ATTACK_ROLL_POISONED': require('./dis-attack-roll-poisoned.js'),
     'DIS_ATTACK_ROLL_PROPERTY_EFFECT': require('./dis-attack-roll-property-effect.js'),
     'DIS_ATTACK_ROLL_RESTRAINED': require('./dis-attack-roll-restrained.js'),
+    'DIS_ATTACK_ROLL_TARGET_PROTECTED': require('./dis-attack-roll-target-protected.js'),
     'DIS_ATTACK_ROLL_TARGET_UNDETECTED': require('./dis-attack-roll-target-undetected.js'),
     'DIS_ATTACK_ROLL_WINDY_ENVIRONMENT': require('./dis-attack-roll-windy-environment.js')
 };

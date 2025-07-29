@@ -28,8 +28,8 @@ describe('Fire Bolt', function () {
         m.process();
         const combat = m.getCreatureCombat(c1);
         expect(aLog).toEqual([
-            'orc1 casts fire-bolt (free) at orc2',
-            'orc2 damaged by orc1: 10 DAMAGE_TYPE_FIRE'
+            'c1 casts fire-bolt (free) at c2',
+            'c2 damaged by c1: 10 DAMAGE_TYPE_FIRE'
         ]);
     });
 });

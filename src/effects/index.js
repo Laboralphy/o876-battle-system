@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-28T08:54:31.942Z
+// Date : 2025-07-29T13:51:56.076Z
 // List of files in ./src/effects
 
 module.exports = {
@@ -10,6 +10,7 @@ module.exports = {
     'EFFECT_ATTACK_COUNT_MODIFIER': require('./attack-count-modifier.js'),
     'EFFECT_ATTACK_MODIFIER': require('./attack-modifier.js'),
     'EFFECT_BLINDNESS': require('./blindness.js'),
+    'EFFECT_BREAKER': require('./breaker.js'),
     'EFFECT_CHARM': require('./charm.js'),
     'EFFECT_DAMAGE_IMMUNITY': require('./damage-immunity.js'),
     'EFFECT_DAMAGE_MODIFIER': require('./damage-modifier.js'),
@@ -27,11 +28,13 @@ module.exports = {
     'EFFECT_HEAL': require('./heal.js'),
     'EFFECT_HEALING_FACTOR': require('./healing-factor.js'),
     'EFFECT_IMMUNITY': require('./immunity.js'),
+    'EFFECT_INCAPACITATED': require('./incapacitated.js'),
     'EFFECT_INVISIBILITY': require('./invisibility.js'),
     'EFFECT_LIGHT': require('./light.js'),
     'EFFECT_NEGATIVE_LEVEL': require('./negative-level.js'),
     'EFFECT_PARALYSIS': require('./paralysis.js'),
     'EFFECT_PETRIFICATION': require('./petrification.js'),
+    'EFFECT_PROTECTION_FROM_EVIL': require('./protection-from-evil.js'),
     'EFFECT_REGENERATION': require('./regeneration.js'),
     'EFFECT_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
     'EFFECT_SEE_INVISIBILITY': require('./see-invisibility.js'),

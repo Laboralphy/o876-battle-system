@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-28T08:54:31.512Z
+// Date : 2025-07-29T13:51:55.930Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -59,6 +59,8 @@ module.exports = {
     'isDead': require('./isDead.js'),
     'isEquipmentProficient': require('./isEquipmentProficient.js'),
     'isRangedWeaponLoaded': require('./isRangedWeaponLoaded.js'),
+    'isSpecieEvil': require('./isSpecieEvil.js'),
+    'isSpecieGood': require('./isSpecieGood.js'),
     'isWieldingShield': require('./isWieldingShield.js'),
     'isWieldingTwoHandedWeapon': require('./isWieldingTwoHandedWeapon.js')
 };

@@ -72,6 +72,7 @@ class Combat {
          * @private
          */
         this._pauseTick = 0; // while > 0 don't do anything
+        this._longAction = null;
 
         /**
          *
@@ -296,6 +297,9 @@ class Combat {
     nextTick () {
         if (this._pauseTick > 0) {
             --this._pauseTick;
+            if (this._pauseTick <= 0) {
+                // combat is now unpaused
+            }
         }
         ++this._tick;
         const ttc = this._tickCount;
