@@ -100,21 +100,12 @@ class Service {
                 action: action.id
             });
         });
-        e.on(CONSTS.EVENT_CREATURE_DRINK_POTION, ({
-            creature,
-            spell
-        }) => {
-            this.sendEventMessage(CONSTS.EVENT_CREATURE_DRINK_POTION, {
-                creature: creature.id,
-                spell: spell.id
-            });
-        });
-        e.on(CONSTS.EVENT_CREATURE_THROW_GRENADE, ({
+        e.on(CONSTS.EVENT_CREATURE_USE_ITEM, ({
             creature,
             target,
             spell
         }) => {
-            this.sendEventMessage(CONSTS.EVENT_CREATURE_THROW_GRENADE, {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_USE_ITEM, {
                 creature: creature.id,
                 target: target.id,
                 spell: spell.id
@@ -126,7 +117,20 @@ class Service {
             spell,
             freeCast
         }) => {
-            this.sendEventMessage(CONSTS.EVENT_CREATURE_THROW_GRENADE, {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_CAST_SPELL, {
+                creature: creature.id,
+                target: target.id,
+                spell: spell.id,
+                freeCast
+            });
+        });
+        e.on(CONSTS.EVENT_CREATURE_START_INCANTATION, ({
+            creature,
+            target,
+            spell,
+            freeCast
+        }) => {
+            this.sendEventMessage(CONSTS.EVENT_CREATURE_START_INCANTATION, {
                 creature: creature.id,
                 target: target.id,
                 spell: spell.id,

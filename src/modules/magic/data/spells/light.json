@@ -4,5 +4,6 @@
   "range": 120,
   "hostile": false,
   "target": "SPELL_CAST_TARGET_TYPE_ALLY",
-  "script": "spell-light"
+  "script": "spell-light",
+  "castingTime": "CASTING_TIME_ACTION"
 }

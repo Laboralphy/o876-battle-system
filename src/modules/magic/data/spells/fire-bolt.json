@@ -4,5 +4,6 @@
   "range": 120,
   "hostile": true,
   "target": "SPELL_CAST_TARGET_TYPE_HOSTILE",
-  "script": "spell-fire-bolt"
+  "script": "spell-fire-bolt",
+  "castingTime": "CASTING_TIME_ACTION"
 }

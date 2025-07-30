@@ -5,7 +5,6 @@ const Horde = require('./Horde');
 const CombatManager = require('./libs/combat/CombatManager');
 const CombatActionFailure = require('./libs/combat/CombatActionFailure');
 const CombatActionSuccess = require('./libs/combat/CombatActionSuccess');
-const CombatActionTaken = require('./libs/combat/CombatActionTaken');
 const Events = require('events');
 const SCHEMAS = require('./schemas');
 const SchemaValidator = require('./SchemaValidator');
@@ -51,6 +50,7 @@ const CreatureEquipItemEvent = require('./events/CreatureEquipItemEvent');
 const CreatureRemoveItemEvent = require('./events/CreatureRemoveItemEvent');
 const CreatureRemoveItemFailedEvent = require('./events/CreatureRemoveItemFailedEvent');
 const CreatureLevelUp = require('./events/CreatureLevelUpEvent');
+const CreatureStartIncantationEvent = require('./events/CreatureStartIncantationEvent');
 const {isEntityCreature, isEntityItem, checkEntityCreature, checkEntityItem} = require('./check-entity');
 
 class Manager {
@@ -79,6 +79,7 @@ class Manager {
         cm.events.on(CONSTS.EVENT_COMBAT_MOVE, evt => this._combatManagerEventMove(evt));
         cm.events.on(CONSTS.EVENT_COMBAT_DISTANCE, evt => this._combatManagerEventDistance(evt));
         cm.events.on(CONSTS.EVENT_COMBAT_ACTION, evt => this._combatManagerAction(evt));
+        cm.events.on(CONSTS.EVENT_COMBAT_DELAYED_ACTION, evt => this._combatManagerDelayedAction(evt));
         cm.events.on(CONSTS.EVENT_COMBAT_ATTACK, evt => this._combatManagerAttack(evt));
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_APPLIED, evt => this._effectApplied(evt));
         ep.events.on(CONSTS.EVENT_EFFECT_PROCESSOR_EFFECT_IMMUNITY, evt => this._effectImmunity(evt));
@@ -260,6 +261,18 @@ class Manager {
         // Lancement de l'action
         if (action) {
             this.executeAction(attacker, action, target);
+        }
+    }
+
+    _combatManagerDelayedAction (evt) {
+        const action = evt.action;
+        if (action.actionType === CONSTS.COMBAT_ACTION_TYPE_SPELL && !action.parameters.item) {
+            this._events.emit(CONSTS.EVENT_CREATURE_START_INCANTATION, new CreatureStartIncantationEvent({
+                system: this._systemInstance,
+                creature: evt.combat.attacker,
+                target: evt.target,
+                action: evt.action
+            }));
         }
     }
 
@@ -1039,6 +1052,10 @@ class Manager {
     // ▐▙▟▌▐▌   ▐▌  ▐▌ ▐▌▐▌▐▌▐▌ ▀▜▖
     // ▝▘▝▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▘▝▘▝▀▀
 
+    executeDelayedAction (oCreature, oAction, oTarget = null) {
+
+    }
+
     /**
      * Execute an action when not involved in a combat
      * @param oCreature {Creature}
@@ -1101,9 +1118,11 @@ class Manager {
             oTarget = oCreature;
         }
         const oSpellData = this.getSpellData(sSpell);
+        const delay = item === null
+            ? (this.data['CASTING_DELAYS'][oSpellData.castingTime ?? CONSTS.CASTING_TIME_ACTION] ?? 0)
+            : 0;
         return {
             id: SPECIAL_ACTION_CAST_SPELL,
-            requirements: null,
             limited: true,
             actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL,
             cooldown: 0,
@@ -1126,7 +1145,8 @@ class Manager {
             },
             ready: true,
             bonus: false,
-            hostile: oSpellData.hostile
+            hostile: oSpellData.hostile,
+            delay
         };
     }
 

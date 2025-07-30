@@ -4,5 +4,6 @@
   "range": 120,
   "hostile": true,
   "target": "SPELL_CAST_TARGET_TYPE_HOSTILE",
-  "script": "spell-acid-splash"
+  "script": "spell-acid-splash",
+  "castingTime": "CASTING_TIME_ACTION"
 }

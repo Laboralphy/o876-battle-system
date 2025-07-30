@@ -4,5 +4,6 @@
   "range": 120,
   "hostile": true,
   "target": "SPELL_CAST_TARGET_TYPE_HOSTILE",
-  "script": "spell-chill-touch"
+  "script": "spell-chill-touch",
+  "castingTime": "CASTING_TIME_ACTION"
 }

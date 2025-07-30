@@ -70,11 +70,15 @@ class CombatManager {
      * @private
      */
     _sendCombatActionEvent (ev) {
-        const { combat, target, action, parameters } = ev;
+        const { combat, action, parameters } = ev;
         this._events.emit(CONSTS.EVENT_COMBAT_ACTION, this._addManagerToObject(ev));
         if (action.hostile && !this.isCreatureFighting(combat.target)) {
             this.startCombat(combat.target, combat.attacker, combat.distance);
         }
+    }
+
+    _sendCombatDelayedActionEvent (ev) {
+        this._events.emit(CONSTS.EVENT_COMBAT_DELAYED_ACTION, this._addManagerToObject(ev));
     }
 
     /**
@@ -107,6 +111,7 @@ class CombatManager {
         combat.events.on(CONSTS.EVENT_COMBAT_TURN, ev => this._events.emit(CONSTS.EVENT_COMBAT_TURN, this._addManagerToObject(ev)));
         combat.events.on(CONSTS.EVENT_COMBAT_TICK_END, ev => this._events.emit(CONSTS.EVENT_COMBAT_TICK_END, this._addManagerToObject(ev)));
         combat.events.on(CONSTS.EVENT_COMBAT_ACTION, ev => this._sendCombatActionEvent(ev));
+        combat.events.on(CONSTS.EVENT_COMBAT_DELAYED_ACTION, ev => this._sendCombatDelayedActionEvent(ev));
         combat.events.on(CONSTS.EVENT_COMBAT_ATTACK, ev => this._sendCombatAttackEvent(ev));
         combat.events.on(CONSTS.EVENT_COMBAT_SCRIPT, ev => this._events.emit(CONSTS.EVENT_COMBAT_SCRIPT, this._addManagerToObject(ev)));
         combat.events.on(CONSTS.EVENT_COMBAT_OFFENSIVE_SLOT, ev => this._events.emit(CONSTS.EVENT_COMBAT_OFFENSIVE_SLOT, this._addManagerToObject(ev)));

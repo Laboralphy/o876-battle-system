@@ -3,7 +3,6 @@ const CombatActionFailure = require('./CombatActionFailure');
 const Events = require('events');
 const { getUniqueId } = require('../unique-id');
 const CombatFighterState = require('./CombatFighterState');
-const CombatActionTaken = require('./CombatActionTaken');
 const CONSTS = require('../../consts');
 
 const MAX_COMBAT_DISTANCE = 60;
@@ -56,12 +55,12 @@ class Combat {
         this._events = new Events();
         this._distance = distance;
         /**
-         * @type {CombatActionTaken}
+         * @type {{ action: RBSAction, parameters: {} }|null}
          * @private
          */
         this._nextAction = null; // will be used next turn instead of attacks
         /**
-         * @type {CombatActionTaken}
+         * @type {{ action: RBSAction, parameters: {} }|null}
          * @private
          */
         this._currentAction = null;
@@ -72,7 +71,11 @@ class Combat {
          * @private
          */
         this._pauseTick = 0; // while > 0 don't do anything
-        this._longAction = null;
+        /**
+         * @type {{ action: RBSAction, parameters: {} }|null}
+         * @private
+         */
+        this._delayedAction = null;
 
         /**
          *
@@ -213,6 +216,10 @@ class Combat {
         return this._currentAction?.action ?? null;
     }
 
+    get delayedAction () {
+        return this._delayedAction?.action ?? null;
+    }
+
     /**
      * @returns {RBSAction | null}
      */
@@ -226,6 +233,29 @@ class Combat {
 
     /**
      *
+     * @param action {RBSAction}
+     * @param parameters {{}}
+     * @returns {CombatActionOutcome}
+     */
+    delayAction (action, parameters = {}) {
+        const delay = action.delay;
+        this._currentAction = null;
+        this._nextAction = null;
+        this._delayedAction = {
+            action,
+            parameters
+        };
+        this.events.emit(CONSTS.EVENT_COMBAT_DELAYED_ACTION, {
+            ...this.eventDefaultPayload,
+            action: action,
+            target: this.target,
+            parameters
+        });
+        this.pause(delay);
+    }
+
+    /**
+     *
      * @param action {string|RBSAction}
      * @param parameters {{}}
      * @returns {CombatActionOutcome}
@@ -235,22 +265,22 @@ class Combat {
             this._currentAction = null;
             return new CombatActionSuccess();
         }
-        const oAction = new CombatActionTaken({
-            creature: this.attacker,
-            action: action,
-            target: this.target,
-            ...parameters
-        });
-        if (!oAction.action.ready) {
+        action = typeof action === 'string'
+            ? this.attacker.getters.getActions[action]
+            : action;
+        if (!action.ready) {
+            // Action not ready : will not do anything
             return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_NOT_READY);
         }
-        if (oAction.action.range < this.distance) {
+        if (action.range < this.distance) {
+            // Action out of range : will not do anything
             return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_RANGE);
         }
-        if (oAction.action.bonus) {
+        if (action.bonus) {
+            // bonus action
             if (this._attackerState.hasBonusAction()) {
                 // We can play bonus action immediately
-                return this.playActionNow(oAction.action, parameters);
+                return this.playActionNow(action, parameters);
             } else {
                 // We cannot play bonus action at the moment
                 return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_PENDING_ACTION);
@@ -258,10 +288,20 @@ class Combat {
         } else {
             if (this._currentAction || this._attackerState.hasTakenAction()) {
                 // Already used an action this turn
-                this._nextAction = oAction;
+                this._nextAction = {
+                    action,
+                    parameters
+                };
             } else {
                 // did not take action this turn : replacing current action
-                this._currentAction = oAction;
+                if (action.delay > 0) {
+                    this.delayAction(action, parameters);
+                } else {
+                    this._currentAction = {
+                        action,
+                        parameters
+                    };
+                }
             }
             return new CombatActionSuccess();
         }
@@ -299,6 +339,10 @@ class Combat {
             --this._pauseTick;
             if (this._pauseTick <= 0) {
                 // combat is now unpaused
+                if (this._delayedAction) {
+                    this.playActionNow(this._delayedAction.action, this._delayedAction.parameters);
+                    this._delayedAction = null;
+                }
             }
         }
         ++this._tick;
@@ -316,6 +360,9 @@ class Combat {
      * @return {CombatActionOutcome}
      */
     playActionNow (action, parameters = {}) {
+        if (!action.actionType) {
+            throw new TypeError('parameters is not a RBSAction : given ' + action.constructor?.name ?? '(unknown)');
+        }
         const attackerState = this._attackerState;
         const bCanAct = (!action.hostile && this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_ACT)) ||
             (action.hostile && this.attacker.getters.getCapabilitySet.has(CONSTS.CAPABILITY_FIGHT));
@@ -391,7 +438,12 @@ class Combat {
      * Selects next action in row
      */
     selectNextAction () {
-        this._currentAction = this._nextAction;
+        const nNextActionDelay = this._nextAction?.action.delay ?? 0;
+        if (nNextActionDelay > 0) {
+            this.delayAction(this._nextAction.action, this._nextAction.parameters);
+        } else {
+            this._currentAction = this._nextAction;
+        }
         this._nextAction = null;
     }
 
@@ -420,10 +472,7 @@ class Combat {
         }
         // immediately play action if available this turn
         if (this._currentAction) {
-            const ao = this.playActionNow(this._currentAction.action, this._currentAction.parameters);
-            attackerState.takeAction();
-            this._currentAction = null;
-            return ao;
+            return this.playActionNow(this._currentAction.action, this._currentAction.parameters);
         }
         // If no current action then we are attacking during this turn
         if (nAttackCount > 0) {

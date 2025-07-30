@@ -11,7 +11,7 @@ const CONSTS = require('../../consts');
  * @param parameters {{}}
  * @param bonus {boolean}
  * @param hostile {boolean}
- * @param requirements {RBSActionRequirement|null}
+ * @param delay {number}
  */
 module.exports = ({ state }, {
     id,
@@ -23,7 +23,7 @@ module.exports = ({ state }, {
     parameters = {},
     bonus = false,
     hostile= false,
-    requirements = null
+    delay = 0
 }) => {
     const bHasCooldown = cooldown > 0;
     const bHasCharges = charges > 0;
@@ -63,6 +63,6 @@ module.exports = ({ state }, {
         parameters,
         bonus,
         hostile,
-        requirements
+        delay
     };
 };

@@ -1238,7 +1238,8 @@ describe('normal & bonus action test', function () {
                 script: 'normal-action-1',
                 range: 500,
                 bonus: false,
-                hostile: true
+                hostile: true,
+                delay: 0
             });
             c1.mutations.defineAction({
                 id: 'na2',
@@ -1246,7 +1247,8 @@ describe('normal & bonus action test', function () {
                 script: 'normal-action-2',
                 range: 500,
                 bonus: false,
-                hostile: true
+                hostile: true,
+                delay: 0
             });
             c1.mutations.defineAction({
                 id: 'ba1',
@@ -1254,7 +1256,8 @@ describe('normal & bonus action test', function () {
                 script: 'bonus-action-1',
                 range: 500,
                 bonus: true,
-                hostile: true
+                hostile: true,
+                delay: 0
             });
             const oActions = c1.getters.getActions;
             const aActionNames = new Set(Object.keys(oActions));

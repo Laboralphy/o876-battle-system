@@ -25,6 +25,8 @@ describe('Fire Bolt', function () {
         const r = m.doAction(c1, 'fire-bolt', c2, { freeCast: true });
         expect(r.reason).toBe('');
         expect(r.success).toBeTruthy();
+        m.process(); // spell need 3 tick to be cast
+        m.process();
         m.process();
         const combat = m.getCreatureCombat(c1);
         expect(aLog).toEqual([

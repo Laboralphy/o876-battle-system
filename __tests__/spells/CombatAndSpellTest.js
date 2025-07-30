@@ -59,14 +59,25 @@ describe('should initiate combat when casting firebolt', function () {
         const oCombat = m.getCreatureCombat(c1);
         // current action should be cast spell fire bol
         expect(oCombat).toBeDefined();
-        expect(oCombat.currentAction).not.toBeNull();
-        expect(oCombat.currentAction.id).toBe('cast-spell');
-        expect(oCombat.currentAction.range).toBe(120);
-        expect(oCombat.currentAction.parameters?.spell?.id).toBe('fire-bolt');
+        expect(oCombat.delayedAction).not.toBeNull();
+        expect(oCombat.currentAction).toBeNull();
+        expect(oCombat.delayedAction.id).toBe('cast-spell');
+        expect(oCombat.delayedAction.range).toBe(120);
+        expect(oCombat.delayedAction.parameters?.spell?.id).toBe('fire-bolt');
+
+        m.process();
+        expect(aLog.length).toBe(0);
+        expect(oCombat.turn).toBe(0);
+        expect(oCombat.tick).toBe(1);
+
+        m.process();
+        expect(aLog.length).toBe(0);
+        expect(oCombat.turn).toBe(0);
+        expect(oCombat.tick).toBe(2);
 
         m.process();
         expect(aLog.length).toBe(1);
         expect(oCombat.turn).toBe(0);
-        expect(oCombat.tick).toBe(1);
+        expect(oCombat.tick).toBe(3);
     });
 });
