@@ -28,7 +28,6 @@
  * @property getInnateProperties {RBSProperty[]}
  * @property getLevel {number}
  * @property getMaxHitPoints {number}
- * @property getMaxPreparedSpells {number}
  * @property getMeleeAttackBonus {number}
  * @property getOffensiveSlots {string[]}
  * @property getPoolValues {{ [idPool: string]: number }}
@@ -48,6 +47,7 @@
  * @property getSpeed {number}
  * @property getSpellCastingAbility {string}
  * @property getSpellDifficultyClass {Object<string, number>}
+ * @property getSpellSet {Set<string>}
  * @property getSpellSlots {{level: number, count: number, used: number, remaining: number, ready: boolean, cooldown: number}[]}
  * @property getUnmodifiedLevel {number}
  * @property getVariables {Object<string, number|string>}

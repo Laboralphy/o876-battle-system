@@ -100,7 +100,7 @@ module.exports = () => ({
     },
     selectedOffensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
     actions: {},
-    spells: {},
+    spells: [],
     spellSlots: [{
         level: 0,
         cooldown: 0,

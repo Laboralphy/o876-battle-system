@@ -1,21 +1,21 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-31T12:02:42.171Z
+// Date : 2025-07-31T23:16:50.372Z
 // List of files in ./src/store/mutations
 
 module.exports = {
     'addEffect': require('./addEffect.js'),
     'addProficiency': require('./addProficiency.js'),
     'addProperty': require('./addProperty.js'),
+    'addSpell': require('./addSpell.js'),
     'defineAction': require('./defineAction.js'),
     'definePool': require('./definePool.js'),
     'depleteEffects': require('./depleteEffects.js'),
     'equipItem': require('./equipItem.js'),
-    'forgetSpell': require('./forgetSpell.js'),
-    'learnSpell': require('./learnSpell.js'),
     'rechargeActions': require('./rechargeActions.js'),
     'rechargeSpellSlots': require('./rechargeSpellSlots.js'),
     'removeEffect': require('./removeEffect.js'),
     'removeProperty': require('./removeProperty.js'),
+    'removeSpell': require('./removeSpell.js'),
     'restoreAction': require('./restoreAction.js'),
     'selectOffensiveSlot': require('./selectOffensiveSlot.js'),
     'setAbilityValue': require('./setAbilityValue.js'),
@@ -33,7 +33,6 @@ module.exports = {
     'setRace': require('./setRace.js'),
     'setSpecie': require('./setSpecie.js'),
     'setSpeed': require('./setSpeed.js'),
-    'setSpellPrepared': require('./setSpellPrepared.js'),
     'setSpellSlot': require('./setSpellSlot.js'),
     'useAction': require('./useAction.js'),
     'useSpellSlot': require('./useSpellSlot.js')

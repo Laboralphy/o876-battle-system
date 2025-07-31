@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-31T12:02:42.302Z
+// Date : 2025-07-31T23:16:50.661Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -19,6 +19,7 @@ module.exports = {
     'PROPERTY_DARKVISION': require('./darkvision.js'),
     'PROPERTY_DISADVANTAGE_ATTACK': require('./disadvantage-attack.js'),
     'PROPERTY_DISADVANTAGE_SAVING_THROW': require('./disadvantage-saving-throw.js'),
+    'PROPERTY_ENFEEBLEMENT': require('./enfeeblement.js'),
     'PROPERTY_EXTRA_HITPOINTS': require('./extra-hitpoints.js'),
     'PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE': require('./extra-weapon-damage-type.js'),
     'PROPERTY_FEAT': require('./feat.js'),

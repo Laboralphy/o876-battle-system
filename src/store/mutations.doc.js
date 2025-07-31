@@ -3,16 +3,16 @@
  * @property addEffect {function({ effect: RBSEffect }): RBSEffect}
  * @property addProficiency {function({ value: string })}
  * @property addProperty {function({ property: RBSProperty })}
+ * @property addSpell {function({  })}
  * @property defineAction {function({ id: string, actionType: string, cooldown: number, charges: number, range: number, script: string, parameters: {}, bonus: boolean, hostile: boolean, delay: number })}
  * @property definePool {function({ pool: string })}
  * @property depleteEffects {function({  })}
  * @property equipItem {function({ item: RBSItem, slot: string, bypassCurse: boolean }): *}
- * @property forgetSpell {function({ spell: string })}
- * @property learnSpell {function({ spell: string })}
  * @property rechargeActions {function({  })}
  * @property rechargeSpellSlots {function({  })}
  * @property removeEffect {function({ effect: RBSEffect })}
  * @property removeProperty {function({ property: RBSProperty })}
+ * @property removeSpell {function({  })}
  * @property restoreAction {function({ idAction: string })}
  * @property selectOffensiveSlot {function({ value: string })}
  * @property setAbilityValue {function({ ability: string, value: number })}
@@ -30,7 +30,6 @@
  * @property setRace {function({ value: string RACE_* })}
  * @property setSpecie {function({ value: string SPECIE_* })}
  * @property setSpeed {function({ value: number })}
- * @property setSpellPrepared {function({ spell: string, value: boolean })}
  * @property setSpellSlot {function({ level: number, count: number|undefined, cooldown: number|undefined })}
  * @property useAction {function({ idAction: string })}
  * @property useSpellSlot {function({ level: number })}
