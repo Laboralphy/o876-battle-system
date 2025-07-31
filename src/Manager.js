@@ -944,16 +944,16 @@ class Manager {
         oAttackOutcome.computeDefenseParameters();
         oAttackOutcome.rush = additionalWeaponDamage !== 0;
         oAttackOutcome.attack(attacker.dice.roll(additionalAttackBonus));
+        if (oAttackOutcome.hit && oAttackOutcome.rush) {
+            const sWeaponDamageType = oAttackOutcome.weapon.blueprint.damageType;
+            const nAmount = attacker.dice.roll(additionalWeaponDamage) + attacker.getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH];
+            oAttackOutcome.rollDamages(nAmount, sWeaponDamageType);
+        }
         this.runPropEffectScript(attacker, 'attack', {
             attack: oAttackOutcome,
             manager: this
         });
         if (oAttackOutcome.hit) {
-            if (oAttackOutcome.rush) {
-                const sWeaponDamageType = oAttackOutcome.weapon.blueprint.damageType;
-                const nAmount = attacker.dice.roll(additionalWeaponDamage) + attacker.getters.getAbilityModifiers[CONSTS.ABILITY_STRENGTH];
-                oAttackOutcome.rollDamages(nAmount, sWeaponDamageType);
-            }
             oAttackOutcome.createDamageEffects();
             this.runPropEffectScript(target, 'attacked', {
                 attack: oAttackOutcome,

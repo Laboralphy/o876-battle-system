@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-30T16:05:16.728Z
+// Date : 2025-07-31T12:02:41.980Z
 // List of files in ./src/advantages/functions/attack-rolls/dis
 
 module.exports = {
