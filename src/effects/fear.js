@@ -8,7 +8,7 @@ const CONSTS = require('../consts');
  * @param reject {function}
  */
 function apply ({ effect, target, source, reject }) {
-    if (target.getters.getEffectSet.has(CONSTS.EFFECT_PROTECTION_FROM_EVIL) && source.getters.isSpecieEvil) {
+    if (target.getters.getSpecieProtectionSet.has(source.getters.getSpecie)) {
         reject();
     }
     if (target.getters.getImmunitySet.has(CONSTS.IMMUNITY_TYPE_FEAR)) {

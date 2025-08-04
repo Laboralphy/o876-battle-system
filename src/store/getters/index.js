@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-31T23:16:50.253Z
+// Date : 2025-08-02T14:09:41.453Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -47,6 +47,7 @@ module.exports = {
     'getSkillValues': require('./getSkillValues.js'),
     'getSlotProperties': require('./getSlotProperties.js'),
     'getSpecie': require('./getSpecie.js'),
+    'getSpecieProtectionSet': require('./getSpecieProtectionSet.js'),
     'getSpeed': require('./getSpeed.js'),
     'getSpellCastingAbility': require('./getSpellCastingAbility.js'),
     'getSpellDifficultyClass': require('./getSpellDifficultyClass.js'),
@@ -59,8 +60,6 @@ module.exports = {
     'isDead': require('./isDead.js'),
     'isEquipmentProficient': require('./isEquipmentProficient.js'),
     'isRangedWeaponLoaded': require('./isRangedWeaponLoaded.js'),
-    'isSpecieEvil': require('./isSpecieEvil.js'),
-    'isSpecieGood': require('./isSpecieGood.js'),
     'isWieldingShield': require('./isWieldingShield.js'),
     'isWieldingTwoHandedWeapon': require('./isWieldingTwoHandedWeapon.js')
 };

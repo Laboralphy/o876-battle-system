@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-31T23:16:50.543Z
+// Date : 2025-08-02T14:09:41.747Z
 // List of files in ./src/effects
 
 module.exports = {
@@ -35,7 +35,7 @@ module.exports = {
     'EFFECT_NEGATIVE_LEVEL': require('./negative-level.js'),
     'EFFECT_PARALYSIS': require('./paralysis.js'),
     'EFFECT_PETRIFICATION': require('./petrification.js'),
-    'EFFECT_PROTECTION_FROM_EVIL': require('./protection-from-evil.js'),
+    'EFFECT_PROTECTION_FROM_SPECIES': require('./protection-from-species.js'),
     'EFFECT_REGENERATION': require('./regeneration.js'),
     'EFFECT_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
     'EFFECT_SEE_INVISIBILITY': require('./see-invisibility.js'),

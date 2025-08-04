@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-07-31T23:16:50.661Z
+// Date : 2025-08-02T14:09:41.871Z
 // List of files in ./src/properties
 
 module.exports = {
@@ -30,6 +30,7 @@ module.exports = {
     'PROPERTY_MAX_DEXTERITY_BONUS': require('./max-dexterity-bonus.js'),
     'PROPERTY_MULTI_ATTACK': require('./multi-attack.js'),
     'PROPERTY_ON_ATTACK_HIT': require('./on-attack-hit.js'),
+    'PROPERTY_PROTECTION_FROM_SPECIES': require('./protection-from-species.js'),
     'PROPERTY_REGENERATION': require('./regeneration.js'),
     'PROPERTY_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
     'PROPERTY_SKILL_MODIFIER': require('./skill-modifier.js'),

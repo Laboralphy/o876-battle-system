@@ -44,6 +44,7 @@
  * @property getSkillValues {Object<string, number>}
  * @property getSlotProperties {Object<string, RBSProperty[]>}
  * @property getSpecie {string}
+ * @property getSpecieProtectionSet undefined
  * @property getSpeed {number}
  * @property getSpellCastingAbility {string}
  * @property getSpellDifficultyClass {Object<string, number>}
@@ -56,8 +57,6 @@
  * @property isDead {boolean}
  * @property isEquipmentProficient {Object<string, boolean>}
  * @property isRangedWeaponLoaded {boolean}
- * @property isSpecieEvil {boolean}
- * @property isSpecieGood {boolean}
  * @property isWieldingShield {boolean}
  * @property isWieldingTwoHandedWeapon {boolean}
  */
