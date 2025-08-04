@@ -1063,12 +1063,6 @@ class Manager {
      * @param oTarget {Creature|null}
      */
     executeAction (oCreature, oAction, oTarget = null) {
-        const oActionEvent = new CreatureActionEvent({
-            system: this._systemInstance,
-            creature: oCreature,
-            target: oTarget,
-            action: oAction
-        });
         const oActionEventPayload = {
             system: this._systemInstance,
             creature: oCreature,
@@ -1086,7 +1080,7 @@ class Manager {
             }
         } else {
             // This is another type of action
-            this._events.emit(CONSTS.EVENT_CREATURE_ACTION, oActionEvent);
+            this._events.emit(CONSTS.EVENT_CREATURE_ACTION, new CreatureActionEvent(oActionEventPayload));
         }
         this.runScript(oAction.script, {
             manager: this,
@@ -1398,5 +1392,7 @@ class Manager {
         };
     }
 }
+
+
 
 module.exports = Manager;

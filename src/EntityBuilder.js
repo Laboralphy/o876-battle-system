@@ -3,6 +3,7 @@ const { deepMerge, deepFreeze } = require('@laboralphy/object-fusion');
 const { getUniqueId } = require('./libs/unique-id');
 const CONSTS = require('./consts');
 const Creature = require('./Creature');
+
 const { sortByDependency } = require('./libs/sort-by-dependency');
 const DATA = require('./data');
 

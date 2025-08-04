@@ -1,5 +1,3 @@
-const {CONSTS} = require('../../index');
-
 /**
  * The creature becomes weak and all attacks using a certain ability will have its damage output halved
  * @param effect {RBSEffect}

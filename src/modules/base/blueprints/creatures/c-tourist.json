@@ -1,0 +1,13 @@
+{
+  "entityType": "ENTITY_TYPE_ACTOR",
+  "specie": "SPECIE_HUMANOID",
+  "race": "RACE_HUMAN",
+  "ac": 0,
+  "proficiencies": [],
+  "speed": 30,
+  "classType": "CLASS_TYPE_TOURIST",
+  "level": 1,
+  "hd": 6,
+  "actions": [],
+  "equipment": []
+}

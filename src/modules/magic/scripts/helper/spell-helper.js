@@ -1,5 +1,3 @@
-const {CONSTS} = require('../../../../../index');
-
 /**
  * Returns a dice expression for a cantrip damage
  * @param nDieFaceCount {number}

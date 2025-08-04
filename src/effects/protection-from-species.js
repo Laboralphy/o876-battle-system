@@ -3,7 +3,7 @@
  * impose attack disadvantage from such creatures
  * make protected immune to mental influence like fear and charm from those species
  */
-function init ({ effect }, { species = [] }) {
+function init ({ effect, species = [] }) {
     if (Array.isArray(species)) {
         effect.data.species = species;
     } else {

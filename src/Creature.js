@@ -6,6 +6,9 @@ const Dice = require('./libs/dice');
 const { checkConst } = require('./libs/check-const');
 const { computeSavingThrowAdvantages } = require('./advantages');
 
+/**
+ * @class
+ */
 class Creature {
     constructor ({ blueprint = null, id = null, data = undefined } = {}) {
         this._store = buildStore({ externals: data });

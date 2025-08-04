@@ -1,4 +1,3 @@
-const {CONSTS} = require('../../../../../index');
 const {getAreaOfEffectTargets} = require('../../../../libs/helpers');
 
 /**
@@ -20,7 +19,7 @@ function main ({ manager, action, creature, target }) {
             manager.CONSTS.THREAT_TYPE_POISON
         );
         if (!success) {
-            const ePoison = manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, 1, { damageType: CONSTS.DAMAGE_TYPE_POISON});
+            const ePoison = manager.createEffect(manager.CONSTS.EFFECT_DAMAGE, 1, { damageType: manager.CONSTS.DAMAGE_TYPE_POISON});
             manager.applyEffect(ePoison, offender, duration, creature);
         }
     });

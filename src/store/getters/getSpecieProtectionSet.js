@@ -1,5 +1,5 @@
 const {aggregateModifiers} = require('../../libs/aggregator');
-const {CONSTS} = require('../../../index');
+const CONSTS = require('../../consts');
 module.exports = (state, getters) => {
     const aSpecies = new Set();
     aggregateModifiers([

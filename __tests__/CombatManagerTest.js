@@ -1,6 +1,6 @@
+const Creature = require('../src/Creature');
 const CombatManager = require('../src/libs/combat/CombatManager');
 const Combat = require('../src/libs/combat/Combat');
-const Creature = require('../src/Creature');
 const CONSTS = require('../src/consts');
 const PropertyBuilder = require('../src/PropertyBuilder');
 const EntityBuilder = require('../src/EntityBuilder');
@@ -618,9 +618,28 @@ describe('Try real combat', function () {
 });
 
 describe('combat vs monster with claws and fangs', function () {
+    it('should create an entity when called by entityBuilder', function () {
+        const eb = new EntityBuilder();
+        eb.schemaValidator = oSchemaValidator;
+        eb.propertyBuilder = new PropertyBuilder();
+        const c1 = eb.createEntity({
+            entityType: CONSTS.ENTITY_TYPE_ACTOR,
+            specie: CONSTS.SPECIE_HUMANOID,
+            race: CONSTS.RACE_HUMAN,
+            ac: 0,
+            proficiencies: [],
+            speed: 30,
+            classType: 'CLASS_TYPE_TOURIST',
+            level: 1,
+            hd: 6,
+            actions: [],
+            equipment: []
+        }, 'c1');
+    });
     it('should not select weapon when target is out of range and not having ranged weapon', function () {
         const eb = new EntityBuilder();
         eb.schemaValidator = oSchemaValidator;
+        eb.propertyBuilder = new PropertyBuilder();
         eb.blueprints = {
             bpNaturalWeapon,
             bpClaws2d6,
