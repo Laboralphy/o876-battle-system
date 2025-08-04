@@ -1,5 +1,6 @@
 const Horde = require('../src/Horde');
 const Creature = require('../src/Creature');
+const {CONSTS} = require('../index');
 
 describe('linkCreature', function () {
     it('should return 1 when adding a creature', function () {
@@ -110,4 +111,70 @@ describe('shrinkActiveCreatureRegistry', function () {
         expect(h.activeCreatures).toHaveLength(0);
     });
 
+});
+
+describe('environment', function () {
+    it('should return previously defined room environments', function () {
+        const h = new Horde();
+        h.setLocationEnvironment('r1', [
+            CONSTS.ENVIRONMENT_DARKNESS
+        ]);
+        expect(h.getLocationEnvironment('r1')).toEqual([
+            CONSTS.ENVIRONMENT_DARKNESS
+        ]);
+    });
+    it('should change defined environments', function () {
+        const h = new Horde();
+        h.setLocationEnvironment('r1', [
+            CONSTS.ENVIRONMENT_DARKNESS
+        ]);
+        h.setLocationEnvironment('r1', [
+            CONSTS.ENVIRONMENT_WINDY
+        ]);
+        expect(h.getLocationEnvironment('r1')).toEqual([
+            CONSTS.ENVIRONMENT_WINDY
+        ]);
+    });
+    it('should change creature environment [] -> [darkness]', function() {
+        const c = new Creature();
+        const h = new Horde();
+        h.updateCreatureEnvironment(c, [CONSTS.ENVIRONMENT_DARKNESS]);
+        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
+    });
+    it('should change creature environment [darkness] -> []', function() {
+        const c = new Creature();
+        const h = new Horde();
+        c.mutations.setEnvironment({ environment: CONSTS.ENVIRONMENT_DARKNESS, value: true });
+        h.updateCreatureEnvironment(c, []);
+        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
+    });
+    it('should return [darkness] when asking for creature in dark area', function () {
+        const h = new Horde();
+        h.setLocationEnvironment('r1', [
+            CONSTS.ENVIRONMENT_DARKNESS
+        ]);
+        expect(h.getLocationEnvironment('r1')).toEqual([CONSTS.ENVIRONMENT_DARKNESS]);
+        const c = new Creature();
+        expect(c.id).toBeDefined();
+        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
+        h.setCreatureLocation(c, 'r1');
+        expect(h.getCreatureLocation(c)).toBe('r1');
+        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
+    });
+    it('should change creature environment [darkness] -> [windy]', function() {
+        const c = new Creature();
+        const h = new Horde();
+        h.setLocationEnvironment('r1', [
+            CONSTS.ENVIRONMENT_DARKNESS
+        ]);
+        h.setLocationEnvironment('r2', [
+            CONSTS.ENVIRONMENT_WINDY
+        ]);
+        h.setCreatureLocation(c, 'r1');
+        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
+        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_WINDY]).toBeFalsy();
+        h.setCreatureLocation(c, 'r2');
+        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
+        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_WINDY]).toBeTruthy();
+    });
 });

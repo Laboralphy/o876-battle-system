@@ -1,5 +1,13 @@
 const FactionManager = require('./libs/factions/FactionManager');
 const LocationRegistry = require('./libs/location-registry');
+const CONSTS = require('./consts');
+const ENVIRONMENTS = [
+    CONSTS.ENVIRONMENT_FOG,
+    CONSTS.ENVIRONMENT_DARKNESS,
+    CONSTS.ENVIRONMENT_WINDY,
+    CONSTS.ENVIRONMENT_UNDERWATER,
+    CONSTS.ENVIRONMENT_DIFFICULT_TERRAIN
+];
 
 class Horde {
     constructor () {
@@ -8,6 +16,7 @@ class Horde {
         this._activeCreatures = new Set();
         this._factionManager = new FactionManager();
         this._locationRegistry = new LocationRegistry();
+        this._locationEnvironmentRegistry = new Map();
     }
 
     /**
@@ -39,12 +48,73 @@ class Horde {
     }
 
     /**
+     * Change creature environments
+     * @param oCreature {Creature}
+     * @param aEnvironments {string[]}
+     */
+    updateCreatureEnvironment (oCreature, aEnvironments) {
+        const e = new Set(aEnvironments);
+        const ec = oCreature.getters.getEnvironment;
+        ENVIRONMENTS.forEach(env => {
+            const bNewEnv = e.has(env);
+            const bOldEnv = ec[env];
+            const m = (bNewEnv ? 10 : 0) + (bOldEnv ? 1 : 0);
+            switch (m) {
+            case 0:
+            case 11: {
+                // this env is not on creature, and not in new room
+                // or this env is both on creature and in new room
+                // don't change anything
+                break;
+            }
+
+            case 10: {
+                // env is in new room, but creature does not have it yet
+                // add it to creature
+                oCreature.mutations.setEnvironment({ environment: env, value: true });
+                break;
+            }
+
+            case 1: {
+                // env is in creature but not in new room
+                // remove it from creature
+                oCreature.mutations.setEnvironment({ environment: env, value: false });
+            }
+            }
+        });
+    }
+
+    getLocationEnvironment (idLocation) {
+        return this._locationEnvironmentRegistry.get(idLocation) || [];
+    }
+
+    updateCreatureLocationEnvironment (oCreature) {
+        const idLocation = this.getCreatureLocation(oCreature);
+        this.updateCreatureEnvironment(oCreature, this.getLocationEnvironment(idLocation));
+    }
+
+    /**
+     * Define/update room environment
+     * @param idLocation {string}
+     * @param aEnvironments {string[]}
+     */
+    setLocationEnvironment (idLocation, aEnvironments) {
+        this._locationEnvironmentRegistry.set(idLocation, aEnvironments);
+        this
+            .getLocationCreatures(idLocation)
+            .forEach(creature => {
+                this.updateCreatureLocationEnvironment(creature);
+            });
+    }
+
+    /**
      *
      * @param oCreature {Creature}
      * @param idLocation {string}
      */
     setCreatureLocation (oCreature, idLocation) {
         this._locationRegistry.setEntityLocation(oCreature.id, idLocation);
+        this.updateCreatureLocationEnvironment(oCreature);
     }
 
     /**
@@ -53,7 +123,7 @@ class Horde {
      * @return {string}
      */
     getCreatureLocation (oCreature) {
-        this._locationRegistry.getEntityLocation(oCreature.id);
+        return this._locationRegistry.getEntityLocation(oCreature.id);
     }
 
     setCreatureFaction (oCreature, idFaction) {
