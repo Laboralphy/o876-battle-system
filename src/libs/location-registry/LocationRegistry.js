@@ -9,20 +9,6 @@ class LocationRegistry extends GroupMemberRegistry {
      */
     constructor () {
         super();
-        this._environmentRegistry = new Map();
-    }
-
-    getLocationEnvironment (idLocation) {
-        if (this._environmentRegistry.has(idLocation)) {
-            const er = this._environmentRegistry.get(idLocation);
-
-        } else {
-            return;
-        }
-    }
-
-    setLocationEnvironment (environment, value) {
-
     }
 
     /**

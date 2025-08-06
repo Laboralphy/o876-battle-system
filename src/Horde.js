@@ -1,3 +1,4 @@
+const { getUniqueId } = require('./libs/unique-id');
 const FactionManager = require('./libs/factions/FactionManager');
 const LocationRegistry = require('./libs/location-registry');
 const CONSTS = require('./consts');
@@ -17,6 +18,33 @@ class Horde {
         this._factionManager = new FactionManager();
         this._locationRegistry = new LocationRegistry();
         this._locationEnvironmentRegistry = new Map();
+        this._locationTemporaryEnvironments = [];
+    }
+
+    addTemporaryEnvironment (idLocation, sEnvironment, nDuration) {
+        this._locationTemporaryEnvironments.push({
+            id: getUniqueId(),
+            environment: sEnvironment,
+            duration: nDuration,
+            location: idLocation
+        });
+    }
+
+    removeTemporaryEnvironment (id) {
+        const i = this._locationTemporaryEnvironments.findIndex(e => e.id === id);
+        if (i >= 0) {
+            this._locationTemporaryEnvironments.splice(i, 1);
+        }
+    }
+
+    depleteTemporaryEnvironmentDurations () {
+        this
+            ._locationTemporaryEnvironments
+            .filter(e => --e.duration > 0)
+            .forEach(e => {
+                this.removeTemporaryEnvironment(e.id);
+                this.updateLocationEnvironment(e.location);
+            });
     }
 
     /**
@@ -91,6 +119,11 @@ class Horde {
     updateCreatureLocationEnvironment (oCreature) {
         const idLocation = this.getCreatureLocation(oCreature);
         this.updateCreatureEnvironment(oCreature, this.getLocationEnvironment(idLocation));
+    }
+
+    updateLocationEnvironment (idLocation) {
+        const aCreatures = this.getLocationCreatures(idLocation);
+        aCreatures.forEach(c => this.updateCreatureLocationEnvironment(c));
     }
 
     /**
