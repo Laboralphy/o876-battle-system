@@ -21,29 +21,47 @@ class Horde {
         this._locationTemporaryEnvironments = [];
     }
 
+    /**
+     *
+     * @param idLocation
+     * @param sEnvironment
+     * @param nDuration
+     * @returns {LocationTemporaryEnvironment}
+     */
     addTemporaryEnvironment (idLocation, sEnvironment, nDuration) {
-        this._locationTemporaryEnvironments.push({
+        /**
+         * @typedef LocationTemporaryEnvironment {Object}
+         * @property id {string}
+         * @property environment {string}
+         * @property duration {number}
+         * @property location {string}
+         */
+        const e = {
             id: getUniqueId(),
             environment: sEnvironment,
             duration: nDuration,
             location: idLocation
-        });
+        };
+        this._locationTemporaryEnvironments.push(e);
+        this.updateLocationEnvironment(e.id);
+        return e;
     }
 
     removeTemporaryEnvironment (id) {
         const i = this._locationTemporaryEnvironments.findIndex(e => e.id === id);
         if (i >= 0) {
+            const e = this._locationTemporaryEnvironments[i];
             this._locationTemporaryEnvironments.splice(i, 1);
+            this.updateLocationEnvironment(e.location);
         }
     }
 
     depleteTemporaryEnvironmentDurations () {
         this
             ._locationTemporaryEnvironments
-            .filter(e => --e.duration > 0)
+            .filter(e => --e.duration <= 0)
             .forEach(e => {
                 this.removeTemporaryEnvironment(e.id);
-                this.updateLocationEnvironment(e.location);
             });
     }
 
@@ -113,7 +131,12 @@ class Horde {
     }
 
     getLocationEnvironment (idLocation) {
-        return this._locationEnvironmentRegistry.get(idLocation) || [];
+        const aPermEnv = this._locationEnvironmentRegistry.get(idLocation) || [];
+        const aTempEnv = this
+            ._locationTemporaryEnvironments
+            .filter(env => env.location === idLocation)
+            .map(env => env.environment);
+        return Array.from(new Set([...aPermEnv, ...aTempEnv]));
     }
 
     updateCreatureLocationEnvironment (oCreature) {
