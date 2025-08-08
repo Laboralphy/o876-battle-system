@@ -1,5 +1,12 @@
 const {aggregateModifiers} = require('../../libs/aggregator');
 const CONSTS = require('../../consts');
+
+/**
+ * Return a set of Species that the creature is protected from
+ * @param state {RBSStoreState}
+ * @param getters {RBSStoreGetters}
+ * @returns {Set<string>}
+ */
 module.exports = (state, getters) => {
     const aSpecies = new Set();
     aggregateModifiers([

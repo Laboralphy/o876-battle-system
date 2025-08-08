@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-04T14:35:45.694Z
+// Date : 2025-08-08T15:12:27.516Z
 // List of files in ./src/modules/magic/scripts
 
 module.exports = {

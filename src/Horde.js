@@ -47,6 +47,10 @@ class Horde {
         return e;
     }
 
+    getLocationTemporaryEnvironments (idLocation) {
+        return this._locationTemporaryEnvironments.filter(env => env.location === idLocation);
+    }
+
     removeTemporaryEnvironment (id) {
         const i = this._locationTemporaryEnvironments.findIndex(e => e.id === id);
         if (i >= 0) {
@@ -133,8 +137,7 @@ class Horde {
     getLocationEnvironment (idLocation) {
         const aPermEnv = this._locationEnvironmentRegistry.get(idLocation) || [];
         const aTempEnv = this
-            ._locationTemporaryEnvironments
-            .filter(env => env.location === idLocation)
+            .getLocationTemporaryEnvironments(idLocation)
             .map(env => env.environment);
         return Array.from(new Set([...aPermEnv, ...aTempEnv]));
     }

@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-04T14:35:46.077Z
+// Date : 2025-08-08T15:12:27.949Z
 // List of files in ./src/effects
 
 module.exports = {
@@ -24,6 +24,7 @@ module.exports = {
     'EFFECT_DISADVANTAGE_SAVING_THROW': require('./disadvantage-saving-throw.js'),
     'EFFECT_DISEASE': require('./disease.js'),
     'EFFECT_ENFEEBLEMENT': require('./enfeeblement.js'),
+    'EFFECT_ENVIRONMENT': require('./environment.js'),
     'EFFECT_FEAR': require('./fear.js'),
     'EFFECT_FLAG': require('./flag.js'),
     'EFFECT_HEAL': require('./heal.js'),

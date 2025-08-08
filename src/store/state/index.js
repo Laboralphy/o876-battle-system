@@ -41,7 +41,7 @@ const CONSTS = require('../../consts');
  * @property actions {Object<string, RBSStoreStateCombatAction>}
  * @property spellSlots {RBSStoreStateSpellSlot[]}
  * @property spells {{ [spell: string]: { prepared: boolean } }}
- *
+ * @property spellCastList {string[]}
  *
  * @returns {RBSStoreState}
  */
@@ -101,6 +101,7 @@ module.exports = () => ({
     selectedOffensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
     actions: {},
     spells: [],
+    spellCastList: [],
     spellSlots: [{
         level: 0,
         cooldown: 0,
