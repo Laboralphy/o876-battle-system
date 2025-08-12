@@ -116,44 +116,44 @@ describe('shrinkActiveCreatureRegistry', function () {
 describe('environment', function () {
     it('should return previously defined room environments', function () {
         const h = new Horde();
-        h.setLocationEnvironment('r1', [
+        h.setLocationEnvironments('r1', [
             CONSTS.ENVIRONMENT_DARKNESS
         ]);
-        expect(h.getLocationEnvironment('r1')).toEqual([
+        expect(h.getLocationEnvironments('r1')).toEqual([
             CONSTS.ENVIRONMENT_DARKNESS
         ]);
     });
     it('should change defined environments', function () {
         const h = new Horde();
-        h.setLocationEnvironment('r1', [
+        h.setLocationEnvironments('r1', [
             CONSTS.ENVIRONMENT_DARKNESS
         ]);
-        h.setLocationEnvironment('r1', [
+        h.setLocationEnvironments('r1', [
             CONSTS.ENVIRONMENT_WINDY
         ]);
-        expect(h.getLocationEnvironment('r1')).toEqual([
+        expect(h.getLocationEnvironments('r1')).toEqual([
             CONSTS.ENVIRONMENT_WINDY
         ]);
     });
     it('should change creature environment [] -> [darkness]', function() {
         const c = new Creature();
         const h = new Horde();
-        h.updateCreatureEnvironment(c, [CONSTS.ENVIRONMENT_DARKNESS]);
+        h.updateCreatureEnvironments(c, [CONSTS.ENVIRONMENT_DARKNESS]);
         expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
     });
     it('should change creature environment [darkness] -> []', function() {
         const c = new Creature();
         const h = new Horde();
         c.mutations.setEnvironment({ environment: CONSTS.ENVIRONMENT_DARKNESS, value: true });
-        h.updateCreatureEnvironment(c, []);
+        h.updateCreatureEnvironments(c, []);
         expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
     });
     it('should return [darkness] when asking for creature in dark area', function () {
         const h = new Horde();
-        h.setLocationEnvironment('r1', [
+        h.setLocationEnvironments('r1', [
             CONSTS.ENVIRONMENT_DARKNESS
         ]);
-        expect(h.getLocationEnvironment('r1')).toEqual([CONSTS.ENVIRONMENT_DARKNESS]);
+        expect(h.getLocationEnvironments('r1')).toEqual([CONSTS.ENVIRONMENT_DARKNESS]);
         const c = new Creature();
         expect(c.id).toBeDefined();
         expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
@@ -164,10 +164,10 @@ describe('environment', function () {
     it('should change creature environment [darkness] -> [windy]', function() {
         const c = new Creature();
         const h = new Horde();
-        h.setLocationEnvironment('r1', [
+        h.setLocationEnvironments('r1', [
             CONSTS.ENVIRONMENT_DARKNESS
         ]);
-        h.setLocationEnvironment('r2', [
+        h.setLocationEnvironments('r2', [
             CONSTS.ENVIRONMENT_WINDY
         ]);
         h.setCreatureLocation(c, 'r1');
@@ -184,7 +184,7 @@ describe('environment', function () {
         expect(e1).toBeDefined();
         expect(e1.environment).toBe(CONSTS.ENVIRONMENT_DARKNESS);
         expect(e1.duration).toBe(10);
-        expect(h.getLocationEnvironment('r1')).toEqual([CONSTS.ENVIRONMENT_DARKNESS]);
+        expect(h.getLocationEnvironments('r1')).toEqual([CONSTS.ENVIRONMENT_DARKNESS]);
         h.depleteTemporaryEnvironmentDurations();
         expect(e1.duration).toBe(9);
         h.depleteTemporaryEnvironmentDurations();
@@ -201,9 +201,9 @@ describe('environment', function () {
         expect(e1.duration).toBe(2);
         h.depleteTemporaryEnvironmentDurations();
         expect(e1.duration).toBe(1);
-        expect(h.getLocationEnvironment('r1')).toEqual([CONSTS.ENVIRONMENT_DARKNESS]);
+        expect(h.getLocationEnvironments('r1')).toEqual([CONSTS.ENVIRONMENT_DARKNESS]);
         h.depleteTemporaryEnvironmentDurations();
         expect(e1.duration).toBe(0);
-        expect(h.getLocationEnvironment('r1')).toEqual([]);
+        expect(h.getLocationEnvironments('r1')).toEqual([]);
     });
 });

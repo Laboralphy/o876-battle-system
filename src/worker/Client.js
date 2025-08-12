@@ -157,6 +157,18 @@ class Client {
         return this.transaction(MESSAGE_OPCODES.OPCODE_GET_CREATURE_LOCATION_OCCUPANTS, { creature: id });
     }
 
+    // ▗▄▄▖         ▗▖                          ▗▖
+    // ▐▙▄ ▐▛▜▖▐▌▐▌ ▄▖ ▐▛▜▖▗▛▜▖▐▛▜▖▐▙▟▙▗▛▜▖▐▛▜▖▝▜▛▘▗▛▀▘
+    // ▐▌  ▐▌▐▌▝▙▟▘ ▐▌ ▐▌  ▐▌▐▌▐▌▐▌▐▛▛█▐▛▀▘▐▌▐▌ ▐▌  ▀▜▖
+    // ▝▀▀▘▝▘▝▘ ▝▘  ▀▀ ▝▘   ▀▀ ▝▘▝▘▝▘ ▀ ▀▀ ▝▘▝▘  ▀▘▝▀▀
+
+    setLocationEnvironments (idLocation, aEnvironments) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_SET_LOCATION_ENVIRONMENTS, {
+            location: idLocation,
+            environments: aEnvironments
+        });
+    }
+
     // ▗▄▄▖         ▄▖      ▗▖  ▗▖
     // ▐▙▄ ▐▌▐▌▗▛▜▖ ▐▌ ▐▌▐▌▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖
     // ▐▌  ▝▙▟▘▐▌▐▌ ▐▌ ▐▌▐▌ ▐▌  ▐▌ ▐▌▐▌▐▌▐▌
@@ -177,7 +189,7 @@ class Client {
         return this.transaction(MESSAGE_OPCODES.OPCODE_START_COMBAT, { attacker: idAttacker, target: idTarget });
     }
 
-    endCombat (idAttacker, bothSides) {
+    endCombat (idAttacker, bothSides = false) {
         return this.transaction(MESSAGE_OPCODES.OPCODE_END_COMBAT, { attacker: idAttacker, bothSides });
     }
 

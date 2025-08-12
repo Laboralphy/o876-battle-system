@@ -194,7 +194,7 @@ class Creature {
         const myProps = mg.getPropertySet;
         const targetEffects = tg.getEffectSet;
         const targetProps = tg.getPropertySet;
-        if (myConditions.has(CONSTS.CONDITION_BLINDED) || mg.getEnvironment[CONSTS.ENVIRONMENT_FOG]) {
+        if (myConditions.has(CONSTS.CONDITION_BLINDED) || mg.getEnvironments[CONSTS.ENVIRONMENT_FOG]) {
             return CONSTS.CREATURE_VISIBILITY_BLINDED;
         }
         if (targetEffects.has(CONSTS.EFFECT_INVISIBILITY) && !myEffects.has(CONSTS.EFFECT_SEE_INVISIBILITY)) {
@@ -203,7 +203,7 @@ class Creature {
         if (targetEffects.has(CONSTS.EFFECT_STEALTH)) {
             return CONSTS.CREATURE_VISIBILITY_HIDDEN;
         }
-        const bInDarkness = mg.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS];
+        const bInDarkness = mg.getEnvironments[CONSTS.ENVIRONMENT_DARKNESS];
         if (bInDarkness && !myEffects.has(CONSTS.EFFECT_DARKVISION) && !myProps.has(CONSTS.PROPERTY_DARKVISION)) {
             // if environment is dark, then one of the two opponent must have a source light
             return (

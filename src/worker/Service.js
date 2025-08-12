@@ -500,6 +500,15 @@ class Service {
         };
     }
 
+    // ▗▄▄▖         ▗▖                          ▗▖
+    // ▐▙▄ ▐▛▜▖▐▌▐▌ ▄▖ ▐▛▜▖▗▛▜▖▐▛▜▖▐▙▟▙▗▛▜▖▐▛▜▖▝▜▛▘▗▛▀▘
+    // ▐▌  ▐▌▐▌▝▙▟▘ ▐▌ ▐▌  ▐▌▐▌▐▌▐▌▐▛▛█▐▛▀▘▐▌▐▌ ▐▌  ▀▜▖
+    // ▝▀▀▘▝▘▝▘ ▝▘  ▀▀ ▝▘   ▀▀ ▝▘▝▘▝▘ ▀ ▀▀ ▝▘▝▘  ▀▘▝▀▀
+
+    opcodeSetLocationEnvironments ({ location, environments }) {
+        this._manager.horde.setLocationEnvironments(location, environments);
+    }
+
     // ▗▄▄▖         ▄▖      ▗▖  ▗▖
     // ▐▙▄ ▐▌▐▌▗▛▜▖ ▐▌ ▐▌▐▌▝▜▛▘ ▄▖ ▗▛▜▖▐▛▜▖
     // ▐▌  ▝▙▟▘▐▌▐▌ ▐▌ ▐▌▐▌ ▐▌  ▐▌ ▐▌▐▌▐▌▐▌

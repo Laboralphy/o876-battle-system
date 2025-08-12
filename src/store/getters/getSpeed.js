@@ -9,7 +9,7 @@ const { aggregateModifiers } = require('../../libs/aggregator');
  * @returns {number}
  */
 module.exports = (state, getters, externals) => {
-    let nModifier = getters.getEnvironment[CONSTS.ENVIRONMENT_DIFFICULT_TERRAIN] ? 0.5 : 1;
+    let nModifier = getters.getEnvironments[CONSTS.ENVIRONMENT_DIFFICULT_TERRAIN] ? 0.5 : 1;
     const f = ({ amp }) => {
         nModifier *= amp;
     };

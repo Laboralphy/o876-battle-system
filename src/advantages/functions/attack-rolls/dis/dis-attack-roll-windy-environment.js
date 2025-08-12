@@ -6,7 +6,7 @@ const CONSTS = require('../../../../consts');
  * @returns {boolean}
  */
 function main (attackOutcome) {
-    return !!attackOutcome.attacker.getters.getEnvironment[CONSTS.ENVIRONMENT_WINDY] &&
+    return !!attackOutcome.attacker.getters.getEnvironments[CONSTS.ENVIRONMENT_WINDY] &&
         attackOutcome.attackType === CONSTS.ATTACK_TYPE_RANGED;
 }
 

@@ -43,7 +43,7 @@ class Horde {
             location: idLocation
         };
         this._locationTemporaryEnvironments.push(e);
-        this.updateLocationEnvironment(e.id);
+        this.updateLocationEnvironments(e.id);
         return e;
     }
 
@@ -56,7 +56,7 @@ class Horde {
         if (i >= 0) {
             const e = this._locationTemporaryEnvironments[i];
             this._locationTemporaryEnvironments.splice(i, 1);
-            this.updateLocationEnvironment(e.location);
+            this.updateLocationEnvironments(e.location);
         }
     }
 
@@ -102,7 +102,7 @@ class Horde {
      * @param oCreature {Creature}
      * @param aEnvironments {string[]}
      */
-    updateCreatureEnvironment (oCreature, aEnvironments) {
+    updateCreatureEnvironments (oCreature, aEnvironments) {
         const e = new Set(aEnvironments);
         const ec = oCreature.getters.getEnvironment;
         ENVIRONMENTS.forEach(env => {
@@ -134,7 +134,7 @@ class Horde {
         });
     }
 
-    getLocationEnvironment (idLocation) {
+    getLocationEnvironments (idLocation) {
         const aPermEnv = this._locationEnvironmentRegistry.get(idLocation) || [];
         const aTempEnv = this
             .getLocationTemporaryEnvironments(idLocation)
@@ -142,27 +142,27 @@ class Horde {
         return Array.from(new Set([...aPermEnv, ...aTempEnv]));
     }
 
-    updateCreatureLocationEnvironment (oCreature) {
+    updateCreatureLocationEnvironments (oCreature) {
         const idLocation = this.getCreatureLocation(oCreature);
-        this.updateCreatureEnvironment(oCreature, this.getLocationEnvironment(idLocation));
+        this.updateCreatureEnvironments(oCreature, this.getLocationEnvironments(idLocation));
     }
 
-    updateLocationEnvironment (idLocation) {
+    updateLocationEnvironments (idLocation) {
         const aCreatures = this.getLocationCreatures(idLocation);
-        aCreatures.forEach(c => this.updateCreatureLocationEnvironment(c));
+        aCreatures.forEach(c => this.updateCreatureLocationEnvironments(c));
     }
 
     /**
-     * Define/update room environment
+     * Define/update room environments
      * @param idLocation {string}
      * @param aEnvironments {string[]}
      */
-    setLocationEnvironment (idLocation, aEnvironments) {
+    setLocationEnvironments (idLocation, aEnvironments) {
         this._locationEnvironmentRegistry.set(idLocation, aEnvironments);
         this
             .getLocationCreatures(idLocation)
             .forEach(creature => {
-                this.updateCreatureLocationEnvironment(creature);
+                this.updateCreatureLocationEnvironments(creature);
             });
     }
 
@@ -173,7 +173,7 @@ class Horde {
      */
     setCreatureLocation (oCreature, idLocation) {
         this._locationRegistry.setEntityLocation(oCreature.id, idLocation);
-        this.updateCreatureLocationEnvironment(oCreature);
+        this.updateCreatureLocationEnvironments(oCreature);
     }
 
     /**

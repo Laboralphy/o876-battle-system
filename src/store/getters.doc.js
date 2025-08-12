@@ -19,7 +19,7 @@
  * @property getEffectTagSet {Set<string>}
  * @property getEffects {RBSEffect[]}
  * @property getEncumbrance {{value: number, capacity: number}}
- * @property getEnvironment {{ darkness: boolean, windy: boolean, difficultTerrain: boolean, underwater: boolean }}
+ * @property getEnvironments {{ darkness: boolean, windy: boolean, difficultTerrain: boolean, underwater: boolean }}
  * @property getEquipment {Object<string, RBSItem>}
  * @property getEquipmentProperties {RBSProperty[]}
  * @property getHitPoints {number}

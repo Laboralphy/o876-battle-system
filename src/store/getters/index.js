@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-08T15:12:27.803Z
+// Date : 2025-08-12T23:20:42.437Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
     'getEffectTagSet': require('./getEffectTagSet.js'),
     'getEffects': require('./getEffects.js'),
     'getEncumbrance': require('./getEncumbrance.js'),
-    'getEnvironment': require('./getEnvironment.js'),
+    'getEnvironments': require('./getEnvironments.js'),
     'getEquipment': require('./getEquipment.js'),
     'getEquipmentProperties': require('./getEquipmentProperties.js'),
     'getHitPoints': require('./getHitPoints.js'),
