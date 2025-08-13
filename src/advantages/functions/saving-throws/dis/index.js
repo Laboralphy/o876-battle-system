@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-12T23:20:42.223Z
+// Date : 2025-08-13T01:31:32.951Z
 // List of files in ./src/advantages/functions/saving-throws/dis
 
 module.exports = {

@@ -45,6 +45,14 @@ class EffectProcessor {
     }
 
     /**
+     * return horde instance
+     * @returns {Horde}
+     */
+    get horde () {
+        return this._horde;
+    }
+
+    /**
      * Invoke effect method
      * @param oEffect {RBSEffect}
      * @param sMethod
@@ -212,7 +220,7 @@ class EffectProcessor {
      * @param oEffect
      */
     removeEffect (oEffect) {
-        const { target, source } = this.getEffectTargetSource(oEffect);
+        const { target } = this.getEffectTargetSource(oEffect);
         if (oEffect.siblings.length > 0) {
             const oEffectRegistry = target.getters.getEffectRegistry;
             oEffect

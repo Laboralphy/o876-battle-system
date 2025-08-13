@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-12T23:20:42.720Z
+// Date : 2025-08-13T01:31:33.481Z
 // List of files in ./src/effects
 
 module.exports = {
@@ -12,6 +12,7 @@ module.exports = {
     'EFFECT_BLINDNESS': require('./blindness.js'),
     'EFFECT_BREAKER': require('./breaker.js'),
     'EFFECT_CHARM': require('./charm.js'),
+    'EFFECT_CONCENTRATION': require('./concentration.js'),
     'EFFECT_DAMAGE_IMMUNITY': require('./damage-immunity.js'),
     'EFFECT_DAMAGE_MODIFIER': require('./damage-modifier.js'),
     'EFFECT_DAMAGE_REDUCTION': require('./damage-reduction.js'),
