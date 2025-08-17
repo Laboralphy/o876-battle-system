@@ -1,6 +1,6 @@
 const { checkConst } = require('../libs/check-const');
 
-function init ({ property, ability = '', threat = '' }) {
+function init ({ property, ability = undefined, threat = undefined }) {
     const sType = ability || threat;
     if (sType) {
         property.data.ability = checkConst(sType);

@@ -16,6 +16,13 @@
     "actions"
   ],
   "properties": {
+    "extends": {
+      "description": "Reference of a blueprint which this one is based on",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "entityType": {
       "description": "Entity type, always ENTITY_TYPE_ACTOR",
       "const": "ENTITY_TYPE_ACTOR"
@@ -127,6 +134,13 @@
       "description": "List of possible actions",
       "items": {
         "$ref": "def-actor-action"
+      }
+    },
+    "spells": {
+      "description": "List of known spells",
+      "type": "array",
+      "items": {
+        "type": "strings"
       }
     }
   }

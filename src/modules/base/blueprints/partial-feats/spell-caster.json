@@ -1,0 +1,10 @@
+{
+  "entityType": "ENTITY_TYPE_PARTIAL_ACTOR",
+  "actions": [{
+    "id": "cast-spell",
+    "actionType": "COMBAT_ACTION_TYPE_SPELL",
+    "cooldown": 6,
+    "script": "",
+    "delay": 3
+  }]
+}

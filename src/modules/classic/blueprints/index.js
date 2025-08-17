@@ -1,9 +1,10 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-16T23:38:27.750Z
+// Date : 2025-08-17T23:28:12.409Z
 // List of files in ./src/modules/classic/blueprints
 
 module.exports = {
     'class-type-fighter': require('./class-types/class-type-fighter.json'),
+    'class-type-wizard': require('./class-types/class-type-wizard.json'),
     'cp-celestial': require('./creatures/common-props/cp-celestial.json'),
     'cp-construct-armored': require('./creatures/common-props/cp-construct-armored.json'),
     'cp-construct-metal': require('./creatures/common-props/cp-construct-metal.json'),

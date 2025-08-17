@@ -9,15 +9,16 @@ function init ({ property, ability }) {
 
 /**
  * Half the damages of any attack using the effect ability
+ * @param property {RBSProperty}
  * @param attackOutcome {AttackOutcome}
  */
-function attack ({ attack: attackOutcome }) {
+function attack ({ property, attack: attackOutcome }) {
     if (attackOutcome.ability === property.data.ability) {
         // reduce all physical damages
         Object
-            .entries(attackOutcome.damages.types)
-            .forEach(([sType, nAmount]) => {
-                attackOutcome.damages.types[sType] = Math.max(1, Math.floor(nAmount / 2));
+            .values(attackOutcome.damages.types)
+            .forEach((oDamType) => {
+                oDamType.amount = Math.max(1, Math.floor(oDamType.amount / 2));
             });
     }
 }

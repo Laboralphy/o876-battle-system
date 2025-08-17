@@ -1,7 +1,7 @@
 {
   "description": "+2 to damage roll when wielding a one hand weapon, with no shield",
   "properties": [{
-    "type": "PROPERTY_SPECIAL_BEHAVIOR",
+    "type": "PROPERTY_THINKER",
     "attack": "sb-ffs-duelling-weapon-dmg-bonus"
   }],
   "action": null

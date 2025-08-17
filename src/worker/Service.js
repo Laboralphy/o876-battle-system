@@ -624,6 +624,16 @@ class Service {
         }
     }
 
+    opcodeGetCreatureSpellbook ({ creature }) {
+        // list of known spells
+        // list of slots of each level (total, remaining)
+        const oCreature = this._getCreature(creature);
+        return {
+            spells: [...oCreature.getters.getLearnedSpellSet],
+            slots: oCreature.getters.getSpellSlots
+        };
+    }
+
     // ▗▄▄▖ ▗▖                  ▟▜▖                 ▗▖                  ▗▖
     //  ▐▌ ▝▜▛▘▗▛▜▖▐▙▟▙▗▛▀▘     ▟▛     ▗▛▜▖▗▛▜▌▐▌▐▌ ▄▖ ▐▛▜▖▐▙▟▙▗▛▜▖▐▛▜▖▝▜▛▘
     //  ▐▌  ▐▌ ▐▛▀▘▐▛▛█ ▀▜▖    ▐▌▜▛    ▐▛▀▘▝▙▟▌▐▌▐▌ ▐▌ ▐▙▟▘▐▛▛█▐▛▀▘▐▌▐▌ ▐▌

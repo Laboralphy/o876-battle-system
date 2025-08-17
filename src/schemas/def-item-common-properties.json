@@ -8,6 +8,13 @@
     "equipmentSlots"
   ],
   "properties": {
+    "extends": {
+      "description": "Reference of a blueprint which this one is based on",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "entityType": {
       "type": "string",
       "const": "ENTITY_TYPE_ITEM"
@@ -28,10 +35,6 @@
     "charges": {
       "description": "number of times the item can be used. (see 'spell' property)",
       "type": "number"
-    },
-    "extends": {
-      "description": "If specified, this blueprint is an extension of another blueprint",
-      "type": "string"
     },
     "equipmentSlots": {
       "description": "List of equipment slot, if item is not equipable, this list wil be empty",

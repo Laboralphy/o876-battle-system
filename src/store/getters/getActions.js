@@ -17,7 +17,7 @@
  *
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
- * @returns {Object<string, RBSAction >}
+ * @returns {Object<string, RBSAction>}
  */
 module.exports = (state, getters) => Object.fromEntries(
     Object

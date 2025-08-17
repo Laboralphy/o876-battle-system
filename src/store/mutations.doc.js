@@ -32,7 +32,7 @@
  * @property setSpellSlot {function({ level: number, count: number|undefined, cooldown: number|undefined })}
  * @property setTimer {function({ timer: string, value: number })}
  * @property unlearnSpell {function({  })}
- * @property useAction {function({ idAction: string, time: number time })}
+ * @property useAction {function({ action: string, time: number time })}
  * @property useSpellSlot {function({ level: number })}
  */
 

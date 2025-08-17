@@ -334,6 +334,13 @@ class EntityBuilder {
                 .forEach(action => {
                     oCreature.mutations.defineAction(action);
                 });
+            if (oBlueprint.spells) {
+                Object
+                    .values(oBlueprint.spells)
+                    .forEach(spell => {
+                        oCreature.mutations.learnSpell(spell);
+                    });
+            }
             return oCreature;
         } catch (e) {
             console.error(e);
@@ -363,7 +370,8 @@ class EntityBuilder {
             return this.createCreatureFromResRef(idbp, id);
         }
 
-        case CONSTS.ENTITY_TYPE_PARTIAL: {
+        case CONSTS.ENTITY_TYPE_PARTIAL_ITEM:
+        case CONSTS.ENTITY_TYPE_PARTIAL_ACTOR: {
             return null;
         }
 

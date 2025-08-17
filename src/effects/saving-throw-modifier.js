@@ -1,7 +1,7 @@
 const CONSTS = require('../consts');
 const { checkConst } = require('../libs/check-const');
 
-function init ({ effect, ability = '', threat = '' }) {
+function init ({ effect, ability = undefined, threat = undefined }) {
     const sType = ability || threat;
     if (sType) {
         effect.data.ability = checkConst(sType);

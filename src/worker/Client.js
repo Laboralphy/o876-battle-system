@@ -17,7 +17,7 @@ class Client {
      * @param request
      * @returns {Promise<{}>}
      */
-    transaction (opcode, request) {
+    async transaction (opcode, request) {
         const requestId = getUniqueId();
         return new Promise((resolve, reject) => {
             const messageHandler = (message) => {
@@ -236,6 +236,10 @@ class Client {
 
     getSpellData (idSpell) {
         return this.transaction(MESSAGE_OPCODES.OPCODE_GET_SPELL_DATA, { spell: idSpell });
+    }
+
+    getCreatureSpellbook (idCreature) {
+        return this.transaction(MESSAGE_OPCODES.OPCODE_GET_CREATURE_SPELLBOOK, { creature: idCreature });
     }
 
     // ▗▄▄▖ ▗▖                  ▟▜▖                 ▗▖                  ▗▖

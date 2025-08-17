@@ -8,6 +8,9 @@ const { checkConst } = require('../libs/check-const');
  * @param threat {string} THREAT_*
  */
 function init ({ property, universal = false, ability = '', threat = '' }) {
+    if (!ability && !threat) {
+        universal = true;
+    }
     if (universal) {
         property.data.universal = true;
         property.data.ability = '';

@@ -46,7 +46,7 @@ function _createAilmentEffect (property, oTarget, oSource, oEffectProcessor) {
     const nAmp = oSource.dice.roll(amp);
     switch (ailment) {
     case CONSTS.ON_ATTACK_HIT_ABILITY_DRAIN: {
-        const { ability } = extraParams;
+        const { ability = CONSTS.ABILITY_STRENGTH } = extraParams;
         oEffect = oEffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_MODIFIER, nAmp, { ability });
         break;
     }
@@ -65,12 +65,23 @@ function _createAilmentEffect (property, oTarget, oSource, oEffectProcessor) {
         break;
     }
     case CONSTS.ON_ATTACK_HIT_DISEASE: {
-        const { disease } = extraParams;
-        const { stages } = oSource.data.DISEASES[disease];
-        oEffect = oEffectProcessor.createEffect(CONSTS.EFFECT_DISEASE, nAmp, {
-            disease,
-            stages
-        });
+        const { disease = undefined } = extraParams;
+        if (disease) {
+            const { stages } = oSource.data.DISEASES[disease];
+            oEffect = oEffectProcessor.createEffect(CONSTS.EFFECT_DISEASE, nAmp, {
+                disease,
+                stages
+            });
+        }
+        break;
+    }
+    case CONSTS.ON_ATTACK_HIT_DOOM: {
+        // -2 on attack rolls, magical damage, saving throws, ability checks and skill checks.
+        oEffect = [
+            oEffectProcessor.createEffect(CONSTS.EFFECT_DISADVANTAGE_ATTACK, -2),
+            oEffectProcessor.createEffect(CONSTS.EFFECT_SAVING_THROW_MODIFIER, -2),
+            oEffectProcessor.createEffect(CONSTS.EFFECT_ABILITY_CHECK_MODIFIER, -2)
+        ];
         break;
     }
     case CONSTS.ON_ATTACK_HIT_FEAR: {
@@ -112,7 +123,7 @@ function _createAilmentEffect (property, oTarget, oSource, oEffectProcessor) {
             e.subtype = subtype;
         });
         oEffectProcessor.applyEffectGroup(oEffect, '', oTarget, duration, oSource);
-    } else {
+    } else if (oEffect) {
         oEffect.subtype = subtype;
         oEffectProcessor.applyEffect(oEffect, oTarget, duration, oSource);
     }

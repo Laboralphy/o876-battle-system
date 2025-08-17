@@ -22,7 +22,7 @@ module.exports = ({ state }, {
     script,
     parameters = {},
     bonus = false,
-    hostile= false,
+    hostile = false,
     delay = 0
 }) => {
     const bHasCooldown = cooldown > 0;

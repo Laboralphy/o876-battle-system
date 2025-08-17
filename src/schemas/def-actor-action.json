@@ -33,7 +33,7 @@
     },
     "parameters": {
       "type": "object",
-      "description": "An object containing optional parameters for script script"
+      "description": "An object containing optional parameters for script"
     },
     "cooldown": {
       "type": "number",

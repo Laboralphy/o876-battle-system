@@ -1,0 +1,12 @@
+{
+  "entityType": "ENTITY_TYPE_PARTIAL_ACTOR",
+  "extends": ["spell-caster"],
+  "hd": 6,
+  "proficiencies": [
+    "PROFICIENCY_WEAPON_SIMPLE",
+    "PROFICIENCY_SAVING_THROW_INTELLIGENCE",
+    "PROFICIENCY_SAVING_THROW_WISDOM"
+  ],
+  "classType": "CLASS_TYPE_WIZARD",
+  "actions": []
+}

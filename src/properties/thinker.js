@@ -1,11 +1,12 @@
-function init ({ property, combat = '', damaged = '', attack = '' }) {
+function init ({ property, combat = '', damaged = '', attack = '', attacked = '' }) {
     if (!combat && !damaged && !attack) {
         throw new Error('No script defined in Special Behavior property');
     }
     property.data = {
         combat,
         damaged,
-        attack
+        attack,
+        attacked
     };
 }
 
@@ -13,14 +14,37 @@ function init ({ property, combat = '', damaged = '', attack = '' }) {
  * this part is triggered when a creature attacks
  * @param property {RBSProperty} the item property object
  * @param manager {Manager} Instance of manager
- * @param attackOutcome {AttackOutcome} the attack outcome
+ * @param creature {Creature} the attacking creature
+ * @param target {Creature} the targetted creature
+ * @param attack {AttackOutcome} the attack outcome
  */
-function attack ({ property, manager, attackOutcome }) {
+function attack ({ property, manager, creature, target, attack }) {
     const sScript = property.data.attack;
     if (sScript) {
         manager.runScript(sScript, {
             manager,
-            attack: attackOutcome
+            creature,
+            target,
+            attack
+        });
+    }
+}
+/**
+ * this part is triggered when a creature attacks
+ * @param property {RBSProperty} the item property object
+ * @param manager {Manager} Instance of manager
+ * @param creature {Creature} the attacking creature
+ * @param target {Creature} the targetted creature
+ * @param attack {AttackOutcome} the attack outcome
+ */
+function attacked ({ property, manager, creature, target, attack }) {
+    const sScript = property.data.attack;
+    if (sScript) {
+        manager.runScript(sScript, {
+            manager,
+            creature,
+            target,
+            attack
         });
     }
 }
@@ -30,27 +54,17 @@ function attack ({ property, manager, attackOutcome }) {
  * @param property {RBSProperty} the item property object
  * @param manager {Manager} Instance of manager
  * @param creature {Creature} the damaged creature
- * @param source {Creature} the creature who is applying damage effects
  * @param sDamageType {string} a DAMAGE_TYPE_*
  * @param amount {number} number of damage points dealt
  * @param resisted {number} number of damage points resisted
  */
-function damaged ({
-    property,
-    manager,
-    creature,
-    source,
-    damageType,
-    amount,
-    resisted
-}) {
+function damaged ({ property, manager, creature, damageType: sDamageType, amount, resisted }) {
     const sScript = property.data.damaged;
     if (sScript) {
         manager.runScript(sScript, {
             manager,
             creature,
-            source,
-            damageType,
+            damageType: sDamageType,
             amount,
             resisted
         });
@@ -81,5 +95,6 @@ module.exports = {
     init,
     combatTurn,
     damaged,
-    attack
+    attack,
+    attacked
 };

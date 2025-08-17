@@ -305,7 +305,7 @@ class Manager {
                 );
                 let iRank = Math.floor(oAttacker.dice.random() * aOffenders.length);
                 for (let iMultiAttack = 0; iMultiAttack < nMultiAttackCount; ++iMultiAttack) {
-                    this.deliverAttack(oAttacker, aOffenders[iRank], { applyDamage: true });
+                    this.deliverAttack(oAttacker, aOffenders[iRank]);
                     iRank = (iRank + 1) % aOffenders.length;
                 }
             }
@@ -1237,16 +1237,20 @@ class Manager {
             } else {
                 // non-hostile action : go ahead
                 // Special case for spells
-                if (bIsSpell) {
-                    // should be aware of cooldown
-                    if (oCreature.getters.getTimers.spellCast > this._time) {
-                        // this checking is only for non combat situations
+                if (bIsSpell && !freeCast) {
+                    /**
+                     * @var csa {RBSAction}
+                     */
+                    const csa = oCreature.getters.getActions[SPECIAL_ACTION_CAST_SPELL];
+                    if (!csa) {
+                        return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_CAPABILITY);
+                    }
+                    if (!csa.ready) {
                         return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_NOT_READY);
                     }
-                    oCreature.mutations.setTimer({ timer: 'spellCast', value: this._time + this._combatManager.defaultTickCount });
                 }
                 this.executeAction(oCreature, oAction, oTarget);
-                oCreature.mutations.useAction({ idAction: oAction.id });
+                oCreature.mutations.useAction({ action: bIsSpell ? SPECIAL_ACTION_CAST_SPELL : oAction.id });
                 return new CombatActionSuccess();
             }
         }

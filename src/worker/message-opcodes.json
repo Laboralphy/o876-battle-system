@@ -22,6 +22,7 @@
   "OPCODE_CAST_SPELL": "CastSpell",
   "OPCODE_USE_ITEM": "UseItem",
   "OPCODE_GET_SPELL_DATA": "GetSpellData",
+  "OPCODE_GET_CREATURE_SPELLBOOK": "GetCreatureSpellbook",
   "OPCODE_EQUIP_ITEM": "EquipItem",
   "OPCODE_UNEQUIP_ITEM": "UnequipItem",
   "OPCODE_SET_LOCATION_ENVIRONMENTS": "SetLocationEnvironments"

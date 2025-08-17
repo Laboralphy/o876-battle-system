@@ -1,8 +1,9 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-16T23:38:29.776Z
+// Date : 2025-08-17T23:28:13.573Z
 // List of files in ./src/effects
 
 module.exports = {
+    'EFFECT_ABILITY_CHECK_MODIFIER': require('./ability-check-modifier.js'),
     'EFFECT_ABILITY_MODIFIER': require('./ability-modifier.js'),
     'EFFECT_ADVANTAGE_ATTACK': require('./advantage-attack.js'),
     'EFFECT_ADVANTAGE_SAVING_THROW': require('./advantage-saving-throw.js'),

@@ -1,8 +1,9 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-16T23:38:29.978Z
+// Date : 2025-08-17T23:28:13.707Z
 // List of files in ./src/properties
 
 module.exports = {
+    'PROPERTY_ABILITY_CHECK_MODIFIER': require('./ability-check-modifier.js'),
     'PROPERTY_ABILITY_MODIFIER': require('./ability-modifier.js'),
     'PROPERTY_ADVANTAGE_ATTACK': require('./advantage-attack.js'),
     'PROPERTY_ADVANTAGE_SAVING_THROW': require('./advantage-saving-throw.js'),
@@ -35,7 +36,6 @@ module.exports = {
     'PROPERTY_SAVING_THROW_MODIFIER': require('./saving-throw-modifier.js'),
     'PROPERTY_SKILL_MODIFIER': require('./skill-modifier.js'),
     'PROPERTY_SNEAK_ATTACK': require('./sneak-attack.js'),
-    'PROPERTY_SPECIAL_BEHAVIOR': require('./special-behavior.js'),
     'PROPERTY_SPEED_FACTOR': require('./speed-factor.js'),
     'PROPERTY_SPELL_POWER': require('./spell-power.js'),
     'PROPERTY_SPIKE_DAMAGE': require('./spike-damage.js'),

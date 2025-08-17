@@ -1,7 +1,7 @@
 const CONSTS = require('../consts');
 
 function init ({ effect }) {
-    this.data.lastCheck = 0;
+    effect.data.lastCheck = 0;
 }
 
 /**
@@ -15,7 +15,7 @@ function attack ({ effect, effectProcessor, attackOutcome }) {
 }
 
 function apply ({ target, reject }) {
-    if (target.getters.getters.getEffectSet.has(CONSTS.EFFECT_STEALTH)) {
+    if (target.getters.getEffectSet.has(CONSTS.EFFECT_STEALTH)) {
         reject();
     }
 }

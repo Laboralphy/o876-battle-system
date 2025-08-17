@@ -3,7 +3,7 @@
  * @property getAbilities {Object<string, number>}
  * @property getAbilityBaseValues {Object<string, number>}
  * @property getAbilityModifiers {Object<string, number>}
- * @property getActions {Object<string, RBSAction >}
+ * @property getActions {Object<string, RBSAction>}
  * @property getActiveProperties {RBSProperty[]}
  * @property getArmorClass {Object<string, number>}
  * @property getAttackAbility {Object<string, string>}
@@ -26,6 +26,7 @@
  * @property getId {string}
  * @property getImmunitySet {Set<string>}
  * @property getInnateProperties {RBSProperty[]}
+ * @property getLearnedSpellSet {Set<string>}
  * @property getLevel {number}
  * @property getMaxHitPoints {number}
  * @property getMaxPreparedSpellCount {number}
@@ -48,7 +49,6 @@
  * @property getSpeed {number}
  * @property getSpellCastingAbility {string}
  * @property getSpellDifficultyClass {Object<string, number>}
- * @property getSpellSet {Set<string>}
  * @property getSpellSlots {{level: number, count: number, used: number, remaining: number, ready: boolean, cooldown: number}[]}
  * @property getTimers {{ spellCast: number }}
  * @property getUnmodifiedLevel {number}

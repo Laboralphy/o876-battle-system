@@ -5,7 +5,7 @@
  * @param getters {RBSStoreGetters}
  */
 module.exports = ({ state, getters }, { spell }) => {
-    if (!getters.getSpellSet.has(spell)) {
+    if (!getters.getLearnedSpellSet.has(spell)) {
         state.spells.push(spell);
     }
 };

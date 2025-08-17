@@ -6,10 +6,11 @@ const CONSTS = require('../consts');
  * @param damageTypeVulnerabilities {string[]} if creature is damaged by one of this damage types, the regeneration is
  * @param threshold {number} regen is active only when current hp is lower than `threshold * maxHP`
  * shut down until damage amount is soaked down by regeneration
+ * @param useConstitutionModifier {boolean} if true then constitution modifier is used to inc/dec regen rate
  */
 function init ({ property, damageTypeVulnerabilities = [], threshold = 1, useConstitutionModifier = false }) {
     property.data.vulnerabilities = damageTypeVulnerabilities;
-    property.data.shutdown = 0; // use internally to deals with regend stopped because of vulnerabilities
+    property.data.shutdown = 0; // use internally to deals with regen stopped because of vulnerabilities
     property.data.threshold = threshold;
     property.data.useConstitutionModifier = useConstitutionModifier;
 }

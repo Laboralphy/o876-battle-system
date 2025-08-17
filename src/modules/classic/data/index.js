@@ -1,10 +1,11 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-16T23:38:27.821Z
+// Date : 2025-08-17T23:28:12.478Z
 // List of files in ./src/modules/classic/data
 
 module.exports = {
     'CLASS_TYPES': {
-        'CLASS_TYPE_FIGHTER': require('./class-types/class-type-fighter.json')
+        'CLASS_TYPE_FIGHTER': require('./class-types/class-type-fighter.json'),
+        'CLASS_TYPE_WIZARD': require('./class-types/class-type-wizard.json')
     },
     'FEATS': {
         'FEAT_ACTION_SURGE_2': require('./feats/feat-action-surge-2.json'),

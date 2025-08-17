@@ -5,6 +5,7 @@ const Events = require('events');
 const Dice = require('./libs/dice');
 const { checkConst } = require('./libs/check-const');
 const { computeSavingThrowAdvantages } = require('./advantages');
+const {aggregateModifiers} = require('./libs/aggregator');
 
 /**
  * @class
@@ -330,12 +331,19 @@ class Creature {
     checkAbility (sAbility, dc) {
         checkConst(sAbility);
         const nModifier = this.getters.getAbilityModifiers[sAbility];
+        const { sum: nBonus } = aggregateModifiers([
+            CONSTS.PROPERTY_ABILITY_CHECK_MODIFIER,
+            CONSTS.EFFECT_ABILITY_CHECK_MODIFIER
+        ], this.getters, {
+            effectFilter: eff => eff.data.universal || eff.data.ability === sAbility,
+            propFilter: prop => prop.data.universal || prop.data.ability === sAbility
+        });
         const nRoll = this._rollD20();
         const result = {
             ability: sAbility,
             roll: nRoll,
-            bonus: nModifier,
-            success: (nRoll + nModifier) >= dc
+            bonus: nModifier + nBonus,
+            success: (nRoll + nModifier + nBonus) >= dc
         };
         this.events.emit(CONSTS.EVENT_CREATURE_ABILITY_CHECK, result);
         return result;
@@ -348,6 +356,8 @@ class Creature {
      * @returns {{bonus: number, success: boolean, skill: string, roll: number, dc: number}}
      */
     checkSkill (sSkill, dc = 0) {
+        const oSkillData = this.data['SKILLS'][sSkill];
+
         const sv = this.getters.getSkillValues;
         if (!(sSkill in sv)) {
             throw new Error(`Invalid skill ${sSkill}`);
@@ -370,6 +380,43 @@ class Creature {
      */
     get classTypeData () {
         return this.getters.getSpellCastingAbility;
+    }
+
+    get spellcaster () {
+        return 'cast-spell' in this.getters.getActions;
+    }
+
+    set spellcaster (value) {
+        const m = (this.spellcaster ? 10 : 0) +
+            (value ? 1 : 0);
+        switch (m) {
+        case 0: {
+            // removing spellcaster flag from a non spellcaster : do nothing
+            break;
+        }
+
+        case 1: {
+            // adding spellcaster flag to a non spellcaster
+            this.mutations.defineAction({
+                id: 'cast-spell',
+                actionType: CONSTS.COMBAT_ACTION_TYPE_SPELL,
+                cooldown: 6,
+                script: '',
+                delay: 3
+            });
+            break;
+        }
+
+        case 10: {
+            // removing spellcaster flag is forbidden
+            throw new Error('Cannot remove spellcaster flag');
+        }
+
+        case 11: {
+            // add spellcaster flag to a spellcaster: do nothing
+            break;
+        }
+        }
     }
 }
 

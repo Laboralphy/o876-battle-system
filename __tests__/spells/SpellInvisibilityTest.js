@@ -6,6 +6,7 @@ describe('Spell Invisibility', () => {
         const { manager: m, creatures: { c1, c2, c3, c4, c5 }} = getNewManager({
             friends: ['c-orc', 'c-orc', 'c-orc', 'c-orc', 'c-orc']
         });
+        c1.spellcaster = true;
         m.doAction(c1, 'invisibility', c2, { freeCast: true });
         // c2 should have invisibility
         expect(c2.getters.getEffectSet.has(CONSTS.EFFECT_INVISIBILITY)).toBeTruthy();
@@ -29,6 +30,7 @@ describe('Spell Invisibility', () => {
         const { manager: m, creatures: { c1, c2, c3, c4, c5 }} = getNewManager({
             friends: ['c-orc', 'c-orc', 'c-orc', 'c-orc', 'c-orc']
         });
+        c1.spellcaster = true;
         m.doAction(c1, 'invisibility', c2, { freeCast: true });
         // c1 should have one concetration effect
         expect(c1.getters.getEffectSet.has(CONSTS.EFFECT_CONCENTRATION)).toBeTruthy();
@@ -41,6 +43,7 @@ describe('Spell Invisibility', () => {
         const { manager: m, creatures: { c1, c2, c3, c4, c5 }} = getNewManager({
             friends: ['c-orc', 'c-orc', 'c-orc', 'c-orc', 'c-orc']
         });
+        c1.spellcaster = true;
         m.doAction(c1, 'invisibility', c2, { freeCast: true });
         expect(c1.getters.getEffectSet.has(CONSTS.EFFECT_CONCENTRATION)).toBeTruthy();
         expect(c2.getters.getEffectSet.has(CONSTS.EFFECT_INVISIBILITY)).toBeTruthy();
@@ -55,6 +58,7 @@ describe('Spell Invisibility', () => {
         const { manager: m, creatures: { c1, c2, c3, c4, c5 }} = getNewManager({
             friends: ['c-orc', 'c-orc']
         });
+        c1.spellcaster = true;
         m.doAction(c1, 'invisibility', c2, { freeCast: true });
         expect(c2.getters.getEffectSet.has(CONSTS.EFFECT_INVISIBILITY)).toBeTruthy();
         m.process();
@@ -71,6 +75,7 @@ describe('Spell Invisibility', () => {
         const { manager: m, creatures: { c1, c2, c3, c4, c5 }} = getNewManager({
             friends: ['c-orc', 'c-orc']
         });
+        c1.spellcaster = true;
         m.doAction(c1, 'invisibility', c2, { freeCast: true });
         expect(c2.getters.getEffectSet.has(CONSTS.EFFECT_INVISIBILITY)).toBeTruthy();
         const eDam = m.createEffect(CONSTS.EFFECT_DAMAGE, 1000, { damageType: CONSTS.DAMAGE_TYPE_FORCE });
@@ -82,7 +87,9 @@ describe('Spell Invisibility', () => {
         const { manager: m, creatures: { c1, c2, c3, c4, c5 }} = getNewManager({
             friends: ['c-orc', 'c-orc', 'c-orc', 'c-orc', 'c-orc']
         });
-        m.doAction(c1, 'invisibility', c2, { freeCast: true, power: 4, additionalTargets: [c1, c3, c4, c5] });
+        c1.spellcaster = true;
+        const x = m.doAction(c1, 'invisibility', c2, { freeCast: true, power: 4, additionalTargets: [c1, c3, c4, c5] });
+        expect(x.success).toBeTruthy();
         expect(c1.getters.getEffectSet.has(CONSTS.EFFECT_INVISIBILITY)).toBeTruthy();
         expect(c2.getters.getEffectSet.has(CONSTS.EFFECT_INVISIBILITY)).toBeTruthy();
         expect(c3.getters.getEffectSet.has(CONSTS.EFFECT_INVISIBILITY)).toBeTruthy();

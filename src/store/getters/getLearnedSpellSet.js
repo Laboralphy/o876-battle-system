@@ -1,5 +1,5 @@
 /**
- * Retuns a Set of learned spells
+ * Returns a Set of learned spells
  * @param state {RBSStoreState}
  * @returns {Set<string>}
  */

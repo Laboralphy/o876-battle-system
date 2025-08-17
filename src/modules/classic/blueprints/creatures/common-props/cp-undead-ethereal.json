@@ -1,5 +1,5 @@
 {
-  "entityType": "ENTITY_TYPE_PARTIAL",
+  "entityType": "ENTITY_TYPE_PARTIAL_ACTOR",
   "properties": [
     {
       "type": "PROPERTY_DAMAGE_IMMUNITY",
