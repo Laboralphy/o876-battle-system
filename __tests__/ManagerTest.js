@@ -740,6 +740,7 @@ describe('active properties', function () {
             m.process();
         }
         expect(c1.hitPoints).toBe(23);
+        console.timeEnd('time');
     });
 
     it('should add vampire as an active creature', function () {

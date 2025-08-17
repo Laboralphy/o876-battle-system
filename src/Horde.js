@@ -104,7 +104,7 @@ class Horde {
      */
     updateCreatureEnvironments (oCreature, aEnvironments) {
         const e = new Set(aEnvironments);
-        const ec = oCreature.getters.getEnvironment;
+        const ec = oCreature.getters.getEnvironments;
         ENVIRONMENTS.forEach(env => {
             const bNewEnv = e.has(env);
             const bOldEnv = ec[env];

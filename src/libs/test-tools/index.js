@@ -1,27 +1,40 @@
 const Manager = require('../../Manager');
 
-function getNewManager (sCreature = 'c-orc', sFoes = 'c-orc') {
+function getNewManager ({ friends = [], foes = []}) {
     const m = new Manager();
     m.combatManager.defaultDistance = 50;
     m.loadModule('classic');
     m.loadModule('magic');
     m.initFactions();
-    const c1 = m.createEntity(sCreature, 'c1');
-    const c2 = m.createEntity(sFoes, 'c2');
-    const c3 = m.createEntity(sFoes, 'c3');
-    m.horde.setCreatureFaction(c1, 'player');
-    m.horde.setCreatureFaction(c2, 'hostile');
-    m.horde.setCreatureFaction(c3, 'hostile');
-    m.horde.setCreatureLocation(c1, 'r1');
-    m.horde.setCreatureLocation(c2, 'r1');
-    m.horde.setCreatureLocation(c3, 'r1');
+    let cid = 0;
+
+    const createCreature = (resref, sFaction) => {
+        const nId = ++cid;
+        const sId = 'c' + nId.toString();
+        const c = m.createEntity(resref, sId);
+        m.horde.setCreatureFaction(c, sFaction);
+        m.horde.setCreatureLocation(c, 'r1');
+        return c;
+    };
+
+    const aFriends = friends.map(f => createCreature(f, 'player'));
+    const aFoes = foes.map(f => createCreature(f, 'hostile'));
+
+    const oFriends = Object.fromEntries(
+        aFriends.map(f => [f.id, f])
+    );
+    const oFoes = Object.fromEntries(
+        aFoes.map(f => [f.id, f])
+    );
+
     return {
         manager: m,
         creatures: {
-            c1,
-            c2,
-            c3
-        }
+            ...oFriends,
+            ...oFoes
+        },
+        friends: oFriends,
+        foes: oFoes
     };
 }
 

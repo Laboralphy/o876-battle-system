@@ -39,6 +39,7 @@ const CONSTS = require('../../consts');
  * @property environment {Object<string, boolean >}
  * @property selectedOffensiveSlot {string}
  * @property actions {Object<string, RBSStoreStateCombatAction>}
+ * @property timers {{ spellCast: number }}
  * @property spellSlots {RBSStoreStateSpellSlot[]}
  * @property spells {{ [spell: string]: { prepared: boolean } }}
  * @property spellCastList {string[]}
@@ -100,6 +101,9 @@ module.exports = () => ({
     },
     selectedOffensiveSlot: CONSTS.EQUIPMENT_SLOT_WEAPON_MELEE,
     actions: {},
+    timers: {
+        spellCast: 0
+    },
     spells: [],
     spellCastList: [],
     spellSlots: [{

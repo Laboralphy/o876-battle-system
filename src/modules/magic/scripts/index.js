@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-13T01:31:32.541Z
+// Date : 2025-08-16T23:38:28.078Z
 // List of files in ./src/modules/magic/scripts
 
 module.exports = {
@@ -7,5 +7,6 @@ module.exports = {
     'spell-acid-splash': require('./spells/spell-acid-splash.js'),
     'spell-chill-touch': require('./spells/spell-chill-touch.js'),
     'spell-fire-bolt': require('./spells/spell-fire-bolt.js'),
+    'spell-invisibility': require('./spells/spell-invisibility.js'),
     'spell-light': require('./spells/spell-light.js')
 };

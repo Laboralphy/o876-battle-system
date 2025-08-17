@@ -11,6 +11,7 @@ const SchemaValidator = require('./SchemaValidator');
 const Creature = require('./Creature');
 const path = require('path');
 const AttackOutcome = require('./AttackOutcome');
+const ConcentrationSpell = require('./ConcentrationSpell');
 const CONSTS = require('./consts');
 const TAG_SPELL_GROUP = 'SPELL_GROUP::';
 
@@ -51,6 +52,7 @@ const CreatureRemoveItemEvent = require('./events/CreatureRemoveItemEvent');
 const CreatureRemoveItemFailedEvent = require('./events/CreatureRemoveItemFailedEvent');
 const CreatureLevelUp = require('./events/CreatureLevelUpEvent');
 const CreatureStartIncantationEvent = require('./events/CreatureStartIncantationEvent');
+const ItemChargesEvent = require('./events/ItemChargesEvent');
 const {isEntityCreature, isEntityItem, checkEntityCreature, checkEntityItem} = require('./check-entity');
 
 class Manager {
@@ -70,7 +72,7 @@ class Manager {
         eb.propertyBuilder = this._propertyBuilder;
         this._effectProcessor = ep;
         this._combatManager = cm;
-        this._scripts = {};
+        this._scripts = new Map();
         this._time = 0;
         this._systemInstance = this;
         cm.events.on(CONSTS.EVENT_COMBAT_TURN, evt => this._combatManagerEventTurn(evt));
@@ -394,7 +396,7 @@ class Manager {
                 if (id === 'init') {
                     script({manager: this});
                 } else {
-                    this._scripts[id] = script;
+                    this._scripts.set(id, script);
                 }
             });
         this._entityBuilder.addData(data);
@@ -480,6 +482,10 @@ class Manager {
                 });
             });
             oEntity.events.on(CONSTS.EVENT_CREATURE_DEATH, evt => {
+                // clear all effects from creature
+                oEntity.getters.getEffects.forEach(eff => {
+                    this.dispellEffect(eff);
+                });
                 this._events.emit(CONSTS.EVENT_CREATURE_DEATH, new CreatureDeathEvent({
                     system: this._systemInstance,
                     creature: oEntity,
@@ -796,6 +802,22 @@ class Manager {
     }
 
     /**
+     * Creates a new Concetration spell
+     * @param idSpell {string}
+     * @param caster {Creature}
+     * @param duration {number}
+     * @returns {ConcentrationSpell}
+     */
+    createConcentrationSpell (idSpell, caster, duration) {
+        return new ConcentrationSpell({
+            manager: this,
+            spell: idSpell,
+            caster,
+            duration
+        });
+    }
+
+    /**
      * Removes an effect from the creature it is applied on
      * @param effect {RBSEffect} instance of effect to be removed
      */
@@ -1099,18 +1121,20 @@ class Manager {
      * @param oCreature
      * @param sSpell
      * @param oTarget
-     * @param freeCast {boolean} if true, and sAction is a spell id, the spell is cast without consuming spell slot
-     * @param item {RBSItem|null} item used to support spell casting
+     * @param scParameters {RBSCastSpellParameters}
      * @private
      * @returns {RBSAction}
      */
-    _createSpellAction (oCreature, sSpell, oTarget = null, {
-        freeCast = false,
-        item = null
-    } = {}) {
+    _createSpellAction (oCreature, sSpell, oTarget = null, scParameters = {}) {
         if (oTarget === null) {
             oTarget = oCreature;
         }
+        const {
+            freeCast = false,
+            item = null,
+            power = 0,
+            additionalTargets = []
+        } = scParameters;
         const oSpellData = this.getSpellData(sSpell);
         const delay = item === null
             ? (this.data['CASTING_DELAYS'][oSpellData.castingTime ?? CONSTS.CASTING_TIME_ACTION] ?? 0)
@@ -1127,15 +1151,11 @@ class Manager {
                 oSpellData.id,
                 oCreature,
                 oTarget,
-                {
-                    freeCast,
-                    item
-                }
+                scParameters
             ),
             parameters: {
                 spell: oSpellData,
-                freeCast,
-                item
+                ...scParameters
             },
             ready: true,
             bonus: false,
@@ -1165,14 +1185,16 @@ class Manager {
      * @param oCreature {Creature}
      * @param sAction {string}
      * @param oTarget {Creature}
-     * @param freeCast {boolean} if true, and sAction is a spell id, the spell is cast without consuming spell slot
-     * @param item {RBSItem|null} items used to assist action (scroll, potion, grenade, wand...)
+     * @param parameters {RBSCastSpellParameters}
      * @return {CombatActionOutcome}
      */
-    doAction (oCreature, sAction, oTarget = null, {
-        freeCast = false,
-        item = null
-    } = {}) {
+    doAction (oCreature, sAction, oTarget = null, parameters = {}) {
+        const {
+            freeCast = false,
+            item = null,
+            power = 0,
+            additionalTargets = []
+        } = parameters;
         // check if creature is in combat
         const oCombat = this.combatManager.getCombat(oCreature);
         const bIsSpell = this.getSpellData(sAction);
@@ -1181,7 +1203,9 @@ class Manager {
             const oAction = bIsSpell
                 ? this._createSpellAction(oCreature, sAction, oTarget, {
                     freeCast,
-                    item
+                    item,
+                    power,
+                    additionalTargets
                 })
                 : sAction;
             if (oTarget === null || oCombat.target === oTarget) {
@@ -1196,7 +1220,9 @@ class Manager {
             const oAction = bIsSpell
                 ? this._createSpellAction(oCreature, sAction, oTarget, {
                     freeCast,
-                    item
+                    item,
+                    power,
+                    additionalTargets
                 })
                 : oCreature.getters.getActions[sAction];
             // Check if action can be cast
@@ -1209,7 +1235,16 @@ class Manager {
                 const combat = this.combatManager.startCombat(oCreature, oTarget);
                 return combat.selectAction(oAction);
             } else {
-                // non hostile action : go ahead
+                // non-hostile action : go ahead
+                // Special case for spells
+                if (bIsSpell) {
+                    // should be aware of cooldown
+                    if (oCreature.getters.getTimers.spellCast > this._time) {
+                        // this checking is only for non combat situations
+                        return new CombatActionFailure(CONSTS.ACTION_FAILURE_REASON_NOT_READY);
+                    }
+                    oCreature.mutations.setTimer({ timer: 'spellCast', value: this._time + this._combatManager.defaultTickCount });
+                }
                 this.executeAction(oCreature, oAction, oTarget);
                 oCreature.mutations.useAction({ idAction: oAction.id });
                 return new CombatActionSuccess();
@@ -1263,8 +1298,8 @@ class Manager {
     runScript (script, ...params) {
         if (typeof script === 'function') {
             script(...params);
-        } else if (script in this._scripts) {
-            this._scripts[script](...params);
+        } else if (this._scripts.has(script)) {
+            this._scripts.get(script)(...params);
         } else {
             throw new Error(`script ${script} not found.`);
         }
@@ -1308,17 +1343,25 @@ class Manager {
     }
 
     /**
+     * @typedef RBSCastSpellParameters {object}
+     * @property freeCast {boolean} spell is cast with no cost (slot, ...) and does not need to be known
+     * @property item {RBSItem|null} spell is cast with the aid of an item
+     * @property power {number} spell is cast with a level bonus +1 +2 ...
+     * @property additionalTargets {Creature[]} spell is cast on several additional targets
+     *
      * Casts a spell
      * @param sSpellId {string} spell identifier
      * @param caster {Creature} creature casting the spell
      * @param target {Creature} spell primary target
-     * @param parameters {{}}
+     * @param parameters {RBSCastSpellParameters}
      * @returns {{success: boolean, reason: string}}
      */
     castSpell (sSpellId, caster, target = null, parameters = {}) {
         const {
             freeCast = false,
-            item = null
+            item = null,
+            power = 0,
+            additionalTargets = []
         } = parameters;
         const sd = this.getSpellData(sSpellId);
         if (!sd) {
@@ -1378,6 +1421,11 @@ class Manager {
         }
         if (item) {
             --item.dailyCharges;
+            this.events.emit(CONSTS.EVENT_ITEM_CHARGES, new ItemChargesEvent({
+                system: this,
+                item,
+                charges: item.dailyCharges
+            }));
         }
         this.runScript(sd.script, {
             manager: this,

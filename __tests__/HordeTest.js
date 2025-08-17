@@ -139,14 +139,14 @@ describe('environment', function () {
         const c = new Creature();
         const h = new Horde();
         h.updateCreatureEnvironments(c, [CONSTS.ENVIRONMENT_DARKNESS]);
-        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
+        expect(c.getters.getEnvironments[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
     });
     it('should change creature environment [darkness] -> []', function() {
         const c = new Creature();
         const h = new Horde();
         c.mutations.setEnvironment({ environment: CONSTS.ENVIRONMENT_DARKNESS, value: true });
         h.updateCreatureEnvironments(c, []);
-        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
+        expect(c.getters.getEnvironments[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
     });
     it('should return [darkness] when asking for creature in dark area', function () {
         const h = new Horde();
@@ -156,10 +156,10 @@ describe('environment', function () {
         expect(h.getLocationEnvironments('r1')).toEqual([CONSTS.ENVIRONMENT_DARKNESS]);
         const c = new Creature();
         expect(c.id).toBeDefined();
-        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
+        expect(c.getters.getEnvironments[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
         h.setCreatureLocation(c, 'r1');
         expect(h.getCreatureLocation(c)).toBe('r1');
-        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
+        expect(c.getters.getEnvironments[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
     });
     it('should change creature environment [darkness] -> [windy]', function() {
         const c = new Creature();
@@ -171,11 +171,11 @@ describe('environment', function () {
             CONSTS.ENVIRONMENT_WINDY
         ]);
         h.setCreatureLocation(c, 'r1');
-        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
-        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_WINDY]).toBeFalsy();
+        expect(c.getters.getEnvironments[CONSTS.ENVIRONMENT_DARKNESS]).toBeTruthy();
+        expect(c.getters.getEnvironments[CONSTS.ENVIRONMENT_WINDY]).toBeFalsy();
         h.setCreatureLocation(c, 'r2');
-        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
-        expect(c.getters.getEnvironment[CONSTS.ENVIRONMENT_WINDY]).toBeTruthy();
+        expect(c.getters.getEnvironments[CONSTS.ENVIRONMENT_DARKNESS]).toBeFalsy();
+        expect(c.getters.getEnvironments[CONSTS.ENVIRONMENT_WINDY]).toBeTruthy();
     });
     it('should return [darkness] when adding temporary environment darkness', function () {
         const c = new Creature();

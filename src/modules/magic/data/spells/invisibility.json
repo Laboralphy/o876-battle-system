@@ -1,0 +1,9 @@
+{
+  "school": "SCHOOL_ILLUSION",
+  "level": 2,
+  "range": 120,
+  "hostile": false,
+  "target": "SPELL_CAST_TARGET_TYPE_ALLY",
+  "script": "spell-invisibility",
+  "castingTime": "CASTING_TIME_ACTION"
+}

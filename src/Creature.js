@@ -100,6 +100,7 @@ class Creature {
             m.setAbilityValue({ ability: CONSTS.ABILITY_WISDOM, value: blueprint.abilities.wisdom });
             m.setAbilityValue({ ability: CONSTS.ABILITY_CHARISMA, value: blueprint.abilities.charisma });
         }
+        // Replenish hit points when setting blueprints
         m.setHitPoints({ value: this.getters.getMaxHitPoints });
         this._blueprint = blueprint;
     }
@@ -224,6 +225,7 @@ class Creature {
     revive () {
         if (this.getters.isDead) {
             this._events.emit(CONSTS.EVENT_CREATURE_REVIVE);
+            // creature is healed event if dead, this will revive it
             this.mutations.setHitPoints({ value: this.getters.getVariables['REVIVE_HIT_POINTS'] });
         }
     }

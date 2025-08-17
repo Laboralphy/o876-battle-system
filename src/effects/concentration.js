@@ -7,8 +7,11 @@ const CONSTS = require('../consts');
  * and that should be ended as well
  */
 function init ({ effect, spell, effects = [] }) {
+    if (effects.length === 0) {
+        throw new Error('Malformed concentration effect : need at least one effect');
+    }
     if (effects.some(e => !e.id || !e.target)) {
-        throw new Error('Malformed concentration effect');
+        throw new Error('Malformed concentration effect : some effect have no id/target');
     }
     effect.data.spell = spell;
     effect.data.effects = effects;

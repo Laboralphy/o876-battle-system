@@ -6,6 +6,8 @@ describe('ProtectFromSpecieEffect', function () {
         const m = new Manager();
         m.loadModule('classic');
         const c1 = m.createEntity('c-tourist', 'c1');
+        c1.mutations.setLevel({ value: 20 });
+        c1.hitPoints = c1.getters.getMaxHitPoints;
         const c2 = m.createEntity('c-zombie');
         const e1 = m.createEffect(CONSTS.EFFECT_PROTECTION_FROM_SPECIES, 0, { species: [CONSTS.SPECIE_UNDEAD] });
         m.applyEffect(e1, c1, 10);

@@ -75,6 +75,7 @@ function mutate ({ effect, target, source }) {
     });
     if (target.getters.isDead) {
         target.events.emit(CONSTS.EVENT_CREATURE_DEATH, {
+            creature: target,
             killer: source
         });
     }

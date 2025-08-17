@@ -211,18 +211,28 @@ class Client {
     // ▐▙▟▌▐▌   ▐▌  ▐▌ ▐▌▐▌▐▌▐▌ ▀▜▖
     // ▝▘▝▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▘▝▘▝▀▀
 
-    doAction (idCreature, idAction, idTarget = '') {
-        return this.transaction(MESSAGE_OPCODES.OPCODE_DO_ACTION, { creature: idCreature, target: idTarget, action: idAction });
+    doAction (idCreature, idAction, idTarget = '', {
+        freeCast = false,
+        item = null,
+        power = 0,
+        additionalTargets = []
+    }) {
+        return this.transaction(
+            MESSAGE_OPCODES.OPCODE_DO_ACTION, {
+                creature: idCreature,
+                target: idTarget,
+                action: idAction,
+                freeCast,
+                item,
+                power,
+                additionalTargets
+            });
     }
 
     // ▗▖ ▄         ▗▖          ▟▜▖     ▄▄          ▄▖  ▄▖                  ▗▖  ▗▖
     // ▐█▟█ ▀▜▖▗▛▜▌ ▄▖ ▗▛▀      ▟▛     ▝▙▄ ▐▛▜▖▗▛▜▖ ▐▌  ▐▌     ▗▛▀  ▀▜▖▗▛▀▘▝▜▛▘ ▄▖ ▐▛▜▖▗▛▜▌
     // ▐▌▘█▗▛▜▌▝▙▟▌ ▐▌ ▐▌      ▐▌▜▛      ▐▌▐▙▟▘▐▛▀▘ ▐▌  ▐▌     ▐▌  ▗▛▜▌ ▀▜▖ ▐▌  ▐▌ ▐▌▐▌▝▙▟▌
     // ▝▘ ▀ ▀▀▘▗▄▟▘ ▀▀  ▀▀      ▀▘▀     ▀▀ ▐▌   ▀▀  ▀▀  ▀▀      ▀▀  ▀▀▘▝▀▀   ▀▘ ▀▀ ▝▘▝▘▗▄▟▘
-
-    castSpell (idCreature, idSpell, idTarget = '') {
-        return this.transaction(MESSAGE_OPCODES.OPCODE_CAST_SPELL, { creature: idCreature, target: idTarget, spell: idSpell });
-    }
 
     getSpellData (idSpell) {
         return this.transaction(MESSAGE_OPCODES.OPCODE_GET_SPELL_DATA, { spell: idSpell });

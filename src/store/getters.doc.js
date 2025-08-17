@@ -50,6 +50,7 @@
  * @property getSpellDifficultyClass {Object<string, number>}
  * @property getSpellSet {Set<string>}
  * @property getSpellSlots {{level: number, count: number, used: number, remaining: number, ready: boolean, cooldown: number}[]}
+ * @property getTimers {{ spellCast: number }}
  * @property getUnmodifiedLevel {number}
  * @property getVariables {Object<string, number|string>}
  * @property getWeaponRanges {Object<string, number>}

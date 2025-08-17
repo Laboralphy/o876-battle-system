@@ -3,10 +3,11 @@
  * @param state {RBSStoreState}
  * @param getters {RBSStoreGetters}
  * @param idAction {string}
+ * @param time {number} time
  */
-module.exports = ({ state, getters }, { action: idAction }) => {
+module.exports = ({ state, getters }, { action: idAction, time }) => {
     /**
-     * @var {RBSAction}
+     * @var oAction {RBSAction}
      */
     const oAction = state.actions[idAction];
     if (oAction) {

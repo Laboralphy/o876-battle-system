@@ -3,7 +3,10 @@ const { getNewManager } = require('../../src/libs/test-tools');
 
 describe('Fire Bolt', function () {
     it('should cast fire bolt spell and deal 10 fire damage on unaware target', function () {
-        const { manager: m, creatures: { c1, c2 }} = getNewManager();
+        const { manager: m, creatures: { c1, c2 }} = getNewManager({
+            friends: ['c-orc'],
+            foes: ['c-orc']
+        });
         const aLog = [];
         m.events.on(CONSTS.EVENT_CREATURE_CAST_SPELL, (evt) => {
             /**

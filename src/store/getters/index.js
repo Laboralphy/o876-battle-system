@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-13T01:31:33.142Z
+// Date : 2025-08-16T23:38:29.263Z
 // List of files in ./src/store/getters
 
 module.exports = {
@@ -53,6 +53,7 @@ module.exports = {
     'getSpellDifficultyClass': require('./getSpellDifficultyClass.js'),
     'getSpellSet': require('./getSpellSet.js'),
     'getSpellSlots': require('./getSpellSlots.js'),
+    'getTimers': require('./getTimers.js'),
     'getUnmodifiedLevel': require('./getUnmodifiedLevel.js'),
     'getVariables': require('./getVariables.js'),
     'getWeaponRanges': require('./getWeaponRanges.js'),

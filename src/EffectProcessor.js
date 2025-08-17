@@ -171,6 +171,18 @@ class EffectProcessor {
      * @param source {Creature|null}
      */
     applyEffectGroup (aEffects, tag, target, duration = 0, source = null) {
+        // First remove any effect belonging to the spell tag
+        // We only need one effect, other effect are linked
+        // We only check for effect group having a tag
+        if (tag) {
+            const oPrevSpellEffect = target
+                .getters
+                .getEffects
+                .find(eff => eff.tag === tag);
+            if (oPrevSpellEffect) {
+                this.removeEffect(oPrevSpellEffect);
+            }
+        }
         return this.groupEffects(aEffects, tag)
             .map(effect => this.applyEffect(effect, target, duration, source));
     }

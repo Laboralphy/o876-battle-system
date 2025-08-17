@@ -34,5 +34,6 @@
   "EVENT_COMBAT_END": "combat.end",
   "EVENT_COMBAT_SCRIPT": "combat.script",
   "EVENT_COMBAT_OFFENSIVE_SLOT": "combat.offensive-slot",
-  "EVENT_COMBAT_ACTION_FAILURE": "combat-action-failure"
+  "EVENT_COMBAT_ACTION_FAILURE": "combat-action-failure",
+  "EVENT_ITEM_CHARGES": "item_charges"
 }

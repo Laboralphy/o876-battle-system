@@ -593,10 +593,14 @@ class Service {
     // ▐▙▟▌▐▌   ▐▌  ▐▌ ▐▌▐▌▐▌▐▌ ▀▜▖
     // ▝▘▝▘ ▀▀   ▀▘ ▀▀  ▀▀ ▝▘▝▘▝▀▀
 
-    opcodeDoAction ({ creature, target, action }) {
+    opcodeDoAction ({ creature, target, action, freeCast = false, item = null, power = 0, additionalTargets = [] }) {
         const oCreature = this._getCreature(creature);
         const oTarget = this._getCreature(target);
-        const oOutcome = this._manager.doAction(oCreature, action, oTarget);
+        const oItem = item === null ? null : this._getItem(item);
+        const aAdditionalTargets = additionalTargets.map(t => this._getCreature(t));
+        const oOutcome = this._manager.doAction(oCreature, action, oTarget, {
+            freeCast, item: oItem, power, additionalTargets: aAdditionalTargets
+        });
         if (oOutcome.failure) {
             return this._error(oOutcome.reason);
         } else {
@@ -608,17 +612,6 @@ class Service {
     // ▐█▟█ ▀▜▖▗▛▜▌ ▄▖ ▗▛▀      ▟▛     ▝▙▄ ▐▛▜▖▗▛▜▖ ▐▌  ▐▌     ▗▛▀  ▀▜▖▗▛▀▘▝▜▛▘ ▄▖ ▐▛▜▖▗▛▜▌
     // ▐▌▘█▗▛▜▌▝▙▟▌ ▐▌ ▐▌      ▐▌▜▛      ▐▌▐▙▟▘▐▛▀▘ ▐▌  ▐▌     ▐▌  ▗▛▜▌ ▀▜▖ ▐▌  ▐▌ ▐▌▐▌▝▙▟▌
     // ▝▘ ▀ ▀▀▘▗▄▟▘ ▀▀  ▀▀      ▀▘▀     ▀▀ ▐▌   ▀▀  ▀▀  ▀▀      ▀▀  ▀▀▘▝▀▀   ▀▘ ▀▀ ▝▘▝▘▗▄▟▘
-
-    opcodeCastSpell ({ creature, target, spell }) {
-        const oCreature = this._getCreature(creature);
-        const oTarget = this._getCreature(target);
-        const oOutcome = this._manager.doAction(oCreature, spell, oTarget);
-        if (oOutcome.failure) {
-            return this._error(oOutcome.reason);
-        } else {
-            return this._success();
-        }
-    }
 
     opcodeGetSpellData ({ spell }) {
         const oSpellData = this._manager.getSpellData(spell);
