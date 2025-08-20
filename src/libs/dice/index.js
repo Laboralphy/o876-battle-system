@@ -13,6 +13,13 @@ class Dice {
     }
 
     /**
+     * @returns {RegExp}
+     */
+    static get REGEX_XDY () {
+        return REGEX_XDY;
+    }
+
+    /**
    * Force a value, usefull for testing
    * @param value {number|boolean|undefined|string} this number will be use instead of random value
    */

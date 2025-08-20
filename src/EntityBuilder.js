@@ -362,6 +362,7 @@ class EntityBuilder {
             id = getUniqueId();
         }
         switch (bp.entityType) {
+        case CONSTS.ENTITY_TYPE_PARTIAL_ITEM:
         case CONSTS.ENTITY_TYPE_ITEM: {
             return this.createItemFromResRef(idbp, id);
         }
@@ -370,7 +371,6 @@ class EntityBuilder {
             return this.createCreatureFromResRef(idbp, id);
         }
 
-        case CONSTS.ENTITY_TYPE_PARTIAL_ITEM:
         case CONSTS.ENTITY_TYPE_PARTIAL_ACTOR: {
             return null;
         }

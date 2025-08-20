@@ -1,4 +1,4 @@
-const PROPERTIES = require('./properties');
+const PROPERTIES = require('./Struct/Property');
 
 const aProps = new Set();
 for (const px of Object.values(PROPERTIES)) {

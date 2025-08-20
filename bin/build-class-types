@@ -1,0 +1,38 @@
+#!/bin/bash
+
+listAllClassTypes () {
+  local MODULES
+  MODULES=$(ls -1 ./src/modules)
+  for m in $MODULES
+  do
+    if [ -d "./src/modules/$m/data/class-types" ]
+    then
+      for ct in $(ls -1 "./src/modules/$m/data/class-types")
+      do
+        echo ${ct%.json} | tr '[a-z]' '[A-Z]' | tr '-' '_'
+      done
+    fi
+  done
+}
+
+makeJSON () {
+  local i
+  local b
+  b=1
+  echo "{"
+  for i in $(listAllClassTypes)
+  do
+    if [ $b -eq 1 ]
+    then
+      b=0
+    else
+      echo ","
+    fi
+    echo -n "  \"$i\": \"$i\""
+  done
+  echo ""
+  echo "}"
+}
+
+makeJSON > ./src/consts/class-types.json
+

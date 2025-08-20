@@ -1,16 +1,17 @@
 const CONSTS = require('../consts');
 const MODULES = require('./modules');
-const DATA = {
-    ...MODULES.base.data,
-    ...MODULES.classic.data
-};
+const { deepMerge } = require('@laboralphy/object-fusion');
+const DATA = {};
+deepMerge(DATA, MODULES.base.data);
+deepMerge(DATA, MODULES.classic.data);
+
 
 const CONSTS_VALUES = Object.values(CONSTS);
 
 module.exports = {
     Ability: CONSTS_VALUES.filter(c => c.startsWith('ABILITY_')),
     AttackType: CONSTS_VALUES.filter(c => c.startsWith('ATTACK_TYPE_')),
-    Class: Object.keys(DATA.CLASS_TYPES).filter(c => c.startsWith('CLASS_TYPE_')),
+    ClassType: Object.keys(DATA.CLASS_TYPES).filter(c => c.startsWith('CLASS_TYPE_')),
     DamageType: CONSTS_VALUES.filter(c => c.startsWith('DAMAGE_TYPE_')),
     Proficiency: CONSTS_VALUES.filter(c => c.startsWith('PROFICIENCY_')),
     Race: CONSTS_VALUES.filter(c => c.startsWith('RACE_')),

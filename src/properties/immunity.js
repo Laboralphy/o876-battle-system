@@ -2,8 +2,8 @@ const CONSTS = require('../consts');
 
 /**
  * Grants immunity to one of immunity types
- * @param property
- * @param immunityType
+ * @param property {RBSProperty}
+ * @param immunityType {string} IMMUNITY_TYPE_*
  */
 function init ({ property, immunityType }) {
     if (!CONSTS[immunityType]) {

@@ -1,25 +1,25 @@
 module.exports = {
     'int': {
-        description: 'an integer value',
+        description: 'An integer value',
         examples: [0, 10, 5],
     },
     'float': {
-        description: 'a float value, usually used for factors and multipliers',
+        description: 'A float value, usually used for factors and multipliers',
         examples: [0, 0.1, 2, 1.3]
     },
     'string': {
-        description: 'a string value',
+        description: 'A string value',
         examples: ['a-example-of-string', 'abcdef0123456789', 'AN_IDENTIFIER']
     },
     'boolean': {
-        description: 'a boolean value',
+        description: 'A boolean value',
         examples: ['true', 'false'],
     },
-    'Array<T>': {
-        description: 'an array of T, each item of this array is of type T'
+    'T[]': {
+        description: 'An array of T, each item of this array is of type T. string[], int[] is valid syntax. Enum.Something[] is also a valid syntax'
     },
     'DiceExpression': {
-        description: 'can be an integer value or a dice expression. this kind of notation is often used in D&D literature',
-        examples: ['1d20', '3d6', '1d6+2', '2d12']
+        description: 'An integer fixed value or a dice expression. this kind of notation is often used in D&D literature',
+        examples: ['1d20', 10, 2, '3d6', '1d6+2', 8, '2d12']
     }
 };

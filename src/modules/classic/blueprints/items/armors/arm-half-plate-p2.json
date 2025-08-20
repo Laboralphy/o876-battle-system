@@ -1,4 +1,5 @@
 {
+  "entityType": "ENTITY_TYPE_ITEM",
   "extends": [
     "arm-type-half-plate"
   ],

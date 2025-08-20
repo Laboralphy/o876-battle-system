@@ -1,7 +1,7 @@
 /**
  * This property adds a feat on creature.
  * @param property {RBSProperty}
- * @param feat {string}
+ * @param feat {string} FEAT_*
  * @param properties {string[]} list of property identifier associated with this feat
  */
 function init ({ property, feat, properties }) {

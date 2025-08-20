@@ -1,3 +1,3 @@
-const PublicData = require('./rebus');
+const ResRefs = require('./resrefs');
 
-console.log(PublicData.properties.proficiencies);
+console.log(ResRefs);

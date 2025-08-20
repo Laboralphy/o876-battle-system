@@ -1,5 +1,5 @@
 {
-  "entityType": "ENTITY_TYPE_ITEM",
+  "entityType": "ENTITY_TYPE_PARTIAL_ITEM",
   "itemType": "ITEM_TYPE_ARMOR",
   "proficiency": "PROFICIENCY_ARMOR_LIGHT",
   "ac": 2,

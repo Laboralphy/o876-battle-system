@@ -16,7 +16,8 @@
     "@laboralphy/object-fusion": "^1.4.0",
     "@laboralphy/store": "^1.7.1",
     "jsonschema": "^1.4.1",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "csv-parse": "^5.6.0",

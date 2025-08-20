@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-17T23:28:13.769Z
+// Date : 2025-08-19T20:21:29.519Z
 // List of files in ./src/consts
 
 module.exports = {
@@ -11,6 +11,7 @@ module.exports = {
     ...require('./capabilities.json'),
     ...require('./caster-types.json'),
     ...require('./casting-times.json'),
+    ...require('./class-types.json'),
     ...require('./combat-action-type.json'),
     ...require('./combat-specials-events.json'),
     ...require('./conditions.json'),
@@ -33,6 +34,7 @@ module.exports = {
     ...require('./races.json'),
     ...require('./roll-types.json'),
     ...require('./skill-proficiencies.json'),
+    ...require('./skills.json'),
     ...require('./species.json'),
     ...require('./spell-cast-target-types.json'),
     ...require('./threat-types.json'),

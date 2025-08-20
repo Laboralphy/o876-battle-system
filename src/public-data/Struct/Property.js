@@ -1,4 +1,4 @@
-const CONSTS = require('../consts');
+const CONSTS = require('../../consts');
 
 const INTERNAL_PROPERTIES = [
     CONSTS.PROPERTY_FEAT,
@@ -13,23 +13,23 @@ const oPropertyParameters = {
             required: true
         },
         ability: {
-            type: 'Ability',
+            type: 'Enum.Ability',
             required: true
         }
     },
     [CONSTS.PROPERTY_ADVANTAGE_ATTACK]: {
         attackType: {
-            type: 'AttackType',
+            type: 'Enum.AttackType',
             required: false
         }
     },
     [CONSTS.PROPERTY_ADVANTAGE_SAVING_THROW]: {
         ability: {
-            type: 'Ability',
+            type: 'Enum.Ability',
             required: false
         },
         threat: {
-            type: 'Threat',
+            type: 'Enum.Threat',
             required: false
         }
     },
@@ -39,11 +39,11 @@ const oPropertyParameters = {
             required: true
         },
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: false
         },
         attackType: {
-            type: 'AttackType',
+            type: 'Enum.AttackType',
             required: false
         }
     },
@@ -53,7 +53,7 @@ const oPropertyParameters = {
             required: true
         },
         attackType: {
-            type: 'AttackType',
+            type: 'Enum.AttackType',
             required: false
         }
     },
@@ -63,7 +63,7 @@ const oPropertyParameters = {
             required: true
         },
         attackType: {
-            type: 'AttackType',
+            type: 'Enum.AttackType',
             required: false
         }
     },
@@ -73,7 +73,7 @@ const oPropertyParameters = {
             required: true
         },
         attackType: {
-            type: 'AttackType',
+            type: 'Enum.AttackType',
             required: false
         }
     },
@@ -81,7 +81,7 @@ const oPropertyParameters = {
     },
     [CONSTS.PROPERTY_DAMAGE_IMMUNITY]: {
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: true
         }
     },
@@ -91,7 +91,7 @@ const oPropertyParameters = {
             required: true
         },
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: false
         }
     },
@@ -101,19 +101,19 @@ const oPropertyParameters = {
             required: true
         },
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: true
         }
     },
     [CONSTS.PROPERTY_DAMAGE_RESISTANCE]: {
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: true
         }
     },
     [CONSTS.PROPERTY_DAMAGE_VULNERABILITY]: {
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: true
         }
     },
@@ -121,23 +121,23 @@ const oPropertyParameters = {
     },
     [CONSTS.PROPERTY_DISADVANTAGE_ATTACK]: {
         attackType: {
-            type: 'AttackType',
+            type: 'Enum.AttackType',
             required: false
         }
     },
     [CONSTS.PROPERTY_DISADVANTAGE_SAVING_THROW]: {
         ability: {
-            type: 'Ability',
+            type: 'Enum.Ability',
             required: false
         },
         threat: {
-            type: 'Threat',
+            type: 'Enum.Threat',
             required: false
         }
     },
     [CONSTS.PROPERTY_ENFEEBLEMENT]: {
         ability: {
-            type: 'Ability',
+            type: 'Enum.Ability',
             required: true
         }
     },
@@ -149,7 +149,7 @@ const oPropertyParameters = {
     },
     [CONSTS.PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE]: {
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: true
         }
     },
@@ -187,7 +187,7 @@ const oPropertyParameters = {
     },
     [CONSTS.PROPERTY_ON_ATTACK_HIT]: {
         ailment: {
-            type: 'Ailment',
+            type: 'Enum.Ailment',
             required: true
         },
         amp: {
@@ -199,25 +199,25 @@ const oPropertyParameters = {
             required: true
         },
         ability: {
-            type: 'Ability',
+            type: 'Enum.Ability',
             required: false
         },
         attackType: {
-            type: 'AttackType',
+            type: 'Enum.AttackType',
             required: false
         },
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: false
         },
         disease: {
-            type: 'Disease',
+            type: 'Enum.Disease',
             required: false
         }
     },
     [CONSTS.PROPERTY_PROTECTION_FROM_SPECIES]: {
         species: {
-            type: 'Array<Species>',
+            type: 'Enum.Species[]',
             required: true
         }
     },
@@ -227,7 +227,7 @@ const oPropertyParameters = {
             required: true
         },
         damageTypeVulnerabilities: {
-            type: 'Array<DamageType>',
+            type: 'Enum.DamageType[]',
             required: false
         },
         threshold: {
@@ -245,11 +245,11 @@ const oPropertyParameters = {
             required: true
         },
         ability: {
-            type: 'Ability',
+            type: 'Enum.Ability',
             required: false
         },
         threat: {
-            type: 'Threat',
+            type: 'Enum.Threat',
             required: false
         }
     },
@@ -259,7 +259,7 @@ const oPropertyParameters = {
             required: true
         },
         skill: {
-            type: 'Skill',
+            type: 'Enum.Skill',
             required: true
         }
     },
@@ -275,7 +275,7 @@ const oPropertyParameters = {
             required: true
         },
         ability: {
-            type: 'Ability',
+            type: 'Enum.Ability',
             required: true
         }
     },
@@ -285,7 +285,7 @@ const oPropertyParameters = {
             required: true
         },
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: false
         },
         maxDistance: {
@@ -305,7 +305,7 @@ const oPropertyParameters = {
             required: true
         },
         damageType: {
-            type: 'DamageType',
+            type: 'Enum.DamageType',
             required: true
         }
     },
@@ -317,12 +317,9 @@ const oPropertyParameters = {
     }
 };
 
-for (const [sPropType, pp] of Object.entries(oPropertyParameters)) {
-    pp.type = {
-        type: 'string',
-        value: sPropType,
-        required: true
-    };
-}
-
-module.exports = oPropertyParameters;
+module.exports = {
+    type: 'Enum.PropertyType',
+    required: true,
+    remark: 'Select a sub-structure matching this value, and extends the current structure',
+    switch: oPropertyParameters
+};

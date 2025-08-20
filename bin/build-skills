@@ -1,0 +1,36 @@
+#!/bin/bash
+
+listAllSkills () {
+  local MODULES
+  MODULES=$(ls -1 ./src/modules)
+  node ./bin/generate-skill-consts ./src/data/skills.json
+  for m in $MODULES
+  do
+    if [ -f "./src/modules/$m/data/skills.json" ]
+    then
+      node ./bin/generate-skill-consts "./src/modules/$m/data/skills.json"
+    fi
+  done
+}
+
+makeJSON () {
+  local i
+  local b
+  b=1
+  echo "{"
+  for i in $(listAllSkills)
+  do
+    if [ $b -eq 1 ]
+    then
+      b=0
+    else
+      echo ","
+    fi
+    echo -n "  \"$i\": \"$i\""
+  done
+  echo ""
+  echo "}"
+}
+
+makeJSON > ./src/consts/skills.json
+
