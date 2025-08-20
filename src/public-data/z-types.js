@@ -194,7 +194,7 @@ const Struct = {
         charges: z.number().int().positive().optional().describe(LABELS.Fields.ActionField.charges),
         range: z.number().int().positive().describe(LABELS.Fields.ActionField.range),
         delay: z.number().int().positive().optional().describe(LABELS.Fields.ActionField.delay)
-    }),
+    }).describe(LABELS.Struct.ActionStruct),
     PropertyRegistry: PROPERTY_REGISTRY,
     Property: z.discriminatedUnion('type', Object.values(PROPERTY_REGISTRY))
 };
@@ -276,6 +276,6 @@ function generateDoc(schema) {
 console.log(
     util.inspect(
         generateDoc(Struct.Action),
-        { depth: null, color: true }
+        { depth: null, colors: true }
     )
 );

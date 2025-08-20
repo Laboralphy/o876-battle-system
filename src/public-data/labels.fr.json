@@ -223,6 +223,9 @@
       "delay": "Délai de retardement"
     }
   },
+  "Struct": {
+    "ActionStruct": "Action de combat"
+  },
   "Misc": {
     "DiceExpression": {
       "int": "Valeur numérique fixe",
