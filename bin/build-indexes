@@ -10,6 +10,7 @@ do
     "$SCRIPT_DIR"/build-module "$m"
   fi
 done
+"$SCRIPT_DIR"/build-ammo-types
 "$SCRIPT_DIR"/build-proficiencies
 "$SCRIPT_DIR"/build-skills
 "$SCRIPT_DIR"/build-class-types

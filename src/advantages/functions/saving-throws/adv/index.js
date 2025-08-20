@@ -1,5 +1,5 @@
 // AUTOMATIC GENERATION : DO NOT MODIFY !
-// Date : 2025-08-19T20:21:28.784Z
+// Date : 2025-08-20T22:15:55.841Z
 // List of files in ./src/advantages/functions/saving-throws/adv
 
 module.exports = {

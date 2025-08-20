@@ -1,5 +1,5 @@
 const CONSTS = require('../consts');
-const MODULES = require('./modules');
+const MODULES = require('./z-schemas/modules');
 const { deepMerge } = require('@laboralphy/object-fusion');
 const DATA = {};
 deepMerge(DATA, MODULES.base.data);

@@ -1,11 +1,13 @@
 {
-  "Enum": {
+  "Values": {
     "ABILITY_STRENGTH": "Force",
     "ABILITY_DEXTERITY": "Dextérité",
     "ABILITY_CONSTITUTION": "Constitution",
     "ABILITY_INTELLIGENCE": "Intelligence",
     "ABILITY_WISDOM": "Sagesse",
     "ABILITY_CHARISMA": "Charisme",
+    "AMMO_TYPE_QUARREL": "Carreau d'arbalète",
+    "AMMO_TYPE_ARROW": "Flèche",
     "ATTACK_TYPE_ANY": "Attaque quelconque",
     "ATTACK_TYPE_MELEE": "Attaque en mêlée",
     "ATTACK_TYPE_RANGED": "Attaque à distance",
@@ -189,6 +191,28 @@
     "PROPERTY_VAMPYRE": "Vampirique",
     "PROPERTY_WEIGHT_FACTOR": "Facteur de poids"
   },
+  "Enum": {
+    "Ability": "Caractéristique",
+    "ActionType": "Type d'action",
+    "Ailment": "Affliction",
+    "AttackType": "Type d'attaque",
+    "ClassType": "Type de classe",
+    "DamageType": "Type de dégâts",
+    "Disease": "Maladie",
+    "EntityType": "Type d'entité",
+    "ItemType": "Type d'objet",
+    "ImmunityType": "Type d'immunité",
+    "Proficiency": "Maîtrise",
+    "PropertyType": "Type de propriété",
+    "Race": "Race",
+    "Skill": "Compétence",
+    "Specie": "Espèce",
+    "Threat": "Menace",
+    "EquipmentSlot": "Emplacement d'équipement",
+    "WeaponAttribute": "Attribut d'arme",
+    "WeaponSize": "Taille d'arme",
+    "AmmoType": "Type de munition"
+  },
   "Fields": {
     "PropertyFields": {
       "type": "Type de propriété",
@@ -221,15 +245,49 @@
       "charges": "Nombre de charges d'utilisation",
       "range": "Portée de l'action",
       "delay": "Délai de retardement"
+    },
+    "ItemField": {
+      "extends": "Blueprint parents",
+      "entityType": "Type d'entité",
+      "itemType": "Type d'objet",
+      "itemTypes": {
+        "Ammo": "Munition",
+        "Armor": "Armure",
+        "Shield": "Bouclier",
+        "Weapon": "Arme",
+        "Gear": "Objet d'équipement"
+      },
+      "properties": "Propriétés",
+      "weight": "Poids",
+      "charges": "Charges d'utilisation",
+      "equipmentSlots": "Emplacements d'équipement",
+      "tag": "Tag",
+      "spell": "Sort associé",
+      "attributes": "Attributs d'arme",
+      "damages": "Dégâts d'arme",
+      "damageType": "Type de dégâts",
+      "proficiency": "Type de maîtrise",
+      "size": "Taille d'arme",
+      "ammoType": "Type de munition",
+      "ac": "Classe d'armure"
+    },
+    "CreatureField": {
+      "extends": "Blueprint parents",
+      "entityType": "Type d'entité",
+      "properties": "Propriétés innées",
+      "tag": "Tag"
     }
   },
   "Struct": {
-    "ActionStruct": "Action de combat"
+    "ActionStruct": "Action de combat",
+    "ItemStruct": "Objet d'équipement",
+    "CreatureStruct": "Créature"
   },
   "Misc": {
     "DiceExpression": {
       "int": "Valeur numérique fixe",
-      "dice": "Valeur aléatoire obtenue par lancé de dé (2d6+1, 1d20, 6d8...)"
+      "dice": "Valeur aléatoire en notation D&D (2d6+1, 1d20, 6d8...)",
+      "description": "Valeur fixe, ou jet de dé"
     }
   }
 }

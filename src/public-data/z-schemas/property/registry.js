@@ -1,33 +1,8 @@
-const CONSTS = require('../consts');
-const CONSTS_VALUES = Object.values(CONSTS);
-const MODULES = require('./z-schemas/modules');
-const { deepMerge } = require('@laboralphy/object-fusion');
-const DATA = {};
-deepMerge(DATA, MODULES.base.data);
-deepMerge(DATA, MODULES.classic.data);
+const CONSTS = require('../../../consts');
 const z = require('zod');
-const Dice = require('../libs/dice');
-const LABELS = require('./labels.fr.json');
-const util = require('node:util');
-
-const buildEnum = (sPrefix) => z.enum(CONSTS_VALUES.filter(c => c.startsWith(sPrefix)));
-const Enum = {
-    Ability: buildEnum('ABILITY_'),
-    ActionType: buildEnum('COMBAT_ACTION_TYPE_'),
-    Ailment: buildEnum('ON_ATTACK_HIT_'),
-    AttackType: buildEnum('ATTACK_TYPE'),
-    ClassType: buildEnum('CLASS_TYPE_'),
-    DamageType: buildEnum('DAMAGE_TYPE_'),
-    Disease: buildEnum('DISEASE_'),
-    EntityType: buildEnum('ENTITY_TYPE_'),
-    ImmunityType: buildEnum('IMMUNITY_TYPE_'),
-    Proficiency: buildEnum('PROFICIENCY_'),
-    PropertyType: buildEnum('PROPERTY_'),
-    Race: buildEnum('RACE_'),
-    Skill: buildEnum('SKILL_'),
-    Specie: buildEnum('SPECIE_'),
-    Threat: buildEnum('THREAT_')
-};
+const Enum = require('../enums');
+const DiceExpression = require('../dice-expression');
+const LABELS = require('../../labels');
 
 const buildPropertyRegistryEntries = (oPropDef) => {
     const p = {};
@@ -47,12 +22,7 @@ const buildPropertyRegistryEntries = (oPropDef) => {
     return p;
 };
 
-const DiceExpression = z.union([
-    z.number().int().describe(LABELS.Misc.DiceExpression.int),
-    z.string().regex(Dice.REGEX_XDY).describe(LABELS.Misc.DiceExpression.dice)
-]);
-
-const PROPERTY_REGISTRY = buildPropertyRegistryEntries({
+module.exports = buildPropertyRegistryEntries({
     [CONSTS.PROPERTY_ABILITY_MODIFIER]: {
         amp: z.number().int(),
         ability: Enum.Ability
@@ -181,101 +151,3 @@ const PROPERTY_REGISTRY = buildPropertyRegistryEntries({
         amp: z.number().min(0)
     }
 });
-
-const Struct = {
-    Action: z.strictObject({
-        id: z.string().describe(LABELS.Fields.ActionField.id),
-        actionType: Enum.ActionType.describe(LABELS.Fields.ActionField.actionType),
-        bonus: z.boolean().describe(LABELS.Fields.ActionField.bonus),
-        hostile: z.boolean().describe(LABELS.Fields.ActionField.hostile),
-        script: z.string().describe(LABELS.Fields.ActionField.script),
-        parameters: z.object().optional().describe(LABELS.Fields.ActionField.parameters),
-        cooldown: z.number().int().positive().optional().describe(LABELS.Fields.ActionField.cooldown),
-        charges: z.number().int().positive().optional().describe(LABELS.Fields.ActionField.charges),
-        range: z.number().int().positive().describe(LABELS.Fields.ActionField.range),
-        delay: z.number().int().positive().optional().describe(LABELS.Fields.ActionField.delay)
-    }).describe(LABELS.Struct.ActionStruct),
-    PropertyRegistry: PROPERTY_REGISTRY,
-    Property: z.discriminatedUnion('type', Object.values(PROPERTY_REGISTRY))
-};
-
-module.exports = {
-    Enum,
-    Struct
-};
-
-function getFieldDoc (oField) {
-    let bRequired = true;
-    let field = oField;
-    const description = oField.description;
-    if (oField.isOptional()) {
-        bRequired = false;
-        field = oField.unwrap();
-    }
-    const sType = field.def.type;
-    const dx = {
-        type: sType,
-        required: bRequired
-    };
-    switch (sType) {
-    case 'literal': {
-        dx.value = field.value;
-        break;
-    }
-    case 'number': {
-        dx.int = field.isInt;
-        if (('minValue' in field) && field.minValue !== Number.MIN_SAFE_INTEGER) {
-            dx.min = field.minValue;
-        }
-        if ('maxValue' in field && field.maxValue !== Number.MAX_SAFE_INTEGER) {
-            dx.max = field.maxValue;
-        }
-        break;
-    }
-    case 'enum': {
-        dx.options = field.options.map(s => ({
-            value: s,
-            description: LABELS.Values[s]
-        }));
-        break;
-    }
-    case 'union': {
-        dx.type = [
-            field.options.map(o => getFieldDoc(o))
-        ];
-        break;
-    }
-    case 'optional': {
-        Object.assign(dx, getFieldDoc(field.unwrap()));
-        break;
-    }
-    }
-    if (description) {
-        dx.description = description;
-    }
-    return dx;
-}
-
-/**
- *
- * @param schema {z.ZodObject}
- * @returns {string}
- */
-function generateDoc(schema) {
-    const d = {
-        schema: schema.description,
-        properties: {}
-    };
-    for (const [key, oField] of Object.entries(schema.shape)) {
-        const dx = getFieldDoc(oField);
-        d.properties[key] = dx;
-    }
-    return d;
-}
-
-console.log(
-    util.inspect(
-        generateDoc(Struct.Action),
-        { depth: null, colors: true }
-    )
-);

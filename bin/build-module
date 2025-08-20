@@ -1,6 +1,8 @@
 #!/bin/bash
 
 MODULE_NAME="$1"
+
+echo -n "building module $MODULE_NAME... "
 MODULE_ROOT="./src/modules"
 MODULE_PATH="$MODULE_ROOT/$MODULE_NAME"
 

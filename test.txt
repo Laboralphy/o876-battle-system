@@ -1,0 +1,2 @@
+./src/modules/classic/blueprints/types/ammo-types/ammo-type-quarrel.json:AMMO_TYPE_QUARREL
+./src/modules/classic/blueprints/types/ammo-types/ammo-type-arrow.json:AMMO_TYPE_ARROW
