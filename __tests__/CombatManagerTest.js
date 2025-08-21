@@ -4,11 +4,6 @@ const Combat = require('../src/libs/combat/Combat');
 const CONSTS = require('../src/consts');
 const PropertyBuilder = require('../src/PropertyBuilder');
 const EntityBuilder = require('../src/EntityBuilder');
-const SCHEMA = require('../src/schemas');
-const SchemaValidator = require('../src/SchemaValidator');
-const oSchemaValidator = new SchemaValidator();
-oSchemaValidator.schemaIndex = SCHEMA;
-oSchemaValidator.init();
 
 const bpNormalActor = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -21,7 +16,15 @@ const bpNormalActor = {
     level: 1,
     hd: 6,
     actions: [],
-    equipment: []
+    equipment: [],
+    abilities: {
+        strength: 10,
+        dexterity: 10,
+        constitution: 10,
+        intelligence: 10,
+        wisdom: 10,
+        charisma: 10
+    }
 };
 
 const bpNaturalWeapon = {
@@ -67,7 +70,15 @@ const bpMonster1 = {
     equipment: [
         'bpClaws2d6',
         'bpFangs3d6'
-    ]
+    ],
+    abilities: {
+        strength: 10,
+        dexterity: 10,
+        constitution: 10,
+        intelligence: 10,
+        wisdom: 10,
+        charisma: 10
+    }
 };
 
 const bpShortbow = {
@@ -107,7 +118,6 @@ const bpFist1d3 = {
 };
 
 const ebArmCreature = new EntityBuilder();
-ebArmCreature.schemaValidator = oSchemaValidator;
 ebArmCreature.blueprints = {
     bpFist1d3
 };
@@ -174,7 +184,6 @@ describe('endCombat', function () {
 describe('fleeCombat', function () {
     it('should do a parting strike before fleeing combat', function () {
         const eb = new EntityBuilder();
-        eb.schemaValidator = oSchemaValidator;
         eb.blueprints = {
             bpNaturalWeapon,
             bpClaws2d6,
@@ -207,7 +216,6 @@ describe('fleeCombat', function () {
 
 describe('advancing combat', function () {
     const eb = new EntityBuilder();
-    eb.schemaValidator = oSchemaValidator;
     const pb = new PropertyBuilder();
     it('should produce two events (one per combat) when processing combat 6 times', function () {
         const cm = new CombatManager();
@@ -620,7 +628,6 @@ describe('Try real combat', function () {
 describe('combat vs monster with claws and fangs', function () {
     it('should create an entity when called by entityBuilder', function () {
         const eb = new EntityBuilder();
-        eb.schemaValidator = oSchemaValidator;
         eb.propertyBuilder = new PropertyBuilder();
         const c1 = eb.createEntity({
             entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -633,12 +640,19 @@ describe('combat vs monster with claws and fangs', function () {
             level: 1,
             hd: 6,
             actions: [],
-            equipment: []
+            equipment: [],
+            abilities: {
+                strength: 10,
+                dexterity: 10,
+                constitution: 10,
+                intelligence: 10,
+                wisdom: 10,
+                charisma: 10
+            }
         }, 'c1');
     });
     it('should not select weapon when target is out of range and not having ranged weapon', function () {
         const eb = new EntityBuilder();
-        eb.schemaValidator = oSchemaValidator;
         eb.propertyBuilder = new PropertyBuilder();
         eb.blueprints = {
             bpNaturalWeapon,
@@ -662,7 +676,6 @@ describe('combat vs monster with claws and fangs', function () {
     });
     it('should select a natural weapon when attacking', function () {
         const eb = new EntityBuilder();
-        eb.schemaValidator = oSchemaValidator;
         eb.blueprints = {
             bpNaturalWeapon,
             bpClaws2d6,

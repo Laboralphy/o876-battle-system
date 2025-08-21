@@ -79,8 +79,7 @@
       "amp": 2
     },
     {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
+      "type": "PROPERTY_DARKVISION"
     }
   ],
   "actions": [],

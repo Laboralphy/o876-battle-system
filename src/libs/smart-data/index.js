@@ -7,6 +7,14 @@ class SmartData {
         this._data = data;
     }
 
+    _bool (v) {
+        return v === 'FALSE'
+            ? false
+            : v === 'TRUE'
+                ? true
+                : v;
+    }
+
     loadCSV (sFile) {
         return parse(fs
             .readFileSync(sFile)
@@ -40,7 +48,7 @@ class SmartData {
         if (sSearch.toString().toUpperCase() === 'FALSE') {
             return false;
         }
-        if (typeof sSearch === 'number') {
+        if ((typeof sSearch === 'number') || (typeof sSearch === 'boolean')) {
             return sSearch;
         }
         if (Array.isArray(sSearch)) {
@@ -98,7 +106,7 @@ class SmartData {
          * @param obj
          */
         function kv (obj) {
-            if (typeof oContext.value === 'number') {
+            if ((typeof oContext.value === 'number') || (typeof oContext.value === 'boolean')) {
                 obj[oContext.leftValue] = oContext.value;
                 return;
             }
@@ -149,7 +157,7 @@ class SmartData {
         aRow.forEach((value, i) => {
             if (value !== '') {
                 value = isNaN(+value) ? value : parseFloat(value);
-                oContext.value = value;
+                oContext.value = this._bool(value);
 
                 try {
                     if (aScripts[i]) {

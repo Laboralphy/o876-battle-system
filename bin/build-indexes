@@ -11,8 +11,9 @@ do
   fi
 done
 "$SCRIPT_DIR"/build-ammo-types
-"$SCRIPT_DIR"/build-proficiencies
+"$SCRIPT_DIR"/build-feats
 "$SCRIPT_DIR"/build-skills
+"$SCRIPT_DIR"/build-skill-proficiencies
 "$SCRIPT_DIR"/build-class-types
 "$SCRIPT_DIR"/build-advantages
 "$SCRIPT_DIR"/build-schemas

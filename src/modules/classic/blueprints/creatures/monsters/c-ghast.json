@@ -32,9 +32,9 @@
       "properties": [
         {
           "type": "PROPERTY_ON_ATTACK_HIT",
-          "amp": 0,
           "ailment": "ON_ATTACK_HIT_PARALYSIS",
-          "savingThrow": "ABILITY_CONSTITUTION"
+          "savingThrow": "ABILITY_CONSTITUTION",
+          "duration": 3
         }
       ],
       "equipmentSlots": [
@@ -68,7 +68,7 @@
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "ca-stench",
       "bonus": false,
-      "hostile": true,
+      "hostile": false,
       "range": 10,
       "parameters": {},
       "cooldown": 2

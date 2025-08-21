@@ -16,7 +16,15 @@ const bpNormalActor = {
     actions: [],
     equipment: [
         'natwpn-punch-1d3'
-    ]
+    ],
+    abilities: {
+        strength: 10,
+        dexterity: 10,
+        constitution: 10,
+        intelligence: 10,
+        wisdom: 10,
+        charisma: 10
+    }
 };
 
 const bpNaturalWeapon = {
@@ -79,7 +87,15 @@ const bpMonster1 = {
     equipment: [
         'bpClaws2d6',
         'bpFangs3d6'
-    ]
+    ],
+    abilities: {
+        strength: 10,
+        dexterity: 10,
+        constitution: 10,
+        intelligence: 10,
+        wisdom: 10,
+        charisma: 10
+    }
 };
 
 const bpMonster2 = {
@@ -95,7 +111,15 @@ const bpMonster2 = {
     actions: [],
     equipment: [
         'bpSting1d6Poison'
-    ]
+    ],
+    abilities: {
+        strength: 10,
+        dexterity: 10,
+        constitution: 10,
+        intelligence: 10,
+        wisdom: 10,
+        charisma: 10
+    }
 };
 
 const bpHydra = {
@@ -138,8 +162,7 @@ const bpHydra = {
     ],
     'properties': [
         {
-            'type': 'PROPERTY_DARKVISION',
-            'amp': 0
+            'type': 'PROPERTY_DARKVISION'
         },
         {
             'type': 'PROPERTY_MULTI_ATTACK',

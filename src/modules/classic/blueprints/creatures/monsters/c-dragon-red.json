@@ -82,12 +82,10 @@
   "properties": [
     {
       "type": "PROPERTY_DAMAGE_IMMUNITY",
-      "amp": 0,
       "damageType": "DAMAGE_TYPE_FIRE"
     },
     {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
+      "type": "PROPERTY_DARKVISION"
     },
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",
@@ -100,7 +98,7 @@
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "ca-elemental-breath",
       "bonus": false,
-      "hostile": true,
+      "hostile": false,
       "range": 60,
       "parameters": {
         "damageType": "DAMAGE_TYPE_FIRE",
@@ -113,7 +111,7 @@
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "ca-frightful-presence",
       "bonus": false,
-      "hostile": true,
+      "hostile": false,
       "range": 60,
       "parameters": {},
       "cooldown": 6
@@ -123,7 +121,7 @@
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "ca-wing-buffet",
       "bonus": false,
-      "hostile": true,
+      "hostile": false,
       "range": 20,
       "parameters": {
         "amount": "2d6+8"

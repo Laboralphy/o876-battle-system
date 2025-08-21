@@ -2,8 +2,7 @@
   "entityType": "ENTITY_TYPE_PARTIAL_ACTOR",
   "properties": [
     {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
+      "type": "PROPERTY_DARKVISION"
     }
   ],
   "extends": [

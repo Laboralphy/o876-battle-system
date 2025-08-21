@@ -57,7 +57,7 @@
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "ca-stunning-glare",
       "bonus": false,
-      "hostile": true,
+      "hostile": false,
       "range": 30,
       "parameters": {},
       "cooldown": 6
@@ -67,7 +67,7 @@
       "actionType": "COMBAT_ACTION_TYPE_SPELL_LIKE_ABILITY",
       "script": "ca-vampiric-bite",
       "bonus": false,
-      "hostile": true,
+      "hostile": false,
       "range": 5,
       "parameters": {},
       "cooldown": 3

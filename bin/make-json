@@ -1,0 +1,21 @@
+#!/bin/bash
+
+makeJSON () {
+  local sListScript="$1"
+  local i
+  local b
+  b=1
+  echo "{"
+  for i in $("$sListScript")
+  do
+    if [ $b -eq 1 ]
+    then
+      b=0
+    else
+      echo ","
+    fi
+    echo -n "  \"$i\": \"$i\""
+  done
+  echo ""
+  echo "}"
+}

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "$(dirname "$0")/make-json"
+
 listAllClassTypes () {
   local MODULES
   MODULES=$(ls -1 ./src/modules)
@@ -15,24 +17,6 @@ listAllClassTypes () {
   done
 }
 
-makeJSON () {
-  local i
-  local b
-  b=1
-  echo "{"
-  for i in $(listAllClassTypes)
-  do
-    if [ $b -eq 1 ]
-    then
-      b=0
-    else
-      echo ","
-    fi
-    echo -n "  \"$i\": \"$i\""
-  done
-  echo ""
-  echo "}"
-}
-
-makeJSON > ./src/consts/class-types.json
-
+echo -n "building class types... "
+makeJSON listAllClassTypes > ./src/consts/class-types.json
+echo done

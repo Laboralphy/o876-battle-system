@@ -25,8 +25,7 @@
   ],
   "properties": [
     {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
+      "type": "PROPERTY_DARKVISION"
     },
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",

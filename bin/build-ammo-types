@@ -1,27 +1,11 @@
 #!/bin/bash
+source "$(dirname "$0")/make-json"
 
 listAllAmmoTypes () {
   grep -roP '"ammoType": "\K[^"]+' ./src/modules | cut -d ':' -f 2-
 }
 
-makeJSON () {
-  local i
-  local b
-  b=1
-  echo "{"
-  for i in $(listAllAmmoTypes)
-  do
-    if [ $b -eq 1 ]
-    then
-      b=0
-    else
-      echo ","
-    fi
-    echo -n "  \"$i\": \"$i\""
-  done
-  echo ""
-  echo "}"
-}
-
-makeJSON > ./src/consts/ammo-types.json
+echo -n "building ammo types... "
+makeJSON listAllAmmoTypes > ./src/consts/ammo-types.json
+echo done
 

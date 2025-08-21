@@ -1,13 +1,8 @@
 const EntityBuilder = require('../src/EntityBuilder');
-const SCHEMA = require('../src/schemas');
-const SchemaValidator = require('../src/SchemaValidator');
 const CONSTS = require('../src/consts');
 const AttackOutcome = require('../src/AttackOutcome');
 const PropertyBuilder = require('../src/PropertyBuilder');
 
-const oSchemaValidator = new SchemaValidator();
-oSchemaValidator.schemaIndex = SCHEMA;
-oSchemaValidator.init();
 
 const bpNormalActor = {
     entityType: CONSTS.ENTITY_TYPE_ACTOR,
@@ -27,7 +22,15 @@ const bpNormalActor = {
     level: 1,
     hd: 6,
     actions: [],
-    equipment: []
+    equipment: [],
+    abilities: {
+        strength: 10,
+        dexterity: 10,
+        constitution: 10,
+        intelligence: 10,
+        wisdom: 10,
+        charisma: 10
+    }
 };
 
 const bpDagger = {
@@ -93,7 +96,6 @@ let eb;
 beforeEach(function () {
     eb = new EntityBuilder();
     eb.propertyBuilder = new PropertyBuilder();
-    eb.schemaValidator = oSchemaValidator;
 });
 
 afterEach(function () {
@@ -392,7 +394,6 @@ describe('Polyvalent weapon', function () {
             'properties': [
                 {
                     'type': 'PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE',
-                    'amp': 0,
                     'damageType': 'DAMAGE_TYPE_PIERCING'
                 }
             ],
@@ -413,7 +414,6 @@ describe('Polyvalent weapon', function () {
             'properties': [
                 {
                     'type': 'PROPERTY_EXTRA_WEAPON_DAMAGE_TYPE',
-                    'amp': 0,
                     'damageType': 'DAMAGE_TYPE_PIERCING'
                 }
             ],

@@ -32,7 +32,6 @@
       "properties": [
         {
           "type": "PROPERTY_ON_ATTACK_HIT",
-          "amp": 0,
           "ailment": "ON_ATTACK_HIT_PETRIFICATION",
           "savingThrow": "ABILITY_CONSTITUTION"
         }
@@ -46,8 +45,7 @@
   ],
   "properties": [
     {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
+      "type": "PROPERTY_DARKVISION"
     }
   ],
   "actions": [],

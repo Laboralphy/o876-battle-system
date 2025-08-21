@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "$(dirname "$0")/make-json"
+
 listAllSkills () {
   local MODULES
   MODULES=$(ls -1 ./src/modules)
@@ -13,24 +15,6 @@ listAllSkills () {
   done
 }
 
-makeJSON () {
-  local i
-  local b
-  b=1
-  echo "{"
-  for i in $(listAllSkills)
-  do
-    if [ $b -eq 1 ]
-    then
-      b=0
-    else
-      echo ","
-    fi
-    echo -n "  \"$i\": \"$i\""
-  done
-  echo ""
-  echo "}"
-}
-
-makeJSON > ./src/consts/skills.json
-
+echo -n "building skills... "
+makeJSON listAllSkills > ./src/consts/skills.json
+echo "done"

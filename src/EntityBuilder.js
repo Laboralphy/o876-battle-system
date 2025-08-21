@@ -4,6 +4,8 @@ const { getUniqueId } = require('./libs/unique-id');
 const CONSTS = require('./consts');
 const Creature = require('./Creature');
 
+const zs = require('./z-schemas');
+
 const { sortByDependency } = require('./libs/sort-by-dependency');
 const DATA = require('./data');
 
@@ -14,7 +16,6 @@ const DATA = require('./data');
 class EntityBuilder {
     constructor () {
         this._blueprints = new Map();
-        this._schemaValidator = null;
         this._propertyBuilder = null;
         this._data = {
             ...DATA
@@ -137,14 +138,7 @@ class EntityBuilder {
     }
 
     set schemaValidator (value) {
-        this._schemaValidator = value;
-    }
-
-    get schemaValidator () {
-        if (!this._schemaValidator) {
-            throw new ReferenceError('no schema validator has been defined for this instance');
-        }
-        return this._schemaValidator;
+        throw new Error('ERR_DEPRECATED');
     }
 
     get blueprints () {
@@ -213,32 +207,17 @@ class EntityBuilder {
         if (this._blueprints.has(id)) {
             throw new Error(`blueprint ${id} is already defined`);
         }
-        const oBuiltBlueprint = {};
-        if ('extends' in blueprint) {
-            const aExtends = Array.isArray(blueprint.extends) ? blueprint.extends : [blueprint.extends];
-            aExtends.forEach(x => {
-                if (this._blueprints.has(x)) {
-                    deepMerge(oBuiltBlueprint, this._blueprints.get(x));
-                } else {
-                    throw new Error(`blueprint ${id} extends from an non-existant blueprint ${x}`);
-                }
-            });
-        }
-        deepMerge(oBuiltBlueprint, blueprint);
-        delete oBuiltBlueprint.extends;
+        const oBuiltBlueprint = EntityBuilder.composeBlueprint(blueprint, this._blueprints);
         oBuiltBlueprint.ref = id;
-        if (!('properties' in oBuiltBlueprint)) {
-            oBuiltBlueprint.properties = [];
-        }
         try {
             switch (oBuiltBlueprint.entityType) {
             case CONSTS.ENTITY_TYPE_ITEM: {
-                this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-item');
+                zs.Item.parse(oBuiltBlueprint);
                 break;
             }
 
             case CONSTS.ENTITY_TYPE_ACTOR: {
-                this.schemaValidator.validate(oBuiltBlueprint, 'blueprint-actor');
+                zs.Creature.parse(oBuiltBlueprint);
                 break;
             }
             }
@@ -248,6 +227,39 @@ class EntityBuilder {
         const oFinalBP = deepFreeze(oBuiltBlueprint);
         this._blueprints.set(id, oFinalBP);
         return oFinalBP;
+    }
+
+    /**
+     * Compose a blueprint by resolving all extends
+     * @param blueprint {RBSActorBlueprint|RBSItemBlueprint}
+     * @param blueprints {Map<string, RBSActorBlueprint|RBSItemBlueprint>}
+     */
+    static composeBlueprint (blueprint, blueprints) {
+        const KEY_EXTENDS = 'extends';
+        const oBuiltBlueprint = {};
+        if (KEY_EXTENDS in blueprint) {
+            oBuiltBlueprint[KEY_EXTENDS] = blueprint[KEY_EXTENDS];
+        }
+        while (KEY_EXTENDS in oBuiltBlueprint) {
+            if (!Array.isArray(oBuiltBlueprint[KEY_EXTENDS])) {
+                throw new TypeError('blueprint ' + KEY_EXTENDS + ' field must be an array');
+            }
+            const aExtends = oBuiltBlueprint[KEY_EXTENDS];
+            delete oBuiltBlueprint[KEY_EXTENDS];
+            aExtends.forEach(x => {
+                if (blueprints.has(x)) {
+                    deepMerge(oBuiltBlueprint, blueprints.get(x));
+                } else {
+                    throw new Error(`blueprint extends from an non-existant blueprint ${x}`);
+                }
+            });
+        }
+        deepMerge(oBuiltBlueprint, blueprint);
+        delete oBuiltBlueprint[KEY_EXTENDS];
+        if (!('properties' in oBuiltBlueprint)) {
+            oBuiltBlueprint.properties = [];
+        }
+        return oBuiltBlueprint;
     }
 
     _hashObject (oObject) {

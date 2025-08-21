@@ -1,4 +1,4 @@
-const oModules = require('./z-schemas/modules');
+const oModules = require('../z-schemas/modules');
 
 const oBlueprints = {};
 

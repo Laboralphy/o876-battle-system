@@ -14,7 +14,15 @@ const bpTourist = {
     actions: [],
     equipment: [
         'natwpn-punch-1d3'
-    ]
+    ],
+    abilities: {
+        strength: 10,
+        dexterity: 10,
+        constitution: 10,
+        intelligence: 10,
+        wisdom: 10,
+        charisma: 10
+    }
 };
 
 describe('at-fightful-glare', function() {

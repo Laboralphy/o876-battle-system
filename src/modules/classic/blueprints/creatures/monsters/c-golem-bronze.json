@@ -48,17 +48,15 @@
       "type": "PROPERTY_SPIKE_DAMAGE",
       "amp": "1d6",
       "damageType": "DAMAGE_TYPE_FIRE",
-      "savingThrow": "TRUE",
+      "savingThrow": true,
       "maxDistance": 15
     },
     {
       "type": "PROPERTY_DAMAGE_IMMUNITY",
-      "amp": 0,
       "damageType": "DAMAGE_TYPE_FIRE"
     },
     {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
+      "type": "PROPERTY_DARKVISION"
     },
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",

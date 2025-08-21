@@ -40,17 +40,14 @@
   "properties": [
     {
       "type": "PROPERTY_DAMAGE_IMMUNITY",
-      "amp": 0,
       "damageType": "DAMAGE_TYPE_ELECTRICITY"
     },
     {
       "type": "PROPERTY_DAMAGE_VULNERABILITY",
-      "amp": 0,
       "damageType": "DAMAGE_TYPE_FIRE"
     },
     {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
+      "type": "PROPERTY_DARKVISION"
     },
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",

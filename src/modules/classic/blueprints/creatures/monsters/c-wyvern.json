@@ -68,7 +68,8 @@
           "type": "PROPERTY_ON_ATTACK_HIT",
           "amp": "7d6",
           "ailment": "ON_ATTACK_HIT_POISON",
-          "savingThrow": "ABILITY_CONSTITUTION"
+          "savingThrow": "ABILITY_CONSTITUTION",
+          "duration": 3
         }
       ],
       "equipmentSlots": [
@@ -80,8 +81,7 @@
   ],
   "properties": [
     {
-      "type": "PROPERTY_DARKVISION",
-      "amp": 0
+      "type": "PROPERTY_DARKVISION"
     },
     {
       "type": "PROPERTY_ATTACK_COUNT_MODIFIER",

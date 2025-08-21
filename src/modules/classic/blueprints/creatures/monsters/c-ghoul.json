@@ -49,9 +49,9 @@
       "properties": [
         {
           "type": "PROPERTY_ON_ATTACK_HIT",
-          "amp": 0,
           "ailment": "ON_ATTACK_HIT_PARALYSIS",
-          "savingThrow": "ABILITY_CONSTITUTION"
+          "savingThrow": "ABILITY_CONSTITUTION",
+          "duration": 3
         }
       ],
       "equipmentSlots": [
